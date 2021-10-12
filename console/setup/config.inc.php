@@ -25,8 +25,8 @@ return array(
         'db' => array(
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=website_db',
-            'username' => 'root',
-            'password' => '',
+            'username' => 'api-intalim',
+            'password' => '1nTal!m-api',
             'charset' => 'utf8mb4',
             'attributes' => [
                 '{PDO_ATTR}' => "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));",

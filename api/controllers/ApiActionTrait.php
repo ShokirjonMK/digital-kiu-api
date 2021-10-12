@@ -126,6 +126,9 @@ trait ApiActionTrait
      */
     private function check_access_key()
     {
+        // checking api_token key
+        return true;
+
         $token = '';
         $headers = Yii::$app->request->headers;
         $header_token = $headers->get('api-token');

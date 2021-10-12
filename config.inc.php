@@ -1,6 +1,6 @@
 <?php return [
-    'app_id' => 'NUIRG-52484aacc9343c1f4c8314efe1f2bf1e',
-    'site_master_pass' => 310900,
+    'app_id' => 'REOQA-7aef9430e4875b3d4dadff8dc39bf986',
+    'site_master_pass' => 875337,
     'domain_name' => 'localhost.loc',
     'api_url' => 'http://api.localhost.loc/',
     'assets_url' => 'http://assets.localhost.loc/',
@@ -12,8 +12,8 @@
         'active' => false,
         'prefix' => 'mywebsite',
         'password' => '',
-        'secret_key' => 'nuAwcdgs2bvKHhtQN3ZG06eDMCWRVrp4aF89jo5BPxJkST1fiY',
-        'secret_iv' => '63ziB90kuKIJq5xcFVspXa4QMmGW1EYAglwH2LrnNDhOtSC7vP',
+        'secret_key' => '4JGufNX5F1bL8IhetaTsM6HDxBogEncY9Vm0S7r2vjpQqzWyCK',
+        'secret_iv' => 'cXZ1Yh2VDyoxvTERrN5jW3OwKIkbu8isqm9MaF4AQdnLP76Gfg',
         'config' => [
             'host' => '127.0.0.1',
             'port' => '6379',
@@ -24,8 +24,8 @@
         'db' => [
             'class' => 'yii\\db\\Connection',
             'dsn' => 'mysql:host=localhost;dbname=website_db',
-            'username' => 'root',
-            'password' => '',
+            'username' => 'api-intalim',
+            'password' => '1nTal!m-api',
             'charset' => 'utf8mb4',
             'attributes' => [
                 \yii\db\mssql\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'));',

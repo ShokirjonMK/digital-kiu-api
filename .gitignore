@@ -6,3 +6,5 @@ protected/data/*.db
 themes/classic/views/
 vendor/
 config.inc.php
+composer.lock
+.idea/

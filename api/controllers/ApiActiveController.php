@@ -15,5 +15,4 @@ class ApiActiveController extends ActiveController
         'class' => 'yii\rest\Serializer',
         'collectionEnvelope' => 'items',
     ];
-
 }

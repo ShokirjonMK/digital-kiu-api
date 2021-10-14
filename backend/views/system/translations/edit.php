@@ -12,7 +12,7 @@ $this->page_title = _e('Edit translation');
 
 $this->breadcrumb_title = _e('Edit translation');
 $this->breadcrumbs[] = ['label' => _e('Translations'), 'url' => $main_url];
-$this->breadcrumbs[] = ['label' => _e('Languages'), 'url' => $main_url . '/list-languages?id=' . $path_key];
+$this->breadcrumbs[] = ['label' => _e('Language'), 'url' => $main_url . '/list-languages?id=' . $path_key];
 
 $logs = array();
 $translations = array();

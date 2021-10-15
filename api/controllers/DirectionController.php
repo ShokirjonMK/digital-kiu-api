@@ -3,7 +3,7 @@
 namespace api\controllers;
 
 use Yii;
-use api\resources\Direction;
+use common\models\Direction;
 use base\ResponseStatus;
 use common\models\DirectionInfo;
 
@@ -22,10 +22,7 @@ class DirectionController extends ApiActiveController
         $model = new Direction();
 
         $query = $model->find()
-            ->with(['infoRelation'])
             ->andWhere(['status' => 1,'deleted' => 0])
-            ->join('INNER JOIN', 'direction_info info', 'info.direction_id = direction.id')
-            ->andWhere(['language' => Yii::$app->request->get('lang')])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
         
         // sort

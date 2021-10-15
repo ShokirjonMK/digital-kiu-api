@@ -491,6 +491,10 @@ function backend_sidebar_menu_items()
                     'name' => _e('Users'),
                 ),
                 array(
+                    'url' => '/buildings',
+                    'name' => _e('Building'),
+                ),
+                array(
                     'url' => '/system/roles',
                     'name' => _e('Roles & permissions'),
                 ),

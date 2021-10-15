@@ -16,6 +16,9 @@ $controllers = [
     'scientific-title',
     'special-title',
     'basis-of-learning',
+    'faculty',
+    'building',
+    'course',
 ];
 
 $controllerRoutes = [];

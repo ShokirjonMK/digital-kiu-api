@@ -10,11 +10,13 @@ use base\BackendController;
  */
 class SiteController extends BackendController
 {
+
     /**
      * Displays homepage.
      *
      * @return string
      */
+
     public function actionIndex()
     {
         $this->registerCss(array(

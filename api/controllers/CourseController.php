@@ -2,7 +2,8 @@
 
 namespace api\controllers;
 
-use common\models\Course;
+use common\models\model\Course;
+use common\models\model\Room;
 use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
@@ -41,7 +42,7 @@ class CourseController extends ApiActiveController
         $this->load($model, $post);
         $result = Course::createItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('Course successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -57,7 +58,7 @@ class CourseController extends ApiActiveController
         $this->load($model, $post);
         $result = Course::updateItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('Course successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -66,9 +67,7 @@ class CourseController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = Course::find()
-            ->with(['infoRelation'])
-            ->join('INNER JOIN', 'job_info info', 'info.job_id = job.id')
-            ->andWhere(['id' => $id, 'language' => $lang])
+            ->andWhere(['id' => $id])
             ->one();
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
@@ -83,14 +82,14 @@ class CourseController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations
-        JobInfo::deleteAll(['job_id' => $id]);
-
         // remove model
-        $result = Course::findOne($id)->delete();
+        $result = Course::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Job succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('Course succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

@@ -19,6 +19,17 @@ $controllers = [
     'faculty',
     'building',
     'course',
+    'room',
+    'course',
+    'direction',
+    'faculty',
+    'kafedra',
+    'para',
+    'semestr',
+    'edu-year',
+    'subject',
+    'subject-category',
+    'exams-type',
 ];
 
 $controllerRoutes = [];

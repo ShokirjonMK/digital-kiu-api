@@ -2,7 +2,8 @@
 
 namespace api\controllers;
 
-use common\models\EduYear;
+use common\models\model\EduYear;
+use common\models\model\Room;
 use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
@@ -10,7 +11,7 @@ use common\models\JobInfo;
 
 class EduYearController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Job';
+    public $modelClass = 'api\resources\EduYear';
 
     public function actions()
     {
@@ -83,14 +84,14 @@ class EduYearController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations
-        JobInfo::deleteAll(['job_id' => $id]);
-
         // remove model
-        $result = EduYear::findOne($id)->delete();
+        $result = EduYear::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Job succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('Room succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

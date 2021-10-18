@@ -2,7 +2,8 @@
 
 namespace api\controllers;
 
-use common\models\Kafedra;
+use common\models\model\Kafedra;
+use common\models\model\Room;
 use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
@@ -10,7 +11,7 @@ use common\models\JobInfo;
 
 class KafedraController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Job';
+    public $modelClass = 'api\resources\Kafedra';
 
     public function actions()
     {
@@ -41,7 +42,7 @@ class KafedraController extends ApiActiveController
         $this->load($model, $post);
         $result = Kafedra::createItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('Kafedra successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -57,7 +58,7 @@ class KafedraController extends ApiActiveController
         $this->load($model, $post);
         $result = Kafedra::updateItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('Kafedra successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -83,17 +84,18 @@ class KafedraController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations
-        JobInfo::deleteAll(['job_id' => $id]);
-
         // remove model
-        $result = Kafedra::findOne($id)->delete();
+        $result = Kafedra::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Job succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('Kafedra succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
+
 
 
 

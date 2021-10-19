@@ -45,7 +45,7 @@ class DirectionInfo extends \yii\db\ActiveRecord
         return [
             'info_id' => 'Info ID',
             'direction_id' => 'Direction ID',
-            'language' => 'Language',
+            'language' => 'Languages',
             'name' => 'Name',
             'description' => 'Description',
         ];

@@ -15,7 +15,7 @@ if ($model->isNewRecord) {
     $info->language = $content_language;
 }
 
-// Language
+// Languages
 $lang = input_get('lang');
 
 if (is_string($lang) && $lang) {

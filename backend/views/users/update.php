@@ -4,7 +4,7 @@ $this->title = _e('Edit user: {email}', [
 ]);
 
 $this->breadcrumb_title = _e('Edit user');
-$this->breadcrumbs[] = ['label' => _e('Users'), 'url' => $main_url]; ?>
+$this->breadcrumbs[] = ['label' => _e('User'), 'url' => $main_url]; ?>
 
 <div class="User-update">
     <?= $this->render('_form',[

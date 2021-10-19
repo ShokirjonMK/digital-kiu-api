@@ -10,7 +10,7 @@ use yii\widgets\LinkPager;
 // dd(ModelsUser::findOne(5)->role);
 
 
-$this->title = _e('Users'); ?>
+$this->title = _e('User'); ?>
 
 <div class="card-top-links row">
     <div class="col-md-7">
@@ -154,7 +154,7 @@ $this->title = _e('Users'); ?>
                             <td colspan="6" class="text-center table-not-found">
                                 <i class="ri-error-warning-line"></i>
                                 <div class="h5">
-                                    <?= _e('Users not found!'); ?>
+                                    <?= _e('User not found!'); ?>
                                 </div>
                             </td>
                         </tr>

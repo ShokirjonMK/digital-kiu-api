@@ -62,7 +62,7 @@ class ContentInfos extends \base\libs\RedisDB
         return [
             'info_id' => _e('Info ID'),
             'content_id' => _e('Content ID'),
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'title' => _e('Title'),
             'slug' => _e('Slug'),
             'description' => _e('Description'),

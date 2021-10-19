@@ -18,7 +18,7 @@ $last_visted_pages = Dashboard::getLastVistedPages(); ?>
 <div class="card">
     <div class="card-body" style="min-height: 433px;">
         <h4 class="card-title mb-">
-            <?= _e('Users online: '); ?>
+            <?= _e('User online: '); ?>
         </h4>
 
         <h1 class="mt-0 mb-4" data-dw-load="users-online-counter">

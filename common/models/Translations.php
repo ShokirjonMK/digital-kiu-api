@@ -56,7 +56,7 @@ class Translations extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'path_key' => _e('Path key'),
-            'lang_key' =>  _e('Language key'),
+            'lang_key' =>  _e('Languages key'),
             'translations' =>  _e('Translations'),
             'logs' => _e('Logs'),
             'updated_on' => _e('Updated On'),

@@ -49,7 +49,7 @@ class SpecialityInfo extends \base\libs\RedisDB
         return [
             'info_id' => _e('Info ID'),
             'speciality_id' => _e('Specility'),
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'name' => _e('Name'),
             'description' => _e('Description'),
         ];

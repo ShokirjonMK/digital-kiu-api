@@ -1797,7 +1797,7 @@
         .appendTo(slide.$slide.addClass("fancybox-slide--image"));
 
       // If we have a thumbnail, we can display it while actual image is loading
-      // Users will not stare at black screen and actual image will appear gradually
+      // User will not stare at black screen and actual image will appear gradually
       if (slide.opts.preload !== false && slide.opts.width && slide.opts.height && slide.thumb) {
         slide.width = slide.opts.width;
         slide.height = slide.opts.height;

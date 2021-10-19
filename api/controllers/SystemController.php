@@ -8,7 +8,7 @@ use base\ApiController;
 class SystemController extends ApiController
 {
     /**
-     * Language
+     * Languages
      *
      * @return void
      */

@@ -68,7 +68,7 @@ class Employee extends \yii\db\ActiveRecord
             'job_id' => _e('Job'),
             'inps' => _e('INPS'),
             'scientific_work' => _e('Scientific Work'),
-            'languages' => _e('Language'),
+            'languages' => _e('Languages'),
             'lang_certs' => _e('Lang Certs'),
             'rate' => _e('Rate'),
             'rank_id' => _e('Rank'),

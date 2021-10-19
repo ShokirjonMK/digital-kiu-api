@@ -2,6 +2,10 @@
 
 namespace common\models;
 
+use Yii;
+use api\resources\ResourceTrait;
+use yii\behaviors\TimestampBehavior;
+
 /**
  * This is the model class for table "languages".
  *
@@ -16,6 +20,16 @@ namespace common\models;
  */
 class Languages extends \base\libs\RedisDB
 {
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * Table name
      *
@@ -38,6 +52,8 @@ class Languages extends \base\libs\RedisDB
             [['rtl', 'status', 'sort', 'default'], 'integer'],
             [['name', 'lang_code', 'locale'], 'string'],
             [['rtl', 'status', 'sort'], 'default', 'value' => 0],
+            [['status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -111,4 +127,61 @@ class Languages extends \base\libs\RedisDB
 
         return $result;
     }
+
+
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
+
 }

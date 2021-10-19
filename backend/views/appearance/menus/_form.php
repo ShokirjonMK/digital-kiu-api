@@ -12,7 +12,7 @@ $languages = admin_active_langs();
 $current_language = admin_current_lang();
 $langs_array = ArrayHelper::map($languages, 'lang_code', 'name');
 
-// Language
+// Languages
 $lang = input_get('lang');
 
 if (is_string($lang) && $lang) {

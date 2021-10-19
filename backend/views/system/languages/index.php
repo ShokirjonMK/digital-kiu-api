@@ -4,7 +4,7 @@ use backend\models\System;
 
 $request = Yii::$app->request;
 $site_language = System::getSettingValue('site_language');
-$this->title = _e('Language'); ?>
+$this->title = _e('Languages'); ?>
 
 <div class="card">
     <div class="card-body">

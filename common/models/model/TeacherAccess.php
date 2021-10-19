@@ -1,8 +1,11 @@
 <?php
 
-namespace common\models;
+namespace common\models\model;
 
+use api\resources\ResourceTrait;
+use common\models\User;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "teacher_access".
@@ -21,11 +24,21 @@ use Yii;
  *
  * @property Languages $language
  * @property Subject $subject
- * @property Users $user
+ * @property User $user
  * @property TimeTable[] $timeTables
  */
 class TeacherAccess extends \yii\db\ActiveRecord
 {
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,11 +53,11 @@ class TeacherAccess extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'subject_id', 'language_id', 'created_at', 'updated_at'], 'required'],
+            [['user_id', 'subject_id', 'language_id'], 'required'],
             [['user_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -57,7 +70,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'subject_id' => 'Subject ID',
-            'language_id' => 'Language ID',
+            'language_id' => 'Languages ID',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -69,7 +82,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Language]].
+     * Gets query for [[Languages]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -95,7 +108,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**
@@ -107,4 +120,58 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TimeTable::className(), ['teacher_access_id' => 'id']);
     }
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
 }

@@ -7,7 +7,7 @@ $this->page_title = _e('Translation languages: {name}', [
     'name' => $translations['name'],
 ]);
 
-$this->breadcrumb_title = _e('Language');
+$this->breadcrumb_title = _e('Languages');
 $this->breadcrumbs[] = ['label' => _e('Translations'), 'url' => $main_url];
 
 $logs = array();
@@ -35,7 +35,7 @@ require('js-vars.php'); ?>
             <table class="table table-bordered table-hover mb-0">
                 <thead class="thead-light">
                     <tr>
-                        <th width="40%"><?= _e('Language name') ?></th>
+                        <th width="40%"><?= _e('Languages name') ?></th>
                         <th><?= _e('Progress'); ?></th>
                         <th><?= _e('Last change'); ?></th>
                     </tr>

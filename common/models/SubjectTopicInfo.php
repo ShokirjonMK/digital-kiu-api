@@ -49,7 +49,7 @@ class SubjectTopicInfo extends \base\libs\RedisDB
         return [
             'info_id' => _e('Info ID'),
             'subject_topic_id' => _e('Subject'),
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'name' => _e('Name'),
             'description' => _e('Description'),
         ];

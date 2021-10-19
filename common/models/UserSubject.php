@@ -58,7 +58,7 @@ class UserSubject extends \base\libs\RedisDB
             'id' => _e('ID'),
             'user_id' => _e('User'),
             'subject_id' => _e('Subject'),
-            'language_id' => _e('Language'),
+            'language_id' => _e('Languages'),
             'created_on' => _e('Created on'),
             'created_by' => _e('Created by'),
             'updated_on' => _e('Updated on'),

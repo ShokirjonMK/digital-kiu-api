@@ -11,7 +11,7 @@ $this->title = _e('User: {email}', [
 ]);
 
 $this->breadcrumb_title = _e('Info');
-$this->breadcrumbs[] = ['label' => _e('Users'), 'url' => $main_url];
+$this->breadcrumbs[] = ['label' => _e('User'), 'url' => $main_url];
 
 $active_tab = input_get('tab', 'profile');
 

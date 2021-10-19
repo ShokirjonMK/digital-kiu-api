@@ -15,7 +15,7 @@ use common\models\Reference;
 use common\models\Subject;
 use common\models\UserSubject;
 /**
- * Users controller
+ * User controller
  */
 class UsersController extends BackendController
 {

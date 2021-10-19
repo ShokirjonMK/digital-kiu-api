@@ -49,7 +49,7 @@ class DepartmentInfo extends \base\libs\RedisDB
         return [
             'info_id' => _e('Info ID'),
             'department_id' => _e('Department'),
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'name' => _e('Name'),
             'description' => _e('Description'),
         ];

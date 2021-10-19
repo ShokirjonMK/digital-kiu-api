@@ -2,8 +2,11 @@
 
 namespace api\controllers;
 
+
+
+use common\models\model\Subject;
 use Yii;
-use api\resources\Subject;
+// use api\resources\Subject;
 use base\ResponseStatus;
 use common\models\SubjectInfo;
 
@@ -21,10 +24,7 @@ class SubjectController extends ApiActiveController
         $model = new Subject();
 
         $query = $model->find()
-            ->with(['infoRelation'])
-            ->andWhere(['status' => 1,'deleted' => 0])
-            ->join('INNER JOIN', 'subject_info info', 'info.subject_id = subject.id')
-            ->andWhere(['language' => Yii::$app->request->get('lang')])
+            ->andWhere(['status' => 1,'is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
         
         // sort
@@ -82,26 +82,27 @@ class SubjectController extends ApiActiveController
     {
         $model = Subject::findOne($id);
         if(!$model){
-            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);     
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations 
-        SubjectInfo::deleteAll(['subject_id' => $id]);
-
         // remove model
-        $result = Subject::findOne($id)->delete();
+        $result = Subject::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Subject succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);     
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('Subject succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-    
 
 
 
-    
 
-    
+
+
+
+
 
 }

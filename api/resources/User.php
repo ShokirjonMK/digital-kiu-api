@@ -2,6 +2,7 @@
 
 namespace api\resources;
 
+use common\models\model\TeacherAccess;
 use Yii;
 use api\resources\Profile;
 use common\models\User as CommonUser;
@@ -26,7 +27,7 @@ class User extends CommonUser
         ];
     }
 
-        /**
+    /**
      * Rules
      *
      * @return array
@@ -53,7 +54,7 @@ class User extends CommonUser
      */
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'username',
             'firstname' => function ($model) {
@@ -70,7 +71,7 @@ class User extends CommonUser
             },
             'email',
             'status'
-            
+
         ];
 
         return $fields;
@@ -83,7 +84,7 @@ class User extends CommonUser
      */
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'created_at',
             'updated_at',
             'profile'
@@ -92,18 +93,19 @@ class User extends CommonUser
         return $extraFields;
     }
 
-    public function getPermissions(){
-        if($this->roleItem){
+    public function getPermissions()
+    {
+        if ($this->roleItem) {
             $authItem = AuthItem::find()->where(['name' => $this->roleItem])->one();
             $perms = $authItem->permissions;
             $result = [];
-            if($perms && is_array($perms)){
+            if ($perms && is_array($perms)) {
                 foreach ($perms as $row) {
                     $result[] = $row['name'];
                 }
             }
             return $result;
-        }else{
+        } else {
             return [];
         }
     }
@@ -118,17 +120,21 @@ class User extends CommonUser
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if(!$post){
+        if (!$post) {
             $errors[] = ['all' => [_e('Please send data.')]];
         }
 
         // role to'gri jo'natilganligini tekshirish
-        if($post && !(isset($post['role']) && !empty($post['role']) && is_string($post['role']))){
-            $errors[] = ['role' => [_e('Role is not valid.')]];
+        $roles = $post['role'];
+        foreach ($roles as $role) {
+            if (!(isset($role) && !empty($role) && is_string($role))) {
+                $errors[] = ['role' => [_e('Role is not valid.')]];
+            }
         }
 
+
         if (count($errors) == 0) {
-            if(isset($post['password']) && !empty($post['password'])){
+            if (isset($post['password']) && !empty($post['password'])) {
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($post['password']);
             }
             $model->auth_key = \Yii::$app->security->generateRandomString(20);
@@ -143,41 +149,58 @@ class User extends CommonUser
                 if ($model->avatar) {
                     $model->avatar = $model->avatar[0];
                     $avatarUrl = $model->upload();
-                    if($avatarUrl){
+                    if ($avatarUrl) {
                         $profile->image = $avatarUrl;
-                    }else{
+                    } else {
                         $errors[] = $model->errors;
                     }
-                    
+
                 }
                 // ***
 
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
-                }else{
-                    
+                } else {
                     // role ni userga assign qilish
                     $auth = Yii::$app->authManager;
-                    $authorRole = $auth->getRole($post['role']);
-                    if($authorRole){
-                        $auth->assign($authorRole, $model->id);
-                    }else{
-                        $errors[] = ['role' => [_e('Role not found.')]];    
-                    }
+                    $roles = $post['role'];
+                    foreach ($roles as $role) {
 
+                        $authorRole = $auth->getRole($role);
+                        if ($authorRole) {
+                            $auth->assign($authorRole, $model->id);
+                            if ($role == 'teacher') {
+                                $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
+                                foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
+                                    foreach ($subjectIdsValues as $langId) {
+//                                        var_dump($subjectIds);
+                                        $teacherAccessNew = new TeacherAccess();
+                                        $teacherAccessNew->user_id = $model->id;
+                                        $teacherAccessNew->subject_id = $subjectIds;
+                                        $teacherAccessNew->language_id = $langId;
+
+//                                        var_dump($teacherAccessNew);
+                                        $teacherAccessNew->save();
+                                    }
+                                }
+                            }
+                        } else {
+                            $errors[] = ['role' => [_e('Role not found.')]];
+                        }
+                    }
                 }
             } else {
                 $errors[] = $model->errors;
             }
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return $errors;
-        } 
+        }
     }
 
     public static function updateItem($model, $profile, $post)
@@ -185,19 +208,19 @@ class User extends CommonUser
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if(!$post){
+        if (!$post) {
             $errors[] = ['all' => [_e('Please send data.')]];
         }
 
         // role to'gri jo'natilganligini tekshirish
-        if(isset($post['role'])){
-            if(empty($post['role']) || !is_string($post['role'])){
-                $errors[] = ['role' => [_e('Role is not valid.')]];    
+        if (isset($post['role'])) {
+            if (empty($post['role']) || !is_string($post['role'])) {
+                $errors[] = ['role' => [_e('Role is not valid.')]];
             }
         }
 
         if (count($errors) == 0) {
-            if(isset($post['password']) && !empty($post['password'])){
+            if (isset($post['password']) && !empty($post['password'])) {
                 $model->password_hash = \Yii::$app->security->generatePasswordHash($post['password']);
             }
             if ($model->save()) {
@@ -207,28 +230,28 @@ class User extends CommonUser
                 if ($model->avatar) {
                     $model->avatar = $model->avatar[0];
                     $avatarUrl = $model->upload();
-                    if($avatarUrl){
+                    if ($avatarUrl) {
                         $profile->image = $avatarUrl;
-                    }else{
+                    } else {
                         $errors[] = $model->errors;
                     }
-                    
+
                 }
                 // ***
 
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
-                }else{
-                    if(isset($post['role'])){
+                } else {
+                    if (isset($post['role'])) {
                         $auth = Yii::$app->authManager;
                         $authorRole = $auth->getRole($post['role']);
-                        if($authorRole){
+                        if ($authorRole) {
                             // user ning eski rolini o'chirish
                             $auth->revokeAll($model->id);
                             // role ni userga assign qilish
                             $auth->assign($authorRole, $model->id);
-                        }else{
-                            $errors[] = ['role' => [_e('Role not found.')]];    
+                        } else {
+                            $errors[] = ['role' => [_e('Role not found.')]];
                         }
                     }
                 }
@@ -236,7 +259,7 @@ class User extends CommonUser
                 $errors[] = $model->errors;
             }
         }
-            
+
         if (count($errors) == 0) {
             $transaction->commit();
             return true;
@@ -252,11 +275,11 @@ class User extends CommonUser
         $errors = [];
 
         $model = User::findOne($id);
-        if(!$model){
+        if (!$model) {
             $errors[] = [_e('Data not found.')];
         }
         if (count($errors) == 0) {
-            
+
             // remove profile image
             // $filePath = assets_url($model->profile->image);
             // if(file_exists($filePath)){
@@ -264,17 +287,17 @@ class User extends CommonUser
             // }
             // remove profile
             $profileDeleted = Profile::deleteAll(['user_id' => $id]);
-            if(!$profileDeleted){
-                $errors[] = [_e('Error in profile deleting process.')];   
+            if (!$profileDeleted) {
+                $errors[] = [_e('Error in profile deleting process.')];
             }
 
             // remove model
             $userDeleted = User::findOne($id)->delete();
-            if(!$userDeleted){
-                $errors[] = [_e('Error in user deleting process.')];   
+            if (!$userDeleted) {
+                $errors[] = [_e('Error in user deleting process.')];
             }
         }
-            
+
         if (count($errors) == 0) {
             $transaction->commit();
             return true;
@@ -291,11 +314,11 @@ class User extends CommonUser
             self::STATUS_BANNED => _e('Banned'),
             self::STATUS_PENDING => _e('Pending'),
         ];
-    }    
-    
+    }
+
     public function upload()
     {
-        if ($this->validate()) { 
+        if ($this->validate()) {
             $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->avatar->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;

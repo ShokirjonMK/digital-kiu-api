@@ -7,7 +7,7 @@ use base\BackendController;
 use common\models\Languages;
 
 /**
- * Language controller
+ * Languages controller
  */
 class LanguagesController extends BackendController
 {

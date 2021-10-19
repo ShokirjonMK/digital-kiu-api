@@ -2,8 +2,9 @@
 
 namespace api\controllers;
 
+
 use Yii;
-use api\resources\Direction;
+use common\models\model\Direction;
 use base\ResponseStatus;
 use common\models\DirectionInfo;
 
@@ -22,10 +23,7 @@ class DirectionController extends ApiActiveController
         $model = new Direction();
 
         $query = $model->find()
-            ->with(['infoRelation'])
-            ->andWhere(['status' => 1,'deleted' => 0])
-            ->join('INNER JOIN', 'direction_info info', 'info.direction_id = direction.id')
-            ->andWhere(['language' => Yii::$app->request->get('lang')])
+            ->andWhere(['status' => 1,'is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
         
         // sort
@@ -69,9 +67,7 @@ class DirectionController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = Direction::find()
-            ->with(['infoRelation'])
-            ->join('INNER JOIN', 'direction_info info', 'info.direction_id = direction.id')
-            ->andWhere(['id' => $id, 'language' => $lang])
+            ->andWhere(['id' => $id,'is_deleted' => 0])
             ->one();
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);     
@@ -83,17 +79,17 @@ class DirectionController extends ApiActiveController
     {
         $model = Direction::findOne($id);
         if(!$model){
-            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);     
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations 
-        DirectionInfo::deleteAll(['direction_id' => $id]);
-
         // remove model
-        $result = Direction::findOne($id)->delete();
+        $result = Direction::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Direction succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);     
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('Direction succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

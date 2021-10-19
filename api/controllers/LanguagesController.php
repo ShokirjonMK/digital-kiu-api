@@ -10,7 +10,7 @@ use common\models\JobInfo;
 
 class LanguagesController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Job';
+    public $modelClass = 'api\resources\Languages';
 
     public function actions()
     {
@@ -21,9 +21,9 @@ class LanguagesController extends ApiActiveController
     {
         $model = new Languages();
 
-        $query = $model->find()
-            ->andWhere(['status' => 1,'is_deleted' => 0])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        $query = $model->find();
+        //   ->andWhere(['status' => 1,'is_deleted' => 0])
+        //    ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
         // sort
         $query = $this->sort($query);
@@ -36,12 +36,13 @@ class LanguagesController extends ApiActiveController
 
     public function actionCreate($lang)
     {
+
         $model = new Languages();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = Languages::createItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('Languages successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -57,7 +58,7 @@ class LanguagesController extends ApiActiveController
         $this->load($model, $post);
         $result = Languages::updateItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('Languages successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -66,9 +67,7 @@ class LanguagesController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = Languages::find()
-            ->with(['infoRelation'])
-            ->join('INNER JOIN', 'job_info info', 'info.job_id = job.id')
-            ->andWhere(['id' => $id, 'language' => $lang])
+            ->andWhere(['id' => $id])
             ->one();
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
@@ -83,18 +82,17 @@ class LanguagesController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations
-        JobInfo::deleteAll(['job_id' => $id]);
-
         // remove model
-        $result = Languages::findOne($id)->delete();
+        $result = Languages::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Job succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('Languages succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
 
 
 

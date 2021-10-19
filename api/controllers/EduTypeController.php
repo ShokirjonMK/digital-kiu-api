@@ -2,7 +2,7 @@
 
 namespace api\controllers;
 
-use common\models\EduType;
+use common\models\model\EduType;
 use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
@@ -10,7 +10,7 @@ use common\models\JobInfo;
 
 class EduTypeController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Job';
+    public $modelClass = 'api\resources\EduType';
 
     public function actions()
     {
@@ -41,7 +41,7 @@ class EduTypeController extends ApiActiveController
         $this->load($model, $post);
         $result = EduType::createItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('EduType successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -57,7 +57,7 @@ class EduTypeController extends ApiActiveController
         $this->load($model, $post);
         $result = EduType::updateItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('EduType successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -83,18 +83,17 @@ class EduTypeController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove translations
-        JobInfo::deleteAll(['job_id' => $id]);
-
         // remove model
-        $result = EduType::findOne($id)->delete();
+        $result = EduType::findOne($id);
 
         if($result){
-            return $this->response(1, _e('Job succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+            $result->is_deleted = 1;
+            $result->update();
+
+            return $this->response(1, _e('EduType succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
 
 
 

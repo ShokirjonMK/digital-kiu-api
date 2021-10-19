@@ -10,7 +10,7 @@ $controllers = [
     'subject',
     'subject-topic',
     'nationality',
-    'language',
+    'languages',
     'residence-type',
     'science-degree',
     'scientific-title',
@@ -28,8 +28,18 @@ $controllers = [
     'semestr',
     'edu-year',
     'subject',
+    'subject-type',
     'subject-category',
     'exams-type',
+    'edu-type',
+    'edu-plan',
+    'edu-semestr',
+    'edu-semestr-exams-type',
+    'edu-semestr-subject',
+    'edu-semestr-subject-category-time',
+    'teacher-access',
+    'time-table',
+
 ];
 
 $controllerRoutes = [];

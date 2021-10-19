@@ -91,7 +91,7 @@ class EducationWork extends \yii\db\ActiveRecord
             'diploma_number' => _e('Diploma number'),
             'diploma_date' => _e('Date of issue of the diploma'),
             'scientific_work' => _e('Scientific Work'),
-            'languages' => _e('Language'),
+            'languages' => _e('Languages'),
             'lang_certs' => _e('Lang Certs'),
             'rate' => _e('Rate'),
             'rank_id' => _e('Rank'),

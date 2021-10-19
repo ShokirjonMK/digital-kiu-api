@@ -1,5 +1,5 @@
 <?php
-
+// rollar va dostup
 return [
     'chair_admin' => [
         'subject_index',

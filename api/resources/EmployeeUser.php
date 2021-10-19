@@ -232,7 +232,7 @@ class EmployeeUser extends ParentUser
         // check user_id
         $user = User::findOne($model->user_id);
         if(!$user){
-            $errors[] = [_e('User not found.')];      
+            $errors[] = [_e('User not found.')];
         }
 
         $bodyObj = json_decode($body);
@@ -249,7 +249,7 @@ class EmployeeUser extends ParentUser
                 // check language_ids
                 $langs = Reference::find()->where(['type' => 'language', 'id' => $obj->language_ids])->all();
                 if (!$langs || count($langs) != count($obj->language_ids)) {
-                    $errors[] = [_e('Language with ID {language_ids} not found.', ['language_ids' => implode(',', $obj->language_ids)])];
+                    $errors[] = [_e('Languages with ID {language_ids} not found.', ['language_ids' => implode(',', $obj->language_ids)])];
                 }
             }
             //
@@ -287,7 +287,7 @@ class EmployeeUser extends ParentUser
         $data = [];
         $user = User::findOne($employee_id);
         if(!$user){
-            $errors[] = [_e('User not found.')];      
+            $errors[] = [_e('User not found.')];
         } 
 
         if (count($errors) == 0) {

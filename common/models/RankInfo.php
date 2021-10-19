@@ -49,7 +49,7 @@ class RankInfo extends \base\libs\RedisDB
         return [
             'info_id' => _e('Info ID'),
             'rank_id' => _e('Rank'),
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'name' => _e('Name'),
             'description' => _e('Description'),
         ];

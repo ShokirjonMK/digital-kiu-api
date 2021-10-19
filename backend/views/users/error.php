@@ -1,6 +1,6 @@
 <?php
 $this->title = _e('Not found');
-$this->breadcrumbs[] = ['label' => _e('Users'), 'url' => $main_url]; ?>
+$this->breadcrumbs[] = ['label' => _e('User'), 'url' => $main_url]; ?>
 
 <div class="card">
     <div class="card-body page-item-not-found">

@@ -488,7 +488,7 @@ function backend_sidebar_menu_items()
             'childs' => array(
                 array(
                     'url' => '/users',
-                    'name' => _e('Users'),
+                    'name' => _e('User'),
                 ),
                 array(
                     'url' => '/buildings',
@@ -504,7 +504,7 @@ function backend_sidebar_menu_items()
                 ),
                 array(
                     'url' => '/system/languages',
-                    'name' => _e('Language'),
+                    'name' => _e('Languages'),
                 ),
                 array(
                     'url' => '/system/translations',
@@ -552,7 +552,7 @@ function backend_sidebar_menu_items()
                 ),
                 array(
                     'url' => '/directories/references/language/all',
-                    'name' => _e('Language'),
+                    'name' => _e('Languages'),
                 ),
                 array(
                     'url' => '/directories/references/science-degree/all',

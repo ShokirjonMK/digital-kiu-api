@@ -45,7 +45,7 @@ class SettingsTranslation extends \base\libs\RedisDB
     {
         return [
             'id' => 'ID',
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'settings_key' => _e('Settings key'),
             'settings_value' => _e('Settings value'),
             'updated_on' => _e('Updated On'),

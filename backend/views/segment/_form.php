@@ -31,7 +31,7 @@ if ($model->isNewRecord) {
     $model = init_content_settings($model);
 }
 
-// Language
+// Languages
 $lang = input_get('lang');
 
 if (is_string($lang) && $lang) {

@@ -65,7 +65,7 @@ class SegmentInfos extends \base\libs\RedisDB
         return [
             'info_id' => 'Info ID',
             'segment_id' => _e('Segment ID'),
-            'language' => _e('Language'),
+            'language' => _e('Languages'),
             'title' => _e('Title'),
             'slug' => _e('Slug'),
             'description' => _e('Description'),

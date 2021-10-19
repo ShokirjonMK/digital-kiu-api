@@ -1,8 +1,10 @@
 <?php
 
-namespace common\models;
+namespace common\models\model;
 
+use api\resources\ResourceTrait;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "edu_semestr_exams_type".
@@ -24,6 +26,16 @@ use Yii;
  */
 class EduSemestrExamsType extends \yii\db\ActiveRecord
 {
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +50,7 @@ class EduSemestrExamsType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_subject_id', 'exams_type_id', 'max-ball', 'created_at', 'updated_at'], 'required'],
+            [['edu_semestr_subject_id', 'exams_type_id', 'max-ball'], 'required'],
             [['edu_semestr_subject_id', 'exams_type_id', 'max-ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['exams_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exams_type_id' => 'id']],
@@ -84,4 +96,59 @@ class EduSemestrExamsType extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ExamsType::className(), ['id' => 'exams_type_id']);
     }
+
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
 }

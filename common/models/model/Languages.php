@@ -1,29 +1,38 @@
 <?php
 
-namespace common\models;
+namespace common\models\model;
 
+use api\resources\ResourceTrait;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "languages".
  *
  * @property int $id
  * @property string $name
- * @property int|null $order
- * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
- * @property int $created_by
- * @property int $updated_by
- * @property int $is_deleted
- *
- * @property TeacherAccess[] $teacherAccesses
- * @property TimeTable[] $timeTables
+ * @property string $lang_code
+ * @property string $locale
+ * @property int $rtl
+ * @property int $default
+ * @property int $sort
+ * @property int $status
  */
-class Languages extends \yii\db\ActiveRecord
+class Languages extends \base\libs\RedisDB
 {
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
-     * {@inheritdoc}
+     * Table name
+     *
+     * @return string
      */
     public static function tableName()
     {
@@ -31,52 +40,147 @@ class Languages extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * Rules
+     *
+     * @return array
      */
+
     public function rules()
     {
         return [
-            [['name', 'created_at', 'updated_at'], 'required'],
+            [['name', 'lang_code'], 'required'],
+            [['rtl', 'status', 'sort', 'default'], 'integer'],
+            [['name', 'lang_code', 'locale'], 'string'],
+            [['rtl', 'status', 'sort'], 'default', 'value' => 0],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['name'], 'string', 'max' => 255],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * Attribute labels
+     *
+     * @return array
      */
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'order' => 'Order',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'id' => _e('ID'),
+            'name' => _e('Name'),
+            'lang_code' => _e('Code'),
+            'locale' => _e('Locale'),
+            'rtl' => _e('RTL'),
+            'default' => _e('Default'),
+            'sort' => _e('Sort'),
+            'status' => _e('Status'),
         ];
     }
 
     /**
-     * Gets query for [[TeacherAccesses]].
+     * Get all
      *
-     * @return \yii\db\ActiveQuery
+     * @param array $where
+     * @param string $order_by
+     * @return array
      */
-    public function getTeacherAccesses()
+    public function getAll($where = array(), $order_by = 'name')
     {
-        return $this->hasMany(TeacherAccess::className(), ['language_id' => 'id']);
+        $query = Languages::find();
+        $query->asArray();
+        $query->orderBy($order_by);
+
+        if (is_array($where) && $where) {
+            $query->where($where);
+        }
+
+        $results = $query->all();
+
+        if ($results) {
+            foreach ($results as $key => $result) {
+                $results[$key]['flag'] = images_url('flags/svg/' . $result['lang_code'] . '.svg');
+            }
+        }
+
+        return $results;
     }
 
     /**
-     * Gets query for [[TimeTables]].
+     * Get one
      *
-     * @return \yii\db\ActiveQuery
+     * @param array $where
+     * @return array
      */
-    public function getTimeTables()
+    public function getOne($where = array())
     {
-        return $this->hasMany(TimeTable::className(), ['language_id' => 'id']);
+        $query = Languages::find();
+        $query->asArray();
+
+        if (is_array($where) && $where) {
+            $query->where($where);
+        }
+
+        $result = $query->one();
+
+        if ($result) {
+            $result['flag'] = images_url('flags/svg/' . $result['lang_code'] . '.svg');
+        }
+
+        return $result;
     }
+
+
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
 }

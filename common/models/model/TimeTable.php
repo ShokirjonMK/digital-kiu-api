@@ -1,8 +1,10 @@
 <?php
 
-namespace common\models;
+namespace common\models\model;
 
+use api\resources\ResourceTrait;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "time_table".
@@ -35,6 +37,16 @@ use Yii;
  */
 class TimeTable extends \yii\db\ActiveRecord
 {
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,7 +61,7 @@ class TimeTable extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semestr_id', 'edu_year_id', 'subject_id', 'language_id', 'created_at', 'updated_at'], 'required'],
+            [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semestr_id', 'edu_year_id', 'subject_id', 'language_id'], 'required'],
             [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semestr_id', 'edu_year_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
@@ -76,7 +88,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'semestr_id' => 'Semestr ID',
             'edu_year_id' => 'Edu Year ID',
             'subject_id' => 'Subject ID',
-            'language_id' => 'Language ID',
+            'language_id' => 'Languages ID',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -108,7 +120,7 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Language]].
+     * Gets query for [[Languages]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -166,4 +178,60 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
+
+
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
 }

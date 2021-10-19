@@ -54,7 +54,7 @@ $form = ActiveForm::begin([
                     <thead class="table-light">
                         <tr>
                             <th style="width: 20%;"><?= _e('Subject') ?></th>
-                            <th><?= _e('Language') ?></th>
+                            <th><?= _e('Languages') ?></th>
                             <th style="width: 120px;" class="text-center">Action</th>
                         </tr>
                     </thead>

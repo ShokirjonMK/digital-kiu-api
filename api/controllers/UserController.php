@@ -44,7 +44,7 @@ class UserController extends ApiActiveController
         $this->load($profile, $post);
         $result = User::createItem($model, $profile, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('User successfully created.'), $model, null, ResponseStatus::CREATED);     
+            return $this->response(1, _e('User successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);     
         }
@@ -62,7 +62,7 @@ class UserController extends ApiActiveController
         $this->load($profile, $post);
         $result = User::updateItem($model, $profile, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('User successfully updated.'), $model, null, ResponseStatus::OK);     
+            return $this->response(1, _e('User successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);     
         }
@@ -85,7 +85,7 @@ class UserController extends ApiActiveController
     {
         $result = User::deleteItem($id);
         if(!is_array($result)){
-            return $this->response(1, _e('User successfully deleted.'), null, null, ResponseStatus::NO_CONTENT);     
+            return $this->response(1, _e('User successfully deleted.'), null, null, ResponseStatus::NO_CONTENT);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);     
         }
@@ -95,7 +95,7 @@ class UserController extends ApiActiveController
 
     public function actionStatusList()
     {
-        return $this->response(1, _e('Success.'), User::statusList(), null, ResponseStatus::OK);    
+        return $this->response(1, _e('Success.'), User::statusList(), null, ResponseStatus::OK);
     }
     
 }

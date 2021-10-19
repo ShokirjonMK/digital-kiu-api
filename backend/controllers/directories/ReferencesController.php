@@ -37,7 +37,7 @@ class ReferencesController extends BackendController
         switch ($this->settings['type']) {
             case 'nationality': $title = ['plural' => _e('Nationalities'), 'singular' => 'nationality']; break;
             case 'residence-type': $title = ['plural' =>_e('Residence types'),'singular' => 'residence type']; break;
-            case 'language': $title = ['plural' =>_e('Languages'),'singular' => 'language']; break;
+            case 'language': $title = ['plural' =>_e('Language'),'singular' => 'language']; break;
             case 'science-degree': $title = ['plural' =>_e('Science degrees'),'singular' => 'science degree']; break;
             case 'scientific-title': $title = ['plural' =>_e('Scientific titles'),'singular' => 'scientific title']; break;
             case 'special-title': $title = ['plural' =>_e('Special titles'),'singular' => 'special title']; break;

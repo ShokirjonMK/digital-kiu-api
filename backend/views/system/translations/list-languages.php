@@ -7,7 +7,7 @@ $this->page_title = _e('Translation languages: {name}', [
     'name' => $translations['name'],
 ]);
 
-$this->breadcrumb_title = _e('Languages');
+$this->breadcrumb_title = _e('Language');
 $this->breadcrumbs[] = ['label' => _e('Translations'), 'url' => $main_url];
 
 $logs = array();

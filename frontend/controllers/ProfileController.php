@@ -18,12 +18,14 @@ use Yii;
  */
 class ProfileController extends FrontendController
 {
+
     /**
      * Before action
      *
      * @param $action
      * @return void
      */
+
     public function beforeAction($action)
     {
         $this->viewPath = rtrim($this->theme_alias, '/') . '/views/profile';

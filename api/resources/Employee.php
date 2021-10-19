@@ -57,7 +57,7 @@ class Employee extends Model
                 // check language_ids
                 $langs = Reference::find()->where(['type' => 'language', 'id' => $obj->language_ids])->all();
                 if (!$langs || count($langs) != count($obj->language_ids)) {
-                    $errors[] = [_e('Languages with ID {language_ids} not found.', ['language_ids' => implode(',', $obj->language_ids)])];
+                    $errors[] = [_e('Language with ID {language_ids} not found.', ['language_ids' => implode(',', $obj->language_ids)])];
                 }
             }
             //

@@ -7,7 +7,7 @@ use base\BackendController;
 use common\models\Languages;
 
 /**
- * Languages controller
+ * Language controller
  */
 class LanguagesController extends BackendController
 {
@@ -56,7 +56,7 @@ class LanguagesController extends BackendController
             exit();
         }
 
-        $languages = Languages::find()
+        $languages = Language::find()
             ->orderBy('name')
             ->asArray()
             ->all();

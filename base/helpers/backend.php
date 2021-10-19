@@ -500,7 +500,7 @@ function backend_sidebar_menu_items()
                 ),
                 array(
                     'url' => '/system/languages',
-                    'name' => _e('Languages'),
+                    'name' => _e('Language'),
                 ),
                 array(
                     'url' => '/system/translations',
@@ -548,7 +548,7 @@ function backend_sidebar_menu_items()
                 ),
                 array(
                     'url' => '/directories/references/language/all',
-                    'name' => _e('Languages'),
+                    'name' => _e('Language'),
                 ),
                 array(
                     'url' => '/directories/references/science-degree/all',

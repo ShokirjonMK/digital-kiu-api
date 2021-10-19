@@ -1,4 +1,3 @@
-
 <?php
 define('DS', DIRECTORY_SEPARATOR);
 define('HOME_PATH', dirname(__FILE__) . DS);

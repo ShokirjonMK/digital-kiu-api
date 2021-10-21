@@ -126,11 +126,18 @@ class User extends CommonUser
 
         // role to'gri jo'natilganligini tekshirish
         $roles = $post['role'];
-        foreach ($roles as $role) {
-            if (!(isset($role) && !empty($role) && is_string($role))) {
+        if(is_array($roles)){
+            foreach ($roles as $role) {
+                if (!(isset($role) && !empty($role) && is_string($role))) {
+                    $errors[] = ['role' => [_e('Role is not valid.')]];
+                }
+            }
+        }else{
+            if (!(isset($roles) && !empty($roles) && is_string($roles))) {
                 $errors[] = ['role' => [_e('Role is not valid.')]];
             }
         }
+
 
 
         if (count($errors) == 0) {
@@ -154,7 +161,6 @@ class User extends CommonUser
                     } else {
                         $errors[] = $model->errors;
                     }
-
                 }
                 // ***
 
@@ -163,31 +169,40 @@ class User extends CommonUser
                 } else {
                     // role ni userga assign qilish
                     $auth = Yii::$app->authManager;
-                    $roles = $post['role'];
-                    foreach ($roles as $role) {
+                    $roles = json_decode(str_replace("'", "", $post['role']));
 
-                        $authorRole = $auth->getRole($role);
-                        if ($authorRole) {
-                            $auth->assign($authorRole, $model->id);
-                            if ($role == 'teacher') {
-                                $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-                                foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
-                                    foreach ($subjectIdsValues as $langId) {
+                    if(is_array($roles)){
+                        foreach ($roles as $role) {
+                            $authorRole = $auth->getRole($role);
+                            if ($authorRole) {
+
+//                                var_dump($post['teacherAccess']);
+                                $auth->assign($authorRole, $model->id);
+                                if ($role == 'teacher' && isset($post['teacherAccess'])) {
+                                    $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
+                                    if(is_array($teacherAccess)){
+                                        foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
+                                            foreach ($subjectIdsValues as $langId) {
 //                                        var_dump($subjectIds);
-                                        $teacherAccessNew = new TeacherAccess();
-                                        $teacherAccessNew->user_id = $model->id;
-                                        $teacherAccessNew->subject_id = $subjectIds;
-                                        $teacherAccessNew->language_id = $langId;
+                                                $teacherAccessNew = new TeacherAccess();
+                                                $teacherAccessNew->user_id = $model->id;
+                                                $teacherAccessNew->subject_id = $subjectIds;
+                                                $teacherAccessNew->language_id = $langId;
 
 //                                        var_dump($teacherAccessNew);
-                                        $teacherAccessNew->save();
+                                                $teacherAccessNew->save();
+                                            }
+                                        }
                                     }
                                 }
+                            } else {
+                                $errors[] = ['role' => [_e('Role not found.')]];
                             }
-                        } else {
-                            $errors[] = ['role' => [_e('Role not found.')]];
                         }
+                    }else{
+                        $errors[] = ['role' => [_e('Role is invalid')]];
                     }
+
                 }
             } else {
                 $errors[] = $model->errors;
@@ -213,11 +228,18 @@ class User extends CommonUser
         }
 
         // role to'gri jo'natilganligini tekshirish
-        if (isset($post['role'])) {
-            if (empty($post['role']) || !is_string($post['role'])) {
-                $errors[] = ['role' => [_e('Role is not valid.')]];
+            $roles = $post['role'];
+            if(is_array($roles)){
+                foreach ($roles as $role) {
+                    if (!(isset($role) && !empty($role) && is_string($role))) {
+                        $errors[] = ['role' => [_e('Role is not valid.')]];
+                    }
+                }
+            }else{
+                if (!(isset($roles) && !empty($roles) && is_string($roles))) {
+                    $errors[] = ['role' => [_e('Role is not valid.')]];
+                }
             }
-        }
 
         if (count($errors) == 0) {
             if (isset($post['password']) && !empty($post['password'])) {
@@ -242,18 +264,44 @@ class User extends CommonUser
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {
-                    if (isset($post['role'])) {
-                        $auth = Yii::$app->authManager;
-                        $authorRole = $auth->getRole($post['role']);
-                        if ($authorRole) {
-                            // user ning eski rolini o'chirish
-                            $auth->revokeAll($model->id);
-                            // role ni userga assign qilish
-                            $auth->assign($authorRole, $model->id);
-                        } else {
-                            $errors[] = ['role' => [_e('Role not found.')]];
+                    $auth = Yii::$app->authManager;
+                    $roles = json_decode(str_replace("'", "", $post['role']));
+
+                    if(is_array($roles)){
+                        foreach ($roles as $role) {
+                            $authorRole = $auth->getRole($role);
+                            if ($authorRole) {
+                                $auth->revokeAll($model->id);
+//                                var_dump($post['teacherAccess']);
+                                $auth->assign($authorRole, $model->id);
+                                if ($role == 'teacher' && isset($post['teacherAccess'])) {
+                                    $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
+//                                    if(is_array($teacherAccess)){
+//                                                                            var_dump($teacherAccess);
+
+                                        $teacherAccessDelete  = TeacherAccess::deleteAll(['user_id'=>$model->id]);
+                                        foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
+                                            foreach ($subjectIdsValues as $langId) {
+//                                        var_dump($subjectIds);
+                                                $teacherAccessNew = new TeacherAccess();
+                                                $teacherAccessNew->user_id = $model->id;
+                                                $teacherAccessNew->subject_id = $subjectIds;
+                                                $teacherAccessNew->language_id = $langId;
+
+//                                        var_dump($teacherAccessNew);
+                                                $teacherAccessNew->save();
+                                            }
+                                        }
+                                    }
+//                                }
+                            } else {
+                                $errors[] = ['role' => [_e('Role not found.')]];
+                            }
                         }
+                    }else{
+                        $errors[] = ['role' => [_e('Role is invalid')]];
                     }
+
                 }
             } else {
                 $errors[] = $model->errors;

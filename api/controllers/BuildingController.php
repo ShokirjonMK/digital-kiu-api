@@ -41,7 +41,7 @@ class BuildingController extends ApiActiveController
         $this->load($model, $post);
         $result = Building::createItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('Building successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -57,7 +57,7 @@ class BuildingController extends ApiActiveController
         $this->load($model, $post);
         $result = Building::updateItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('Building successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -89,7 +89,7 @@ class BuildingController extends ApiActiveController
             $result->is_deleted = 1;
             $result->update();
 
-            return $this->response(1, _e('Job succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e('Building succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

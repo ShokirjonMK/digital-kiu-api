@@ -16,37 +16,37 @@ class m211021_142749_profile_table extends Migration
         $this->createTable('profile', [
             'id' => $this->primaryKey(),
             'user_id'=>$this->integer()->notNull(),
-            'image'=>$this->string(255)->notNull(),
-            'phone'=>$this->string(50)->notNull(),
-            'phone_secondary'=>$this->string(50)->notNull(),
-            'is_foreign'=>$this->integer()->notNull(),
-            'last_name'=>$this->string(255)->notNull(),
-            'first_name'=>$this->string(255)->notNull(),
-            'middle_name'=>$this->string(255)->notNull(),
-            'passport_seria'=>$this->string(255)->notNull(),
-            'passport_number'=>$this->string(255)->notNull(),
-            'passport_pin'=>$this->string(255)->notNull(),
-            'birthday'=>$this->integer()->notNull(),
-            'passport_file'=>$this->string(255)->notNull(),
-            'country_id'=>$this->integer()->notNull(),
-            'region_id'=>$this->integer()->notNull(),
-            'area_id'=>$this->integer()->notNull(),
-            'address'=>$this->string(255)->notNull(),
-            'gender'=>$this->integer()->notNull(),
-            'passport_given_date'=>$this->date()->notNull(),
-            'passport_issued_date'=>$this->date()->notNull(),
-            'passport_given_by'=>$this->string(255)->notNull(),
-            'permanent_country_id'=>$this->integer()->notNull(),
-            'permanent_region_id'=>$this->integer()->notNull(),
-            'permanent_area_id'=>$this->integer()->notNull(),
-            'permanent_address'=>$this->string(255)->notNull(),
+            'image'=>$this->string(255)->Null(),
+            'phone'=>$this->string(50)->Null(),
+            'phone_secondary'=>$this->string(50)->Null(),
+            'is_foreign'=>$this->integer()->Null(),
+            'last_name'=>$this->string(255)->Null(),
+            'first_name'=>$this->string(255)->Null(),
+            'middle_name'=>$this->string(255)->Null(),
+            'passport_seria'=>$this->string(255)->Null(),
+            'passport_number'=>$this->string(255)->Null(),
+            'passport_pin'=>$this->string(255)->Null(),
+            'birthday'=>$this->integer()->Null(),
+            'passport_file'=>$this->string(255)->Null(),
+            'country_id'=>$this->integer()->Null(),
+            'region_id'=>$this->integer()->Null(),
+            'area_id'=>$this->integer()->Null(),
+            'address'=>$this->string(255)->Null(),
+            'gender'=>$this->integer()->Null(),
+            'passport_given_date'=>$this->date()->Null(),
+            'passport_issued_date'=>$this->date()->Null(),
+            'passport_given_by'=>$this->string(255)->Null(),
+            'permanent_country_id'=>$this->integer()->Null(),
+            'permanent_region_id'=>$this->integer()->Null(),
+            'permanent_area_id'=>$this->integer()->Null(),
+            'permanent_address'=>$this->string(255)->Null(),
 
 
 
             'order'=>$this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
-            'created_at'=>$this->integer()->notNull(),
-            'updated_at'=>$this->integer()->notNull(),
+            'created_at'=>$this->integer()->Null(),
+            'updated_at'=>$this->integer()->Null(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
@@ -62,6 +62,18 @@ class m211021_142749_profile_table extends Migration
         $this->addForeignKey('rp_profile_permanent_region_id','profile','permanent_region_id','region','id');
         $this->addForeignKey('ap_profile_permanent_area_id','profile','permanent_area_id','area','id');
 
+
+        $this->insert('{{%profile}}', [
+            'user_id' => 2,
+            'last_name' => "TSUL",
+            'first_name' => "Admin",
+        ]);
+
+        $this->insert('{{%profile}}', [
+            'user_id' => 1,
+            'last_name' => "Web",
+            'first_name' => "Developer",
+        ]);
 
     }
 

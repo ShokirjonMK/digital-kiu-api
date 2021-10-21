@@ -15,8 +15,8 @@ class Profile extends CommonProfile
     public function rules()
     {
         return [
-            [['firstname', 'lastname', 'gender'], 'required'],
-            [['dob', 'phone', 'phone_secondary'], 'safe'],
+            [['last_name', 'first_name', 'gender'], 'required'],
+            [['birthday', 'phone', 'phone_secondary'], 'safe'],
         ];
     }
 
@@ -30,11 +30,11 @@ class Profile extends CommonProfile
     public function fields()
     {
         $fields =  [
-            'firstname', 
-            'lastname', 
+            'last_name',
+            'first_name',
             'gender',
-            'dob' => function($model) {
-                return date("Y-m-d", strtotime($model->dob));
+            'birthday' => function($model) {
+                return date("Y-m-d", strtotime($model->birthday));
             }, 
             'phone',
             'phone_secondary',

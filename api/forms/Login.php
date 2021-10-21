@@ -83,8 +83,8 @@ class Login extends Model
                     $data = [
                         'user_id' => $user->id,
                         'username' => $user->username,
-                        'firstname' => $profile->firstname,
-                        'lastname' => $profile->lastname,
+                        'last_name' => $profile->last_name,
+                        'first_name' => $profile->first_name,
                         'role' => $user->roleItem,
                         'permissions' => $user->permissions,
                         'access_token' => $user->access_token,

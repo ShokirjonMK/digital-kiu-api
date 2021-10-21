@@ -67,9 +67,7 @@ class ParaController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = Para::find()
-            ->with(['infoRelation'])
-            ->join('INNER JOIN', 'job_info info', 'info.job_id = job.id')
-            ->andWhere(['id' => $id, 'language' => $lang])
+            ->andWhere(['id' => $id])
             ->one();
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%regions}}`.
+ * Handles the creation of table `{{%region}}`.
  */
-class m200721_093042_create_regions_table extends Migration
+class m200721_093042_create_region_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -20,11 +20,12 @@ class m200721_093042_create_regions_table extends Migration
             $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
 
-        $this->createTable('{{%regions}}', [
+        $this->createTable('{{%region}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string('150'),
+            'name_kirill' => $this->string('150'),
             'slug' => $this->string('150'),
-            'country_id' => $this->integer(),
+            'country_id' => $this->integer()->defaultValue(229),
             'parent_id' => $this->integer(),
             'type' => $this->tinyInteger(1)->defaultValue(0),
             'postcode' => $this->string('150'),
@@ -39,14 +40,14 @@ class m200721_093042_create_regions_table extends Migration
         ], $tableOptions);
 
         $this->createIndex(
-            'idx-regions-country_id',
-            'regions',
+            'idx-region-country_id',
+            'region',
             'country_id'
         );
 
         $this->addForeignKey(
-            'fk-regions-country_id',
-            'regions',
+            'fk-region-country_id',
+            'region',
             'country_id',
             'countries',
             'id',
@@ -54,19 +55,23 @@ class m200721_093042_create_regions_table extends Migration
         );
 
         $this->createIndex(
-            'idx-regions-parent_id',
-            'regions',
+            'idx-region-parent_id',
+            'region',
             'parent_id'
         );
 
         $this->addForeignKey(
-            'fk-regions-parent_id',
-            'regions',
+            'fk-region-parent_id',
+            'region',
             'parent_id',
-            'regions',
+            'region',
             'id',
             'CASCADE'
         );
+
+        $sql = file_get_contents(__DIR__ . '/../sql/region_insert.sql');
+        \Yii::$app->db->pdo->exec($sql);
+
     }
 
     /**
@@ -75,25 +80,25 @@ class m200721_093042_create_regions_table extends Migration
     public function safeDown()
     {
         $this->dropForeignKey(
-            'fk-regions-country_id',
-            'regions'
+            'fk-region-country_id',
+            'region'
         );
 
         $this->dropIndex(
-            'idx-regions-country_id',
-            'regions'
+            'idx-region-country_id',
+            'region'
         );
 
         $this->dropForeignKey(
-            'fk-regions-parent_id',
-            'regions'
+            'fk-region-parent_id',
+            'region'
         );
 
         $this->dropIndex(
-            'idx-regions-parent_id',
-            'regions'
+            'idx-region-parent_id',
+            'region'
         );
 
-        $this->dropTable('{{%regions}}');
+        $this->dropTable('{{%region}}');
     }
 }

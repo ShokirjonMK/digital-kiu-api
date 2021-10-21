@@ -42,7 +42,7 @@ class EduYearController extends ApiActiveController
         $this->load($model, $post);
         $result = EduYear::createItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('EduYear successfully created.'), $model, null, ResponseStatus::CREATED);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -58,7 +58,7 @@ class EduYearController extends ApiActiveController
         $this->load($model, $post);
         $result = EduYear::updateItem($model, $post);
         if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('EduYear successfully updated.'), $model, null, ResponseStatus::OK);
         }else{
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -67,9 +67,7 @@ class EduYearController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = EduYear::find()
-            ->with(['infoRelation'])
-            ->join('INNER JOIN', 'job_info info', 'info.job_id = job.id')
-            ->andWhere(['id' => $id, 'language' => $lang])
+            ->andWhere(['id' => $id])
             ->one();
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
@@ -91,7 +89,7 @@ class EduYearController extends ApiActiveController
             $result->is_deleted = 1;
             $result->update();
 
-            return $this->response(1, _e('Room succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e('EduYear succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

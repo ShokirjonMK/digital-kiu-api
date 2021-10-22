@@ -2,6 +2,8 @@
 // rollar va dostup
 return [
     'chair_admin' => [
+        'password_index',
+        'password_update',
         'subject_index',
         'subject_create',
         'subject_update',
@@ -10,6 +12,8 @@ return [
     ],
 
     'teacher' => [
+        'password_index',
+        'password_update',
         'subject-topic_index',
         'subject-topic_create',
         'subject-topic_update',
@@ -18,6 +22,8 @@ return [
     ],
 
     'directory_editor' => [
+        'password_index',
+        'password_update',
         'reference_index',
         'reference_create',
         'reference_update',
@@ -27,6 +33,8 @@ return [
     ],
 
     'hr' => [
+        'password_index',
+        'password_update',
         'department_index',
         'department_create',
         'department_update',
@@ -40,6 +48,8 @@ return [
     ],
 
     'hr_viewer' => [
+        'password_index',
+        'password_update',
         'department_index',
         'department_create',
         'department_update',
@@ -53,6 +63,8 @@ return [
     ],
 
     'rector' => [
+        'password_index',
+        'password_update',
         'job_index',
         'job_create',
         'job_update',
@@ -61,6 +73,8 @@ return [
     ],
 
     'prorector' => [
+        'password_index',
+        'password_update',
         'job_index',
         'job_create',
         'job_update',
@@ -69,6 +83,8 @@ return [
     ],
 
     'dekan' => [
+        'password_index',
+        'password_update',
         'job_index',
         'job_create',
         'job_update',
@@ -77,6 +93,8 @@ return [
     ],
 
     'zamdekan' => [
+        'password_index',
+        'password_update',
         'job_index',
         'job_create',
         'job_update',
@@ -85,6 +103,8 @@ return [
     ],
 
     'mudir' => [
+        'password_index',
+        'password_update',
         'job_index',
         'job_create',
         'job_update',
@@ -93,6 +113,8 @@ return [
     ],
 
     'student' => [
+        'password_index',
+        'password_update',
         'job_index',
         'job_create',
         'job_update',
@@ -101,6 +123,8 @@ return [
     ],
 
     'edu_admin' => [
+        'password_index',
+        'password_update',
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -109,6 +133,8 @@ return [
     ],
 
     'edu_moderator' => [
+        'password_index',
+        'password_update',
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -117,6 +143,8 @@ return [
     ],
 
     'edu_editor' => [
+        'password_index',
+        'password_update',
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -125,6 +153,8 @@ return [
     ],
 
     'edu_viewer' => [
+        'password_index',
+        'password_update',
         'time-table_index',
         'job_create',
         'job_update',

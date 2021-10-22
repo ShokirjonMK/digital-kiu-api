@@ -39,6 +39,7 @@ $controllers = [
     'edu-semestr-subject-category-time',
     'teacher-access',
     'time-table',
+    'password',
 
 ];
 

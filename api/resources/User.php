@@ -3,8 +3,11 @@
 namespace api\resources;
 
 use common\models\model\TeacherAccess;
+use common\models\model\PasswordEncrypts;
 use Yii;
 use api\resources\Profile;
+use common\models\model\EncryptPass;
+use common\models\model\Keys;
 use common\models\User as CommonUser;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
@@ -57,11 +60,11 @@ class User extends CommonUser
         $fields = [
             'id',
             'username',
-            'firstname' => function ($model) {
-                return $model->profile->firstname ?? '';
+            'first_name' => function ($model) {
+                return $model->profile->first_name ?? '';
             },
-            'lastname' => function ($model) {
-                return $model->profile->lastname ?? '';
+            'last_name' => function ($model) {
+                return $model->profile->last_name ?? '';
             },
             'role' => function ($model) {
                 return $model->roleItem ?? '';
@@ -138,17 +141,29 @@ class User extends CommonUser
             }
         }
 
-
-
         if (count($errors) == 0) {
-            if (isset($post['password']) && !empty($post['password'])) {
-                $model->password_hash = \Yii::$app->security->generatePasswordHash($post['password']);
-            }
+            $password = $post['password'];
+            $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
+            
             $model->auth_key = \Yii::$app->security->generateRandomString(20);
             $model->password_reset_token = null;
             $model->access_token = \Yii::$app->security->generateRandomString();
             $model->access_token_time = time();
             if ($model->save()) {
+
+                //**parolni shifrlab saqlaymiz */
+                $uu = new EncryptPass();
+                $max = Keys::find()->count();
+                $rand = rand(1, $max);
+                $key = Keys::findOne($rand);
+                $enc = $uu->encrypt($password, $key->name);
+                $save_password = new PasswordEncrypts();
+                $save_password->user_id = $model->id;
+                $save_password->password = $enc;
+                $save_password->key_id = $key->id;
+                $save_password->save(false);
+                //**** */
+
                 $profile->user_id = $model->id;
 
                 // avatarni saqlaymiz
@@ -376,4 +391,5 @@ class User extends CommonUser
             return false;
         }
     }
+
 }

@@ -40,21 +40,21 @@ class m211022_073249_keys_table extends Migration
             '{{%keys}}',
             [
                 'name' => 'ShokirjonMK'
-            ],
+            ]
         );
 
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'University'
-            ],
+            ]
         );
 
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'NeverGiveUp'
-            ],
+            ]
 
         );
 

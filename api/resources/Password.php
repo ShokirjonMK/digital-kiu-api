@@ -34,9 +34,15 @@ class Password extends Model
        
         if (isset($user_id)) {
             $user = user::findOne($user_id);
+            if(!isset($user)){
+                $data['username'] = '))';
+                $data['password'] = ':)';
+                return $data;
+            }
         } else {
             $user = Yii::$app->user->identity;
         } 
+
         $pass = PasswordEncrypts::find()
                 ->where(['user_id' => $user->id])
                 ->one();

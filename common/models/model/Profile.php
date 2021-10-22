@@ -1,0 +1,264 @@
+<?php
+
+namespace common\models\model;
+
+use api\resources\ResourceTrait;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+
+/**
+ * This is the model class for table "profile".
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $image
+ * @property string $phone
+ * @property string $phone_secondary
+ * @property int $is_foreign
+ * @property string $last_name
+ * @property string $first_name
+ * @property string $middle_name
+ * @property string $passport_seria
+ * @property string $passport_number
+ * @property string $passport_pin
+ * @property int $birthday
+ * @property string $passport_file
+ * @property int $country_id
+ * @property int $region_id
+ * @property int $area_id
+ * @property string $address
+ * @property int $gender
+ * @property string $passport_given_date
+ * @property string $passport_issued_date
+ * @property string $passport_given_by
+ * @property int $permanent_country_id
+ * @property int $permanent_region_id
+ * @property int $permanent_area_id
+ * @property string $permanent_address
+ * @property int|null $order
+ * @property int|null $status
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $is_deleted
+ *
+ * @property Area $area
+ * @property Countries $country
+ * @property Area $permanentArea
+ * @property Countries $permanentCountry
+ * @property Region $permanentRegion
+ * @property Region $region
+ * @property Users $user
+ */
+class Profile extends \yii\db\ActiveRecord
+{
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'profile';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['user_id', 'image', 'phone', 'phone_secondary', 'is_foreign', 'last_name', 'first_name', 'middle_name', 'passport_seria', 'passport_number', 'passport_pin', 'birthday', 'passport_file', 'country_id', 'region_id', 'area_id', 'address', 'gender', 'passport_given_date', 'passport_issued_date', 'passport_given_by', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'permanent_address'], 'required'],
+            [['user_id', 'is_foreign', 'birthday', 'country_id', 'region_id', 'area_id', 'gender', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['passport_given_date', 'passport_issued_date'], 'safe'],
+            [['image', 'last_name', 'first_name', 'middle_name', 'passport_seria', 'passport_number', 'passport_pin', 'passport_file', 'address', 'passport_given_by', 'permanent_address'], 'string', 'max' => 255],
+            [['phone', 'phone_secondary'], 'string', 'max' => 50],
+            [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['area_id' => 'id']],
+            [['permanent_area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['permanent_area_id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
+            [['permanent_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['permanent_country_id' => 'id']],
+            [['permanent_region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['permanent_region_id' => 'id']],
+            [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'user_id' => 'User ID',
+            'image' => 'Image',
+            'phone' => 'Phone',
+            'phone_secondary' => 'Phone Secondary',
+            'is_foreign' => 'Is Foreign',
+            'last_name' => 'Last Name',
+            'first_name' => 'First Name',
+            'middle_name' => 'Middle Name',
+            'passport_seria' => 'Passport Seria',
+            'passport_number' => 'Passport Number',
+            'passport_pin' => 'Passport Pin',
+            'birthday' => 'Birthday',
+            'passport_file' => 'Passport File',
+            'country_id' => 'Country ID',
+            'region_id' => 'Region ID',
+            'area_id' => 'Area ID',
+            'address' => 'Address',
+            'gender' => 'Gender',
+            'passport_given_date' => 'Passport Given Date',
+            'passport_issued_date' => 'Passport Issued Date',
+            'passport_given_by' => 'Passport Given By',
+            'permanent_country_id' => 'Permanent Country ID',
+            'permanent_region_id' => 'Permanent Region ID',
+            'permanent_area_id' => 'Permanent Area ID',
+            'permanent_address' => 'Permanent Address',
+            'order' => 'Order',
+            'status' => 'Status',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'created_by' => 'Created By',
+            'updated_by' => 'Updated By',
+            'is_deleted' => 'Is Deleted',
+        ];
+    }
+
+    /**
+     * Gets query for [[Area]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getArea()
+    {
+        return $this->hasOne(Area::className(), ['id' => 'area_id']);
+    }
+
+    /**
+     * Gets query for [[Country]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
+    }
+
+    /**
+     * Gets query for [[PermanentArea]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPermanentArea()
+    {
+        return $this->hasOne(Area::className(), ['id' => 'permanent_area_id']);
+    }
+
+    /**
+     * Gets query for [[PermanentCountry]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPermanentCountry()
+    {
+        return $this->hasOne(Countries::className(), ['id' => 'permanent_country_id']);
+    }
+
+    /**
+     * Gets query for [[PermanentRegion]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPermanentRegion()
+    {
+        return $this->hasOne(Region::className(), ['id' => 'permanent_region_id']);
+    }
+
+    /**
+     * Gets query for [[Region]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRegion()
+    {
+        return $this->hasOne(Region::className(), ['id' => 'region_id']);
+    }
+
+    /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
+
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
+
+}

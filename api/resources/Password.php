@@ -33,7 +33,7 @@ class Password extends Model
         // return "asd";
        
         if (isset($user_id)) {
-            $user = user::findOne($user_id);
+            $user = User::findOne($user_id);
         } else {
             $user = Yii::$app->user->identity;
         } 

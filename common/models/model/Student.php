@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -65,8 +66,10 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id', 'edu_type_id', 'is_contract', 'diplom_number', 'diplom_seria', 'diplom_date', 'description'], 'required'],
-            [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id', 'edu_type_id', 'is_contract', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
+                'edu_type_id', 'is_contract'], 'required'],
+            [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
+                'edu_type_id', 'is_contract', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['diplom_date'], 'safe'],
             [['description'], 'string'],
             [['diplom_number', 'diplom_seria'], 'string', 'max' => 255],
@@ -75,7 +78,7 @@ class Student extends \yii\db\ActiveRecord
             [['edu_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduType::className(), 'targetAttribute' => ['edu_type_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -164,7 +167,7 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
 

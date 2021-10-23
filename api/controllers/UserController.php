@@ -23,7 +23,7 @@ class UserController extends ApiActiveController
         $query = $model->find()
             ->with(['profile'])
             ->andWhere([])
-            ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
+            // ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
         
         // sort
@@ -40,12 +40,7 @@ class UserController extends ApiActiveController
         $model = new User();
         $profile = new Profile();
         $post = Yii::$app->request->post();
-        if (isset($post['password']) && !empty($post['password'])) {
-            $password = $post['password'];
-        } else {
-            $password = $this->randomPassword_alpha(3) . '_' . $this->randomPassword_number(3);
-        }
-        $post['password'] = $password;
+        
         $this->load($model, $post);
         $this->load($profile, $post);
         $result = User::createItem($model, $profile, $post);

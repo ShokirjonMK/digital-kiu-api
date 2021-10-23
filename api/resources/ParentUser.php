@@ -16,6 +16,7 @@ class ParentUser extends CommonUser
     use ResourceTrait;
 
     const UPLOADS_FOLDER = 'uploads/user-images/';
+    const UPLOADS_FOLDER_STUDENT_IMAGE = 'uploads/student-images/';
     public $avatar;
     public $avatarMaxSize = 1024 * 200; // 200 Kb
 
@@ -58,11 +59,11 @@ class ParentUser extends CommonUser
         $fields =  [
             'id',
             'username',
-            'firstname' => function ($model) {
-                return $model->profile->firstname ?? '';
+            'first_name' => function ($model) {
+                return $model->profile->first_name ?? '';
             },
-            'lastname' => function ($model) {
-                return $model->profile->lastname ?? '';
+            'last_name' => function ($model) {
+                return $model->profile->last_name ?? '';
             },
             'role' => function ($model) {
                 return $model->roleItem ?? '';

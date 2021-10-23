@@ -33,7 +33,7 @@ class Password extends Model
         // return "asd";
        
         if (isset($user_id)) {
-            $user = user::findOne($user_id);
+            $user = User::findOne($user_id);
             if(!isset($user)){
                 $data['username'] = '))';
                 $data['password'] = ':)';

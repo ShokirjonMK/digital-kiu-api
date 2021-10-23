@@ -142,7 +142,12 @@ class User extends CommonUser
         }
 
         if (count($errors) == 0) {
-            $password = $post['password'];
+
+            if (isset($post['password']) && !empty($post['password'])) {
+                $password = $post['password'];
+            } else {
+                $password = $model->randomPassword_alpha(4) . '_' . $model->randomPassword_number(3);
+            }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
             
             $model->auth_key = \Yii::$app->security->generateRandomString(20);
@@ -152,16 +157,7 @@ class User extends CommonUser
             if ($model->save()) {
 
                 //**parolni shifrlab saqlaymiz */
-                $uu = new EncryptPass();
-                $max = Keys::find()->count();
-                $rand = rand(1, $max);
-                $key = Keys::findOne($rand);
-                $enc = $uu->encrypt($password, $key->name);
-                $save_password = new PasswordEncrypts();
-                $save_password->user_id = $model->id;
-                $save_password->password = $enc;
-                $save_password->key_id = $key->id;
-                $save_password->save(false);
+                $model->savePassword($password, $model->id);
                 //**** */
 
                 $profile->user_id = $model->id;
@@ -190,21 +186,18 @@ class User extends CommonUser
                         foreach ($roles as $role) {
                             $authorRole = $auth->getRole($role);
                             if ($authorRole) {
-
-//                                var_dump($post['teacherAccess']);
+                                //  var_dump($post['teacherAccess']);
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
                                     if(is_array($teacherAccess)){
                                         foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
                                             foreach ($subjectIdsValues as $langId) {
-//                                        var_dump($subjectIds);
                                                 $teacherAccessNew = new TeacherAccess();
                                                 $teacherAccessNew->user_id = $model->id;
                                                 $teacherAccessNew->subject_id = $subjectIds;
                                                 $teacherAccessNew->language_id = $langId;
 
-//                                        var_dump($teacherAccessNew);
                                                 $teacherAccessNew->save();
                                             }
                                         }
@@ -392,4 +385,49 @@ class User extends CommonUser
         }
     }
 
+    //**parolni shifrlab saqlaymiz */
+    
+    public function savePassword($password, $model_id)
+    {
+        $uu = new EncryptPass();
+        $max = Keys::find()->count();
+        $rand = rand(1, $max);
+        $key = Keys::findOne($rand);
+        $enc = $uu->encrypt($password, $key->name);
+        $save_password = new PasswordEncrypts();
+        $save_password->user_id = $model_id;
+        $save_password->password = $enc;
+        $save_password->key_id = $key->id;
+        if($save_password->save(false)){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    // Generate randon number
+    public function randomPassword_number($count)
+    {
+        $alphabet = '23456789';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < $count; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+    // Generate randon string
+    public function randomPassword_alpha($count)
+    {
+        $alphabet = 'abcdefghjkmnpqrstuvwxyz';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < $count; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
 }

@@ -1,0 +1,144 @@
+<?php
+
+namespace common\models;
+
+use api\resources\ResourceTrait;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+
+/**
+ * This is the model class for table "login".
+ *
+ * @property int $id
+ * @property string $ip
+ * @property int $user_id
+ * @property string $device
+ * @property string $device_id
+ * @property string $type
+ * @property string $model_device
+ * @property int|null $status
+ * @property int|null $created_at
+ * @property int|null $updated_at
+ * @property int $created_by
+ * @property int $updated_by
+ *
+ * @property Users $user
+ */
+class LoginHistory extends \yii\db\ActiveRecord
+{
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'login_history';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+
+    public function rules()
+    {
+        return [
+            [['ip', 'user_id', 'device', 'device_id', 'type', 'model_device'], 'required'],
+            [['user_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['ip', 'device', 'device_id', 'type', 'model_device'], 'string', 'max' => 255],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \api\resources\User::className(), 'targetAttribute' => ['user_id' => 'id']],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'ip' => 'Ip',
+            'user_id' => 'User ID',
+            'device' => 'Device',
+            'device_id' => 'Device ID',
+            'type' => 'Type',
+            'model_device' => 'Model Device',
+            'status' => 'Status',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'created_by' => 'Created By',
+            'updated_by' => 'Updated By',
+        ];
+    }
+
+    /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(\api\resources\User::className(), ['id' => 'user_id']);
+    }
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+//            'department',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $model->status = 1;
+        if($model->save()){
+            $transaction->commit();
+            return true;
+        }else{
+            $errors[] = $model->getErrorSummary(true);
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public function beforeSave($insert) {
+        if ($insert) {
+            $this->created_by = Yii::$app->user->identity->getId();
+        }else{
+            $this->updated_by = Yii::$app->user->identity->getId();
+        }
+        return parent::beforeSave($insert);
+    }
+
+}

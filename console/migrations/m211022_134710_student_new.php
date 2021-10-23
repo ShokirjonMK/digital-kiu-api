@@ -12,29 +12,35 @@ class m211022_134710_student_new extends Migration
      */
     public function safeUp()
     {
+
+        $tableName = Yii::$app->db->tablePrefix . 'student';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('student');
+        }
+
         $this->createTable('student', [
-            'id' => $this->primaryKey(),
-            'user_id'=>$this->integer()->notNull(),
-            'faculty_id'=>$this->integer()->notNull(),
-            'direction_id'=>$this->integer()->notNull(),
-            'course_id'=>$this->integer()->notNull(),
-            'edu_year_id'=>$this->integer()->notNull(),
-            'edu_type_id'=>$this->integer()->notNull(),
-            'is_contract'=>$this->integer()->notNull(),
-            'diplom_number'=>$this->string(255)->notNull(),
-            'diplom_seria'=>$this->string(255)->notNull(),
-            'diplom_date'=>$this->date()->notNull(),
-            'description'=>$this->text()->notNull(),
+        'id' => $this->primaryKey(),
+        'user_id'=>$this->integer()->notNull(),
+        'faculty_id'=>$this->integer()->notNull(),
+        'direction_id'=>$this->integer()->notNull(),
+        'course_id'=>$this->integer()->notNull(),
+        'edu_year_id'=>$this->integer()->notNull(),
+        'edu_type_id'=>$this->integer()->notNull(),
+        'is_contract'=>$this->integer()->notNull(),
+        'diplom_number'=>$this->string(255)->Null(),
+        'diplom_seria'=>$this->string(255)->Null(),
+        'diplom_date'=>$this->date()->Null(),
+        'description'=>$this->text()->Null(),
 
 
-            'order'=>$this->tinyInteger(1)->defaultValue(1),
-            'status' => $this->tinyInteger(1)->defaultValue(1),
-            'created_at'=>$this->integer()->Null(),
-            'updated_at'=>$this->integer()->Null(),
-            'created_by' => $this->integer()->notNull()->defaultValue(0),
-            'updated_by' => $this->integer()->notNull()->defaultValue(0),
-            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        'order'=>$this->tinyInteger(1)->defaultValue(1),
+        'status' => $this->tinyInteger(1)->defaultValue(1),
+        'created_at'=>$this->integer()->Null(),
+        'updated_at'=>$this->integer()->Null(),
+        'created_by' => $this->integer()->notNull()->defaultValue(0),
+        'updated_by' => $this->integer()->notNull()->defaultValue(0),
+        'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+    ]);
 
         $this->addForeignKey('us_student_user_id','student','user_id','users','id');
         $this->addForeignKey('fs_student_faculty_id','student','faculty_id','faculty','id');
@@ -42,6 +48,7 @@ class m211022_134710_student_new extends Migration
         $this->addForeignKey('cs_student_course_id','student','course_id','course','id');
         $this->addForeignKey('es_student_edu_year_id','student','edu_year_id','edu_year','id');
         $this->addForeignKey('es_student_edu_type_id','student','edu_type_id','edu_type','id');
+
 
     }
 

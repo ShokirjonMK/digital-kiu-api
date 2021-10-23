@@ -40,6 +40,7 @@ $controllers = [
     'teacher-access',
     'time-table',
     'password',
+    'translate',
 
 ];
 

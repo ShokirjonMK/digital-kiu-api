@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace common\models\model;
 
 use api\resources\ResourceTrait;
 use Yii;
@@ -135,6 +135,7 @@ class Action extends \yii\db\ActiveRecord
     public function beforeSave($insert) {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
+            $this->user_id   = Yii::$app->user->identity->getId();
         }else{
             $this->updated_by = Yii::$app->user->identity->getId();
         }

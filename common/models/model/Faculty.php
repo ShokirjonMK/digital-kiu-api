@@ -25,8 +25,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Faculty extends \yii\db\ActiveRecord
 {
-
-
+    public static $selected_language = 'uz';
 
     use ResourceTrait;
 
@@ -53,9 +52,9 @@ class Faculty extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            // [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            // [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -66,7 +65,7 @@ class Faculty extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            // 'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -107,18 +106,29 @@ class Faculty extends \yii\db\ActiveRecord
         return $this->hasMany(Kafedra::className(), ['faculty_id' => 'id']);
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name' => function ($model) {
+                return $model->translate->name ?? '';
+            },
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
 
+        ];
 
-
-
-
-
-
+        return $fields;
+    }
 
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            //            'department',
             'createdBy',
             'updatedBy',
         ];
@@ -126,20 +136,53 @@ class Faculty extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getInfoRelation()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => 'faculty']);
+    }
+
+    /**
+     * Get info
+     *
+     * @return void
+     */
+    public function getTranslate()
+    {
+        return $this->infoRelation[0];
+    }
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
-        }
 
+
+        if ($model->save()) {
+            if (isset($post['name'])) {
+                if (!is_array($post['name'])) {
+                    $errors[] = [_e('Please send Name attribute as array.')];
+                } else {
+                    if (isset($post['description'])) {
+                        if (!is_array($post['description'])) {
+                            $errors[] = [_e('Please send Description attribute as array.')];
+                        }else{
+                            Translate::createTranslate($post['name'], 'faculty', $model->id, $post['description']);
+                        }
+                    }else{
+                        Translate::createTranslate($post['name'], 'faculty', $model->id);
+                    }
+                   
+                }
+            } else {
+                $errors[] = [_e('Please send at least one Name attribute.')];
+            }
+        } else {
+            $errors[] = $model->getErrorSummary(true);
+        }
+        
     }
 
     public static function updateItem($model, $post)
@@ -147,26 +190,43 @@ class Faculty extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
+        if ($model->save()) {
+            if (isset($post['name'])) {
+                if (!is_array($post['name'])) {
+                    $errors[] = [_e('Please send Name attribute as array.')];
+                } else {
+                    if (isset($post['description'])) {
+                        if (!is_array($post['description'])) {
+                            $errors[] = [_e('Please send Description attribute as array.')];
+                        } else {
+                            Translate::updateTranslate($post['name'], 'faculty', $model->id, $post['description']);
+                        }
+                    } else {
+                        Translate::updateTranslate($post['name'], 'faculty', $model->id);
+                    }
+                }
+            } else {
+                $errors[] = [_e('Please send at least one Name attribute.')];
+            }
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $errors[] = $model->getErrorSummary(true);
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
 
 
-
-
+  
 }

@@ -2,6 +2,8 @@
 
 namespace api\resources;
 
+use common\models\model\Translate;
+use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
@@ -47,4 +49,27 @@ trait ResourceTrait
     {
         return $this->hasOne(User::class, ['id' => 'updated_by']);
     }
+
+
+    public static function createFromTable($nameArr, $table_name, $model_id)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        foreach ($nameArr as $key => $value) {
+
+            $new_translate[$key] = new Translate();
+            $new_translate[$key]->name = $value;
+            $new_translate[$key]->table_name = $table_name;
+            $new_translate[$key]->model_id = $model_id;
+            if ($new_translate[$key]->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $new_translate[$key]->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        }
+    }
+    
 }

@@ -146,7 +146,7 @@ class User extends CommonUser
             if (isset($post['password']) && !empty($post['password'])) {
                 $password = $post['password'];
             } else {
-                $password = $model->randomPassword_alpha(4) . '_' . $model->randomPassword_number(3);
+                $password = _random_string();
             }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
             
@@ -406,28 +406,4 @@ class User extends CommonUser
 
     }
 
-    // Generate randon number
-    public function randomPassword_number($count)
-    {
-        $alphabet = '23456789';
-        $pass = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-        for ($i = 0; $i < $count; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
-        }
-        return implode($pass); //turn the array into a string
-    }
-    // Generate randon string
-    public function randomPassword_alpha($count)
-    {
-        $alphabet = 'abcdefghjkmnpqrstuvwxyz';
-        $pass = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-        for ($i = 0; $i < $count; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
-        }
-        return implode($pass); //turn the array into a string
-    }
 }

@@ -50,7 +50,7 @@ class StudentUser extends ParentUser
             if (isset($post['password']) && !empty($post['password'])) {
                 $password = $post['password'];
             } else {
-                $password = $model->randomPassword_alpha(4) . '_' . $model->randomPassword_number(3);
+                $password = _random_string();
             }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
 

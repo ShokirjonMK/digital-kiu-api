@@ -6,6 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+use common\models\model\Translate;
 use common\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -204,30 +205,12 @@ trait ApiActionTrait
         return $model->load($data, '');
     }
 
-
-    // Generate randon number
-    public function randomPassword_number($count)
+    public function loadToTranslate($data)
     {
-        $alphabet = '23456789';
-        $pass = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-        for ($i = 0; $i < $count; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
+        foreach($data as $key => $value){
+            $models[$key] = new Translate();
+            $models[$key]->name = $value;
         }
-        return implode($pass); //turn the array into a string
-    }
-    // Generate randon string
-    public function randomPassword_alpha($count)
-    {
-        $alphabet = 'abcdefghjkmnpqrstuvwxyz';
-        $pass = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-        for ($i = 0; $i < $count; $i++) {
-            $n = rand(0, $alphaLength);
-            $pass[] = $alphabet[$n];
-        }
-        return implode($pass); //turn the array into a string
     }
 
 }

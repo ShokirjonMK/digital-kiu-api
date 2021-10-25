@@ -12,7 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property string $name
  * @property string $table_name
- * @property int $languages_id
+ * @property int $language
  * @property int|null $order
  * @property int|null $status
  * @property int|null $created_at
@@ -35,6 +35,19 @@ class Translate extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * used table names:
+     * 
+     * building
+     * room
+     * direction
+     * faculty
+     * kafedra
+     * edu_type
+     * subject
+     * subject_type
+     * 
+     */
 
     /**
      * {@inheritdoc}
@@ -50,10 +63,10 @@ class Translate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'table_name', 'languages_id'], 'required'],
-            [['languages_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['name', 'table_name'], 'string', 'max' => 255],
-            [['languages_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['languages_id' => 'id']],
+            [['name', 'model_id', 'table_name', 'language'], 'required'],
+            [['model_id', 'language', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['name','table_name', 'description'], 'string', 'max' => 255],
+            [['language'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language' => 'id']],
         ];
     }
 
@@ -64,9 +77,10 @@ class Translate extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'model_id' => 'model id',
             'name' => 'Name',
             'table_name' => 'Table Name',
-            'languages_id' => 'Languages ID',
+            'language' => 'Languages ID',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -84,17 +98,13 @@ class Translate extends \yii\db\ActiveRecord
      */
     public function getLanguages()
     {
-        return $this->hasOne(Languages::className(), ['id' => 'languages_id']);
+        return $this->hasOne(Languages::className(), ['id' => 'language']);
     }
-
-
-
-
 
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            'languages',
             'createdBy',
             'updatedBy',
         ];
@@ -103,46 +113,59 @@ class Translate extends \yii\db\ActiveRecord
     }
 
 
-    public static function createItem($model, $post)
+    public function beforeSave($insert)
     {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
-        }
-
-    }
-
-    public static function updateItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
-        }
-    }
-
-
-    public function beforeSave($insert) {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
 
 
+    public static function createTranslate($nameArr, $table_name, $model_id, $descArr = null)
+    {
 
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        foreach ($nameArr as $key => $value) {
+            $new_translate = new Translate();
+            $new_translate->name = $value;
+            $new_translate->table_name = $table_name;
+            $new_translate->model_id = $model_id;
+            $new_translate->language = $key;
+            $new_translate->description = isset($descArr[$key]) ? $descArr[$key] : null ;
+            if ($new_translate->save(false)) {
+            } else {
+                $errors[] = $new_translate->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        }
+        $transaction->commit();
+        return true;
+    }
+
+    public static function updateTranslate($nameArr, $table_name,$model_id, $descArr = null)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $deleteAll = Translate::deleteAll(['model_id' => $model_id]);
+        foreach ($nameArr as $key => $value) {
+            $new_translate = new Translate();
+            $new_translate->name = $value;
+            $new_translate->table_name = $table_name;
+            $new_translate->model_id = $model_id;
+            $new_translate->language = $key;
+            $new_translate->description = isset($descArr[$key]) ? $descArr[$key] : null;
+            if ($new_translate->save(false)) {
+            } else {
+                $errors[] = $new_translate->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        }
+        $transaction->commit();
+        return true;
+    }
 
 }

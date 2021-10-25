@@ -16,7 +16,7 @@ class m211023_091910_translate extends Migration
         'id' => $this->primaryKey(),
         'name'=>$this->string(255)->notNull(),
         'table_name'=>$this->string(255)->notNull(),
-        'languages_id'=>$this->integer()->notNull(),
+        'language'=>$this->string(2)->notNull(),
 
 
         'order'=>$this->tinyInteger(1)->defaultValue(1),

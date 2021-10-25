@@ -36,13 +36,14 @@ class m200608_124459_table_languages extends Migration
             'lang_code'
         );
 
-        $this->insert('{{%languages}}', [
-            'name' => 'Deutsch',
-            'lang_code' => 'de',
-            'locale' => 'de_DE',
+         $this->insert('{{%languages}}', [
+            'name' => 'O\'zbekcha',
+            'lang_code' => 'uz',
+            'locale' => 'uz_UZ',
             'rtl' => 0,
-            'status' => 0,
+            'status' => 1,
         ]);
+        
 
         $this->insert('{{%languages}}', [
             'name' => 'English',
@@ -52,6 +53,22 @@ class m200608_124459_table_languages extends Migration
             'status' => 1,
         ]);
 
+        $this->insert('{{%languages}}', [
+            'name' => 'Русский',
+            'lang_code' => 'ru',
+            'locale' => 'ru_RU',
+            'rtl' => 0,
+            'status' => 1,
+        ]);
+        
+        $this->insert('{{%languages}}', [
+            'name' => 'Deutsch',
+            'lang_code' => 'de',
+            'locale' => 'de_DE',
+            'rtl' => 0,
+            'status' => 0,
+        ]);
+        
         $this->insert('{{%languages}}', [
             'name' => 'Español',
             'lang_code' => 'es',
@@ -76,13 +93,7 @@ class m200608_124459_table_languages extends Migration
             'status' => 0,
         ]);
 
-        $this->insert('{{%languages}}', [
-            'name' => 'O\'zbekcha',
-            'lang_code' => 'uz',
-            'locale' => 'uz_UZ',
-            'rtl' => 0,
-            'status' => 1,
-        ]);
+       
 
         $this->insert('{{%languages}}', [
             'name' => 'Türkçe',
@@ -92,13 +103,7 @@ class m200608_124459_table_languages extends Migration
             'status' => 0,
         ]);
 
-        $this->insert('{{%languages}}', [
-            'name' => 'Русский',
-            'lang_code' => 'ru',
-            'locale' => 'ru_RU',
-            'rtl' => 0,
-            'status' => 1,
-        ]);
+       
     }
 
     public function down()

@@ -6,11 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
-<<<<<<< HEAD
 use common\models\model\Translate;
-=======
-use common\models\Action;
->>>>>>> 4c71d273f1946ca97769514d9475f5eb49f6a0f1
 use common\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;

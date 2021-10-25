@@ -6,7 +6,11 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+<<<<<<< HEAD
 use common\models\model\Translate;
+=======
+use common\models\Action;
+>>>>>>> 4c71d273f1946ca97769514d9475f5eb49f6a0f1
 use common\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -69,6 +73,10 @@ trait ApiActionTrait
      * @param $action
      * @return void
      */
+
+
+
+
     public function beforeAction($action)
     {
 
@@ -96,6 +104,17 @@ trait ApiActionTrait
         if(!in_array($lang, $langCodes)){
             $this->asJson($this->response(0, _e('Wrong language code selected ('.$lang.').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
         }else{
+
+//            $action_logos = new \common\models\model\Action();
+//
+//            $action_logos-> user_id = Yii::$app->user->identity->id();
+//            $action_logos-> controller=Yii::$app->controller->id;
+//            $action_logos-> action=Yii::$app->controller->action->id;
+//            $action_logos-> method= $_SERVER['REQUEST_METHOD'];
+//
+//            var_dump($action_logos);
+//            die();
+
             Yii::$app->language = $lang;
             return parent::beforeAction($action);
         } 
@@ -103,11 +122,14 @@ trait ApiActionTrait
         
     }
 
+
     /**
      * Generate api access key
      *
      * @return void
      */
+
+
     public function generate_access_key()
     {
         $api_salt_key = API_SALT_KEY;
@@ -129,11 +151,22 @@ trait ApiActionTrait
      *
      * @return void
      */
+
     private function check_access_key()
     {
 
         return true;
 
+
+            $action_logos = new \common\models\model\Action();
+
+            $action_logos-> user_id = Yii::$app->user->id();
+            $action_logos-> controller=Yii::$app->controller->id;
+            $action_logos-> action=Yii::$app->controller->action->id;
+            $action_logos-> method= $_SERVER['REQUEST_METHOD'];
+
+            var_dump($action_logos);
+            die();
 
         $token = '';
         $headers = Yii::$app->request->headers;

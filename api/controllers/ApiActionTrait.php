@@ -154,20 +154,7 @@ trait ApiActionTrait
 
     private function check_access_key()
     {
-
         return true;
-
-
-            $action_logos = new \common\models\model\Action();
-
-            $action_logos-> user_id = Yii::$app->user->id();
-            $action_logos-> controller=Yii::$app->controller->id;
-            $action_logos-> action=Yii::$app->controller->action->id;
-            $action_logos-> method= $_SERVER['REQUEST_METHOD'];
-
-            var_dump($action_logos);
-            die();
-
         $token = '';
         $headers = Yii::$app->request->headers;
         $header_token = $headers->get('api-token');

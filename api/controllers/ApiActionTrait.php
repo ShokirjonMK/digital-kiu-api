@@ -75,6 +75,11 @@ trait ApiActionTrait
 
     public function beforeAction($action)
     {
+
+        // var_dump($action);
+        // die();
+// save logs here
+
         $this->generate_access_key();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -84,7 +89,6 @@ trait ApiActionTrait
             $this->asJson($this->response(0, _e('Incorrect token key! MK'), null, null, ResponseStatus::UNAUTHORIZED));
             return false;
         }   
-
 
         $lang = Yii::$app->request->get('lang');
 

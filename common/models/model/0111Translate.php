@@ -149,6 +149,9 @@ class Translate extends \yii\db\ActiveRecord
     public static function updateTranslate($nameArr, $table_name, $model_id, $descArr = null)
     {
 
+        var_dump($nameArr);
+
+        
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
@@ -157,13 +160,7 @@ class Translate extends \yii\db\ActiveRecord
             if (isset($update_tranlate)) {
                 $update_tranlate->name = $value;
                 $update_tranlate->description = isset($descArr[$key]) ? $descArr[$key] : null;
-                // var_dump($update_tranlate);
-                // $update_tranlate->save(false);
-                if ($update_tranlate->save(false)) {
-                } else {
-                    $errors[] = $$update_tranlate->getErrorSummary(true);
-                    return simplify_errors($errors);
-                }
+                $update_tranlate->update();
             } else {
                 $new_translate = new Translate();
                 $new_translate->name = $value;
@@ -178,28 +175,6 @@ class Translate extends \yii\db\ActiveRecord
                 }
             }
         }
-        $transaction->commit();
-        return true;
-    }
-
-
-    public static function deleteTranslate($table_name, $model_id)
-    {
-
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-
-        $delete_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name])->all();
-        foreach($delete_tranlate as $delete_one){
-            $delete_one->is_deleted = 1;
-            $delete_one->save(false);
-            if ($delete_one->save(false)) {
-            } else {
-                $errors[] = $delete_one->getErrorSummary(true);
-                return simplify_errors($errors);
-            }
-        }
-
         $transaction->commit();
         return true;
     }

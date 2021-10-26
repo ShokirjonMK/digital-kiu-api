@@ -85,7 +85,7 @@ class Direction extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFaculty()
+    public function getFacultyId()
     {
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }

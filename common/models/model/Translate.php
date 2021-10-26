@@ -203,4 +203,62 @@ class Translate extends \yii\db\ActiveRecord
         $transaction->commit();
         return true;
     }
+
+    public static function checkingAll($post)
+    {
+        $languages = Languages::find()
+            ->asArray()
+            ->where(['status'=>1])
+            ->select( 'lang_code')
+            ->all();
+
+
+        $langCodes = [];
+        foreach ($languages as $itemLang) {
+            $langCodes[] = $itemLang['lang_code'];
+        }
+      
+        $data = [];
+        $errors = [];
+        $data['status'] = 1;
+
+        if (isset($post['name'])) {
+            if (!is_array($post['name'])) {
+                $errors[] = [_e('Please send Name attribute as array.')];
+                // $data['errors'][] = $errors;
+                $data['status'] = 0;
+            } else {
+                foreach ($post['name'] as $lang => $value) {
+                                        
+                    if(!in_array($lang, $langCodes)){
+                        $errors[] = [_e('Wrong language code selected (' . $lang . ').')];
+                        // $data['errors'][] = $errors;
+                        $data['status'] = 0;
+                    }
+                }
+            }
+        } else {
+            $errors[] = [_e('Please send Name attribute as array.')];
+            // $data['errors'][] = $errors;
+            $data['status'] = 0;
+        }
+        if (isset($post['description'])) {
+            if (!is_array($post['description'])) {
+                $errors[] = [_e('Please send Description attribute as array.')];
+                // $data['errors'][] = $errors;
+                $data['status'] = 0;
+            } else {
+                foreach ($post['description'] as $lang => $value) {
+                    if (!in_array($lang, $langCodes)) {
+                        $errors[] = [_e('Wrong language code selected (' . $lang . ').')];
+                        // $data['errors'][] = $errors;
+                        $data['status'] = 0;
+                    }
+                }
+            }
+        }
+        $data['errors'] = $errors;
+        return $data;
+    }
+
 }

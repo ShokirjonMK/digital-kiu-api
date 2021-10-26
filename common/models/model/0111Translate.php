@@ -23,7 +23,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property Languages $languages
  */
-class Translate extends \yii\db\ActiveRecord
+class Translate11 extends \yii\db\ActiveRecord
 {
 
     use ResourceTrait;
@@ -151,7 +151,7 @@ class Translate extends \yii\db\ActiveRecord
 
         var_dump($nameArr);
 
-        
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
@@ -177,5 +177,32 @@ class Translate extends \yii\db\ActiveRecord
         }
         $transaction->commit();
         return true;
+    }
+
+    public function checkingAll($post)
+    {
+
+        if (isset($post['name'])) {
+            if (!is_array($post['name'])) {
+                $errors[] = [_e('Please send Name attribute as array.')];
+                return simplify_errors($errors);
+            }else{
+                foreach($post as $key => $value){
+                    
+                }
+            }
+        } else {
+            $errors[] = [_e('Please send Name attribute as array.')];
+            return simplify_errors($errors);
+        }
+        if (isset($post['description'])) {
+            if (!is_array($post['description'])) {
+                $errors[] = [_e('Please send Description attribute as array.')];
+                return simplify_errors($errors);
+            }else{
+
+            }
+        }
+
     }
 }

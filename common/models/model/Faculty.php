@@ -98,7 +98,7 @@ class Faculty extends \yii\db\ActiveRecord
         $extraFields =  [
             // 'facultyId',
             'createdBy',
-            'updatedBy', 
+            'updatedBy',
         ];
 
         return $extraFields;
@@ -164,29 +164,29 @@ class Faculty extends \yii\db\ActiveRecord
         $errors = [];
         $model->status = 1;
 
-        if ($model->save()) {
-            if (isset($post['name'])) {
-                if (!is_array($post['name'])) {
-                    $errors[] = [_e('Please send Name attribute as array.')];
+    
+        $has_error = Translate::checkingAll($post);
+        // var_dump($has_error);
+        // die();
+
+        if($has_error['status']){
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
                 } else {
-                    if (isset($post['description'])) {
-                        if (!is_array($post['description'])) {
-                            $errors[] = [_e('Please send Description attribute as array.')];
-                        }else{
-                            Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                        }
-                    }else{
-                        Translate::createTranslate($post['name'], $model->tableName(), $model->id);
-                    }
-                   
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
+
+                //asdasd
             } else {
-                $errors[] = [_e('Please send at least one Name attribute.')];
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
             }
-        } else {
-            $errors[] = $model->getErrorSummary(true);
+        }else{
+            
+            return simplify_errors($has_error['errors']);
         }
-        
+
     }
 
     public static function updateItem($model, $post)
@@ -233,5 +233,4 @@ class Faculty extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
 }

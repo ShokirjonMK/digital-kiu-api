@@ -29,8 +29,10 @@ class FacultyController extends ApiController
         $query = $model->find()
             ->with(['infoRelation'])
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            ->join("LEFT JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->andWhere([$this->table_name.'.is_deleted' => 0])
+            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->groupBy($this->table_name.'.id')
             // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
@@ -38,6 +40,8 @@ class FacultyController extends ApiController
         // sort
         $query = $this->sort($query);
         // data
+
+        // return $query;
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
@@ -45,7 +49,6 @@ class FacultyController extends ApiController
     public function actionCreate($lang)
     {
         $model = new Faculty();
-        $translate = new Translate();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         // $this->loadToTranslate($post['name']);

@@ -221,12 +221,4 @@ trait ApiActionTrait
         return $model->load($data, '');
     }
 
-    public function loadToTranslate($data)
-    {
-        foreach($data as $key => $value){
-            $models[$key] = new Translate();
-            $models[$key]->name = $value;
-        }
-    }
-
 }

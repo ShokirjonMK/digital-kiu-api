@@ -212,7 +212,6 @@ class Translate extends \yii\db\ActiveRecord
             ->select( 'lang_code')
             ->all();
 
-
         $langCodes = [];
         foreach ($languages as $itemLang) {
             $langCodes[] = $itemLang['lang_code'];

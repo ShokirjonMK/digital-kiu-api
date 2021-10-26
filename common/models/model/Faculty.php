@@ -114,6 +114,7 @@ class Faculty extends \yii\db\ActiveRecord
     public function getInfoRelationDefaultLanguage()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        Yii::$app->request->get('q');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
@@ -164,10 +165,7 @@ class Faculty extends \yii\db\ActiveRecord
         $errors = [];
         $model->status = 1;
 
-    
         $has_error = Translate::checkingAll($post);
-        // var_dump($has_error);
-        // die();
 
         if($has_error['status']){
             if ($model->save()) {
@@ -176,50 +174,38 @@ class Faculty extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-
-                //asdasd
+                $transaction->commit();
+                return true;
             } else {
                 $errors[] = $model->getErrorSummary(true);
                 return simplify_errors($errors);
             }
         }else{
-            
             return simplify_errors($has_error['errors']);
         }
-
     }
 
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        // $model->status = 1;
-        if ($model->save()) {
 
-            // var_dump($model);
-
-            if (isset($post['name'])) {
-                if (!is_array($post['name'])) {
-                    $errors[] = [_e('Please send Name attribute as array.')];
+        $has_error = Translate::checkingAll($post);
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
                 } else {
-                    if (isset($post['description'])) {
-                        if (!is_array($post['description'])) {
-                            $errors[] = [_e('Please send Description attribute as array.')];
-                        } else {
-                            Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                        }
-                    } else {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
-                    }
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                 }
+                $transaction->commit();
+                return true;
             } else {
-                $errors[] = [_e('Please send at least one Name attribute.')];
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
             }
-            $transaction->commit();
-            return true;
         } else {
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+            return simplify_errors($has_error['errors']);
         }
     }
 

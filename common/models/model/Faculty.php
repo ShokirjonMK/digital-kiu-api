@@ -96,7 +96,9 @@ class Faculty extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            // 'facultyId',
+            'kafedras',
+            'eduPlans',
+            'eirections',
             'createdBy',
             'updatedBy',
         ];

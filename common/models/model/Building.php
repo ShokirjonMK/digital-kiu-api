@@ -23,6 +23,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class Building extends \yii\db\ActiveRecord
 {
+    public static $selected_language = 'uz';
 
     use ResourceTrait;
 
@@ -47,9 +48,9 @@ class Building extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            // [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+            // [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -60,7 +61,7 @@ class Building extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+            // 'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -71,11 +72,29 @@ class Building extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name' => function ($model) {
+                return $model->translate->name ?? '';
+            },
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
 
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            'rooms',
             'createdBy',
             'updatedBy',
         ];
@@ -83,6 +102,29 @@ class Building extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getInfoRelation()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+    }
+
+    public function getInfoRelationDefaultLanguage()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
+    /**
+     * Get info
+     *
+     * @return void
+     */
+    public function getTranslate()
+    {
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
 
 
     /**
@@ -100,12 +142,24 @@ class Building extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+
+        $has_error = Translate::checkingAll($post);
+
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        } else {
+            return simplify_errors($has_error['errors']);
         }
 
     }
@@ -114,13 +168,23 @@ class Building extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+
+        $has_error = Translate::checkingAll($post);
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        } else {
+            return simplify_errors($has_error['errors']);
         }
     }
 

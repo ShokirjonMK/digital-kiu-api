@@ -39,18 +39,4 @@ class m211023_091910_translate extends Migration
         $this->dropTable('translate');
     }
 
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m211023_091910_translate cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

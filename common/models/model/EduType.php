@@ -96,6 +96,7 @@ class EduType extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'eduPlans',
+            'description',
             'createdBy',
             'updatedBy',
         ];
@@ -103,6 +104,11 @@ class EduType extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+    
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');

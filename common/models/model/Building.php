@@ -117,19 +117,20 @@ class Building extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
+    /**
+     * Get Tranlate
+     *
+     * @return void
+     */
     public function getTranslate()
     {
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
-
-    /**
-     * Get info
-     *
-     * @return void
-     */
-
-
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
 
     /**
      * Gets query for [[Rooms]].
@@ -165,7 +166,6 @@ class Building extends \yii\db\ActiveRecord
         } else {
             return simplify_errors($has_error['errors']);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -193,13 +193,13 @@ class Building extends \yii\db\ActiveRecord
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
 }

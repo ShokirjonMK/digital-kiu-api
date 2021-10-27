@@ -101,6 +101,25 @@ class Direction extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+            'facultyId',
+            'eduPlans',
+            'kafedras',
+            'description',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
@@ -152,19 +171,6 @@ class Direction extends \yii\db\ActiveRecord
 
 
 
-
-    public function extraFields()
-    {
-        $extraFields =  [
-            'facultyId',
-            'eduPlans',
-            'kafedras',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
 
 
     public static function createItem($model, $post)

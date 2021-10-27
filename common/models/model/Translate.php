@@ -47,6 +47,15 @@ class Translate extends \yii\db\ActiveRecord
      * subject
      * subject_type
      *
+     * 
+     * 
+     * smester
+     * course
+     * para
+     * eduPlan
+     * SubjectCategory
+     * ExamsType
+     * EduYear
      */
 
     /**

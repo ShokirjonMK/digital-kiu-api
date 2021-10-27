@@ -109,11 +109,17 @@ class Kafedra extends \yii\db\ActiveRecord
             'direction',
             'faculty',
             'subjects',
+            'description',
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
     }
 
     public function getInfoRelation()

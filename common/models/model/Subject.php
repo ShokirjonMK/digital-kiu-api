@@ -108,11 +108,17 @@ class Subject extends \yii\db\ActiveRecord
             'teacherAccesses',
             'kafedra',
             'semestrSubjects',
+            'description',
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
     }
 
     public function getInfoRelation()

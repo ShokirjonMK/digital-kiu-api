@@ -20,8 +20,6 @@ class m211025_112417_multi_lang_corrector extends Migration
         $this->execute("ALTER TABLE `edu_type` DROP `name`;");
         $this->execute("ALTER TABLE `subject` DROP `name`;");
         $this->execute("ALTER TABLE `subject_type` DROP `name`;");
-
-
     }
 
     /**

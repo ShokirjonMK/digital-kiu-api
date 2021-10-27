@@ -49,10 +49,9 @@ class Translate extends \yii\db\ActiveRecord
      *
      * 
      * 
-     * smester
+     * semestr
      * course
      * para
-     * eduPlan
      * SubjectCategory
      * ExamsType
      * EduYear

@@ -2,17 +2,15 @@
 
 namespace api\controllers;
 
-use common\models\model\Faculty;
 use Yii;
-use api\resources\Job;
 use base\ResponseStatus;
-use common\models\JobInfo;
-use common\models\model\Translate;
 use yii\web\ForbiddenHttpException;
+
+use common\models\model\Faculty;
+use common\models\model\Translate;
 
 class FacultyController extends ApiController
 {
-    // public $modelClass = 'api\resources\Faculty';
 
     public function actions()
     {
@@ -39,9 +37,8 @@ class FacultyController extends ApiController
 
         // sort
         $query = $this->sort($query);
+        
         // data
-
-        // return $query;
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
@@ -51,9 +48,7 @@ class FacultyController extends ApiController
         $model = new Faculty();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        // $this->loadToTranslate($post['name']);
 
-        // return 1;
         $result = Faculty::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name.' successfully created.'), $model, null, ResponseStatus::CREATED);

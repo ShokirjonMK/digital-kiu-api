@@ -114,7 +114,6 @@ class Faculty extends \yii\db\ActiveRecord
     public function getInfoRelationDefaultLanguage()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        Yii::$app->request->get('q');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
@@ -167,7 +166,7 @@ class Faculty extends \yii\db\ActiveRecord
 
         $has_error = Translate::checkingAll($post);
 
-        if($has_error['status']){
+        if ($has_error['status']) {
             if ($model->save()) {
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
@@ -180,7 +179,7 @@ class Faculty extends \yii\db\ActiveRecord
                 $errors[] = $model->getErrorSummary(true);
                 return simplify_errors($errors);
             }
-        }else{
+        } else {
             return simplify_errors($has_error['errors']);
         }
     }
@@ -208,7 +207,6 @@ class Faculty extends \yii\db\ActiveRecord
             return simplify_errors($has_error['errors']);
         }
     }
-
 
     public function beforeSave($insert)
     {

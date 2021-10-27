@@ -29,7 +29,6 @@ class m211023_091910_translate extends Migration
     ]);
 
 
-        $this->addForeignKey('lt_translate_language_id','translate','languages_id','languages','id');
     }
 
     /**
@@ -37,7 +36,6 @@ class m211023_091910_translate extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('lt_translate_language_id','translate');
         $this->dropTable('translate');
     }
 

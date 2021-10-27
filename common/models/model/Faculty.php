@@ -99,11 +99,17 @@ class Faculty extends \yii\db\ActiveRecord
             'kafedras',
             'eduPlans',
             'eirections',
+            'description',
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
     }
 
     public function getInfoRelation()
@@ -121,7 +127,7 @@ class Faculty extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get info
+     * Get Translate
      *
      * @return void
      */

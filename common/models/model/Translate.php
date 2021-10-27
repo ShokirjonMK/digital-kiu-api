@@ -37,16 +37,16 @@ class Translate extends \yii\db\ActiveRecord
 
     /**
      * used table names:
-     * 
+     * faculty 
      * building
+     * 
      * room
      * direction
-     * faculty
      * kafedra
      * edu_type
      * subject
      * subject_type
-     * 
+     *
      */
 
     /**

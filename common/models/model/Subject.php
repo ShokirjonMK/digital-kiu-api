@@ -28,6 +28,8 @@ use yii\behaviors\TimestampBehavior;
 class Subject extends \yii\db\ActiveRecord
 {
 
+    public static $selected_language = 'uz';
+
     use ResourceTrait;
 
     public function behaviors()
@@ -53,9 +55,9 @@ class Subject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'kafedra_id'], 'required'],
+            [['kafedra_id'], 'required'],
             [['kafedra_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['name'], 'string', 'max' => 255],
+//            [['name'], 'string', 'max' => 255],
             [['kafedra_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kafedra::className(), 'targetAttribute' => ['kafedra_id' => 'id']],
         ];
     }
@@ -67,7 +69,7 @@ class Subject extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
+//            'name' => 'Name',
             'kafedra_id' => 'Kafedra ID',
             'order' => 'Order',
             'status' => 'Status',
@@ -78,6 +80,60 @@ class Subject extends \yii\db\ActiveRecord
             'is_deleted' => 'Is Deleted',
         ];
     }
+
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name' => function ($model) {
+                return $model->translate->name ?? '';
+            },
+            'kafedra_id',
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'timeTables',
+            'teacherAccesses',
+            'kafedra',
+            'semestrSubjects',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+    public function getInfoRelation()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+    }
+
+    public function getInfoRelationDefaultLanguage()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
+    public function getTranslate()
+    {
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
 
     /**
      * Gets query for [[EduSemestrSubjects]].
@@ -121,16 +177,6 @@ class Subject extends \yii\db\ActiveRecord
 
 
 
-    public function extraFields()
-    {
-        $extraFields =  [
-//            'department',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
 
 
     public static function createItem($model, $post)
@@ -138,12 +184,24 @@ class Subject extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+
+        $has_error = Translate::checkingAll($post);
+
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        } else {
+            return simplify_errors($has_error['errors']);
         }
 
     }
@@ -152,15 +210,26 @@ class Subject extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+
+        $has_error = Translate::checkingAll($post);
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
+        } else {
+            return simplify_errors($has_error['errors']);
         }
     }
+
 
 
     public function beforeSave($insert) {

@@ -104,6 +104,15 @@ class SubjectType extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+        
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
     public function getDescription()
     {
         return $this->translate->description ?? '';
@@ -121,11 +130,6 @@ class SubjectType extends \yii\db\ActiveRecord
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
-    }
-
-    public function getTranslate()
-    {
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
 

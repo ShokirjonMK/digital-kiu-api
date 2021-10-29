@@ -99,6 +99,24 @@ class TimeTable extends \yii\db\ActiveRecord
         ];
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+            'course',
+            'eduYear',
+            'languages',
+            'para',
+            'room',
+            'subject',
+            'semestr',
+            'teacherAccessController',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
     /**
      * Gets query for [[Course]].
      *
@@ -179,19 +197,6 @@ class TimeTable extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
-
-
-
-    public function extraFields()
-    {
-        $extraFields =  [
-//            'department',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
 
 
     public static function createItem($model, $post)

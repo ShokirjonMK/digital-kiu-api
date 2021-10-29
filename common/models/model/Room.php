@@ -130,6 +130,15 @@ class Room extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
     
     public function getDescription()
     {
@@ -150,11 +159,6 @@ class Room extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-
-    public function getTranslate()
-    {
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
 
     public static function createItem($model, $post)
     {

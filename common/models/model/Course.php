@@ -35,39 +35,25 @@ class Course extends \yii\db\ActiveRecord
         ];
     }
 
-
-
-
-
-
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'course';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
-//            [['name'], 'required'],
+            //            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-//            [['name'], 'string', 'max' => 255],
+            //            [['name'], 'string', 'max' => 255],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-//            'name' => 'Name',
+            //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -110,6 +96,15 @@ class Course extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
@@ -124,43 +119,20 @@ class Course extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-    /**
-     * Get Tranlate
-     *
-     * @return void
-     */
-    public function getTranslate()
-    {
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
-
     public function getDescription()
     {
         return $this->translate->description ?? '';
     }
 
-
-    /**
-     * Gets query for [[EduSemestrs]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getEduSemestrs()
     {
         return $this->hasMany(EduSemestr::className(), ['course_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[TimeTables]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getTimeTables()
     {
         return $this->hasMany(TimeTable::className(), ['course_id' => 'id']);
     }
-
-
 
     public static function createItem($model, $post)
     {
@@ -214,20 +186,13 @@ class Course extends \yii\db\ActiveRecord
 
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
-
-
-
-
-
 }

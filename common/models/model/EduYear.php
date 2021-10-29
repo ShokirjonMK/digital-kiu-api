@@ -36,8 +36,6 @@ class EduYear extends \yii\db\ActiveRecord
         ];
     }
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -52,9 +50,9 @@ class EduYear extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['name'], 'required'],
+            //            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-//            [['name'], 'string', 'max' => 255],
+            //            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -65,7 +63,7 @@ class EduYear extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-//            'name' => 'Name',
+            //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -75,7 +73,6 @@ class EduYear extends \yii\db\ActiveRecord
             'is_deleted' => 'Is Deleted',
         ];
     }
-
 
     public function fields()
     {
@@ -110,6 +107,20 @@ class EduYear extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    /**
+     * Get Tranlate
+     *
+     * @return void
+     */
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
@@ -124,22 +135,11 @@ class EduYear extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-    /**
-     * Get Tranlate
-     *
-     * @return void
-     */
-    public function getTranslate()
-    {
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
 
     public function getDescription()
     {
         return $this->translate->description ?? '';
     }
-
-
 
     /**
      * Gets query for [[EduPlans]].
@@ -170,9 +170,6 @@ class EduYear extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TimeTable::className(), ['edu_year_id' => 'id']);
     }
-
-
-
 
     public static function createItem($model, $post)
     {
@@ -225,15 +222,13 @@ class EduYear extends \yii\db\ActiveRecord
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
 }

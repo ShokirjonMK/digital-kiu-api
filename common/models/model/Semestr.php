@@ -107,6 +107,25 @@ class Semestr extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    /**
+     * Get Tranlate
+     *
+     * @return void
+     */
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+        
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
@@ -121,20 +140,6 @@ class Semestr extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-    /**
-     * Get Tranlate
-     *
-     * @return void
-     */
-    public function getTranslate()
-    {
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
-
-    public function getDescription()
-    {
-        return $this->translate->description ?? '';
-    }
 
     /**
      * Gets query for [[EduSemestrs]].

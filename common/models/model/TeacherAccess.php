@@ -81,6 +81,20 @@ class TeacherAccess extends \yii\db\ActiveRecord
         ];
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+            'languages',
+            'subject',
+            'user',
+            'timeTables',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
     /**
      * Gets query for [[Languages]].
      *
@@ -122,16 +136,6 @@ class TeacherAccess extends \yii\db\ActiveRecord
     }
 
 
-    public function extraFields()
-    {
-        $extraFields =  [
-//            'department',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
 
 
     public static function createItem($model, $post)

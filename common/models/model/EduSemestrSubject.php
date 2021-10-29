@@ -144,7 +144,11 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            'eduSemestrExamsTypes',
+            'eduSemestr',
+            'subject',
+            'subjectType',
+            'eduSemestrSubjectCategoryTimes',
             'createdBy',
             'updatedBy',
         ];

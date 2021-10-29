@@ -124,6 +124,10 @@ class Building extends \yii\db\ActiveRecord
      */
     public function getTranslate()
     {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+        
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 

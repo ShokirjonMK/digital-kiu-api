@@ -143,13 +143,14 @@ class EduSemestr extends \yii\db\ActiveRecord
         return $this->hasMany(EduSemestrSubject::className(), ['edu_semestr_id' => 'id']);
     }
 
-
-
-
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            'course',
+            'eduPlan',
+            'eduYear',
+            'semestr',
+            'eduSemestrSubjects',
             'createdBy',
             'updatedBy',
         ];
@@ -163,14 +164,13 @@ class EduSemestr extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $errors[] = $model->getErrorSummary(true);
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -178,24 +178,23 @@ class EduSemestr extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $errors[] = $model->getErrorSummary(true);
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
 }

@@ -110,6 +110,22 @@ class Student extends \yii\db\ActiveRecord
         ];
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+            'course',
+            'direction',
+            'eduType',
+            'eduYear',
+            'faculty',
+            'user',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+    
     /**
      * Gets query for [[Course]].
      *
@@ -169,22 +185,6 @@ class Student extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
-
-
-
-
-
-    public function extraFields()
-    {
-        $extraFields =  [
-//            'department',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
-
 
     public static function createItem($model, $post)
     {

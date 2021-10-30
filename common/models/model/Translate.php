@@ -138,41 +138,7 @@ class Translate extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         foreach ($nameArr as $key => $value) {
-            $new_translate = new Translate();
-            $new_translate->name = $value;
-            $new_translate->table_name = $table_name;
-            $new_translate->model_id = $model_id;
-            $new_translate->language = $key;
-            $new_translate->description = isset($descArr[$key]) ? $descArr[$key] : null;
-            if ($new_translate->save(false)) {
-            } else {
-                $errors[] = $new_translate->getErrorSummary(true);
-                return simplify_errors($errors);
-            }
-        }
-        $transaction->commit();
-        return true;
-    }
-
-    public static function updateTranslate($nameArr, $table_name, $model_id, $descArr = null)
-    {
-
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
-        foreach ($nameArr as $key => $value) {
-            $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
-            if (isset($update_tranlate)) {
-                $update_tranlate->name = $value;
-                $update_tranlate->description = isset($descArr[$key]) ? $descArr[$key] : null;
-                // var_dump($update_tranlate);
-                // $update_tranlate->save(false);
-                if ($update_tranlate->save(false)) {
-                } else {
-                    $errors[] = $$update_tranlate->getErrorSummary(true);
-                    return simplify_errors($errors);
-                }
-            } else {
+            if ($value != 'undefined' || $value != 'null'|| $value != '') {
                 $new_translate = new Translate();
                 $new_translate->name = $value;
                 $new_translate->table_name = $table_name;
@@ -190,6 +156,44 @@ class Translate extends \yii\db\ActiveRecord
         return true;
     }
 
+    public static function updateTranslate($nameArr, $table_name, $model_id, $descArr = null)
+    {
+
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
+        foreach ($nameArr as $key => $value) {
+            if ($value != 'undefined' || $value != 'null' || $value != '') {
+                $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
+                if (isset($update_tranlate)) {
+                    $update_tranlate->name = $value;
+                    $update_tranlate->description = isset($descArr[$key]) ? $descArr[$key] : null;
+                    // var_dump($update_tranlate);
+                    // $update_tranlate->save(false);
+                    if ($update_tranlate->save(false)) {
+                    } else {
+                        $errors[] = $$update_tranlate->getErrorSummary(true);
+                        return simplify_errors($errors);
+                    }
+                } else {
+                    $new_translate = new Translate();
+                    $new_translate->name = $value;
+                    $new_translate->table_name = $table_name;
+                    $new_translate->model_id = $model_id;
+                    $new_translate->language = $key;
+                    $new_translate->description = isset($descArr[$key]) ? $descArr[$key] : null;
+                    if ($new_translate->save(false)) {
+                    } else {
+                        $errors[] = $new_translate->getErrorSummary(true);
+                        return simplify_errors($errors);
+                    }
+                }
+            }
+        }
+        $transaction->commit();
+        return true;
+    }
+
 
     public static function deleteTranslate($table_name, $model_id)
     {
@@ -198,7 +202,7 @@ class Translate extends \yii\db\ActiveRecord
         $errors = [];
 
         $delete_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name])->all();
-        foreach($delete_tranlate as $delete_one){
+        foreach ($delete_tranlate as $delete_one) {
             $delete_one->is_deleted = 1;
             $delete_one->save(false);
             if ($delete_one->save(false)) {
@@ -216,15 +220,15 @@ class Translate extends \yii\db\ActiveRecord
     {
         $languages = Languages::find()
             ->asArray()
-            ->where(['status'=>1])
-            ->select( 'lang_code')
+            ->where(['status' => 1])
+            ->select('lang_code')
             ->all();
 
         $langCodes = [];
         foreach ($languages as $itemLang) {
             $langCodes[] = $itemLang['lang_code'];
         }
-      
+
         $data = [];
         $errors = [];
         $data['status'] = 1;
@@ -236,8 +240,8 @@ class Translate extends \yii\db\ActiveRecord
                 $data['status'] = 0;
             } else {
                 foreach ($post['name'] as $lang => $value) {
-                                        
-                    if(!in_array($lang, $langCodes)){
+
+                    if (!in_array($lang, $langCodes)) {
                         $errors[] = [_e('Wrong language code selected (' . $lang . ').')];
                         // $data['errors'][] = $errors;
                         $data['status'] = 0;
@@ -267,5 +271,4 @@ class Translate extends \yii\db\ActiveRecord
         $data['errors'] = $errors;
         return $data;
     }
-
 }

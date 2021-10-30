@@ -138,13 +138,14 @@ class Translate extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         foreach ($nameArr as $key => $value) {
-            if ($value != 'undefined' || $value != 'null'|| $value != '') {
+            if ($value != 'undefined' && $value != 'null' && $value != '') {
                 $new_translate = new Translate();
                 $new_translate->name = $value;
                 $new_translate->table_name = $table_name;
                 $new_translate->model_id = $model_id;
                 $new_translate->language = $key;
-                $new_translate->description = isset($descArr[$key]) ? $descArr[$key] : null;
+
+                $new_translate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
                 if ($new_translate->save(false)) {
                 } else {
                     $errors[] = $new_translate->getErrorSummary(true);
@@ -163,11 +164,11 @@ class Translate extends \yii\db\ActiveRecord
         $errors = [];
         //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
         foreach ($nameArr as $key => $value) {
-            if ($value != 'undefined' || $value != 'null' || $value != '') {
+            if ($value != 'undefined' && $value != 'null' && $value != '') {
                 $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
                 if (isset($update_tranlate)) {
                     $update_tranlate->name = $value;
-                    $update_tranlate->description = isset($descArr[$key]) ? $descArr[$key] : null;
+                    $update_tranlate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "" ) ? $descArr[$key] : null) : null;
                     // var_dump($update_tranlate);
                     // $update_tranlate->save(false);
                     if ($update_tranlate->save(false)) {
@@ -181,7 +182,7 @@ class Translate extends \yii\db\ActiveRecord
                     $new_translate->table_name = $table_name;
                     $new_translate->model_id = $model_id;
                     $new_translate->language = $key;
-                    $new_translate->description = isset($descArr[$key]) ? $descArr[$key] : null;
+                    $new_translate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "" ) ? $descArr[$key] : null) : null;
                     if ($new_translate->save(false)) {
                     } else {
                         $errors[] = $new_translate->getErrorSummary(true);

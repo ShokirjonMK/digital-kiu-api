@@ -17,13 +17,23 @@ class EduPlanController extends ApiActiveController
         return [];
     }
 
+    public $table_name = 'edu_plan';
+    public $controller_name = 'EduPlan';
+
     public function actionIndex($lang)
     {
         $model = new EduPlan();
 
         $query = $model->find()
-            ->andWhere(['status' => 1,'is_deleted' => 0])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            ->with(['infoRelation'])
+            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->groupBy($this->table_name . '.id')
+            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
+            // ->andWhere(['tr.tabel_name' => 'faculty'])
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // sort
         $query = $this->sort($query);
@@ -67,7 +77,9 @@ class EduPlanController extends ApiActiveController
     {
         $model = EduPlan::find()
             ->andWhere(['id' => $id])
+            ->andWhere(['is_deleted' => 0])
             ->one();
+            
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -92,12 +104,5 @@ class EduPlanController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
-
-
-
-
-
 
 }

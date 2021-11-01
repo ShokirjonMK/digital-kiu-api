@@ -56,8 +56,9 @@ class EduPlan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id'], 'required'],
+            [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id','fall_start', 'fall_end', 'spring_start', 'spring_end'], 'required'],
             [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['fall_start', 'fall_end', 'spring_start', 'spring_end'], 'safe'],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
@@ -85,8 +86,87 @@ class EduPlan extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'is_deleted' => 'Is Deleted',
+            'fall_start' => 'fall smester start date',
+            'fall_end' => 'fall smester end date',
+            'spring_start' => 'spring smester start date',
+            'spring_end' => 'spring smester end date',
         ];
     }
+
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name' => function ($model) {
+                return $model->translate->name ?? '';
+            },
+            'faculty_id',
+            'course',
+            'semestr',
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'direction',
+            'eduYear',
+            'faculty',
+            'eduType',
+            'eduSemestrs',
+            'description',
+
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+    /**
+     * For tranlating 
+     */
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
+    public function getInfoRelation()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+    }
+
+    public function getInfoRelationDefaultLanguage()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
+    /**
+     * For tranlating 
+     */
+
 
     /**
      * Gets query for [[Direction]].
@@ -138,33 +218,28 @@ class EduPlan extends \yii\db\ActiveRecord
         return $this->hasMany(EduSemestr::className(), ['edu_plan_id' => 'id']);
     }
 
-    public function extraFields()
-    {
-        $extraFields =  [
-            'direction',
-            'eduYear',
-            'faculty',
-            'eduType',
-            'eduSemestrs',
-
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
+
+        $has_error = Translate::checkingAll($post);
+
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
         } else {
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+            return simplify_errors($has_error['errors']);
         }
     }
 
@@ -172,13 +247,23 @@ class EduPlan extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
+
+        $has_error = Translate::checkingAll($post);
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->getErrorSummary(true);
+                return simplify_errors($errors);
+            }
         } else {
-            $errors[] = $model->getErrorSummary(true);
-            return simplify_errors($errors);
+            return simplify_errors($has_error['errors']);
         }
     }
 

@@ -387,15 +387,21 @@ class User extends CommonUser
 
     //**parolni shifrlab saqlaymiz */
     
-    public function savePassword($password, $model_id)
+    public function savePassword($password, $user_id)
     {
+        // if exist delete and create new one 
+        $oldPassword = PasswordEncrypts::findOne(['user_id', $user_id]);
+        if(isset($oldPassword)){
+            $oldPassword->delete();
+        }
+
         $uu = new EncryptPass();
         $max = Keys::find()->count();
         $rand = rand(1, $max);
         $key = Keys::findOne($rand);
         $enc = $uu->encrypt($password, $key->name);
         $save_password = new PasswordEncrypts();
-        $save_password->user_id = $model_id;
+        $save_password->user_id = $user_id;
         $save_password->password = $enc;
         $save_password->key_id = $key->id;
         if($save_password->save(false)){

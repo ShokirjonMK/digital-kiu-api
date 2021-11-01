@@ -133,13 +133,21 @@ class StudentUser extends ParentUser
             }
         }
 
-
-
         if (count($errors) == 0) {
+           
             if (isset($post['password']) && !empty($post['password'])) {
-                $model->password_hash = \Yii::$app->security->generatePasswordHash($post['password']);
+                $password = $post['password'];
+            } else {
+                $password = _random_string();
             }
+
+            $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
+
             if ($model->save()) {
+
+                //**parolni shifrlab saqlaymiz */
+                $model->savePassword($password, $model->id);
+                //**** */
 
                 // avatarni saqlaymiz
                 $model->avatar = UploadedFile::getInstancesByName('avatar');
@@ -195,27 +203,36 @@ class StudentUser extends ParentUser
         if (count($errors) == 0) {
 
             // remove profile image
-            // $filePath = assets_url($model->profile->image);
-            // if(file_exists($filePath)){
-            //     unlink($filePath);
-            // }
+            $filePath = assets_url($model->profile->image);
+            if(file_exists($filePath)){
+                unlink($filePath);
+            }
 
             // remove student
-            $studentDeleted = Student::deleteAll(['user_id' => $id]);
+            $studentDeleted = Student::findOne(['user_id' => $id]);
             if (!$studentDeleted) {
                 $errors[] = [_e('Error in student deleting process.')];
+            }else{
+                $studentDeleted->is_deleted = 1;
+                $studentDeleted->save(false);
             }
 
             // remove profile
-            $profileDeleted = Profile::deleteAll(['user_id' => $id]);
+            $profileDeleted = Profile::findOne(['user_id' => $id]);
             if (!$profileDeleted) {
                 $errors[] = [_e('Error in profile deleting process.')];
+            }else{
+                $profileDeleted->is_deleted = 1;
+                $profileDeleted->save(false);
             }
 
             // remove model
-            $userDeleted = User::findOne($id)->delete();
+            $userDeleted = User::findOne($id);
             if (!$userDeleted) {
                 $errors[] = [_e('Error in user deleting process.')];
+            }else{
+                $userDeleted->status = 9;
+                $userDeleted->save(false);
             }
         }
 

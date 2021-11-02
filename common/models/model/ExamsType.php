@@ -146,7 +146,9 @@ class ExamsType extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
 
         $has_error = Translate::checkingAll($post);
 
@@ -160,7 +162,7 @@ class ExamsType extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-                $errors[] = $model->getErrorSummary(true);
+
                 return simplify_errors($errors);
             }
         } else {
@@ -172,6 +174,9 @@ class ExamsType extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
 
         $has_error = Translate::checkingAll($post);
         if ($has_error['status']) {
@@ -184,7 +189,7 @@ class ExamsType extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-                $errors[] = $model->getErrorSummary(true);
+
                 return simplify_errors($errors);
             }
         } else {

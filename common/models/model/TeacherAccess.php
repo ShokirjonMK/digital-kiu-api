@@ -142,12 +142,13 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
         if($model->save()){
             $transaction->commit();
             return true;
         }else{
-            $errors[] = $model->getErrorSummary(true);
             return simplify_errors($errors);
         }
 
@@ -157,12 +158,13 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
         if($model->save()){
             $transaction->commit();
             return true;
         }else{
-            $errors[] = $model->getErrorSummary(true);
             return simplify_errors($errors);
         }
     }

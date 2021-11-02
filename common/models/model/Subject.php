@@ -194,7 +194,7 @@ class Subject extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;
+
 
         $has_error = Translate::checkingAll($post);
 

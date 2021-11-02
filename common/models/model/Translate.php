@@ -168,7 +168,7 @@ class Translate extends \yii\db\ActiveRecord
                 $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
                 if (isset($update_tranlate)) {
                     $update_tranlate->name = $value;
-                    $update_tranlate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "" ) ? $descArr[$key] : null) : null;
+                    $update_tranlate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
                     // var_dump($update_tranlate);
                     // $update_tranlate->save(false);
                     if ($update_tranlate->save(false)) {
@@ -182,7 +182,7 @@ class Translate extends \yii\db\ActiveRecord
                     $new_translate->table_name = $table_name;
                     $new_translate->model_id = $model_id;
                     $new_translate->language = $key;
-                    $new_translate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "" ) ? $descArr[$key] : null) : null;
+                    $new_translate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
                     if ($new_translate->save(false)) {
                     } else {
                         $errors[] = $new_translate->getErrorSummary(true);
@@ -236,39 +236,45 @@ class Translate extends \yii\db\ActiveRecord
 
         if (isset($post['name'])) {
             if (!is_array($post['name'])) {
-                $errors[] = [_e('Please send Name attribute as array.')];
+                $errors[]['name'] = [_e('Name must be array.')];
                 // $data['errors'][] = $errors;
                 $data['status'] = 0;
             } else {
+                $nameErrors = [];
                 foreach ($post['name'] as $lang => $value) {
 
                     if (!in_array($lang, $langCodes)) {
-                        $errors[] = [_e('Wrong language code selected (' . $lang . ').')];
+                        $nameErrors['name[' . $lang . ']'] = [_e('Wrong language code selected (' . $lang . ').')];
                         // $data['errors'][] = $errors;
                         $data['status'] = 0;
                     }
                 }
+                $errors[] = $nameErrors;
             }
         } else {
-            $errors[] = [_e('Please send Name attribute as array.')];
+            $errors[]['name'] = [_e('Please send Name attribute as array.')];
             // $data['errors'][] = $errors;
             $data['status'] = 0;
         }
         if (isset($post['description'])) {
             if (!is_array($post['description'])) {
-                $errors[] = [_e('Please send Description attribute as array.')];
+                $errors[]['description'] = [_e('Description must be array.')];
+                // array_push($errors, 'description', [_e('Description must be array.')]);
                 // $data['errors'][] = $errors;
                 $data['status'] = 0;
             } else {
+                $descriptionErrors = [];
                 foreach ($post['description'] as $lang => $value) {
                     if (!in_array($lang, $langCodes)) {
-                        $errors[] = [_e('Wrong language code selected (' . $lang . ').')];
+                        $errors[]['description[' . $lang . ']'] = [_e('Wrong language code selected (' . $lang . ').')];
                         // $data['errors'][] = $errors;
                         $data['status'] = 0;
                     }
                 }
+                $errors[] = $descriptionErrors;
             }
         }
+
         $data['errors'] = $errors;
         return $data;
     }

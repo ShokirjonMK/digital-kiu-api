@@ -35,6 +35,8 @@ class EduPlan extends \yii\db\ActiveRecord
 
     use ResourceTrait;
 
+    public static $selected_language = 'uz';
+
     public function behaviors()
     {
         return [
@@ -56,7 +58,7 @@ class EduPlan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id','fall_start', 'fall_end', 'spring_start', 'spring_end'], 'required'],
+            [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'fall_start', 'fall_end', 'spring_start', 'spring_end'], 'required'],
             [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['fall_start', 'fall_end', 'spring_start', 'spring_end'], 'safe'],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
@@ -101,8 +103,16 @@ class EduPlan extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'faculty_id',
+            'semestr',
+            'edu_year_id',
+            'direction_id',
+            'edu_type_id',
             'course',
             'semestr',
+            'fall_start',
+            'fall_end',
+            'spring_start',
+            'spring_end',
             'order',
             'status',
             'created_at',
@@ -225,6 +235,10 @@ class EduPlan extends \yii\db\ActiveRecord
 
         $has_error = Translate::checkingAll($post);
 
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+
         if ($has_error['status']) {
             if ($model->save()) {
                 if (isset($post['description'])) {
@@ -235,11 +249,12 @@ class EduPlan extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-                $errors[] = $model->getErrorSummary(true);
                 return simplify_errors($errors);
             }
         } else {
-            return simplify_errors($has_error['errors']);
+
+            $errors[] = $has_error['errors'];
+            return simplify_errors($errors);
         }
     }
 
@@ -247,6 +262,10 @@ class EduPlan extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
 
         $has_error = Translate::checkingAll($post);
         if ($has_error['status']) {
@@ -259,7 +278,6 @@ class EduPlan extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-                $errors[] = $model->getErrorSummary(true);
                 return simplify_errors($errors);
             }
         } else {

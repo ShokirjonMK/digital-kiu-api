@@ -58,11 +58,12 @@ function api_json_output($type = 'error', $array = array())
 // Simplify AR Model errors
 function simplify_errors($errors)
 {
+    return $errors;
     $result = [];
     foreach ($errors as $lev1) {
-        foreach ($lev1 as $error) {
-            $result[] = $error;
-        }
+        // foreach ($lev1 as $error) {
+            $result[] = $lev1;
+        // }
     }
     return array_unique($result);
 }

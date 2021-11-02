@@ -67,15 +67,18 @@ class  StudentController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Student::findOne($id);
-        if (!$model) {
+        $student = Student::findOne($id);
+        if (!$student) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        $model = User::findOne(['id', $student->user_id]);
+        $profile = Profile::findOne(['user_id', $student->user_id]);
+
         $post = Yii::$app->request->post();
-        $this->load($model, $post);
-        $result = Student::updateItem($model, $post);
+        $this->load($student, $post);
+        $result = StudentUser::updateItem($model, $profile, $student, $post);
         if (!is_array($result)) {
-            return $this->response(1, _e('Student successfully updated.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('Student successfully updated.'), $student, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

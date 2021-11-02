@@ -113,6 +113,17 @@ class StudentUser extends ParentUser
             $errors[] = ['all' => [_e('Please send data.')]];
         }
 
+        // if (!($model->validate())) {
+        //     $errors[] = $model->errors;
+        // }
+        // if (!($profile->validate())) {
+        //     $errors[] = $profile->errors;
+        // }
+        // if (!($student->validate())) {
+        //     $errors[] = $student->errors;
+        // }
+
+
         if (isset($post['role'])) {
 
             // role to'gri jo'natilganligini tekshirish

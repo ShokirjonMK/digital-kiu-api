@@ -62,10 +62,45 @@ function simplify_errors($errors)
     $result = [];
     foreach ($errors as $lev1) {
         // foreach ($lev1 as $error) {
-            $result[] = $lev1;
+        $result[] = $lev1;
         // }
     }
     return array_unique($result);
+}
+
+
+// Model errors
+
+function model_errors($errs)
+{
+    $res = [];
+    foreach ($errs as $key => $val) {
+        $res[$key] = $val;
+    }
+    return $res;
+}
+
+function double_errors($errs, $trErrs)
+{
+    $res = [];
+    if (isset($errs)) {
+        foreach ($errs as $val) {
+            foreach ($val as $key => $valIn) {
+                $res[$key] = $valIn;
+            }
+        }
+    }
+
+    if (isset($trErrs)) {
+        foreach ($trErrs as $tval) {
+            foreach ($tval as $tkey => $tvalIn) {
+                $res[$tkey] = $tvalIn;
+            }
+        }
+    }
+    $result[] = $res;
+    
+    return $result;
 }
 
 // Api sortby

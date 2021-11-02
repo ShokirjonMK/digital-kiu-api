@@ -252,9 +252,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-
-            $errors[] = $has_error['errors'];
-            return simplify_errors($errors);
+            return double_errors($errors, $has_error['errors']);
         }
     }
 
@@ -281,7 +279,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-            return simplify_errors($has_error['errors']);
+            return double_errors($errors, $has_error['errors']);
         }
     }
 

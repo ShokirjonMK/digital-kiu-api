@@ -14,7 +14,6 @@ class StudentUser extends ParentUser
 
     public static function createItem($model, $profile, $student, $post)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 

@@ -39,15 +39,18 @@ class  StudentController extends ApiActiveController
 
     public function actionCreate($lang)
     {
+        $post = Yii::$app->request->post();
+
+        $post['role'] = 'student';
         $model = new User();
         $profile = new Profile();
         $student = new Student();
-        $post = Yii::$app->request->post();
+
 
         $users = Student::find()->count();
         $count = $users + 10000;
-        $post['username'] = 'tsul-'. $count;
-        $post['email'] = 'tsul-'. $count.'@tsul.uz';
+        $post['username'] = 'tsul-' . $count;
+        $post['email'] = 'tsul-' . $count . '@tsul.uz';
 
         $this->load($model, $post);
         $this->load($profile, $post);

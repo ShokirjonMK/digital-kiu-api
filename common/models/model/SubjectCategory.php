@@ -169,7 +169,7 @@ class SubjectCategory extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-            return simplify_errors($has_error['errors']);
+            return double_errors($errors, $has_error['errors']);
         }
     }
 
@@ -194,7 +194,7 @@ class SubjectCategory extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-            return simplify_errors($has_error['errors']);
+            return double_errors($errors, $has_error['errors']);
         }
     }
 

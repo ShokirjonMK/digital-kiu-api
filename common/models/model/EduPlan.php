@@ -246,6 +246,14 @@ class EduPlan extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
+                for ($i=0; $i < $post['course']; $i++) { 
+                    $newEduSmester = new EduSemestr();
+                    $newEduSmester->start_date = date('Y-m-d', strtotime('+'.$i.' years', strtotime($post['fall_start'])));
+                    $newEduSmester->end_date = date('Y-m-d', strtotime('+'.$i.' years', strtotime($post['fall_end'])));
+
+                    
+                }
+
                 $transaction->commit();
                 return true;
             } else {

@@ -46,6 +46,7 @@ class CourseController extends ApiActiveController
 
     public function actionCreate($lang)
     {
+        return $this->response(0, _e('There is an error occurred while processing.'), null, ResponseStatus::FORBIDDEN);
         $model = new Course();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
@@ -87,6 +88,7 @@ class CourseController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
+        return $this->response(0, _e('There is an error occurred while processing.'), null, ResponseStatus::FORBIDDEN);
         $model = Course::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();

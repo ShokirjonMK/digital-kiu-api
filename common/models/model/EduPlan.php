@@ -134,7 +134,6 @@ class EduPlan extends \yii\db\ActiveRecord
             'eduType',
             'eduSemestrs',
             'description',
-
             'createdBy',
             'updatedBy',
         ];
@@ -240,20 +239,82 @@ class EduPlan extends \yii\db\ActiveRecord
         }
 
         if ($has_error['status']) {
+            $eduPlan = EduPlan::findOne([
+                'faculty_id' => $model->faculty_id,
+                'direction_id' => $model->direction_id,
+                'edu_type_id' => $model->edu_type_id,
+                'edu_year_id' => $model->edu_year_id
+            ]);
+            if(isset($eduPlan)){
+                $errors[] = _e(' This Edu Plan already exists');
+                return $errors;
+            }
             if ($model->save()) {
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-                for ($i=0; $i < $post['course']; $i++) { 
-                    $newEduSmester = new EduSemestr();
-                    $newEduSmester->start_date = date('Y-m-d', strtotime('+'.$i.' years', strtotime($post['fall_start'])));
-                    $newEduSmester->end_date = date('Y-m-d', strtotime('+'.$i.' years', strtotime($post['fall_end'])));
+                for ($i = 0; $i < $post['course']; $i++) {
 
-                    
+                    /* Kuzgi semestrni qo`shish */
+                    $newEduSmester = new EduSemestr();
+                    $newEduSmester->start_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_start'])));
+                    $newEduSmester->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_end'])));
+                    $newEduSmester->edu_plan_id = $model->id;
+                    $newEduSmester->course_id = $i + 1;
+                    $newEduSmester->semestr_id = ($i + 1) * 2 - 1;
+                    $eduYear = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester->start_date))]);
+                    if (!isset($eduYear)) {
+                        $eduYear = new EduYear();
+                        $data = [];
+                        $eduYear->year = date('Y', strtotime($newEduSmester->start_date));
+                        $data['name'][Yii::$app->request->get('lang')] = $eduYear->year . ' - ' . date('Y', strtotime('+1 years', strtotime($eduYear->year)));
+                        $res = EduYear::createItem($eduYear, $data);
+                        if (is_array($res)) {
+                            $model->delete();
+                            return $res;
+                        }
+                    }
+
+                    $newEduSmester->edu_year_id = $eduYear->id;
+                    if (!$newEduSmester->validate()) {
+                        $errors[] = $newEduSmester->errors;
+                    }
+                    $newEduSmester->save();
+                    /* Kuzgi semestrni qo`shish */
+
+                    /* Baxorgi semestrni qo`shish */
+                    $newEduSmester1 = new EduSemestr();
+                    $newEduSmester1->start_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['spring_start'])));
+                    $newEduSmester1->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['spring_end'])));
+                    $newEduSmester1->edu_plan_id = $model->id;
+                    $newEduSmester1->course_id = $i + 1;
+                    $newEduSmester1->semestr_id = ($i + 1) * 2;
+                    $eduYear = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester1->start_date))]);
+                    if (!isset($eduYear)) {
+                        $eduYear = new EduYear();
+                        $data = [];
+                        $eduYear->year = date('Y', strtotime($newEduSmester1->start_date));
+                        $data['name'][Yii::$app->request->get('lang')] = $eduYear->year . ' - ' . date('Y', strtotime('+1 years', strtotime($eduYear->year)));
+                        $res = EduYear::createItem($eduYear, $data);
+                        if (is_array($res)) {
+                            $model->delete();
+                            return $res;
+                        }
+                    }
+                    $newEduSmester1->edu_year_id = $eduYear->id;
+                    if (!$newEduSmester1->validate()) {
+                        $errors[] = $newEduSmester1->errors;
+                    }
+                    $newEduSmester1->save();
+                    /* Baxorgi semestrni qo`shish */
                 }
 
+                if (count($errors) > 0) {
+                    $model->delete();
+                    return simplify_errors($errors);
+                }
                 $transaction->commit();
                 return true;
             } else {
@@ -268,7 +329,7 @@ class EduPlan extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

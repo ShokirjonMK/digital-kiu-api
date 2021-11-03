@@ -50,9 +50,10 @@ class EduYear extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //            [['name'], 'required'],
+            [['year'], 'required',],
+            [['year'], 'unique',],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            //            [['name'], 'string', 'max' => 255],
+            [['year'], 'integer'],
         ];
     }
 
@@ -66,6 +67,7 @@ class EduYear extends \yii\db\ActiveRecord
             //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
+            'year' => 'Year',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
@@ -82,6 +84,7 @@ class EduYear extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'order',
+            'year',
             'status',
             'created_at',
             'updated_at',
@@ -173,6 +176,7 @@ class EduYear extends \yii\db\ActiveRecord
 
     public static function createItem($model, $post)
     {
+       
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         if (!($model->validate())) {

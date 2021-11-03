@@ -88,7 +88,7 @@ class CourseController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, ResponseStatus::FORBIDDEN);
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         $model = Course::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();

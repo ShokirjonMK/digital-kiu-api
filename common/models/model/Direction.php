@@ -104,7 +104,7 @@ class Direction extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'facultyId',
+            'faculty',
             'eduPlans',
             'kafedras',
             'description',
@@ -148,7 +148,7 @@ class Direction extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFacultyId()
+    public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }

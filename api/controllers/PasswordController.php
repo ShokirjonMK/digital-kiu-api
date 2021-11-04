@@ -30,9 +30,7 @@ class PasswordController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-       
-        return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);     
-        
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
     }
 
     public function actionView($lang, $id)

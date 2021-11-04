@@ -22,7 +22,7 @@ class SubjectTopicController extends ApiActiveController
 
         $query = $model->find()
             ->with(['infoRelation'])
-            ->andWhere(['status' => 1,'deleted' => 0])
+            ->andWhere(['deleted' => 0])
             ->join('INNER JOIN', 'subject_topic_info info', 'info.subject_topic_id = subject_topic.id')
             ->andWhere(['language' => Yii::$app->request->get('lang')])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);

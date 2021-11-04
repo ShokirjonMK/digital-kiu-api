@@ -22,7 +22,7 @@ class DirectionInfoController extends ApiActiveController
         $model = new DirectionInfo();
 
         $query = $model->find()
-            ->andWhere(['status' => 1,'is_deleted' => 0])
+            ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
         // sort
@@ -36,31 +36,35 @@ class DirectionInfoController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new DirectionInfo();
-        $post = Yii::$app->request->post();
-        $this->load($model, $post);
-        $result = DirectionInfo::createItem($model, $post);
-        if(!is_array($result)){
-            return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
-        }else{
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+
+        // $model = new DirectionInfo();
+        // $post = Yii::$app->request->post();
+        // $this->load($model, $post);
+        // $result = DirectionInfo::createItem($model, $post);
+        // if(!is_array($result)){
+        //     return $this->response(1, _e('Job successfully created.'), $model, null, ResponseStatus::CREATED);
+        // }else{
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        // }
     }
 
     public function actionUpdate($lang, $id)
     {
-        $model = DirectionInfo::findOne($id);
-        if(!$model){
-            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
-        }
-        $post = Yii::$app->request->post();
-        $this->load($model, $post);
-        $result = DirectionInfo::updateItem($model, $post);
-        if(!is_array($result)){
-            return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
-        }else{
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+
+        // $model = DirectionInfo::findOne($id);
+        // if(!$model){
+        //     return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        // }
+        // $post = Yii::$app->request->post();
+        // $this->load($model, $post);
+        // $result = DirectionInfo::updateItem($model, $post);
+        // if(!is_array($result)){
+        //     return $this->response(1, _e('Job successfully updated.'), $model, null, ResponseStatus::OK);
+        // }else{
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        // }
     }
 
     public function actionView($lang, $id)

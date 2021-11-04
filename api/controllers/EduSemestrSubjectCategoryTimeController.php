@@ -22,7 +22,7 @@ class EduSemestrSubjectCategoryTimeController extends ApiActiveController
         $model = new EduSemestrSubjectCategoryTime();
 
         $query = $model->find()
-            ->andWhere(['status' => 1,'is_deleted' => 0])
+            ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
         // sort

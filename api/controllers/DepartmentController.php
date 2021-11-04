@@ -22,7 +22,7 @@ class DepartmentController extends ApiActiveController
 
         $query = $model->find()
             ->with(['infoRelation'])
-            ->andWhere(['status' => 1,'deleted' => 0])
+            ->andWhere(['deleted' => 0])
             ->join('INNER JOIN', 'department_info info', 'info.department_id = department.id')
             ->andWhere(['language' => Yii::$app->request->get('lang')])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);

@@ -22,7 +22,7 @@ class JobController extends ApiActiveController
 
         $query = $model->find()
             ->with(['infoRelation'])
-            ->andWhere(['status' => 1,'deleted' => 0])
+            ->andWhere(['deleted' => 0])
             ->join('INNER JOIN', 'job_info info', 'info.job_id = job.id')
             ->andWhere(['language' => Yii::$app->request->get('lang')])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);

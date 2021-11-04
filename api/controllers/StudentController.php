@@ -69,6 +69,8 @@ class  StudentController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
+        $post = Yii::$app->request->post();
+        $post['role'] = 'student';
         $student = Student::findOne($id);
         if (!$student) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
@@ -76,7 +78,7 @@ class  StudentController extends ApiActiveController
         $model = User::findOne(['id', $student->user_id]);
         $profile = Profile::findOne(['user_id', $student->user_id]);
 
-        $post = Yii::$app->request->post();
+        
         $this->load($student, $post);
         $result = StudentUser::updateItem($model, $profile, $student, $post);
         if (!is_array($result)) {

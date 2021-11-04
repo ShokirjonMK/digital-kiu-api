@@ -110,6 +110,23 @@ class Student extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'is_contract',
+            'description',
+         
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+        ];
+        return $fields;
+    }
+    
     public function extraFields()
     {
         $extraFields =  [
@@ -119,13 +136,14 @@ class Student extends \yii\db\ActiveRecord
             'eduYear',
             'faculty',
             'user',
+            'profile',
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
     }
-    
+
     /**
      * Gets query for [[Course]].
      *
@@ -186,38 +204,15 @@ class Student extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
-    public static function createItem($model, $post)
+    /**
+     * Gets query for [[profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
     {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-
-            return simplify_errors($errors);
-        }
-
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
-
-    public static function updateItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-            return simplify_errors($errors);
-        }
-    }
-
 
     public function beforeSave($insert) {
         if ($insert) {
@@ -227,8 +222,5 @@ class Student extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
-
-
 
 }

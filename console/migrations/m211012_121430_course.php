@@ -14,17 +14,17 @@ class m211012_121430_course extends Migration
     {
         $this->createTable('course', [
             'id' => $this->primaryKey(),
-            'name'=>$this->string(255)->notNull(),
+            'name' => $this->string(255)->notNull(),
 
-
-            'order'=>$this->tinyInteger(1)->defaultValue(1),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
-            'created_at'=>$this->integer()->notNull(),
-            'updated_at'=>$this->integer()->notNull(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+
     }
 
     /**

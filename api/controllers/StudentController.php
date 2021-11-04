@@ -46,7 +46,6 @@ class  StudentController extends ApiActiveController
         $profile = new Profile();
         $student = new Student();
 
-
         $users = Student::find()->count();
         $count = $users + 10000;
         $post['username'] = 'tsul-' . $count;
@@ -57,9 +56,9 @@ class  StudentController extends ApiActiveController
         $this->load($student, $post);
         $result = StudentUser::createItem($model, $profile, $student, $post);
         $data = [];
-        $data['user'] = $model;
-        $data['profile'] = $profile;
         $data['student'] = $student;
+        $data['profile'] = $profile;
+        $data['user'] = $model;
 
         if (!is_array($result)) {
             return $this->response(1, _e('Student successfully created.'), $data, null, ResponseStatus::CREATED);
@@ -89,9 +88,7 @@ class  StudentController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Student::find()
-            ->andWhere(['id' => $id])
-            ->one();
+        $model = Student::findOne(['id'=>$id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -100,17 +97,14 @@ class  StudentController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Student::findOne($id);
+        $model = Student::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove model
-        $result = Student::findOne($id);
-
-        if ($result) {
-            $result->is_deleted = 1;
-            $result->update();
+        if ($model) {
+            $model->is_deleted = 1;
+            $model->update();
 
             return $this->response(1, _e('Student succesfully removed.'), null, null, ResponseStatus::OK);
         }

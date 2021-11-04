@@ -255,8 +255,9 @@ class EduPlan extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
+               
+                $eduYear = [];
                 for ($i = 0; $i < $post['course']; $i++) {
-
                     /* Kuzgi semestrni qo`shish */
                     $newEduSmester = new EduSemestr();
                     $newEduSmester->start_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_start'])));
@@ -264,20 +265,20 @@ class EduPlan extends \yii\db\ActiveRecord
                     $newEduSmester->edu_plan_id = $model->id;
                     $newEduSmester->course_id = $i + 1;
                     $newEduSmester->semestr_id = ($i + 1) * 2 - 1;
-                    $eduYear = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester->start_date))]);
-                    if (!isset($eduYear)) {
-                        $eduYear = new EduYear();
+                    $eduYear[$i] = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester->start_date))]);
+                    if (!isset($eduYear[$i])) {
+                        $eduYear[$i] = new EduYear();
                         $data = [];
-                        $eduYear->year = date('Y', strtotime($newEduSmester->start_date));
-                        $data['name'][Yii::$app->request->get('lang')] = $eduYear->year . ' - ' . date('Y', strtotime('+1 years', strtotime($eduYear->year)));
-                        $res = EduYear::createItem($eduYear, $data);
+                        $eduYear[$i]->year = date('Y', strtotime($newEduSmester->start_date));
+                        $data['name'][Yii::$app->request->get('lang')] = $eduYear[$i]->year . '-' . date('Y', strtotime('+1 years', strtotime($newEduSmester->start_date)));
+                        $res = EduYear::createItem($eduYear[$i], $data);
                         if (is_array($res)) {
                             $model->delete();
                             return $res;
                         }
                     }
-
-                    $newEduSmester->edu_year_id = $eduYear->id;
+                  
+                    $newEduSmester->edu_year_id = $eduYear[$i]->id;
                     if (!$newEduSmester->validate()) {
                         $errors[] = $newEduSmester->errors;
                     }
@@ -291,19 +292,8 @@ class EduPlan extends \yii\db\ActiveRecord
                     $newEduSmester1->edu_plan_id = $model->id;
                     $newEduSmester1->course_id = $i + 1;
                     $newEduSmester1->semestr_id = ($i + 1) * 2;
-                    $eduYear = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester1->start_date))]);
-                    if (!isset($eduYear)) {
-                        $eduYear = new EduYear();
-                        $data = [];
-                        $eduYear->year = date('Y', strtotime($newEduSmester1->start_date));
-                        $data['name'][Yii::$app->request->get('lang')] = $eduYear->year . ' - ' . date('Y', strtotime('+1 years', strtotime($eduYear->year)));
-                        $res = EduYear::createItem($eduYear, $data);
-                        if (is_array($res)) {
-                            $model->delete();
-                            return $res;
-                        }
-                    }
-                    $newEduSmester1->edu_year_id = $eduYear->id;
+                    
+                    $newEduSmester1->edu_year_id = $eduYear[$i]->id;
                     if (!$newEduSmester1->validate()) {
                         $errors[] = $newEduSmester1->errors;
                     }

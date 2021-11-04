@@ -36,6 +36,8 @@ class EduSemestrController extends ApiActiveController
 
     public function actionCreate($lang)
     {
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+
         $model = new EduSemestr();
         $post = Yii::$app->request->post();
         $this->load($model, $post);

@@ -93,6 +93,56 @@ class EduSemestr extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name' => function ($model) {
+                return $model->generateName ?? '';
+            },
+            'edu_plan_id',
+            'course_id',
+            'semestr_id',
+            'edu_year_id',
+            'start_date',
+            'end_date',
+            'is_checked',
+
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'course',
+            'eduPlan',
+            'eduYear',
+            'semestr',
+            'eduSemestrSubjects',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+
+    public function getGenerateName()
+    {
+        return  $this->eduYear->translate->name . ' - ' . $this->course->translate->name . ' - ' . $this->semestr->translate->name;
+    }
+
     /**
      * Gets query for [[Course]].
      *
@@ -143,27 +193,12 @@ class EduSemestr extends \yii\db\ActiveRecord
         return $this->hasMany(EduSemestrSubject::className(), ['edu_semestr_id' => 'id']);
     }
 
-    public function extraFields()
-    {
-        $extraFields =  [
-            'course',
-            'eduPlan',
-            'eduYear',
-            'semestr',
-            'eduSemestrSubjects',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
-    }
-
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -189,7 +224,7 @@ class EduSemestr extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-           
+
             return simplify_errors($errors);
         }
     }

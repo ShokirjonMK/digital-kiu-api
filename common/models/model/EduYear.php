@@ -81,7 +81,7 @@ class EduYear extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'name' => function ($model) {
-                return $model->translate->name ?? '';
+                return $model->translate->name ?? $model->year . '-' . date('Y', strtotime($model->year));
             },
             'order',
             'year',

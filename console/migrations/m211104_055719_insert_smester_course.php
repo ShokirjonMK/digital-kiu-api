@@ -12,10 +12,9 @@ class m211104_055719_insert_smester_course extends Migration
      */
     public function safeUp()
     {
+        // Yii::$app->db->createCommand()->truncateTable('course')->execute();
 
-
-        Yii::$app->db->createCommand()->truncateTable('course')->execute();
-
+        Yii::$app->db->createCommand()->delete('course', ['id' => 1])->execute();
         $this->insert('{{%course}}', [
             'id' => 1,
             'status' => 1,
@@ -30,6 +29,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '1',
         ]);
 
+        Yii::$app->db->createCommand()->delete('course', ['id' => 2])->execute();
         $this->insert('{{%course}}', [
             'id' => 2,
             'status' => 1,
@@ -44,6 +44,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '2',
         ]);
 
+        Yii::$app->db->createCommand()->delete('course', ['id' => 3])->execute();
         $this->insert('{{%course}}', [
             'id' => 3,
             'status' => 1,
@@ -58,6 +59,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '3',
         ]);
 
+        Yii::$app->db->createCommand()->delete('course', ['id' => 4])->execute();
         $this->insert('{{%course}}', [
             'id' => 4,
             'status' => 1,
@@ -72,6 +74,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '4',
         ]);
 
+        Yii::$app->db->createCommand()->delete('course', ['id' => 5])->execute();
         $this->insert('{{%course}}', [
             'id' => 5,
             'status' => 1,
@@ -86,6 +89,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '5',
         ]);
 
+        Yii::$app->db->createCommand()->delete('course', ['id' => 6])->execute();
         $this->insert('{{%course}}', [
             'id' => 6,
             'status' => 1,
@@ -101,9 +105,9 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
 
-        Yii::$app->db->createCommand()->truncateTable('semestr')->execute();
+        // Yii::$app->db->createCommand()->truncateTable('semestr')->execute();
 
-
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 1])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 1,
             'status' => 1,
@@ -118,6 +122,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '1',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 2])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 2,
             'status' => 1,
@@ -132,6 +137,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '2',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 3])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 3,
             'status' => 1,
@@ -146,6 +152,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '3',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 4])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 4,
             'status' => 1,
@@ -160,6 +167,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '4',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 5])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 5,
             'status' => 1,
@@ -174,6 +182,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '5',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 6])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 6,
             'status' => 1,
@@ -188,6 +197,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '6',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 7])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 7,
             'status' => 1,
@@ -202,6 +212,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '7',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 8])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 8,
             'status' => 1,
@@ -216,6 +227,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '8',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 9])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 9,
             'status' => 1,
@@ -230,6 +242,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '9',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 10])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 10,
             'status' => 1,
@@ -244,6 +257,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '10',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 11])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 11,
             'status' => 1,
@@ -258,6 +272,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '11',
         ]);
 
+        Yii::$app->db->createCommand()->delete('semestr', ['id' => 12])->execute();
         $this->insert('{{%semestr}}', [
             'id' => 12,
             'status' => 1,

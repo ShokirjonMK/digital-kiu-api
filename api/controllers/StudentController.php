@@ -81,8 +81,14 @@ class  StudentController extends ApiActiveController
         
         $this->load($student, $post);
         $result = StudentUser::updateItem($model, $profile, $student, $post);
+
+        $data = [];
+        $data['student'] = $student;
+        $data['profile'] = $profile;
+        $data['user'] = $model;
+
         if (!is_array($result)) {
-            return $this->response(1, _e('Student successfully updated.'), $student, null, ResponseStatus::OK);
+            return $this->response(1, _e('Student successfully updated.'), $data, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

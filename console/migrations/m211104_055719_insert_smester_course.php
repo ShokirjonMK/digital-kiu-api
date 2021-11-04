@@ -24,6 +24,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%course}}', [
             'id' => 1,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -38,6 +40,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%course}}', [
             'id' => 2,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -52,6 +56,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%course}}', [
             'id' => 3,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -66,6 +72,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%course}}', [
             'id' => 4,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -80,6 +88,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%course}}', [
             'id' => 5,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -94,6 +104,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%course}}', [
             'id' => 6,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -113,6 +125,8 @@ class m211104_055719_insert_smester_course extends Migration
         $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
         $this->insert('{{%semestr}}', [
             'id' => 1,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -127,6 +141,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 2,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -141,6 +157,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 3,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -155,6 +173,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 4,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -169,6 +189,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 5,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -183,6 +205,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 6,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -197,6 +221,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 7,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -211,6 +237,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 8,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -225,6 +253,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 9,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -239,6 +269,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 10,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -253,6 +285,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 11,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 
@@ -267,6 +301,8 @@ class m211104_055719_insert_smester_course extends Migration
 
         $this->insert('{{%semestr}}', [
             'id' => 12,
+            'updated_at' => 0,
+            'created_at' => 0,
             'status' => 1,
         ]);
 

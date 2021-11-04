@@ -18,7 +18,9 @@ class m211104_055719_insert_smester_course extends Migration
 
 
 
-        $this->execute("SET FOREIGN_KEY_CHECKS = 0; TRUNCATE table  `course`; SET FOREIGN_KEY_CHECKS = 1;");
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
+        $this->execute("TRUNCATE table  `course`;");
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
 
         $this->insert('{{%course}}', [
             'id' => 1,
@@ -106,8 +108,9 @@ class m211104_055719_insert_smester_course extends Migration
 
 
         // Yii::$app->db->createCommand()->truncateTable('semestr')->execute();
-        $this->execute("SET FOREIGN_KEY_CHECKS = 0; TRUNCATE table  `semestr`; SET FOREIGN_KEY_CHECKS = 1;");
-
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
+        $this->execute("TRUNCATE table  `semestr`;");
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
         $this->insert('{{%semestr}}', [
             'id' => 1,
             'status' => 1,

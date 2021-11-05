@@ -126,6 +126,29 @@ class m130524_201442_init extends Migration
         // inserting data
 
         $this->insert('{{%users}}', [
+            'username' => 'ShokirjonMK',
+            'auth_key' => \Yii::$app->security->generateRandomString(20),
+            'password_hash' => \Yii::$app->security->generatePasswordHash("12300123"),
+            'password_reset_token' => null,
+            'access_token' => \Yii::$app->security->generateRandomString(),
+            'access_token_time' => time(),
+            'email' => 'mk@mk.com',
+            'template' => '',
+            'layout' => '',
+            'view' => '',
+            'status' => 10,
+            'created_at' => time(),
+            'updated_at' => time(),
+        ]);
+
+        $this->insert('{{%profile}}', [
+            'user_id' => 1,
+            'firstname' => "ShokirjonMK",
+            'lastname' => "Developer",
+        ]);
+
+
+        $this->insert('{{%users}}', [
             'username' => 'webadmin',
             'auth_key' => \Yii::$app->security->generateRandomString(20),
             'password_hash' => \Yii::$app->security->generatePasswordHash("helloDev20"),

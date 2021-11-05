@@ -99,17 +99,44 @@ class TimeTable extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'teacher_access_id',
+            'room_id',
+            'para_id',
+            'course_id',
+            'semestr_id',
+            'edu_year_id',
+            'subject_id',
+            'language_id',
+            'order',
+
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+
     public function extraFields()
     {
         $extraFields =  [
             'course',
             'eduYear',
             'languages',
+            'profile',
             'para',
             'room',
             'subject',
             'semestr',
-            'teacherAccessController',
+            'teacherAccess',
             'createdBy',
             'updatedBy',
         ];
@@ -188,13 +215,23 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TeacherAccessController]].
+     * Gets query for [[TeacherAccess]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
+    /**
+     * Gets query for [[profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return Profile::findOne(['user_id'=> $this->teacherAccess->user_id]);
     }
 
 
@@ -205,6 +242,18 @@ class TimeTable extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+        }
+
+        $timeTable = TimeTable::findOne([
+            'room_id' => $model->room_id,
+            'para_id' => $model->para_id,
+            'edu_year_id' => $model->edu_year_id
+        ]);
+        if (isset($timeTable)) {
+            if($timeTable->semestr_id % 2 == $model->semestr_id % 2 ){
+                 $errors[] = _e("This Room and Para are busy for this Edu Year's semester");
+            return $errors;
+            }
         }
         if($model->save()){
             $transaction->commit();

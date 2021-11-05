@@ -246,7 +246,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 'edu_year_id' => $model->edu_year_id
             ]);
             if(isset($eduPlan)){
-                $errors[] = _e(' This Edu Plan already exists');
+                $errors[] = _e('This Edu Plan already exists');
                 return $errors;
             }
             if ($model->save()) {

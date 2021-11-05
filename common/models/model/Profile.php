@@ -135,6 +135,48 @@ class Profile extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'user_id',
+            'image',
+            'phone',
+            'phone_secondary',
+            'is_foreign',
+            'last_name',
+            'first_name',
+            'middle_name',
+            'passport_seria',
+            'passport_number',
+            'passport_pin',
+            'birthday',
+            'passport_file',
+            'country_id',
+            'region_id',
+            'area_id',
+            'address',
+            'gender',
+            'passport_given_date',
+            'passport_issued_date',
+            'passport_given_by',
+            'permanent_country_id',
+            'permanent_region_id',
+            'permanent_area_id',
+            'permanent_address',
+
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+
     /**
      * Gets query for [[Area]].
      *
@@ -211,7 +253,7 @@ class Profile extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            //            'department',
             'createdBy',
             'updatedBy',
         ];
@@ -227,13 +269,12 @@ class Profile extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -243,25 +284,23 @@ class Profile extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
 
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
 }

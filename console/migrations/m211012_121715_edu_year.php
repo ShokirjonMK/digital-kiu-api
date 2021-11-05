@@ -16,9 +16,8 @@ class m211012_121715_edu_year extends Migration
             'id' => $this->primaryKey(),
             'name'=>$this->string(255)->notNull(),
 
-
             'order'=>$this->tinyInteger(1)->defaultValue(1),
-            'status' => $this->tinyInteger(1)->defaultValue(1),
+            'status' => $this->tinyInteger(1)->defaultValue(0),
             'created_at'=>$this->integer()->notNull(),
             'updated_at'=>$this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),

@@ -129,13 +129,13 @@ class User extends CommonUser
 
         // role to'gri jo'natilganligini tekshirish
         $roles = $post['role'];
-        if(is_array($roles)){
+        if (is_array($roles)) {
             foreach ($roles as $role) {
                 if (!(isset($role) && !empty($role) && is_string($role))) {
                     $errors[] = ['role' => [_e('Role is not valid.')]];
                 }
             }
-        }else{
+        } else {
             if (!(isset($roles) && !empty($roles) && is_string($roles))) {
                 $errors[] = ['role' => [_e('Role is not valid.')]];
             }
@@ -149,7 +149,7 @@ class User extends CommonUser
                 $password = _random_string();
             }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
-            
+
             $model->auth_key = \Yii::$app->security->generateRandomString(20);
             $model->password_reset_token = null;
             $model->access_token = \Yii::$app->security->generateRandomString();
@@ -182,16 +182,16 @@ class User extends CommonUser
                     $auth = Yii::$app->authManager;
                     $roles = json_decode(str_replace("'", "", $post['role']));
 
-                    if(is_array($roles)){
+                    if (is_array($roles)) {
                         foreach ($roles as $role) {
                             $authorRole = $auth->getRole($role);
                             if ($authorRole) {
-                                //  var_dump($post['teacherAccess']);
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
+
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-                                    if(is_array($teacherAccess)){
-                                        foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
+                                    foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
+                                        if (is_array($subjectIdsValues)) {
                                             foreach ($subjectIdsValues as $langId) {
                                                 $teacherAccessNew = new TeacherAccess();
                                                 $teacherAccessNew->user_id = $model->id;
@@ -207,10 +207,9 @@ class User extends CommonUser
                                 $errors[] = ['role' => [_e('Role not found.')]];
                             }
                         }
-                    }else{
+                    } else {
                         $errors[] = ['role' => [_e('Role is invalid')]];
                     }
-
                 }
             } else {
                 $errors[] = $model->errors;
@@ -236,18 +235,18 @@ class User extends CommonUser
         }
 
         // role to'gri jo'natilganligini tekshirish
-            $roles = $post['role'];
-            if(is_array($roles)){
-                foreach ($roles as $role) {
-                    if (!(isset($role) && !empty($role) && is_string($role))) {
-                        $errors[] = ['role' => [_e('Role is not valid.')]];
-                    }
-                }
-            }else{
-                if (!(isset($roles) && !empty($roles) && is_string($roles))) {
+        $roles = $post['role'];
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                if (!(isset($role) && !empty($role) && is_string($role))) {
                     $errors[] = ['role' => [_e('Role is not valid.')]];
                 }
             }
+        } else {
+            if (!(isset($roles) && !empty($roles) && is_string($roles))) {
+                $errors[] = ['role' => [_e('Role is not valid.')]];
+            }
+        }
 
         if (count($errors) == 0) {
             if (isset($post['password']) && !empty($post['password'])) {
@@ -265,7 +264,6 @@ class User extends CommonUser
                     } else {
                         $errors[] = $model->errors;
                     }
-
                 }
                 // ***
 
@@ -275,41 +273,37 @@ class User extends CommonUser
                     $auth = Yii::$app->authManager;
                     $roles = json_decode(str_replace("'", "", $post['role']));
 
-                    if(is_array($roles)){
+                    if (is_array($roles)) {
                         foreach ($roles as $role) {
                             $authorRole = $auth->getRole($role);
                             if ($authorRole) {
                                 $auth->revokeAll($model->id);
-//                                var_dump($post['teacherAccess']);
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-//                                    if(is_array($teacherAccess)){
-//                                                                            var_dump($teacherAccess);
 
-                                        $teacherAccessDelete  = TeacherAccess::deleteAll(['user_id'=>$model->id]);
-                                        foreach ($teacherAccess as $subjectIds => $subjectIdsValues ) {
+                                    $teacherAccessDelete  = TeacherAccess::deleteAll(['user_id' => $model->id]);
+                                    foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
+                                        if (is_array($subjectIdsValues)) {
                                             foreach ($subjectIdsValues as $langId) {
-//                                        var_dump($subjectIds);
                                                 $teacherAccessNew = new TeacherAccess();
                                                 $teacherAccessNew->user_id = $model->id;
                                                 $teacherAccessNew->subject_id = $subjectIds;
                                                 $teacherAccessNew->language_id = $langId;
-
-//                                        var_dump($teacherAccessNew);
+                                                
                                                 $teacherAccessNew->save();
                                             }
                                         }
                                     }
-//                                }
+                                }
+                                //                                }
                             } else {
                                 $errors[] = ['role' => [_e('Role not found.')]];
                             }
                         }
-                    }else{
+                    } else {
                         $errors[] = ['role' => [_e('Role is invalid')]];
                     }
-
                 }
             } else {
                 $errors[] = $model->errors;
@@ -386,12 +380,12 @@ class User extends CommonUser
     }
 
     //**parolni shifrlab saqlaymiz */
-    
+
     public function savePassword($password, $user_id)
     {
         // if exist delete and create new one 
         $oldPassword = PasswordEncrypts::findOne(['user_id', $user_id]);
-        if(isset($oldPassword)){
+        if (isset($oldPassword)) {
             $oldPassword->delete();
         }
 
@@ -404,12 +398,10 @@ class User extends CommonUser
         $save_password->user_id = $user_id;
         $save_password->password = $enc;
         $save_password->key_id = $key->id;
-        if($save_password->save(false)){
+        if ($save_password->save(false)) {
             return true;
-        }else{
+        } else {
             return false;
         }
-
     }
-
 }

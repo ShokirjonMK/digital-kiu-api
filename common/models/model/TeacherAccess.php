@@ -81,11 +81,31 @@ class TeacherAccess extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'user_id',
+            'subject_id',
+            'language_id',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+
     public function extraFields()
     {
         $extraFields =  [
             'languages',
             'subject',
+            'profile',
             'user',
             'timeTables',
             'createdBy',
@@ -123,6 +143,16 @@ class TeacherAccess extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[Profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
 
     /**

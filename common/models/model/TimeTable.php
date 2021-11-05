@@ -247,14 +247,16 @@ class TimeTable extends \yii\db\ActiveRecord
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
             'para_id' => $model->para_id,
-            'edu_year_id' => $model->edu_year_id
+            'edu_year_id' => $model->edu_year_id,
+           // 'week_id' => $model->week_id,
         ]);
         if (isset($timeTable)) {
             if($timeTable->semestr_id % 2 == $model->semestr_id % 2 ){
-                 $errors[] = _e("This Room and Para are busy for this Edu Year's semester");
+                 $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
             return $errors;
             }
         }
+        
         if($model->save()){
             $transaction->commit();
             return true;

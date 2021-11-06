@@ -14,9 +14,6 @@ class m211105_152845_week extends Migration
     {
         $this->createTable('week', [
             'id' => $this->primaryKey(),
-            'name'=>$this->string(255)->notNull(),
-
-
             'order'=>$this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at'=>$this->integer()->notNull(),

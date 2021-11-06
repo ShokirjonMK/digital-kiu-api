@@ -12,7 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property int $edu_semestr_subject_id
  * @property int $exams_type_id
- * @property int $max-ball
+ * @property int $max_ball
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -50,8 +50,8 @@ class EduSemestrExamsType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_subject_id', 'exams_type_id', 'max-ball'], 'required'],
-            [['edu_semestr_subject_id', 'exams_type_id', 'max-ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['edu_semestr_subject_id', 'exams_type_id', 'max_ball'], 'required'],
+            [['edu_semestr_subject_id', 'exams_type_id', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['exams_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exams_type_id' => 'id']],
         ];
@@ -66,7 +66,7 @@ class EduSemestrExamsType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
             'exams_type_id' => 'Exams Type ID',
-            'max-ball' => 'Max Ball',
+            'max_ball' => 'Max Ball',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',

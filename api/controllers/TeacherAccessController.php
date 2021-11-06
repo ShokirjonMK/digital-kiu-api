@@ -7,6 +7,7 @@ use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
 use common\models\JobInfo;
+use common\models\model\TimeTable;
 
 class TeacherAccessController extends ApiActiveController
 {
@@ -16,6 +17,44 @@ class TeacherAccessController extends ApiActiveController
     {
         return [];
     }
+
+    public function actionFree($lang)
+    {
+        $get = Yii::$app->request->get();
+
+        $para_id = Yii::$app->request->get('para_id');
+        $edu_year_id = Yii::$app->request->get('edu_year_id');
+        $semester_id = Yii::$app->request->get('semester_id');
+        $week_id = Yii::$app->request->get('week_id');
+
+        $teacheIds =  TimeTable::find()
+            ->select('teacher_access_id')
+            ->where([
+                'para_id' => Yii::$app->request->get('para_id'),
+                'edu_year_id' => Yii::$app->request->get('edu_year_id'),
+                'week_id' => Yii::$app->request->get('week_id')
+            ]);
+
+        $model = new TeacherAccess();
+
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0]);
+
+        if (isset($teacheIds)) {
+            $query->andFilterWhere(['not in', 'id', $teacheIds]);
+        }
+
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
 
     public function actionIndex($lang)
     {

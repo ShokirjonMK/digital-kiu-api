@@ -14,7 +14,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $room_id
  * @property int $para_id
  * @property int $course_id
- * @property int $semestr_id
+ * @property int $semester_id
  * @property int $edu_year_id
  * @property int $subject_id
  * @property int $language_id
@@ -61,15 +61,16 @@ class TimeTable extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semestr_id', 'edu_year_id', 'subject_id', 'language_id'], 'required'],
-            [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semestr_id', 'edu_year_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['teacher_access_id', 'room_id', 'para_id',  'subject_id', 'language_id'], 'required'],
+            [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semester_id', 'edu_year_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
             [['para_id'], 'exist', 'skipOnError' => true, 'targetClass' => Para::className(), 'targetAttribute' => ['para_id' => 'id']],
             [['room_id'], 'exist', 'skipOnError' => true, 'targetClass' => Room::className(), 'targetAttribute' => ['room_id' => 'id']],
+            [['week_id'], 'exist', 'skipOnError' => true, 'targetClass' => Week::className(), 'targetAttribute' => ['week_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
+            [['semester_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semester_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
         ];
     }
@@ -85,7 +86,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'room_id' => 'Room ID',
             'para_id' => 'Para ID',
             'course_id' => 'Course ID',
-            'semestr_id' => 'Semestr ID',
+            'semester_id' => 'Semestr ID',
             'edu_year_id' => 'Edu Year ID',
             'subject_id' => 'Subject ID',
             'language_id' => 'Languages ID',
@@ -107,7 +108,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'room_id',
             'para_id',
             'course_id',
-            'semestr_id',
+            'semester_id',
             'edu_year_id',
             'subject_id',
             'language_id',
@@ -134,6 +135,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'profile',
             'para',
             'room',
+            'week',
             'subject',
             'semestr',
             'teacherAccess',
@@ -194,6 +196,13 @@ class TimeTable extends \yii\db\ActiveRecord
         return $this->hasOne(Room::className(), ['id' => 'room_id']);
     }
 
+    public function getWeek()
+    {
+        return $this->hasOne(Week::className(), ['id' => 'week_id']);
+    }
+
+
+
     /**
      * Gets query for [[Subject]].
      *
@@ -211,7 +220,7 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getSemestr()
     {
-        return $this->hasOne(Semestr::className(), ['id' => 'semestr_id']);
+        return $this->hasOne(Semestr::className(), ['id' => 'semester_id']);
     }
 
     /**
@@ -231,7 +240,7 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getProfile()
     {
-        return Profile::findOne(['user_id'=> $this->teacherAccess->user_id]);
+        return Profile::findOne(['user_id' => $this->teacherAccess->user_id]);
     }
 
 
@@ -240,57 +249,95 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
 
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
             'para_id' => $model->para_id,
+            'week_id' => $model->week_id,
             'edu_year_id' => $model->edu_year_id,
-           // 'week_id' => $model->week_id,
         ]);
         if (isset($timeTable)) {
-            if($timeTable->semestr_id % 2 == $model->semestr_id % 2 ){
-                 $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
-            return $errors;
+            if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
+                $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
+                return $errors;
             }
         }
-        
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-
-            return simplify_errors($errors);
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
+        $checkTeacherTimeTable = TimeTable::findOne([
+            'para_id' => $model->para_id,
+            'edu_semester_id' => $model->edu_semester_id,
+            'week_id' => $model->week_id,
+            'teacher_access_id' => $model->teacher_access_id,
+        ]);
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
+        if (isset($checkTeacherTimeTable)) {
+            $errors[] = _e("This Teacher this Para are busy for this Edu Year's semestr");
+            return $errors;
         }
 
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            return simplify_errors($errors);
+        }
     }
 
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $timeTable = TimeTable::findOne([
+            'room_id' => $model->room_id,
+            'para_id' => $model->para_id,
+            'week_id' => $model->week_id,
+            'edu_year_id' => $model->edu_year_id,
+        ]);
+        if (isset($timeTable)) {
+            if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
+                $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
+                return $errors;
+            }
+        }
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
+        $checkTeacherTimeTable = TimeTable::findOne([
+            'para_id' => $model->para_id,
+            'edu_semester_id' => $model->edu_semester_id,
+            'week_id' => $model->week_id,
+            'teacher_access_id' => $model->teacher_access_id,
+        ]);
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
+        if (isset($checkTeacherTimeTable)) {
+            $errors[] = _e("This Teacher this Para are busy for this Edu Year's semestr");
+            return $errors;
+        }
+
+        $eduSemester = EduSemestr::findOne(['id' => $model->edu_semester_id]);
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
 }

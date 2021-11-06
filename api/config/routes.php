@@ -91,6 +91,10 @@ $routes = [
     'GET <lang:\w{2}>/yesno' => 'enum/yesno',
     // ***
 
+    // Free teachers for time tables
+
+    'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
+
 ];
 
 return array_merge($controllerRoutes, $routes);

@@ -173,11 +173,11 @@ trait ApiActionTrait
 
     public function filterAll($query, $model)
     {
-        $q = Yii::$app->request->get('q');
+        $filter = Yii::$app->request->get('filter');
 
-        $q = json_decode(str_replace("'", "", $q));
-        if (isset($q)) {
-            foreach ($q as $attribute => $id) {
+        $filter = json_decode(str_replace("'", "", $filter));
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $model->attributes())) {
                     $query = $query->andFilterWhere([$attribute => $id]);
                 }

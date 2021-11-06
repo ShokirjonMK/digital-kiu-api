@@ -41,6 +41,7 @@ $controllers = [
     'time-table',
     'password',
     'translate',
+    'week',
 
 ];
 

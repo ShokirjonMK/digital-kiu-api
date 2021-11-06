@@ -7,9 +7,11 @@ use yii\db\Migration;
  */
 class m211018_162215_create_alter_languages_table extends Migration
 {
+
     /**
      * {@inheritdoc}
      */
+
     public function safeUp()
     {
         $this->execute("ALTER TABLE 

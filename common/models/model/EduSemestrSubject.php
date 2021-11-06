@@ -57,7 +57,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
+            [['edu_semestr_id', 'subject_id'], 'required'],
+        //    [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
             [['edu_semestr_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['credit'], 'number'],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],
@@ -164,11 +165,39 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+        $EduSemestrSubject = EduSemestrSubject::findOne([
+            'edu_semestr_id' => $model->edu_semestr_id,
+            'subject_id' => $model->subject_id,
+        ]);
+        if (isset($EduSemestrSubject)) {
+            $errors[] = _e('This Edu Plan already exists');
+            return $errors;
+        }
         if($model->save()){
+            if (isset($post['SubjectCategory'])) {
+                $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
+                foreach ($SubjectCategory as $subjectCatId => $subjectCatValues) {
+                    $CategoryTimes = new EduSemestrSubjectCategoryTime();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->subject_category_id = $subjectCatId;
+                    $CategoryTimes->hours = $subjectCatValues;
+                    $CategoryTimes->save();
+                }
+            }
+            if (isset($post['EduSemestrExamType'])) {
+                $EduSemestrExamType = json_decode(str_replace("'", "", $post['EduSemestrExamType']));
+                foreach ($EduSemestrExamType as $ExamId => $ExamBal) {
+                    $CategoryTimes = new EduSemestrExamsType();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->exams_type_id = $ExamId;
+                    $CategoryTimes->max_ball = $ExamBal;
+                    $CategoryTimes->save();
+                }
+            }
+          
             $transaction->commit();
             return true;
         }else{
-
             return simplify_errors($errors);
         }
 
@@ -182,6 +211,26 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
         if($model->save()){
+            if (isset($post['SubjectCategory'])) {
+                $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
+                foreach ($SubjectCategory as $subjectCatId => $subjectCatValues) {
+                    $CategoryTimes = new EduSemestrSubjectCategoryTime();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->subject_category_id = $subjectCatId;
+                    $CategoryTimes->hours = $subjectCatValues;
+                    $CategoryTimes->save();
+                }
+            }
+            if (isset($post['SubjectCategory'])) {
+                $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
+                foreach ($SubjectCategory as $subjectCatId => $subjectCatValues) {
+                    $CategoryTimes = new EduSemestrSubjectCategoryTime();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->subject_category_id = $subjectCatId;
+                    $CategoryTimes->hours = $subjectCatValues;
+                    $CategoryTimes->save();
+                }
+            }
             $transaction->commit();
             return true;
         }else{

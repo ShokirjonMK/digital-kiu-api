@@ -148,6 +148,7 @@ class ExamsType extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            
         }
 
         $has_error = Translate::checkingAll($post);

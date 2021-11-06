@@ -22,10 +22,9 @@ class TeacherAccessController extends ApiActiveController
         $model = new TeacherAccess();
 
         $query = $model->find()
-            ->andWhere(['is_deleted' => 0])
-            ->andFilterWhere(['language_id' => Yii::$app->request->get('language_id')])
-            ->andFilterWhere(['subject_id' => Yii::$app->request->get('subject_id')])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            ->andWhere(['is_deleted' => 0]);
+
+        $query = $this->filterAll($query, $model);
 
         // sort
         $query = $this->sort($query);

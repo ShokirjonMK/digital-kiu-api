@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -89,7 +90,7 @@ class Profile extends \yii\db\ActiveRecord
             [['permanent_country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['permanent_country_id' => 'id']],
             [['permanent_region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['permanent_region_id' => 'id']],
             [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -135,46 +136,47 @@ class Profile extends \yii\db\ActiveRecord
         ];
     }
 
-    public function fields()
-    {
-        $fields =  [
-            'id',
-            'user_id',
-            'image',
-            'phone',
-            'phone_secondary',
-            'is_foreign',
-            'last_name',
-            'first_name',
-            'middle_name',
-            'passport_seria',
-            'passport_number',
-            'passport_pin',
-            'birthday',
-            'passport_file',
-            'country_id',
-            'region_id',
-            'area_id',
-            'address',
-            'gender',
-            'passport_given_date',
-            'passport_issued_date',
-            'passport_given_by',
-            'permanent_country_id',
-            'permanent_region_id',
-            'permanent_area_id',
-            'permanent_address',
+    // public function fields()
+    // {
+    //     $fields =  [
+    //         'id',
+    //         'user_id',
+    //         'image',
+    //         'phone',
+    //         'phone_secondary',
+    //         'is_foreign',
+    //         'last_name',
+    //         'first_name',
+    //         'middle_name',
+    //         'passport_seria',
+    //         'passport_number',
+    //         'passport_pin',
+    //         'birthday',
+    //         'passport_file',
+    //         'country_id',
+    //         'region_id',
+    //         'area_id',
+    //         'address',
+    //         'gender',
+    //         'passport_given_date',
+    //         'passport_issued_date',
+    //         'passport_given_by',
+    //         'permanent_country_id',
+    //         'permanent_region_id',
+    //         'permanent_area_id',
+    //         'permanent_address',
 
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+    //         'status',
+    //         'created_at',
+    //         'updated_at',
+    //         'created_by',
+    //         'updated_by',
 
-        ];
+    //     ];
 
-        return $fields;
-    }
+    //     return $fields;
+    // }
+
 
 
     /**
@@ -244,7 +246,7 @@ class Profile extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
 

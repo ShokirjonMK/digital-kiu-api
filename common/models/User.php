@@ -80,6 +80,23 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'username',
+            'email',
+            'roleName',
+            'status',
+            'created_at',
+            'updated_at',
+
+        ];
+
+        return $fields;
+    }
+
+
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'id']);
@@ -120,13 +137,14 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $apiExpirationTimeInSeconds = 60 * 60 * 24 * API_EXPIRATION_DAYS;
         return static::find()->where([
-            'AND', 
-            ['access_token' => $token], 
+            'AND',
+            ['access_token' => $token],
             ['<=', '(UNIX_TIMESTAMP() - access_token_time) ', $apiExpirationTimeInSeconds]
         ])->one();
     }
 
-    public function getExpireTime(){
+    public function getExpireTime()
+    {
         return $this->access_token_time + API_EXPIRATION_DAYS * 24 * 60 * 60;
     }
 

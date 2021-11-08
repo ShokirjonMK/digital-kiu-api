@@ -57,7 +57,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
+            [['edu_semestr_id', 'subject_id'], 'required'],
+            //    [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
             [['edu_semestr_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['credit'], 'number'],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],
@@ -164,14 +165,47 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        $EduSemestrSubject = EduSemestrSubject::findOne([
+            'edu_semestr_id' => $model->edu_semestr_id,
+            'subject_id' => $model->subject_id,
+        ]);
+        if (isset($EduSemestrSubject)) {
+            $errors[] = _e('This Edu Subject already exists in This Semester');
+            return $errors;
+        }
+        if ($model->save()) {
+            $all_ball_yuklama = 0;
+            $max_ball = 0;
+            if (isset($post['SubjectCategory'])) {
+                $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
+                foreach ($SubjectCategory as $subjectCatId => $subjectCatValues) {
+                    $CategoryTimes = new EduSemestrSubjectCategoryTime();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->subject_category_id = $subjectCatId;
+                    $CategoryTimes->hours = $subjectCatValues;
+                    $CategoryTimes->save();
+                    $all_ball_yuklama  = $all_ball_yuklama + $subjectCatValues;
+                }
+            }
+            if (isset($post['EduSemestrExamType'])) {
+                $EduSemestrExamType = json_decode(str_replace("'", "", $post['EduSemestrExamType']));
+                foreach ($EduSemestrExamType as $ExamId => $ExamBal) {
+                    $CategoryTimes = new EduSemestrExamsType();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->exams_type_id = $ExamId;
+                    $CategoryTimes->max_ball = $ExamBal;
+                    $CategoryTimes->save();
+                    $max_ball  = $max_ball + $ExamBal;
+                }
+            }
+            $model->all_ball_yuklama = $all_ball_yuklama;
+            $model->max_ball = $max_ball;
+            $model->update();
             $transaction->commit();
             return true;
-        }else{
-
+        } else {
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -181,26 +215,52 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
+            $all_ball_yuklama = 0;
+            $max_ball = 0;
+            if (isset($post['SubjectCategory'])) {
+                $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
+                $SubjectCategoryDelete  = EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]);
+                foreach ($SubjectCategory as $subjectCatId => $subjectCatValues) {
+                    $CategoryTimes = new EduSemestrSubjectCategoryTime();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->subject_category_id = $subjectCatId;
+                    $CategoryTimes->hours = $subjectCatValues;
+                    $CategoryTimes->save();
+                    $all_ball_yuklama  = $all_ball_yuklama + $subjectCatValues;
+                }
+            }
+            if (isset($post['EduSemestrExamType'])) {
+                $EduSemestrExamType = json_decode(str_replace("'", "", $post['EduSemestrExamType']));
+                $SubjectCategoryDelete  = EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]);
+                foreach ($EduSemestrExamType as $ExamId => $ExamBal) {
+                    $CategoryTimes = new EduSemestrExamsType();
+                    $CategoryTimes->edu_semestr_subject_id = $model->id;
+                    $CategoryTimes->exams_type_id = $ExamId;
+                    $CategoryTimes->max_ball = $ExamBal;
+                    $CategoryTimes->save();
+                    $max_ball  = $max_ball + $ExamBal;
+                }
+            }
+            $model->all_ball_yuklama = $all_ball_yuklama;
+            $model->max_ball = $max_ball;
+            $model->update();
             $transaction->commit();
             return true;
-        }else{
+        } else {
 
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
-
 }

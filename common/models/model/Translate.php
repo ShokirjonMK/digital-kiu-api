@@ -159,11 +159,11 @@ class Translate extends \yii\db\ActiveRecord
 
     public static function updateTranslate($nameArr, $table_name, $model_id, $descArr = null)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
-        foreach ($nameArr as $key => $value) {
+        if(isset($nameArr)){
+           foreach ($nameArr as $key => $value) {
             if ($value != 'undefined' && $value != 'null' && $value != '') {
                 $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
                 if (isset($update_tranlate)) {
@@ -190,7 +190,9 @@ class Translate extends \yii\db\ActiveRecord
                     }
                 }
             }
+        } 
         }
+        
         $transaction->commit();
         return true;
     }
@@ -251,10 +253,70 @@ class Translate extends \yii\db\ActiveRecord
                 }
                 $errors[] = $nameErrors;
             }
-        } else {
-            $errors[]['name'] = [_e('Please send Name attribute as array.')];
-            // $data['errors'][] = $errors;
-            $data['status'] = 0;
+        } 
+        // else {
+        //     $errors[]['name'] = [_e('Please send Name attribute as array.')];
+        //     // $data['errors'][] = $errors;
+        //     $data['status'] = 0;
+        // }
+        if (isset($post['description'])) {
+            if (!is_array($post['description'])) {
+                $errors[]['description'] = [_e('Description must be array.')];
+                // array_push($errors, 'description', [_e('Description must be array.')]);
+                // $data['errors'][] = $errors;
+                $data['status'] = 0;
+            } else {
+                $descriptionErrors = [];
+                foreach ($post['description'] as $lang => $value) {
+                    if (!in_array($lang, $langCodes)) {
+                        $errors[]['description[' . $lang . ']'] = [_e('Wrong language code selected (' . $lang . ').')];
+                        // $data['errors'][] = $errors;
+                        $data['status'] = 0;
+                    }
+                }
+                $errors[] = $descriptionErrors;
+            }
+        }
+
+        $data['errors'] = $errors;
+        return $data;
+    }
+
+
+    public static function checkingUpdate($post)
+    {
+        $languages = Languages::find()
+            ->asArray()
+            ->where(['status' => 1])
+            ->select('lang_code')
+            ->all();
+
+        $langCodes = [];
+        foreach ($languages as $itemLang) {
+            $langCodes[] = $itemLang['lang_code'];
+        }
+
+        $data = [];
+        $errors = [];
+        $data['status'] = 1;
+
+        if (isset($post['name'])) {
+            if (!is_array($post['name'])) {
+                $errors[]['name'] = [_e('Name must be array.')];
+                // $data['errors'][] = $errors;
+                $data['status'] = 0;
+            } else {
+                $nameErrors = [];
+                foreach ($post['name'] as $lang => $value) {
+
+                    if (!in_array($lang, $langCodes)) {
+                        $nameErrors['name[' . $lang . ']'] = [_e('Wrong language code selected (' . $lang . ').')];
+                        // $data['errors'][] = $errors;
+                        $data['status'] = 0;
+                    }
+                }
+                $errors[] = $nameErrors;
+            }
         }
         if (isset($post['description'])) {
             if (!is_array($post['description'])) {

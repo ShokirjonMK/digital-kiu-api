@@ -105,7 +105,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
         $extraFields =  [
             'languages',
             'subject',
-            'profile',
+            'teacher',
             'user',
             'timeTables',
             'createdBy',
@@ -150,9 +150,10 @@ class TeacherAccess extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getProfile()
+    public function getTeacher()
     {
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
+
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
     }
 
     /**
@@ -164,8 +165,6 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TimeTable::className(), ['teacher_access_id' => 'id']);
     }
-
-
 
 
     public static function createItem($model, $post)

@@ -41,6 +41,7 @@ $controllers = [
     'time-table',
     'password',
     'translate',
+    'week',
 
 ];
 
@@ -89,6 +90,10 @@ $routes = [
     'GET <lang:\w{2}>/topic-types' => 'enum/topic-types',
     'GET <lang:\w{2}>/yesno' => 'enum/yesno',
     // ***
+
+    // Free teachers for time tables
+
+    'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
 
 ];
 

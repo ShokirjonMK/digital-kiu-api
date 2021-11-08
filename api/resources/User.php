@@ -197,7 +197,6 @@ class User extends CommonUser
                                                 $teacherAccessNew->user_id = $model->id;
                                                 $teacherAccessNew->subject_id = $subjectIds;
                                                 $teacherAccessNew->language_id = $langId;
-
                                                 $teacherAccessNew->save();
                                             }
                                         }
@@ -281,7 +280,6 @@ class User extends CommonUser
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-
                                     $teacherAccessDelete  = TeacherAccess::deleteAll(['user_id' => $model->id]);
                                     foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
                                         if (is_array($subjectIdsValues)) {
@@ -290,7 +288,6 @@ class User extends CommonUser
                                                 $teacherAccessNew->user_id = $model->id;
                                                 $teacherAccessNew->subject_id = $subjectIds;
                                                 $teacherAccessNew->language_id = $langId;
-                                                
                                                 $teacherAccessNew->save();
                                             }
                                         }

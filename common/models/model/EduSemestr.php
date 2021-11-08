@@ -108,14 +108,12 @@ class EduSemestr extends \yii\db\ActiveRecord
             'start_date',
             'end_date',
             'is_checked',
-
             'order',
             'status',
             'created_at',
             'updated_at',
             'created_by',
             'updated_by',
-
         ];
 
         return $fields;

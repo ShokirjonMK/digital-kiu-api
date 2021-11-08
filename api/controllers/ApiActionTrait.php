@@ -12,7 +12,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Response;
 
-trait ApiActionTrait 
+trait ApiActionTrait
 {
     public function behaviors()
     {
@@ -78,7 +78,7 @@ trait ApiActionTrait
 
         // var_dump($action);
         // die();
-// save logs here
+        // save logs here
 
         $this->generate_access_key();
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -88,7 +88,7 @@ trait ApiActionTrait
             $data['message'] = 'Incorrect token key!';
             $this->asJson($this->response(0, _e('Incorrect token key! MK'), null, null, ResponseStatus::UNAUTHORIZED));
             return false;
-        }   
+        }
 
         $lang = Yii::$app->request->get('lang');
 
@@ -97,25 +97,23 @@ trait ApiActionTrait
         foreach ($languages as $itemLang) {
             $langCodes[] = $itemLang['lang_code'];
         }
-        if(!in_array($lang, $langCodes)){
-            $this->asJson($this->response(0, _e('Wrong language code selected ('.$lang.').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
-        }else{
+        if (!in_array($lang, $langCodes)) {
+            $this->asJson($this->response(0, _e('Wrong language code selected (' . $lang . ').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
+        } else {
 
-//            $action_logos = new \common\models\model\Action();
-//
-//            $action_logos-> user_id = Yii::$app->user->identity->id();
-//            $action_logos-> controller=Yii::$app->controller->id;
-//            $action_logos-> action=Yii::$app->controller->action->id;
-//            $action_logos-> method= $_SERVER['REQUEST_METHOD'];
-//
-//            var_dump($action_logos);
-//            die();
+            //            $action_logos = new \common\models\model\Action();
+            //
+            //            $action_logos-> user_id = Yii::$app->user->identity->id();
+            //            $action_logos-> controller=Yii::$app->controller->id;
+            //            $action_logos-> action=Yii::$app->controller->action->id;
+            //            $action_logos-> method= $_SERVER['REQUEST_METHOD'];
+            //
+            //            var_dump($action_logos);
+            //            die();
 
             Yii::$app->language = $lang;
             return parent::beforeAction($action);
-        } 
-
-        
+        }
     }
 
 
@@ -173,15 +171,32 @@ trait ApiActionTrait
         return false;
     }
 
-    public function sort($query){
+    public function filterAll($query, $model)
+    {
+        $filter = Yii::$app->request->get('filter');
 
-        if(Yii::$app->request->get('sort')){
+        $filter = json_decode(str_replace("'", "", $filter));
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $model->attributes())) {
+                    $query = $query->andFilterWhere([$attribute => $id]);
+                }
+            }
+        }
+        return $query;
+    }
+
+
+    public function sort($query)
+    {
+
+        if (Yii::$app->request->get('sort')) {
 
             $sortVal = Yii::$app->request->get('sort');
-            if(substr($sortVal,0,1) == '-'){
+            if (substr($sortVal, 0, 1) == '-') {
                 $sortKey = SORT_DESC;
-                $sortField = substr($sortVal,1);
-            }else{
+                $sortField = substr($sortVal, 1);
+            } else {
                 $sortKey = SORT_ASC;
                 $sortField = $sortVal;
             }
@@ -192,7 +207,8 @@ trait ApiActionTrait
         return $query;
     }
 
-    public function getData($query, $perPage = 20, $validatePage = true){
+    public function getData($query, $perPage = 20, $validatePage = true)
+    {
 
         return new ActiveDataProvider([
             'query' => $query,
@@ -201,7 +217,6 @@ trait ApiActionTrait
                 'validatePage' => $validatePage
             ],
         ]);
-
     }
 
     public function response($status, $message, $data = null, $errors = null, $responsStatusCode = 200)
@@ -211,8 +226,8 @@ trait ApiActionTrait
             'status' => $status,
             'message' => $message
         ];
-        if($data) $response['data'] = $data; 
-        if($errors) $response['errors'] = $errors; 
+        if ($data) $response['data'] = $data;
+        if ($errors) $response['errors'] = $errors;
         return $response;
     }
 
@@ -220,5 +235,4 @@ trait ApiActionTrait
     {
         return $model->load($data, '');
     }
-
 }

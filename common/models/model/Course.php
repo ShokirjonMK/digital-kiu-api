@@ -172,10 +172,12 @@ class Course extends \yii\db\ActiveRecord
         $has_error = Translate::checkingAll($post);
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                    }
                 }
                 $transaction->commit();
                 return true;

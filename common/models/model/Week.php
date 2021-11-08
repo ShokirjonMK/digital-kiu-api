@@ -7,7 +7,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "exams_type".
+ * This is the model class for table "week".
  *
  * @property int $id
  * @property string $name
@@ -19,9 +19,9 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property EduSemestrExamsType[] $eduSemestrExamsTypes
+ * @property TimeTable[] $timeTables
  */
-class ExamsType extends \yii\db\ActiveRecord
+class Week extends \yii\db\ActiveRecord
 {
 
     public static $selected_language = 'uz';
@@ -40,7 +40,7 @@ class ExamsType extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'exams_type';
+        return 'week';
     }
 
     /**
@@ -49,9 +49,7 @@ class ExamsType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-//            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -95,8 +93,7 @@ class ExamsType extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'eduSemestrExamsTypes',
-            'description',
+            'timeTables',
             'createdBy',
             'updatedBy',
         ];
@@ -104,13 +101,9 @@ class ExamsType extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getTranslate()
+    public function getDescription()
     {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
-        
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+        return $this->translate->description ?? '';
     }
 
     public function getInfoRelation()
@@ -127,20 +120,34 @@ class ExamsType extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-    public function getDescription()
+    /**
+     * Get Translate
+     *
+     * @return void
+     */
+    public function getTranslate()
     {
-        return $this->translate->description ?? '';
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
+
+
+
+
     /**
-     * Gets query for [[EduSemestrExamsTypes]].
+     * Gets query for [[TimeTables]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getEduSemestrExamsTypes()
+    public function getTimeTables()
     {
-        return $this->hasMany(EduSemestrExamsType::className(), ['exams_type_id' => 'id']);
+        return $this->hasMany(TimeTable::className(), ['week_id' => 'id']);
     }
+
+
 
     public static function createItem($model, $post)
     {
@@ -148,7 +155,6 @@ class ExamsType extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
-            
         }
 
         $has_error = Translate::checkingAll($post);
@@ -178,7 +184,6 @@ class ExamsType extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-
         $has_error = Translate::checkingAll($post);
         if ($has_error['status']) {
             if ($model->save()) {
@@ -198,17 +203,15 @@ class ExamsType extends \yii\db\ActiveRecord
         }
     }
 
-
-
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
 
 
 

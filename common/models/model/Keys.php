@@ -72,47 +72,4 @@ class Keys extends \yii\db\ActiveRecord
         ];
     }
 
-
-    public function extraFields()
-    {
-        $extraFields =  [
-
-        ];
-
-        return $extraFields;
-    }
-
-    public static function createItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-
-            return simplify_errors($errors);
-        }
-
-    }
-
-    public static function updateItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-        if($model->save()){
-            $transaction->commit();
-            return true;
-        }else{
-
-            return simplify_errors($errors);
-        }
-    }
-
 }

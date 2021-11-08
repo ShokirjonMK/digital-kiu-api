@@ -245,7 +245,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 'edu_type_id' => $model->edu_type_id,
                 'edu_year_id' => $model->edu_year_id
             ]);
-            if(isset($eduPlan)){
+            if (isset($eduPlan)) {
                 $errors[] = _e('This Edu Plan already exists');
                 return $errors;
             }
@@ -255,7 +255,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-               
+
                 $eduYear = [];
                 for ($i = 0; $i < $post['course']; $i++) {
                     /* Kuzgi semestrni qo`shish */
@@ -277,7 +277,7 @@ class EduPlan extends \yii\db\ActiveRecord
                             return $res;
                         }
                     }
-                  
+
                     $newEduSmester->edu_year_id = $eduYear[$i]->id;
                     if (!$newEduSmester->validate()) {
                         $errors[] = $newEduSmester->errors;
@@ -292,7 +292,7 @@ class EduPlan extends \yii\db\ActiveRecord
                     $newEduSmester1->edu_plan_id = $model->id;
                     $newEduSmester1->course_id = $i + 1;
                     $newEduSmester1->semestr_id = ($i + 1) * 2;
-                    
+
                     $newEduSmester1->edu_year_id = $eduYear[$i]->id;
                     if (!$newEduSmester1->validate()) {
                         $errors[] = $newEduSmester1->errors;
@@ -324,13 +324,15 @@ class EduPlan extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        $has_error = Translate::checkingAll($post);
+        $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                    }
                 }
                 $transaction->commit();
                 return true;

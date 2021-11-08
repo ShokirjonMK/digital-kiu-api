@@ -169,7 +169,7 @@ class Course extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        $has_error = Translate::checkingAll($post);
+        $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
                 if (isset($post['name'])) {

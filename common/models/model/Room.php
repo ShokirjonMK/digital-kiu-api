@@ -52,9 +52,9 @@ class Room extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'building_id'], 'required'],
+            [['building_id'], 'required'],
             [['building_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-//            [['name'], 'string', 'max' => 255],
+            //            [['name'], 'string', 'max' => 255],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Building::className(), 'targetAttribute' => ['building_id' => 'id']],
         ];
     }
@@ -66,7 +66,7 @@ class Room extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-//            'name' => 'Name',
+            //            'name' => 'Name',
             'building_id' => 'Building ID',
             'order' => 'Order',
             'status' => 'Status',
@@ -139,7 +139,7 @@ class Room extends \yii\db\ActiveRecord
 
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
-    
+
     public function getDescription()
     {
         return $this->translate->description ?? '';
@@ -185,7 +185,6 @@ class Room extends \yii\db\ActiveRecord
         } else {
             return double_errors($errors, $has_error['errors']);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -195,13 +194,15 @@ class Room extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        $has_error = Translate::checkingAll($post);
+        $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                    }
                 }
                 $transaction->commit();
                 return true;
@@ -215,13 +216,13 @@ class Room extends \yii\db\ActiveRecord
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
 }

@@ -50,9 +50,9 @@ class Para extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['name'], 'required'],
+            //            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-//            [['name'], 'string', 'max' => 255],
+            //            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -63,7 +63,7 @@ class Para extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-//            'name' => 'Name',
+            //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -173,13 +173,15 @@ class Para extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        $has_error = Translate::checkingAll($post);
+        $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                    }
                 }
                 $transaction->commit();
                 return true;
@@ -193,16 +195,13 @@ class Para extends \yii\db\ActiveRecord
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
-
 }

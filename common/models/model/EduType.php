@@ -49,9 +49,9 @@ class EduType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['name'], 'required'],
+            //            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-//            [['name'], 'string', 'max' => 255],
+            //            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -62,7 +62,7 @@ class EduType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-//            'name' => 'Name',
+            //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -109,7 +109,7 @@ class EduType extends \yii\db\ActiveRecord
         if (Yii::$app->request->get('self') == 1) {
             return $this->infoRelation[0];
         }
-        
+
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
@@ -117,7 +117,7 @@ class EduType extends \yii\db\ActiveRecord
     {
         return $this->translate->description ?? '';
     }
-    
+
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
@@ -144,10 +144,6 @@ class EduType extends \yii\db\ActiveRecord
     }
 
 
-
-
-
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -156,14 +152,16 @@ class EduType extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        $has_error = Translate::checkingAll($post);
+        $has_error = Translate::checkingUpdate($post);
 
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                    }
                 }
                 $transaction->commit();
                 return true;
@@ -174,7 +172,6 @@ class EduType extends \yii\db\ActiveRecord
         } else {
             return double_errors($errors, $has_error['errors']);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -204,15 +201,13 @@ class EduType extends \yii\db\ActiveRecord
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
 }

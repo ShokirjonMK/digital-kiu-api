@@ -8,6 +8,8 @@ use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
 use common\models\JobInfo;
+use common\models\model\Semestr;
+use common\models\model\TimeTable;
 
 class RoomController extends ApiActiveController
 {
@@ -20,6 +22,51 @@ class RoomController extends ApiActiveController
 
     public $table_name = 'room';
     public $controller_name = 'Room';
+
+
+    public function actionFree($lang)
+    {
+        
+        $semester_id = Yii::$app->request->get('semester_id');
+
+        $semester = Semestr::findOne($semester_id);
+
+        if (!isset($semester)) {
+            return $this->response(0, _e('Semester not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        $type = $semester->type;
+
+        $semester_ids = Semestr::find()->select('id')->where(['type' => $type]);
+
+        $roomIds =  TimeTable::find()
+            ->select('room_id')
+            ->where([
+                'para_id' => Yii::$app->request->get('para_id'),
+                'edu_year_id' => Yii::$app->request->get('edu_year_id'),
+                'week_id' => Yii::$app->request->get('week_id')
+
+            ])->andWhere(['in', 'semester_id', $semester_ids]);
+
+
+        $model = new Room();
+
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0]);
+
+        if (isset($roomIds)) {
+            $query->andFilterWhere(['not in', 'id', $roomIds]);
+        }
+
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
 
     public function actionIndex($lang)
     {

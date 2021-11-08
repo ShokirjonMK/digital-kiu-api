@@ -7,6 +7,7 @@ use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
 use common\models\JobInfo;
+use common\models\model\Semestr;
 use common\models\model\TimeTable;
 
 class TeacherAccessController extends ApiActiveController
@@ -27,14 +28,25 @@ class TeacherAccessController extends ApiActiveController
         $semester_id = Yii::$app->request->get('semester_id');
         $week_id = Yii::$app->request->get('week_id');
 
+        $semester = Semestr::findOne($semester_id);
+
+        if (!isset($semester)) {
+            return $this->response(0, _e('Semester not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        $type = $semester->type;
+
+        $semester_ids = Semestr::find()->select('id')->where(['type' => $type]);
+
         $teacheIds =  TimeTable::find()
             ->select('teacher_access_id')
             ->where([
                 'para_id' => Yii::$app->request->get('para_id'),
                 'edu_year_id' => Yii::$app->request->get('edu_year_id'),
                 'week_id' => Yii::$app->request->get('week_id')
-            ]);
 
+            ])->andWhere(['in', 'semester_id', $semester_ids]);
+
+            
         $model = new TeacherAccess();
 
         $query = $model->find()

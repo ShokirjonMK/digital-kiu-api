@@ -52,7 +52,7 @@ class Semestr extends \yii\db\ActiveRecord
     {
         return [
             //            [['name'], 'required'],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['order', 'type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             //            [['name'], 'string', 'max' => 255],
         ];
     }
@@ -66,6 +66,7 @@ class Semestr extends \yii\db\ActiveRecord
             'id' => 'ID',
             //            'name' => 'Name',
             'order' => 'Order',
+            'type' => 'Type',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -84,6 +85,8 @@ class Semestr extends \yii\db\ActiveRecord
             },
             'order',
             'status',
+            'type',
+
             'created_at',
             'updated_at',
             'created_by',

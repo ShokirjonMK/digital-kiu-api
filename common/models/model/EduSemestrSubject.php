@@ -91,6 +91,47 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public function fields()
+    {
+        $fields =  [
+            'id',
+
+            'edu_semestr_id',
+            'subject_id',
+            'subject_type_id',
+            'credit',
+            'all_ball_yuklama',
+            'is_checked',
+            'max_ball',
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'eduSemestrExamsTypes',
+            'eduSemestr',
+            'subject',
+            'subjectType',
+            'eduSemestrSubjectCategoryTimes',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
     /**
      * Gets query for [[EduSemestrExamsTypes]].
      *
@@ -139,22 +180,6 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function getEduSemestrSubjectCategoryTimes()
     {
         return $this->hasMany(EduSemestrSubjectCategoryTime::className(), ['edu_semestr_subject_id' => 'id']);
-    }
-
-
-    public function extraFields()
-    {
-        $extraFields =  [
-            'eduSemestrExamsTypes',
-            'eduSemestr',
-            'subject',
-            'subjectType',
-            'eduSemestrSubjectCategoryTimes',
-            'createdBy',
-            'updatedBy',
-        ];
-
-        return $extraFields;
     }
 
 

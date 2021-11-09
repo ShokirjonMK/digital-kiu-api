@@ -81,6 +81,7 @@ class EduSemestrController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
         $model = EduSemestr::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

@@ -44,7 +44,7 @@ $controllers = [
     'week',
     'region',
     'area',
-
+    'student-time-table',
 ];
 
 $controllerRoutes = [];

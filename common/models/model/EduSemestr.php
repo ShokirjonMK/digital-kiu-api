@@ -60,7 +60,7 @@ class EduSemestr extends \yii\db\ActiveRecord
     {
         return [
             [['edu_plan_id', 'course_id', 'semestr_id', 'edu_year_id'], 'required'],
-            [['edu_plan_id', 'course_id', 'semestr_id', 'edu_year_id', 'is_checked', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['edu_plan_id', 'course_id', 'optional_subject_count', 'required_subject_count', 'semestr_id', 'edu_year_id', 'is_checked', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
@@ -84,6 +84,8 @@ class EduSemestr extends \yii\db\ActiveRecord
             'end_date' => 'End Date',
             'is_checked' => 'Is Checked',
             'order' => 'Order',
+            'optional_subject_count' => 'Optional Subject Count',
+            'required_subject_count' => 'Required Subject Count',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -103,6 +105,8 @@ class EduSemestr extends \yii\db\ActiveRecord
             },
             'edu_plan_id',
             'course_id',
+            'optional_subject_count',
+            'required_subject_count',
             'semestr_id',
             'edu_year_id',
             'start_date',
@@ -138,14 +142,14 @@ class EduSemestr extends \yii\db\ActiveRecord
 
     public function getGenerateName()
     {
-        if(isset($this->eduYear)){
+        if (isset($this->eduYear)) {
 
             if (isset($this->eduYear->translate)) {
-                    return $this->eduYear->translate->name . ' - ' . $this->course->id . '-' . $this->semestr->id; 
+                return $this->eduYear->translate->name . ' - ' . $this->course->id . '-' . $this->semestr->id;
             }
-            return $this->eduYear->year . ' - ' . date("Y", strtotime("+1 year", strtotime( $this->eduYear->year."-01-01"))) ;
+            return $this->eduYear->year . ' - ' . date("Y", strtotime("+1 year", strtotime($this->eduYear->year . "-01-01")));
         }
-        return ":) ".$this->course->id . '-' . $this->semestr->id;
+        return ":) " . $this->course->id . '-' . $this->semestr->id;
     }
 
     /**
@@ -226,6 +230,15 @@ class EduSemestr extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
+            if ($model->status == 1) {
+                $allEduSemesters = EduSemestr::find()->where(['edu_plan_id' => $model->edu_plan_id])->andWhere(['not in', 'id', $model->id])->all();
+                if (isset($allEduSemesters)) {
+                    foreach ($allEduSemesters as $EduSemester) {
+                        $EduSemester->status = 0;
+                        $EduSemester->save();
+                    }
+                }
+            }
             $transaction->commit();
             return true;
         } else {

@@ -264,6 +264,7 @@ class EduPlan extends \yii\db\ActiveRecord
                     $newEduSmester->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_end'])));
                     $newEduSmester->edu_plan_id = $model->id;
                     $newEduSmester->course_id = $i + 1;
+                    $newEduSmester->status = 0;
                     $newEduSmester->semestr_id = ($i + 1) * 2 - 1;
                     $eduYear[$i] = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester->start_date))]);
                     if (!isset($eduYear[$i])) {
@@ -291,6 +292,7 @@ class EduPlan extends \yii\db\ActiveRecord
                     $newEduSmester1->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['spring_end'])));
                     $newEduSmester1->edu_plan_id = $model->id;
                     $newEduSmester1->course_id = $i + 1;
+                    $newEduSmester1->status = 0;
                     $newEduSmester1->semestr_id = ($i + 1) * 2;
 
                     $newEduSmester1->edu_year_id = $eduYear[$i]->id;

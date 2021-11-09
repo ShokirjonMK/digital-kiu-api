@@ -79,6 +79,7 @@ class Student extends \yii\db\ActiveRecord
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
         ];
     }
 
@@ -137,13 +138,22 @@ class Student extends \yii\db\ActiveRecord
             'faculty',
             'user',
             'profile',
+            'eduPlan',
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
     }
-
+    /**
+     * Gets query for [[Course]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEduPlan()
+    {
+        return $this->hasOne(EduPlan::className(), ['id' => 'edu_plan_id']);
+    }
     /**
      * Gets query for [[Course]].
      *

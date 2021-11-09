@@ -28,7 +28,10 @@ class EmployeeController extends ApiActiveController
             ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->andWhere(['in', 'auth_assignment.item_name', EmployeeUser::$roleList])
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
-        
+
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
         

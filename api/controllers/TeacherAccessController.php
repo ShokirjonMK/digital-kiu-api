@@ -56,6 +56,7 @@ class TeacherAccessController extends ApiActiveController
             $query->andFilterWhere(['not in', 'id', $teacheIds]);
         }
 
+        //filter
         $query = $this->filterAll($query, $model);
 
         // sort
@@ -75,6 +76,7 @@ class TeacherAccessController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
+        //filter
         $query = $this->filterAll($query, $model);
 
         // sort

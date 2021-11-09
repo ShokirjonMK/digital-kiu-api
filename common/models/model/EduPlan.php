@@ -224,7 +224,7 @@ class EduPlan extends \yii\db\ActiveRecord
      */
     public function getEduSemestrs()
     {
-        return $this->hasMany(EduSemestr::className(), ['edu_plan_id' => 'id']);
+        return $this->hasMany(EduSemestr::className(), ['edu_plan_id' => 'id'])->where(['is_deleted' => 0]);
     }
 
     public static function createItem($model, $post)

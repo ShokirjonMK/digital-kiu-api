@@ -35,6 +35,9 @@ class WeekController extends ApiController
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
 

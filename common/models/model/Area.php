@@ -71,6 +71,36 @@ class Area extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name',
+            'region_id',
+            'type',
+            'postcode',
+            'lat',
+            'long',
+            'sort',
+            'status',
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'region',
+            'profileslive',
+            'profiles',
+            'country',
+            'createdBy',
+            'updatedBy',
+        ];
+        return $extraFields;
+    }
+
     /**
      * Gets query for [[Profiles]].
      *
@@ -86,7 +116,7 @@ class Area extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getProfiles0()
+    public function getProfileslive()
     {
         return $this->hasMany(Profile::className(), ['permanent_area_id' => 'id']);
     }

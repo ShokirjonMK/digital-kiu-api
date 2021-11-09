@@ -23,10 +23,11 @@ class EduSemestrSubjectController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
-           // ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        // ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
-
+        //filter
         $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
 

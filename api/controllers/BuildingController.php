@@ -21,7 +21,7 @@ class BuildingController extends ApiActiveController
 
     public $table_name = 'building';
     public $controller_name = 'Building';
-    
+
     public function actionIndex($lang)
     {
         $model = new Building();
@@ -36,6 +36,10 @@ class BuildingController extends ApiActiveController
             // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
+
+        //filter
+        $query = $this->filterAll($query, $model);
 
         // sort
         $query = $this->sort($query);
@@ -106,5 +110,4 @@ class BuildingController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
 }

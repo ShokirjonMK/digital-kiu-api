@@ -25,7 +25,10 @@ class UserController extends ApiActiveController
             ->andWhere(['deleted' => 0])
             // ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
-        
+
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
         

@@ -24,6 +24,9 @@ class TranslateController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
 
@@ -95,12 +98,5 @@ class TranslateController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
-
-
-
-
-
 
 }

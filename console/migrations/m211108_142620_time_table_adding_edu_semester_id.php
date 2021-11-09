@@ -13,7 +13,7 @@ class m211108_142620_time_table_adding_edu_semester_id extends Migration
     public function safeUp()
     {
         $this->execute("ALTER TABLE `time_table` add  `edu_semester_id` INT(11) NOT NULL;");
-        $this->addForeignKey('wk_time_table_edu_semester_id', 'time_table', 'edu_semester_id', 'edu_semester', 'id');
+        $this->addForeignKey('wk_time_table_edu_semester_id', 'time_table', 'edu_semester_id', 'edu_semestr', 'id');
     }
 
     /**

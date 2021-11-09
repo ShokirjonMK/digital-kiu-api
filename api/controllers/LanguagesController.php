@@ -25,6 +25,9 @@ class LanguagesController extends ApiActiveController
           ->andWhere(['status' => 1,'is_deleted' => 0]);
         //    ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
 

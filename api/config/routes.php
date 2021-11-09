@@ -42,6 +42,8 @@ $controllers = [
     'password',
     'translate',
     'week',
+    'region',
+    'area',
 
 ];
 
@@ -94,6 +96,7 @@ $routes = [
     // Free teachers for time tables
 
     'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
+    'POST <lang:\w{2}>/rooms/free' => 'room/free',
 
 ];
 

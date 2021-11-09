@@ -42,6 +42,9 @@ class ReferenceController extends ApiActiveController
             ->andWhere(['language' => $lang])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
 

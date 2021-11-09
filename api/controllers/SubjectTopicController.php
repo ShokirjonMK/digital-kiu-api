@@ -26,7 +26,10 @@ class SubjectTopicController extends ApiActiveController
             ->join('INNER JOIN', 'subject_topic_info info', 'info.subject_topic_id = subject_topic.id')
             ->andWhere(['language' => Yii::$app->request->get('lang')])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
-        
+
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
         

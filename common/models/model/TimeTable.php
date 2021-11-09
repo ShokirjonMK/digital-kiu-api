@@ -64,6 +64,7 @@ class TimeTable extends \yii\db\ActiveRecord
             [['teacher_access_id', 'room_id', 'para_id',  'subject_id', 'language_id'], 'required'],
             [['teacher_access_id', 'room_id', 'para_id', 'course_id', 'semester_id', 'edu_year_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
+            [['edu_semester_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semester_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
             [['para_id'], 'exist', 'skipOnError' => true, 'targetClass' => Para::className(), 'targetAttribute' => ['para_id' => 'id']],
@@ -88,6 +89,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'course_id' => 'Course ID',
             'semester_id' => 'Semestr ID',
             'edu_year_id' => 'Edu Year ID',
+            'edu_semester_id' => 'Edu Semester ID',
             'subject_id' => 'Subject ID',
             'language_id' => 'Languages ID',
             'order' => 'Order',
@@ -109,6 +111,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'para_id',
             'course_id',
             'semester_id',
+            'edu_semester_id',
             'edu_year_id',
             'subject_id',
             'language_id',
@@ -135,6 +138,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'profile',
             'para',
             'room',
+            'eduSemestr',
             'week',
             'subject',
             'semestr',
@@ -234,6 +238,16 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[TeacherAccess]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEduSemestr()
+    {
+        return $this->hasOne(EduSemestr::className(), ['id' => 'edu_semester_id']);
+    }
+
+    /**
      * Gets query for [[profile]].
      *
      * @return \yii\db\ActiveQuery
@@ -250,30 +264,46 @@ class TimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        $eduSemester = EduSemestr::findOne($model->edu_semester_id);
+
+        if (!isset($eduSemester)) {
+            $errors[] = _e("Edu Semester not found");
+            return $errors;
+        }
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
             'para_id' => $model->para_id,
             'week_id' => $model->week_id,
-            'edu_year_id' => $model->edu_year_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
         ]);
+
+        $model->semester_id = $eduSemester->semestr_id;
+        $model->course_id = $eduSemester->course_id;
+        $model->edu_year_id = $eduSemester->edu_year_id;
+
         if (isset($timeTable)) {
             if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
-                $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
+                $errors[] = _e("This Room and Para is busy for this Edu Year's semestr");
+                return $errors;
+            }
+        }
+
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
+        $checkTeacherTimeTable = TimeTable::findOne([
+            'para_id' => $model->para_id,
+            // 'edu_semester_id' => $model->edu_semester_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
+            'week_id' => $model->week_id,
+            'teacher_access_id' => $model->teacher_access_id,
+        ]);
+
+        if (isset($checkTeacherTimeTable)) {
+            if ($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) {
+                $errors[] = _e("This Teacher in this Para are busy for this Edu Year's semestr");
                 return $errors;
             }
         }
         /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
-        $checkTeacherTimeTable = TimeTable::findOne([
-            'para_id' => $model->para_id,
-            'edu_semester_id' => $model->edu_semester_id,
-            'week_id' => $model->week_id,
-            'teacher_access_id' => $model->teacher_access_id,
-        ]);
-        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
-        if (isset($checkTeacherTimeTable)) {
-            $errors[] = _e("This Teacher this Para are busy for this Edu Year's semestr");
-            return $errors;
-        }
 
 
         if (!($model->validate())) {
@@ -291,33 +321,46 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        $eduSemester = EduSemestr::findOne($model->edu_semester_id);
 
+        if (!isset($eduSemester)) {
+            $errors[] = _e("Edu Semester not found");
+            return $errors;
+        }
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
             'para_id' => $model->para_id,
             'week_id' => $model->week_id,
-            'edu_year_id' => $model->edu_year_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
         ]);
+
+        $model->semester_id = $eduSemester->semestr_id;
+        $model->course_id = $eduSemester->course_id;
+        $model->edu_year_id = $eduSemester->edu_year_id;
+
         if (isset($timeTable)) {
             if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
                 $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
                 return $errors;
             }
         }
+
         /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
         $checkTeacherTimeTable = TimeTable::findOne([
             'para_id' => $model->para_id,
-            'edu_semester_id' => $model->edu_semester_id,
+            // 'edu_semester_id' => $model->edu_semester_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
             'week_id' => $model->week_id,
             'teacher_access_id' => $model->teacher_access_id,
         ]);
-        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
-        if (isset($checkTeacherTimeTable)) {
-            $errors[] = _e("This Teacher this Para are busy for this Edu Year's semestr");
-            return $errors;
-        }
 
-        $eduSemester = EduSemestr::findOne(['id' => $model->edu_semester_id]);
+        if (isset($checkTeacherTimeTable)) {
+            if ($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) {
+                $errors[] = _e("This Teacher in this Para are busy for this Edu Year's semestr");
+                return $errors;
+            }
+        }
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

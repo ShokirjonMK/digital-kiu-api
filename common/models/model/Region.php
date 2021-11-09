@@ -81,6 +81,41 @@ class Region extends \yii\db\ActiveRecord
         ];
     }
 
+
+
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name',
+            'name_kirill',
+            'slug',
+            'country_id',
+            'parent_id',
+            'type',
+            'postcode',
+            'lat',
+            'long',
+            'status',
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'areas',
+            'profilesLive',
+            'profiles',
+            'country',
+            'createdBy',
+            'updatedBy',
+        ];
+        return $extraFields;
+    }
+
+
     /**
      * Gets query for [[Areas]].
      *
@@ -126,7 +161,7 @@ class Region extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getProfiles0()
+    public function getProfilesLive()
     {
         return $this->hasMany(Profile::className(), ['region_id' => 'id']);
     }

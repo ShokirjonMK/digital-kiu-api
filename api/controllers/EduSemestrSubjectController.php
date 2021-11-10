@@ -79,7 +79,7 @@ class EduSemestrSubjectController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = EduSemestrSubject::findOne(['id' => $id, 'is_deleted' => 1]);
+        $model = EduSemestrSubject::findOne($id);
         if(!$model){
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -88,9 +88,8 @@ class EduSemestrSubjectController extends ApiActiveController
         $result = EduSemestrSubject::findOne($id);
 
         if($result){
-            $result->is_deleted = 1;
-            $result->update();
-
+            $result->delete();
+            
             return $this->response(1, _e('EduSemestrSubject succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);

@@ -195,8 +195,14 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             'subject_id' => $model->subject_id,
         ]);
         if (isset($EduSemestrSubject)) {
-            $errors[] = _e('This Edu Subject already exists in This Semester');
-            return $errors;
+            if($EduSemestrSubject->is_deleted == 1){
+                $EduSemestrSubject->is_deleted == 0;
+                $EduSemestrSubject->update();
+            }else{
+               $errors[] = _e('This Edu Subject already exists in This Semester');
+            return $errors; 
+            }
+            
         }
         if ($model->save()) {
             $all_ball_yuklama = 0;

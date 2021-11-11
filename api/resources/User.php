@@ -120,6 +120,8 @@ class User extends CommonUser
 
     public static function createItem($model, $profile, $post)
     {
+
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -183,22 +185,33 @@ class User extends CommonUser
                     $roles = json_decode(str_replace("'", "", $post['role']));
 
                     if (is_array($roles)) {
+
+
                         foreach ($roles as $role) {
+
                             $authorRole = $auth->getRole($role);
                             if ($authorRole) {
+
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
-
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
+
                                     foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
+
                                         if (is_array($subjectIdsValues)) {
+                                            $data = [];
+
                                             foreach ($subjectIdsValues as $langId) {
                                                 $teacherAccessNew = new TeacherAccess();
                                                 $teacherAccessNew->user_id = $model->id;
-                                                $teacherAccessNew->subject_id = $subjectIds;
-                                                $teacherAccessNew->language_id = $langId;
+                                                $teacherAccessNew->subject_id = (int)$subjectIds;
+                                                $teacherAccessNew->language_id = (int)$langId;
                                                 $teacherAccessNew->save();
+$data[]= $teacherAccessNew;
+
                                             }
+
+//                                            return $data;
                                         }
                                     }
                                 }

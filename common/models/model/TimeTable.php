@@ -140,6 +140,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'eduYear',
             'languages',
             'teacher',
+            'building',
             'para',
             'room',
             'eduSemestr',
@@ -266,6 +267,16 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getTeacher()
     {
         return Profile::find()->select(['first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id])->one();
+    }
+
+    /**
+     * Gets query for [[Building ]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuilding()
+    {
+        return Building::find()->where(['id' => $this->room->building_id])->one();
     }
 
 

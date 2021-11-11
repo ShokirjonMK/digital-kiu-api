@@ -139,7 +139,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'course',
             'eduYear',
             'languages',
-            'profile',
+            'teacher',
             'para',
             'room',
             'eduSemestr',
@@ -218,8 +218,6 @@ class TimeTable extends \yii\db\ActiveRecord
         return $this->hasOne(Week::className(), ['id' => 'week_id']);
     }
 
-
-
     /**
      * Gets query for [[Subject]].
      *
@@ -265,11 +263,10 @@ class TimeTable extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getProfile()
+    public function getTeacher()
     {
-        return Profile::findOne(['user_id' => $this->teacherAccess->user_id]);
+        return Profile::find()->select(['first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id])->one();
     }
-
 
 
     public static function createItem($model, $post)

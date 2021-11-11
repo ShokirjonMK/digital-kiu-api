@@ -25,6 +25,9 @@ class TimeTableController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
+        //filter
+        $query = $this->filterAll($query, $model);
+
         // sort
         $query = $this->sort($query);
 
@@ -40,9 +43,9 @@ class TimeTableController extends ApiActiveController
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = TimeTable::createItem($model, $post);
-        if(!is_array($result)){
+        if (!is_array($result)) {
             return $this->response(1, _e('TimeTable successfully created.'), $model, null, ResponseStatus::CREATED);
-        }else{
+        } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
@@ -50,15 +53,15 @@ class TimeTableController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = TimeTable::findOne($id);
-        if(!$model){
+        if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = TimeTable::updateItem($model, $post);
-        if(!is_array($result)){
+        if (!is_array($result)) {
             return $this->response(1, _e('TimeTable successfully updated.'), $model, null, ResponseStatus::OK);
-        }else{
+        } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
@@ -68,7 +71,7 @@ class TimeTableController extends ApiActiveController
         $model = TimeTable::find()
             ->andWhere(['id' => $id])
             ->one();
-        if(!$model){
+        if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
@@ -77,14 +80,14 @@ class TimeTableController extends ApiActiveController
     public function actionDelete($lang, $id)
     {
         $model = TimeTable::findOne($id);
-        if(!$model){
+        if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
         // remove model
         $result = TimeTable::findOne($id);
 
-        if($result){
+        if ($result) {
             $result->is_deleted = 1;
             $result->update();
 
@@ -92,13 +95,4 @@ class TimeTableController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
-
-
-
-
-
-
-
 }

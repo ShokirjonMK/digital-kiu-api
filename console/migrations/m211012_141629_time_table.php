@@ -42,7 +42,7 @@ class m211012_141629_time_table extends Migration
         $this->addForeignKey('st_time_table_semestr_id','time_table','semestr_id','semestr','id');
         $this->addForeignKey('et_time_table_edu_year_id','time_table','edu_year_id','edu_year','id');
         $this->addForeignKey('st_time_table_edu_subject_id','time_table','subject_id','subject','id');
-        $this->addForeignKey('lt_time_table_edu_language_id','time_table','language_id','language','id');
+        $this->addForeignKey('lt_time_table_edu_language_id','time_table','language_id','languages','id');
 
 
     }

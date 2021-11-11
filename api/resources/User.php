@@ -151,6 +151,7 @@ class User extends CommonUser
                 $password = _random_string();
             }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
+
             $model->auth_key = \Yii::$app->security->generateRandomString(20);
             $model->password_reset_token = null;
             $model->access_token = \Yii::$app->security->generateRandomString();

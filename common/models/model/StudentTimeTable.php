@@ -3,6 +3,8 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\StudentUser;
+use common\models\Student;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -136,16 +138,45 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        /**
+         *  Faqat  Student user  
+         */
+
+        // $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        // if (!isset($student)) {
+        //     $errors[] = _e('Student not found');
+        //     return $errors;
+        // }
+        // $model->student_id = $student->id;
+
+
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
         $hasModel = StudentTimeTable::findOne([
             'student_id' => $model->student_id,
             'time_table_id' => $model->time_table_id,
         ]);
 
+        $studentCheck = Student::findOne($model->student_id);
+        $timeTableCheck = TimeTable::findOne($model->time_table_id);
+
+
+        /**
+         *  Student Edu Plan bo'yicah tekshirish
+         */
+
+        // if (isset($timeTableCheck)) {
+        //     if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+        //         $errors[] = _e('This Time Table is not for this Student');
+        //         return $errors;
+        //     }
+        // }
+
         if (isset($hasModel)) {
-            $errors[] = _e('This Student  Time Table already exists ');
+            $errors[] = _e('This Student Time Table already exists ');
             return $errors;
         }
 
@@ -166,23 +197,65 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         }
     }
 
-    public static function updateItem($model, $post)
+    public static function updateItem($model, $post, $model_old)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        /**
+         *  Faqat  Student user  
+         */
+
+        // $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        // if (!isset($student)) {
+        //     $errors[] = _e('Student not found');
+        //     return $errors;
+        // }
+        // $model->student_id = $student->id;
+
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
 
+        $hasModel = StudentTimeTable::findOne([
+            'student_id' => $model->student_id,
+            'time_table_id' => $model->time_table_id,
+        ]);
+
+        $studentCheck = Student::findOne($model->student_id);
+        $timeTableCheck = TimeTable::findOne($model->time_table_id);
+
+        /**
+         *    Student Edu Plan bo'chicha tekshirish
+         */
+        // if (isset($timeTableCheck)) {
+        //     if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+        //         $errors[] = _e('This Time Table is not for this Student');
+        //         return $errors;
+        //     }
+        // }
+
+
+        if (isset($hasModel)) {
+            $errors[] = _e('This Student Time Table already exists ');
+            return $errors;
+        }
+
+        $timeTableChilds = TimeTable::find()->select('id')->where(['parent_id' => $model_old->time_table_id]);
+
+        if (isset($timeTableChilds)) {
+            StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChilds]);
+        }
+
         if ($model->save()) {
-            if ($model->status == 1) {
-                $allEduSemesters = EduSemestr::find()->where(['edu_plan_id' => $model->edu_plan_id])->andWhere(['not in', 'id', $model->id])->all();
-                if (isset($allEduSemesters)) {
-                    foreach ($allEduSemesters as $EduSemester) {
-                        $EduSemester->status = 0;
-                        $EduSemester->save();
-                    }
+            $model_old->delete();
+            $timeTables = TimeTable::findAll(['parent_id' => $model->time_table_id]);
+            if (isset($timeTables)) {
+                foreach ($timeTables as $timeTable) {
+                    $newModel = new StudentTimeTable();
+                    $newModel->student_id = $model->student_id;
+                    $newModel->time_table_id = $timeTable->id;
+                    $newModel->save();
                 }
             }
             $transaction->commit();

@@ -8,9 +8,9 @@ use Yii;
 use api\resources\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
+use common\models\model\Profile as ModelProfile;
 use common\models\User as CommonUser;
 use yii\behaviors\TimestampBehavior;
-use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
 class User extends CommonUser
@@ -115,7 +115,7 @@ class User extends CommonUser
 
     public function getProfile()
     {
-        return $this->hasOne(Profile::className(), ['user_id' => 'id']);
+        return $this->hasOne(ModelProfile::className(), ['user_id' => 'id']);
     }
 
     public static function createItem($model, $profile, $post)

@@ -45,6 +45,8 @@ $controllers = [
     'region',
     'area',
     'student-time-table',
+    'exam',
+    'student-exam',
 ];
 
 $controllerRoutes = [];

@@ -3,29 +3,28 @@
 namespace api\controllers;
 
 use Yii;
-
 use base\ResponseStatus;
-use common\models\model\StudentTimeTable;
-use common\models\model\TimeTable;
+use common\models\model\StudentExam;
 
-class  StudentTimeTableController extends ApiActiveController
+class StudentExamController extends ApiActiveController
 {
-
-    public $modelClass = 'api\resources\StudentTimeTable';
+    public $modelClass = 'api\resources\StudentExam';
 
     public function actions()
     {
         return [];
     }
-    public $table_name = 'student_time_table';
-    public $controller_name = 'StudentTimeTable';
+
+    public $table_name = 'student_exam';
+    public $controller_name = 'StudentExam';
 
     public function actionIndex($lang)
     {
-        $model = new StudentTimeTable();
+        $model = new StudentExam();
 
         $query = $model->find()
-            ->andWhere(['is_deleted' => 0]);
+            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
         //filter
         $query = $this->filterAll($query, $model);
@@ -35,17 +34,16 @@ class  StudentTimeTableController extends ApiActiveController
 
         // data
         $data =  $this->getData($query);
-
         return $this->response(1, _e('Success'), $data);
     }
 
     public function actionCreate($lang)
     {
-        $model = new StudentTimeTable();
+        $model = new StudentExam();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = StudentTimeTable::createItem($model, $post);
+        $result = StudentExam::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -55,16 +53,13 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = StudentTimeTable::findOne($id);
+        $model = StudentExam::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-
-        $model_new = new StudentTimeTable();
         $post = Yii::$app->request->post();
-        $this->load($model_new, $post);
-
-        $result = StudentTimeTable::updateItem($model_new, $post, $model);
+        $this->load($model, $post);
+        $result = StudentExam::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -74,7 +69,9 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = StudentTimeTable::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = StudentExam::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -83,17 +80,24 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = StudentTimeTable::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = StudentExam::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        // remove model
         if ($model) {
             $model->is_deleted = 1;
             $model->update();
 
-            return $this->response(1, _e('Student succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
+
+
+
 }

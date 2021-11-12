@@ -2,14 +2,10 @@
 
 namespace api\controllers;
 
-
-
 use common\models\model\Subject;
 use common\models\model\Translate;
 use Yii;
-// use api\resources\Subject;
 use base\ResponseStatus;
-use common\models\SubjectInfo;
 
 class SubjectController extends ApiActiveController
 {

@@ -50,9 +50,9 @@ class  StudentController extends ApiActiveController
         $student = new Student();
 
         $users = Student::find()->count();
-        $count = $users + 10000;
-        $post['username'] = 'tsul-' . $count;
-        $post['email'] = 'tsul-' . $count . '@tsul.uz';
+        $count = $users + 10001;
+        $post['username'] = 'tsul-std-' . $count;
+        $post['email'] = 'tsul-std' . $count . '@tsul.uz';
 
         $this->load($model, $post);
         $this->load($profile, $post);

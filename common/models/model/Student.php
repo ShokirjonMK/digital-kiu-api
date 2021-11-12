@@ -4,6 +4,7 @@ namespace common\models\model;
 
 use api\resources\ResourceTrait;
 use api\resources\User;
+use common\models\Languages;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -67,7 +68,7 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
-                'edu_type_id', 'is_contract'], 'required'],
+                'edu_type_id', 'is_contract', 'edu_lang_id'], 'required'],
             [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
                 'edu_type_id', 'is_contract', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['diplom_date'], 'safe'],
@@ -80,6 +81,7 @@ class Student extends \yii\db\ActiveRecord
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
+            [['edu_lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['edu_lang_id' => 'id']],
         ];
     }
 

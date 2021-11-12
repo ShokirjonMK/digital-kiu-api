@@ -30,7 +30,7 @@ class m211110_061104_create_exam_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('eet_exam_exam_type_id', 'exam', 'exam_type_id', 'exam_type', 'id');
+        $this->addForeignKey('eet_exam_exam_type_id', 'exam', 'exam_type_id', 'exams_type', 'id');
         $this->addForeignKey('eess_exam_edu_semestr_subject_id', 'exam', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');
     }
 

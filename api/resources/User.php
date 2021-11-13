@@ -45,6 +45,7 @@ class User extends CommonUser
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
+            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
             [['deleted'], 'default', 'value' => 0],
             [['template', 'layout', 'view'], 'default', 'value' => ''],
         ];
@@ -166,6 +167,19 @@ class User extends CommonUser
 
                 // avatarni saqlaymiz
                 $model->avatar = UploadedFile::getInstancesByName('avatar');
+                if ($model->avatar) {
+                    $model->avatar = $model->avatar[0];
+                    $avatarUrl = $model->upload();
+                    if ($avatarUrl) {
+                        $profile->image = $avatarUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                // passport file saqlaymiz
+                $model->avatar = UploadedFile::getInstancesByName('passport_pdf');
                 if ($model->avatar) {
                     $model->avatar = $model->avatar[0];
                     $avatarUrl = $model->upload();

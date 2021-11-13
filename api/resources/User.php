@@ -406,7 +406,7 @@ class User extends CommonUser
             $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->avatar->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
-            $this->avatar->saveAs($url);
+            $this->avatar->saveAs($url,false);
             return assets_url($miniUrl);
         } else {
             return false;
@@ -419,7 +419,7 @@ class User extends CommonUser
             $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->passport_file->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
-            $this->passport_file->saveAs($url);
+            $this->passport_file->saveAs($url, false);
             return assets_url($miniUrl);
         } else {
             return false;

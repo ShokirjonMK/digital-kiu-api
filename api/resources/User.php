@@ -176,7 +176,7 @@ class User extends CommonUser
                     }
                 }
                 // ***
-
+                    
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {

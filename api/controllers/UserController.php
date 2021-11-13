@@ -2,11 +2,10 @@
 
 namespace api\controllers;
 
-use api\resources\Profile;
 use Yii;
 use api\resources\User;
 use base\ResponseStatus;
-
+use common\models\model\Profile;
 class UserController extends ApiActiveController
 {
     public $modelClass = 'api\resources\User';

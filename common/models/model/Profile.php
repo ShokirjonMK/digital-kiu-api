@@ -56,7 +56,10 @@ class Profile extends \yii\db\ActiveRecord
 {
 
     use ResourceTrait;
-
+    const UPLOADS_FOLDER = 'uploads/user-images/';
+    const UPLOADS_FOLDER_STUDENT_IMAGE = 'uploads/student-images/';
+    public $avatar;
+    public $avatarMaxSize = 1024 * 200; // 200 Kb
     public function behaviors()
     {
         return [
@@ -79,11 +82,22 @@ class Profile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'image', 'phone', 'phone_secondary', 'is_foreign', 'last_name', 'first_name', 'middle_name', 'passport_seria', 'passport_number', 'passport_pin', 'birthday', 'passport_file', 'country_id', 'region_id', 'area_id', 'address', 'gender', 'passport_given_date', 'passport_issued_date', 'passport_given_by', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'permanent_address'], 'required'],
+            [[ 'user_id'], 'required'],
+            // [[
+            //     'user_id', 'image', 'phone', 'phone_secondary',
+            //     'is_foreign', 'last_name', 'first_name', 'middle_name',
+            //     'passport_seria', 'passport_number', 'passport_pin',
+            //     'birthday', 'passport_file', 'country_id', 'region_id',
+            //     'area_id', 'address', 'gender', 'passport_given_date',
+            //     'passport_issued_date', 'passport_given_by', 'permanent_country_id',
+            //     'permanent_region_id', 'permanent_area_id', 'permanent_address'
+            // ], 'required'],
             [['user_id', 'is_foreign', 'birthday', 'country_id', 'region_id', 'area_id', 'gender', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['passport_given_date', 'passport_issued_date'], 'safe'],
             [['image', 'last_name', 'first_name', 'middle_name', 'passport_seria', 'passport_number', 'passport_pin', 'passport_file', 'address', 'passport_given_by', 'permanent_address'], 'string', 'max' => 255],
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
+
+             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
             [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['area_id' => 'id']],
             [['permanent_area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['permanent_area_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],

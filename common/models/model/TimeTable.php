@@ -138,13 +138,13 @@ class TimeTable extends \yii\db\ActiveRecord
         $extraFields =  [
             'course',
             'eduYear',
-            'languages',
+            'language',
             'teacher',
             'building',
             'para',
             'room',
             'eduSemestr',
-            'SubjectCategory',
+            'subjectCategory',
             'week',
             'subject',
             'semestr',
@@ -155,8 +155,9 @@ class TimeTable extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
     /**
-     * Gets query for [[Course]].
+     * Gets query for [[SubjectCategory]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -164,6 +165,7 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         return $this->hasOne(SubjectCategory::className(), ['id' => 'subject_category_id']);
     }
+
     /**
      * Gets query for [[Course]].
      *
@@ -185,13 +187,13 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Languages]].
+     * Gets query for [[Language]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getLanguage()
     {
-        return $this->hasOne(Languages::className(), ['id' => 'language_id']);
+        return $this->hasOne(Languages::className(), ['id' => 'language_id'])->select(['name','lang_code']);
     }
 
     /**
@@ -340,6 +342,8 @@ class TimeTable extends \yii\db\ActiveRecord
 
     public static function updateItem($model, $post)
     {
+
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $eduSemester = EduSemestr::findOne($model->edu_semester_id);
@@ -360,7 +364,7 @@ class TimeTable extends \yii\db\ActiveRecord
         $model->edu_year_id = $eduSemester->edu_year_id;
 
         if (isset($timeTable)) {
-            if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
+            if (($model->semester_id % 2 == $timeTable->semester_id % 2) && ($model->id != $timeTable->id)) {
                 $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
                 return $errors;
             }
@@ -376,7 +380,7 @@ class TimeTable extends \yii\db\ActiveRecord
         ]);
 
         if (isset($checkTeacherTimeTable)) {
-            if ($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) {
+            if (($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) && ($model->id != $checkTeacherTimeTable->id)) {
                 $errors[] = _e("This Teacher in this Para are busy for this Edu Year's semestr");
                 return $errors;
             }

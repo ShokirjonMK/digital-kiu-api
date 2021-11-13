@@ -18,8 +18,12 @@ class User extends CommonUser
     use ResourceTrait;
 
     const UPLOADS_FOLDER = 'uploads/user-images/';
+   // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
     public $avatar;
+    public $passport_file;
     public $avatarMaxSize = 1024 * 200; // 200 Kb
+    public $passportFileMaxSize = 1024 * 1024 * 5; // 5 Mb
+
 
     public function behaviors()
     {
@@ -45,7 +49,7 @@ class User extends CommonUser
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
-            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
+            [['passpor_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->passportFileMaxSize],
             [['deleted'], 'default', 'value' => 0],
             [['template', 'layout', 'view'], 'default', 'value' => ''],
         ];
@@ -72,6 +76,9 @@ class User extends CommonUser
             },
             'avatar' => function ($model) {
                 return $model->profile->image ?? '';
+            },
+            'passport_file' => function ($model) {
+                return $model->profile->passport_file ?? '';
             },
             'email',
             'status'
@@ -179,12 +186,12 @@ class User extends CommonUser
                 // ***
 
                 // passport file saqlaymiz
-                $model->avatar = UploadedFile::getInstancesByName('passport_pdf');
-                if ($model->avatar) {
-                    $model->avatar = $model->avatar[0];
-                    $avatarUrl = $model->upload();
-                    if ($avatarUrl) {
-                        $profile->image = $avatarUrl;
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
                     } else {
                         $errors[] = $model->errors;
                     }
@@ -280,6 +287,20 @@ class User extends CommonUser
                     }
                 }
                 // ***
+
+                // passport file saqlaymiz
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
 
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
@@ -385,6 +406,19 @@ class User extends CommonUser
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->avatar->saveAs($url);
+            return assets_url($miniUrl);
+        } else {
+            return false;
+        }
+    }
+
+    public function uploadPassport()
+    {
+        if ($this->validate()) {
+            $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->passport_file->extension;
+            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->passport_file->saveAs($url);
             return assets_url($miniUrl);
         } else {
             return false;

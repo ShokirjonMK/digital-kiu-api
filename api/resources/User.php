@@ -5,7 +5,8 @@ namespace api\resources;
 use common\models\model\TeacherAccess;
 use common\models\model\PasswordEncrypts;
 use Yii;
-use api\resources\Profile;
+//use api\resources\Profile;
+use common\models\model\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
 use common\models\model\Profile as ModelProfile;
@@ -49,7 +50,7 @@ class User extends CommonUser
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
-            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->passportFileMaxSize],
+            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,word,png, jpg', 'maxSize' => $this->passportFileMaxSize],
             [['deleted'], 'default', 'value' => 0],
             [['template', 'layout', 'view'], 'default', 'value' => ''],
         ];

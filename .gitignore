@@ -9,3 +9,4 @@ config.inc.php
 composer.lock
 .idea/
 api/web/index.php
+storage/uploads

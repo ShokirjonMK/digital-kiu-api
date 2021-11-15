@@ -45,7 +45,6 @@ class StudentUser extends ParentUser
         // **********
 
         if (count($errors) == 0) {
-           
             if (isset($post['password']) && !empty($post['password'])) {
                 $password = $post['password'];
             } else {

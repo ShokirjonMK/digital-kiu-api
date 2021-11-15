@@ -2,6 +2,7 @@
 
 namespace api\resources;
 
+use common\models\AuthAssignment;
 use common\models\model\TeacherAccess;
 use common\models\model\PasswordEncrypts;
 use Yii;
@@ -73,7 +74,7 @@ class User extends CommonUser
                 return $model->profile->last_name ?? '';
             },
             'role' => function ($model) {
-                return $model->roleItem ?? '';
+                return $model->roles ?? '';
             },
             'avatar' => function ($model) {
                 return $model->profile->image ?? '';
@@ -115,6 +116,20 @@ class User extends CommonUser
                 foreach ($perms as $row) {
                     $result[] = $row['name'];
                 }
+            }
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
+    public function getRoles()
+    {
+        if ($this->roleItem) {
+            $authItems = AuthAssignment::find()->where(['user_id' => $this->id])->all();
+            $result = [];
+            foreach ($authItems as $authItem) {
+                $result[] = $authItem['item_name'];
             }
             return $result;
         } else {

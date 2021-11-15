@@ -325,10 +325,10 @@ class User extends CommonUser
                     $roles = json_decode(str_replace("'", "", $post['role']));
 
                     if (is_array($roles)) {
+                        $auth->revokeAll($model->id);
                         foreach ($roles as $role) {
                             $authorRole = $auth->getRole($role);
                             if ($authorRole) {
-                                $auth->revokeAll($model->id);
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));

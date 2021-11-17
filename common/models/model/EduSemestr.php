@@ -145,9 +145,9 @@ class EduSemestr extends \yii\db\ActiveRecord
         if (isset($this->eduYear)) {
 
             if (isset($this->eduYear->translate)) {
-                return $this->eduYear->translate->name . ' - ' . $this->course->id . '-' . $this->semestr->id;
+                return $this->eduYear->translate->name . '-' . $this->course->id . '-' . $this->semestr->id;
             }
-            return $this->eduYear->year . ' - ' . date("Y", strtotime("+1 year", strtotime($this->eduYear->year . "-01-01")));
+            return $this->eduYear->year . '-' . date("Y", strtotime("+1 year", strtotime($this->eduYear->year . "-01-01")));
         }
         return ":) " . $this->course->id . '-' . $this->semestr->id;
     }

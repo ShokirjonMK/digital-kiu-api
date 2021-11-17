@@ -12,12 +12,7 @@ class m211104_055719_insert_smester_course extends Migration
      */
     public function safeUp()
     {
-
-
         // Yii::$app->db->createCommand()->truncateTable('course')->execute();
-
-
-
         $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
         $this->execute("TRUNCATE table  `course`;");
         $this->execute("SET FOREIGN_KEY_CHECKS = 1;");

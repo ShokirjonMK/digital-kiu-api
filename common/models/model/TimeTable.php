@@ -193,7 +193,7 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getLanguage()
     {
-        return $this->hasOne(Languages::className(), ['id' => 'language_id'])->select(['name','lang_code']);
+        return $this->hasOne(Languages::className(), ['id' => 'language_id'])->select(['name', 'lang_code']);
     }
 
     /**
@@ -268,7 +268,7 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getTeacher()
     {
-        return Profile::find()->select(['first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id])->one();
+        return Profile::find()->select(['id', 'first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id])->one();
     }
 
     /**

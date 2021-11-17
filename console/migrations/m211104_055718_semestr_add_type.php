@@ -13,8 +13,6 @@ class m211104_055718_semestr_add_type extends Migration
     public function safeUp()
     {
         $this->execute("ALTER TABLE `semestr` add  `type` INT(11) NOT NULL default(1) COMMENT 'kuz=1 bahorhi = 2' ; ");
-
-
     }
 
     /**

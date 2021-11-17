@@ -17,8 +17,8 @@ class m211110_061104_create_exam_table extends Migration
             // nama translate da bo'ladi
             'exam_type_id' => $this->integer()->notNull(),
             'edu_semestr_subject_id' => $this->integer()->notNull(),
-            'start' => $this->integer()->notNull(),
-            'finish' => $this->integer()->notNull(),
+            'start' => $this->dateTime()->notNull(),
+            'finish' => $this->dateTime()->notNull(),
             'max_ball' => $this->integer()->defaultValue(0),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),

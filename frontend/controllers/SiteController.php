@@ -10,6 +10,9 @@ use common\models\Content;
 use common\models\Segment;
 use Yii;
 
+
+use yii\rest\ActiveController;
+
 /**
  * Site controller
  */
@@ -35,6 +38,7 @@ class SiteController extends FrontendController
      */
     public function actionHome()
     {
+
         $lang = get_current_lang();
 
         if ($lang) {
@@ -142,6 +146,8 @@ class SiteController extends FrontendController
      */
     public function actionStoreLocked()
     {
+
+        return "Not found";
         $data['error'] = '';
         $session = Yii::$app->session;
 

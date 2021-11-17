@@ -19,7 +19,7 @@ class User extends CommonUser
 {
     use ResourceTrait;
 
-    const UPLOADS_FOLDER = 'uploads/user-images/';
+    const UPLOADS_FOLDER = 'storage/uploads/user-images/';
    // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
     public $avatar;
     public $passport_file;
@@ -332,7 +332,7 @@ class User extends CommonUser
                                 $auth->assign($authorRole, $model->id);
                                 if ($role == 'teacher' && isset($post['teacherAccess'])) {
                                     $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-                                    $teacherAccessDelete  = TeacherAccess::deleteAll(['user_id' => $model->id]);
+                                    TeacherAccess::deleteAll(['user_id' => $model->id]);
                                     foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
                                         if (is_array($subjectIdsValues)) {
                                             foreach ($subjectIdsValues as $langId) {
@@ -422,7 +422,7 @@ class User extends CommonUser
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->avatar->saveAs($url,false);
-            return assets_url($miniUrl);
+            return $miniUrl;
         } else {
             return false;
         }
@@ -435,7 +435,7 @@ class User extends CommonUser
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->passport_file->saveAs($url, false);
-            return assets_url($miniUrl);
+            return $miniUrl;
         } else {
             return false;
         }

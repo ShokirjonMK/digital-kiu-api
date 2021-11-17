@@ -19,8 +19,8 @@ class User extends CommonUser
 {
     use ResourceTrait;
 
-    const UPLOADS_FOLDER = 'storage/uploads/user-images/';
-   // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
+    const UPLOADS_FOLDER = 'uploads/user-images/';
+    // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
     public $avatar;
     public $passport_file;
     public $avatarMaxSize = 1024 * 200; // 200 Kb
@@ -213,7 +213,7 @@ class User extends CommonUser
                     }
                 }
                 // ***
-                    
+
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {
@@ -420,9 +420,9 @@ class User extends CommonUser
         if ($this->validate()) {
             $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->avatar->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
-            $url = $miniUrl;
-            $this->avatar->saveAs($url,false);
-            return $miniUrl;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->avatar->saveAs($url, false);
+            return "storage/" . $miniUrl;
         } else {
             return false;
         }
@@ -433,9 +433,9 @@ class User extends CommonUser
         if ($this->validate()) {
             $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->passport_file->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
-            $url = $miniUrl;
+            $url = STORAGE_PATH . $miniUrl;
             $this->passport_file->saveAs($url, false);
-            return $miniUrl;
+            return "storage/" . $miniUrl;
         } else {
             return false;
         }

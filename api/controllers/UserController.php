@@ -25,14 +25,25 @@ class UserController extends ApiActiveController
             ->with(['profile'])
             ->andWhere(['deleted' => 0])
             ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            // ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')])
+            ;
 
-        // Filter from Profile 
+        //  Filter from Profile 
         $profile = new Profile();
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {
                     $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
                 }
             }
         }

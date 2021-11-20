@@ -174,12 +174,22 @@ trait ApiActionTrait
     public function filterAll($query, $model)
     {
         $filter = Yii::$app->request->get('filter');
+        $queryfilter = Yii::$app->request->get('filter-like');
 
         $filter = json_decode(str_replace("'", "", $filter));
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $model->attributes())) {
                     $query = $query->andFilterWhere([$attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $model->attributes())) {
+                    $query = $query->andFilterWhere(['like', $attributeq, '%'.$word.'%', false]);
                 }
             }
         }

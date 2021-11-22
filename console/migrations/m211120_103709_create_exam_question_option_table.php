@@ -15,6 +15,7 @@ class m211120_103709_create_exam_question_option_table extends Migration
         $this->createTable('{{%exam_question_option}}', [
             'id' => $this->primaryKey(),
             'exam_question_id' => $this->integer()->notNull(),
+            
             // name in translate
             'file' => $this->string(255)->Null(),
             'is_correct' => $this->tinyInteger(1)->defaultValue(0),
@@ -29,8 +30,8 @@ class m211120_103709_create_exam_question_option_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('ses_exam_question_exam_question_id', 'exam_question_option', 'exam_question_id', 'exam_question', 'id');
-        $this->addForeignKey('ses_exam_question_lang_id', 'exam_question', 'lang_id', 'languages', 'id');
+        $this->addForeignKey('ses_exam_question_option_exam_question', 'exam_question_option', 'exam_question_id', 'exam_question', 'id');
+
     }
 
     /**
@@ -38,6 +39,9 @@ class m211120_103709_create_exam_question_option_table extends Migration
      */
     public function safeDown()
     {
+
+        $this->dropForeignKey('ses_exam_question_option_exam_question', 'exam_question_option');
+      
         $this->dropTable('{{%exam_question_option}}');
     }
 }

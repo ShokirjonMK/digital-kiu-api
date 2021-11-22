@@ -32,8 +32,8 @@ class m211115_154019_create_exam_question_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('ses_exam_question_exam_id', 'exam_question', 'exam_id', 'exam', 'id');
-        $this->addForeignKey('ses_exam_question_lang_id', 'exam_question', 'lang_id', 'languages', 'id');
+        $this->addForeignKey('eqe_exam_question_exam', 'exam_question', 'exam_id', 'exam', 'id');
+        $this->addForeignKey('eql_exam_question_lang', 'exam_question', 'lang_id', 'languages', 'id');
     }
 
     /**
@@ -41,8 +41,9 @@ class m211115_154019_create_exam_question_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('ses_exam_question_exam_id', 'exam_question');
-        $this->dropForeignKey('ses_exam_question_lang_id', 'exam_question');
+        $this->dropForeignKey('eqe_exam_question_exam', 'exam_question');
+        $this->dropForeignKey('eql_exam_question_lang', 'exam_question');
+        
         $this->dropTable('{{%exam_question}}');
     }
   

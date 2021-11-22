@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%student_answer}}`.
+ * Handles the creation of table `{{%exam_student_answer}}`.
  */
 class m211120_113134_create_student_answer_table extends Migration
 {
@@ -12,7 +12,7 @@ class m211120_113134_create_student_answer_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%student_answer}}', [
+        $this->createTable('{{%exam_student_answer}}', [
             'id' => $this->primaryKey(),
             'file' => $this->string(255)->Null(),
             'exam_id' => $this->integer()->notNull(),
@@ -24,7 +24,6 @@ class m211120_113134_create_student_answer_table extends Migration
             'teacher_access_id' => $this->integer()->Null(),
             'attempt' => $this->integer()->defaultValue(1)->comment("Nechinchi marta topshirayotgani"),
             'type' => $this->tinyInteger(1)->notNull()->comment("1-savol, 2-test, 3-another"),
-
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -34,6 +33,13 @@ class m211120_113134_create_student_answer_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
 
         ]);
+
+        $this->addForeignKey('ses_exam_student_answer_exam', 'exam_student_answer', 'exam_id', 'exam', 'id');
+        $this->addForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer', 'exam_question_id', 'exam_question', 'id');
+        $this->addForeignKey('ses_exam_student_answer_student', 'exam_student_answer', 'student_id', 'student', 'id');
+        $this->addForeignKey('ses_exam_student_answer_option', 'exam_student_answer', 'option_id', 'exam_question_option', 'id');
+        $this->addForeignKey('ses_exam_student_answer_teacher_access', 'exam_student_answer', 'teacher_access_id', 'teacher_access', 'id');
+
     }
 
     /**
@@ -41,6 +47,14 @@ class m211120_113134_create_student_answer_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%student_answer}}');
+
+        $this->dropForeignKey('ses_exam_student_answer_exam', 'exam_student_answer');
+        $this->dropForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer');
+        $this->dropForeignKey('ses_exam_student_answer_student', 'exam_student_answer');
+        $this->dropForeignKey('ses_exam_student_answer_option', 'exam_student_answer');
+        $this->dropForeignKey('ses_exam_student_answer_teacher_access', 'exam_student_answer');
+
+
+        $this->dropTable('{{%exam_student_answer}}');
     }
 }

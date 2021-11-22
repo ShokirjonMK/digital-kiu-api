@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%student_exam}}`.
+ * Handles the creation of table `{{%exam_student}}`.
  */
 class m211111_160510_create_student_exam_table extends Migration
 {
@@ -12,7 +12,7 @@ class m211111_160510_create_student_exam_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%student_exam}}', [
+        $this->createTable('{{%exam_student}}', [
             'id' => $this->primaryKey(),
             'student_id' => $this->integer()->notNull(),
             'exam_id' => $this->integer()->notNull(),
@@ -33,9 +33,9 @@ class m211111_160510_create_student_exam_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('ses_student_exam_student_id', 'student_exam', 'student_id', 'student', 'id');
-        $this->addForeignKey('ses_student_exam_exam_id', 'student_exam', 'exam_id', 'student', 'id');
-        $this->addForeignKey('ses_student_exam_teacher_access_id', 'student_exam', 'teacher_access_id', 'teacher_access', 'id');
+        $this->addForeignKey('ses_exam_student_student_id', 'exam_student', 'student_id', 'student', 'id');
+        $this->addForeignKey('ses_exam_student_exam_id', 'exam_student', 'exam_id', 'student', 'id');
+        $this->addForeignKey('ses_exam_student_teacher_access_id', 'exam_student', 'teacher_access_id', 'teacher_access', 'id');
     }
 
     /**
@@ -43,9 +43,9 @@ class m211111_160510_create_student_exam_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('ses_student_exam_student_id', 'student_exam');
-        $this->dropForeignKey('ses_student_exam_exam_id', 'student_exam');
-        $this->dropForeignKey('ses_student_exam_teacher_access_id', 'student_exam');
-        $this->dropTable('{{%student_exam}}');
+        $this->dropForeignKey('ses_exam_student_student_id', 'exam_student');
+        $this->dropForeignKey('ses_exam_student_exam_id', 'exam_student');
+        $this->dropForeignKey('ses_exam_student_teacher_access_id', 'exam_student');
+        $this->dropTable('{{%exam_student}}');
     }
 }

@@ -29,6 +29,10 @@ class m211120_113736_create_exam_teacher_check_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+
+        $this->addForeignKey('etchs_exam_teacher_check_teacher_access', 'exam_student', 'teacher_access_id', 'teacher_access', 'id');
+        $this->addForeignKey('etchs_exam_teacher_check_student', 'exam_student', 'student_id', 'student', 'id');
+        $this->addForeignKey('etchs_exam_teacher_check_exam', 'exam_student', 'exam_id', 'student', 'id');
     }
 
     /**
@@ -36,6 +40,10 @@ class m211120_113736_create_exam_teacher_check_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('etchs_exam_teacher_check_student', 'exam_student');
+        $this->dropForeignKey('etchs_exam_teacher_check_exam', 'exam_student');
+        $this->dropForeignKey('etchs_exam_teacher_check_teacher_access', 'exam_student');
+
         $this->dropTable('{{%exam_teacher_check}}');
     }
 }

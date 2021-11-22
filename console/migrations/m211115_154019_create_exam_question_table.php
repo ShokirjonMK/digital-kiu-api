@@ -20,7 +20,7 @@ class m211115_154019_create_exam_question_table extends Migration
             'file' => $this->string(255)->notNull(),
             'ball' => $this->double()->defaultValue(1),
             'question' => $this->text()->notNull(),
-            'lang_id' => $this->tinyInteger(1)->notNull(),
+            'lang_id' => $this->integer()->notNull(),
             'level' => $this->tinyInteger(1)->notNull()->comment("Qiyinlilik darajasi 1-oson, 2-o\'rta, 3-murakkab"),
             'type' => $this->tinyInteger(1)->notNull()->comment("1-savol, 2-test, 3-another"),
             'order' => $this->tinyInteger(1)->defaultValue(1),

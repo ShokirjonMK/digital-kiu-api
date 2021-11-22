@@ -19,7 +19,8 @@ class m211110_061104_create_exam_table extends Migration
             'edu_semestr_subject_id' => $this->integer()->notNull(),
             'start' => $this->dateTime()->notNull(),
             'finish' => $this->dateTime()->notNull(),
-            'max_ball' => $this->integer()->defaultValue(0),
+            'max_ball' => $this->double()->defaultValue(0),
+            'min_ball' => $this->double()->defaultValue(0),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
@@ -30,8 +31,8 @@ class m211110_061104_create_exam_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('eet_exam_exam_type_id', 'exam', 'exam_type_id', 'exams_type', 'id');
-        $this->addForeignKey('eess_exam_edu_semestr_subject_id', 'exam', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');
+        $this->addForeignKey('eet_exam_exam_type', 'exam', 'exam_type_id', 'exams_type', 'id');
+        $this->addForeignKey('eess_exam_edu_semestr_subject', 'exam', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');
     }
 
     /**
@@ -40,8 +41,8 @@ class m211110_061104_create_exam_table extends Migration
     public function safeDown()
     {
 
-        $this->dropForeignKey('eet_exam_exam_type_id', 'exam');
-        $this->dropForeignKey('eess_exam_edu_semestr_subject_id', 'exam');
+        $this->dropForeignKey('eet_exam_exam_type', 'exam');
+        $this->dropForeignKey('eess_exam_edu_semestr_subject', 'exam');
         $this->dropTable('{{%exam}}');
     }
 }

@@ -16,7 +16,13 @@ class m211115_154019_create_exam_question_table extends Migration
         $this->createTable('{{%exam_question}}', [
             'id' => $this->primaryKey(),
             'exam_id' => $this->integer()->notNull(),
+            // name in translate
             'file' => $this->string(255)->notNull(),
+            'ball' => $this->double()->defaultValue(1),
+            'question' => $this->text()->notNull(),
+            'lang_id' => $this->tinyInteger(1)->notNull(),
+            'level' => $this->tinyInteger(1)->notNull()->comment("Qiyinlilik darajasi 1-oson, 2-o\'rta, 3-murakkab"),
+            'type' => $this->tinyInteger(1)->notNull()->comment("1-savol, 2-test, 3-another"),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -26,8 +32,8 @@ class m211115_154019_create_exam_question_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('ses_student_exam_student_id', 'student_exam', 'student_id', 'student', 'id');
-        $this->addForeignKey('ses_student_exam_teacher_id', 'student_exam', 'teacher_id', 'teacher_access', 'id');
+        $this->addForeignKey('eqe_exam_question_exam', 'exam_question', 'exam_id', 'exam', 'id');
+        $this->addForeignKey('eql_exam_question_lang', 'exam_question', 'lang_id', 'languages', 'id');
     }
 
     /**
@@ -35,8 +41,9 @@ class m211115_154019_create_exam_question_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('ses_student_exam_student_id', 'student_exam');
-        $this->dropForeignKey('ses_student_exam_teacher_id', 'student_exam');
+        $this->dropForeignKey('eqe_exam_question_exam', 'exam_question');
+        $this->dropForeignKey('eql_exam_question_lang', 'exam_question');
+        
         $this->dropTable('{{%exam_question}}');
     }
   

@@ -88,6 +88,8 @@ class Course extends \yii\db\ActiveRecord
         $extraFields =  [
             'eduSemestrs',
             'timeTables',
+
+            
             'description',
             'createdBy',
             'updatedBy',

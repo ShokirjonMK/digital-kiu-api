@@ -51,7 +51,7 @@ class User extends CommonUser
             [['email'], 'email'],
             [['password_reset_token'], 'unique'],
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
-            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,word,png, jpg', 'maxSize' => $this->passportFileMaxSize],
+            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png, jpg', 'maxSize' => $this->passportFileMaxSize],
             [['deleted'], 'default', 'value' => 0],
             [['template', 'layout', 'view'], 'default', 'value' => ''],
         ];

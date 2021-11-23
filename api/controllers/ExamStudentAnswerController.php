@@ -2,37 +2,28 @@
 
 namespace api\controllers;
 
-use common\models\model\Translate;
+use common\models\model\ExamStudentAnswer;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\Exam;
 
-class ExamController extends ApiActiveController
+class ExamStudentAnswerController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Exam';
+    public $modelClass = 'api\resources\ExamStudentAnswer';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'exam';
-    public $controller_name = 'Exam';
+    public $table_name = 'exam_student_answer';
+    public $controller_name = 'Exam Student Answer';
 
     public function actionIndex($lang)
     {
-        $model = new Exam();
+        $model = new ExamStudentAnswer();
 
         $query = $model->find()
-            ->with(['infoRelation'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            ->groupBy($this->table_name . '.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andWhere(['.is_deleted' => 0]);
 
         //filter
         $query = $this->filterAll($query, $model);
@@ -47,11 +38,12 @@ class ExamController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Exam();
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        $model = new ExamStudentAnswer();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = Exam::createItem($model, $post);
+        $result = ExamStudentAnswer::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -61,13 +53,13 @@ class ExamController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Exam::findOne($id);
+        $model = ExamStudentAnswer::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Exam::updateItem($model, $post);
+        $result = ExamStudentAnswer::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,7 +69,7 @@ class ExamController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Exam::find()
+        $model = ExamStudentAnswer::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -88,7 +80,8 @@ class ExamController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Exam::find()
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        $model = ExamStudentAnswer::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
@@ -98,7 +91,6 @@ class ExamController extends ApiActiveController
 
         // remove model
         if ($model) {
-            Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 
@@ -106,5 +98,6 @@ class ExamController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
+
 
 }

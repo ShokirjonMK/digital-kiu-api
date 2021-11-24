@@ -5,34 +5,27 @@ namespace api\controllers;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\Exam;
+use common\models\model\ExamQuestionOption;
 
-class ExamController extends ApiActiveController
+class ExamQuestionOptionController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Exam';
+    public $modelClass = 'api\resources\ExamQuestionOption';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'exam';
-    public $controller_name = 'Exam';
+    public $table_name = 'exam_question_option';
+    public $controller_name = 'Exam Question Option';
 
     public function actionIndex($lang)
     {
-        $model = new Exam();
+        $model = new ExamQuestionOption();
 
         $query = $model->find()
-            ->with(['infoRelation'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            ->groupBy($this->table_name . '.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andWhere(['is_deleted' => 0])
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
 
         //filter
         $query = $this->filterAll($query, $model);
@@ -47,11 +40,11 @@ class ExamController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Exam();
+        $model = new ExamQuestionOption();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = Exam::createItem($model, $post);
+        $result = ExamQuestionOption::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -61,13 +54,13 @@ class ExamController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Exam::findOne($id);
+        $model = ExamQuestionOption::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Exam::updateItem($model, $post);
+        $result = ExamQuestionOption::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,7 +70,7 @@ class ExamController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Exam::find()
+        $model = ExamQuestionOption::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -88,7 +81,7 @@ class ExamController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Exam::find()
+        $model = ExamQuestionOption::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
@@ -98,7 +91,6 @@ class ExamController extends ApiActiveController
 
         // remove model
         if ($model) {
-            Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 

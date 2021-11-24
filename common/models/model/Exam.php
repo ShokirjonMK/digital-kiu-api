@@ -7,28 +7,32 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "Exam".
+ * This is the model class for table "exam".
  *
  * @property int $id
- * @property string name from translate $name
- 
  * @property int $exam_type_id
  * @property int $edu_semestr_subject_id
- * @property int $start
- * @property int $finish
- * @property int $max_ball
- * 
+ * @property string $start
+ * @property string $finish
+ * @property float|null $max_ball
+ * @property float|null $min_ball
  * @property int|null $order
  * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
+ * @property int|null $created_at
+ * @property int|null $updated_at
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
  *
+ * @property EduSemestrSubject $eduSemestrSubject
+ * @property ExamsType $examType
+ * @property ExamQuestion[] $examQuestions
+ * @property ExamStudentAnswer[] $examStudentAnswers
  */
 class Exam extends \yii\db\ActiveRecord
 {
+
+
     public static $selected_language = 'uz';
 
     use ResourceTrait;
@@ -39,7 +43,6 @@ class Exam extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -51,17 +54,15 @@ class Exam extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-
-
     public function rules()
     {
         return [
-            [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish', 'max_ball'], 'required'],
+            [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [['exam_type_id', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['max_ball'], 'double'],
-
-            [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
+            [['start', 'finish'], 'safe'],
+            [['max_ball', 'min_ball'], 'number'],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
+            [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
         ];
     }
 
@@ -72,13 +73,13 @@ class Exam extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            //'name' => 'Name',
+            // name in translate
             'exam_type_id' => 'Exam Type ID',
-            'edu_semestr_subject_id' => 'Edu Semester Subject',
-            'max_ball' => 'Max Ball',
+            'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
             'start' => 'Start',
             'finish' => 'Finish',
-
+            'max_ball' => 'Max Ball',
+            'min_ball' => 'Min Ball',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -88,6 +89,7 @@ class Exam extends \yii\db\ActiveRecord
             'is_deleted' => 'Is Deleted',
         ];
     }
+
 
     public function fields()
     {
@@ -101,6 +103,7 @@ class Exam extends \yii\db\ActiveRecord
             'start',
             'finish',
             'max_ball',
+            'min_ball',
 
             'order',
             'status',
@@ -117,8 +120,10 @@ class Exam extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'examType',
             'eduSemestrSubject',
+            'examType',
+            'examQuestions',
+            'examStudentAnswers',
 
             'description',
             'createdBy',
@@ -137,11 +142,6 @@ class Exam extends \yii\db\ActiveRecord
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
-    public function getDescription()
-    {
-        return $this->translate->description ?? '';
-    }
-
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
@@ -156,25 +156,51 @@ class Exam extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
     /**
-     * Gets query for [['examType']].
-     * ExamType
+     * Gets query for [[EduSemestrSubject]].
+     *
      * @return \yii\db\ActiveQuery
-     */ 
+     */
+    public function getEduSemestrSubject()
+    {
+        return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
+    }
+
+    /**
+     * Gets query for [[ExamType]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getExamType()
     {
         return $this->hasOne(ExamsType::className(), ['id' => 'exam_type_id']);
     }
 
     /**
-     * Gets query for [['eduSemestrSubject']].
-     * EduSemestrSubject
+     * Gets query for [[ExamQuestions]].
+     *
      * @return \yii\db\ActiveQuery
-     */ 
-    public function getEduSemestrSubject()
+     */
+    public function getExamQuestions()
     {
-        return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
+        return $this->hasMany(ExamQuestion::className(), ['exam_id' => 'id']);
     }
+
+    /**
+     * Gets query for [[ExamStudentAnswers]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExamStudentAnswers()
+    {
+        return $this->hasMany(ExamStudentAnswer::className(), ['exam_id' => 'id']);
+    }
+
 
     public static function createItem($model, $post)
     {
@@ -196,6 +222,7 @@ class Exam extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+
                 return simplify_errors($errors);
             }
         } else {
@@ -232,6 +259,7 @@ class Exam extends \yii\db\ActiveRecord
     }
 
 
+
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -240,25 +268,5 @@ class Exam extends \yii\db\ActiveRecord
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
-    }
-
-    /**
-     * Status array
-     *
-     * @param int $key
-     * @return array
-     */
-    public function statusArray($key = null)
-    {
-        $array = [
-            1 => _e('Active'),
-            0 => _e('Inactive'),
-        ];
-
-        if (isset($array[$key])) {
-            return $array[$key];
-        }
-
-        return $array;
     }
 }

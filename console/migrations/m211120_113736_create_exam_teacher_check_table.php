@@ -15,7 +15,7 @@ class m211120_113736_create_exam_teacher_check_table extends Migration
         $this->createTable('{{%exam_teacher_check}}', [
             'id' => $this->primaryKey(),
 
-            'teacher_access_id' => $this->integer()->Null(),
+            'teacher_access_id' => $this->integer()->notNull(),
             'student_id' => $this->integer()->notNull(),
             'exam_id' => $this->integer()->notNull(),
 
@@ -30,9 +30,9 @@ class m211120_113736_create_exam_teacher_check_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('etchs_exam_teacher_check_teacher_access', 'exam_student', 'teacher_access_id', 'teacher_access', 'id');
-        $this->addForeignKey('etchs_exam_teacher_check_student', 'exam_student', 'student_id', 'student', 'id');
-        $this->addForeignKey('etchs_exam_teacher_check_exam', 'exam_student', 'exam_id', 'student', 'id');
+        $this->addForeignKey('etchs_exam_teacher_check_teacher_access', 'exam_teacher_check', 'teacher_access_id', 'teacher_access', 'id');
+        $this->addForeignKey('etchs_exam_teacher_check_student', 'exam_teacher_check', 'student_id', 'student', 'id');
+        $this->addForeignKey('etchs_exam_teacher_check_exam', 'exam_teacher_check', 'exam_id', 'exam', 'id');
     }
 
     /**
@@ -40,9 +40,9 @@ class m211120_113736_create_exam_teacher_check_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('etchs_exam_teacher_check_student', 'exam_student');
-        $this->dropForeignKey('etchs_exam_teacher_check_exam', 'exam_student');
-        $this->dropForeignKey('etchs_exam_teacher_check_teacher_access', 'exam_student');
+        $this->dropForeignKey('etchs_exam_teacher_check_student', 'exam_teacher_check');
+        $this->dropForeignKey('etchs_exam_teacher_check_exam', 'exam_teacher_check');
+        $this->dropForeignKey('etchs_exam_teacher_check_teacher_access', 'exam_teacher_check');
 
         $this->dropTable('{{%exam_teacher_check}}');
     }

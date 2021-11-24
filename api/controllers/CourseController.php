@@ -5,9 +5,7 @@ namespace api\controllers;
 use common\models\model\Course;
 use common\models\model\Translate;
 use Yii;
-use api\resources\Job;
 use base\ResponseStatus;
-use common\models\JobInfo;
 
 class CourseController extends ApiActiveController
 {

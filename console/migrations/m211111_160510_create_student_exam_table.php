@@ -34,7 +34,7 @@ class m211111_160510_create_student_exam_table extends Migration
         ]);
 
         $this->addForeignKey('ses_exam_student_student_id', 'exam_student', 'student_id', 'student', 'id');
-        $this->addForeignKey('ses_exam_student_exam_id', 'exam_student', 'exam_id', 'student', 'id');
+        $this->addForeignKey('ses_exam_student_exam_id', 'exam_student', 'exam_id', 'exam', 'id');
         $this->addForeignKey('ses_exam_student_teacher_access_id', 'exam_student', 'teacher_access_id', 'teacher_access', 'id');
     }
 

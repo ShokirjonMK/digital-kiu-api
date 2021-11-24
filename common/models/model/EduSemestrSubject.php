@@ -302,6 +302,10 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $newExam->save();
                     }else{
                         $hasExam->is_deleted = 0;
+                        $hasExam->start = date("Y-m-d H:i:s");
+                        $hasExam->finish = date("Y-m-d H:i:s");
+                        $hasExam->max_ball = $examsTypeMaxBal1;
+                        $hasExam->min_ball = $examsTypeMaxBal1;
                         $hasExam->save();
                     }
                     /** */

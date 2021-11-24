@@ -53,6 +53,7 @@ $controllers = [
     'exam-question',
     'exam-question-option',
     'exam-student-answer',
+    'exam-teacher-check',
 
 ];
 

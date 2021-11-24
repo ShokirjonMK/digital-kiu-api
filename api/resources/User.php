@@ -79,9 +79,9 @@ class User extends CommonUser
             'avatar' => function ($model) {
                 return $model->profile->image ?? '';
             },
-            'passport_file' => function ($model) {
-                return $model->profile->passport_file ?? '';
-            },
+            // 'passport_file' => function ($model) {
+            //     return $model->profile->passport_file ?? '';
+            // },
             'email',
             'status'
 

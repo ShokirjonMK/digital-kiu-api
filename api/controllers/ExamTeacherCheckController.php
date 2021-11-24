@@ -38,7 +38,6 @@ class ExamTeacherCheckController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         $model = new ExamTeacherCheck();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
@@ -80,7 +79,6 @@ class ExamTeacherCheckController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         $model = ExamTeacherCheck::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();

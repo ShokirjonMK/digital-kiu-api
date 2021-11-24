@@ -52,8 +52,8 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
         return [
             [['teacher_access_id', 'student_id', 'exam_id', 'attempt', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['student_id', 'exam_id'], 'required'],
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['course_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
 
         ];
@@ -89,7 +89,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
             'student_id',
             'exam_id',
             'attempt',
-
+ 
             'order',
             'status',
             'created_at',

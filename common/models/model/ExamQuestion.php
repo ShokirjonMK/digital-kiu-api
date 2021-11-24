@@ -266,7 +266,7 @@ class ExamQuestion extends \yii\db\ActiveRecord
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
             if ($this->isNewRecord) {
-                $fileName = ExamQuestionOption::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
+                $fileName = ExamQuestion::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
             } else {
                 $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
             }

@@ -50,6 +50,12 @@ class ExamController extends ApiActiveController
         $model = new Exam();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
+        if (isset($post->start)) {
+            $model->start = date('Y-m-d H:i:s', strtotime($post->start));
+        }
+        if (isset($post->finish)) {
+            $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
+        }
 
         $result = Exam::createItem($model, $post);
         if (!is_array($result)) {
@@ -106,5 +112,4 @@ class ExamController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
 }

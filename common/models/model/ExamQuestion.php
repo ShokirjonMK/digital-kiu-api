@@ -66,13 +66,14 @@ class ExamQuestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['exam_id', 'question', 'lang_id', 'level', 'type'], 'required'],
+            [['exam_id', 'question', 'lang_id', 'level', 'exam_question_type_id'], 'required'],
             [['exam_id', 'lang_id', 'level', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['ball'], 'number'],
             [['question'], 'string'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
+            [['exam_question_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamQuestionType::className(), 'targetAttribute' => ['exam_question_type_id' => 'id']],
 
             [['question_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->questionFileMaxSize],
         ];

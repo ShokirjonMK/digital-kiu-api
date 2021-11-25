@@ -67,7 +67,7 @@ class ExamQuestion extends \yii\db\ActiveRecord
     {
         return [
             [['exam_id', 'question', 'lang_id', 'level', 'exam_question_type_id'], 'required'],
-            [['exam_id', 'lang_id', 'level', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_id', 'lang_id', 'level', 'exam_question_type_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['ball'], 'number'],
             [['question'], 'string'],
             [['file'], 'string', 'max' => 255],
@@ -93,7 +93,7 @@ class ExamQuestion extends \yii\db\ActiveRecord
             'question' => 'Question',
             'lang_id' => 'Lang ID',
             'level' => 'Level',
-            'type' => 'Type',
+            'exam_question_type_id' => 'Type',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -117,7 +117,7 @@ class ExamQuestion extends \yii\db\ActiveRecord
             'question',
             'lang_id',
             'level',
-            'type',
+            'exam_question_type_id',
             'order',
             'status',
             'created_at',
@@ -137,8 +137,8 @@ class ExamQuestion extends \yii\db\ActiveRecord
             'lang',
             'examQuestionOptions',
             'examStudentAnswers',
+            'type',
 
-            'description',
             'createdBy',
             'updatedBy',
         ];
@@ -165,6 +165,16 @@ class ExamQuestion extends \yii\db\ActiveRecord
     public function getLang()
     {
         return $this->hasOne(Languages::className(), ['id' => 'lang_id']);
+    }
+
+    /**
+     * Gets query for [[exam_question_type_id]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getType()
+    {
+        return $this->hasOne(ExamQuestionType::className(), ['id' => 'exam_question_type_id']);
     }
 
     /**

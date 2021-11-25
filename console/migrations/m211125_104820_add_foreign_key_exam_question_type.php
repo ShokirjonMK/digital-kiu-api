@@ -12,8 +12,7 @@ class m211125_104820_add_foreign_key_exam_question_type extends Migration
      */
     public function safeUp()
     {
-        $this->execute("ALTER TABLE `exam_question` CHANGE `type` `exam_question_type_id` int NULL;");
-        $this->addForeignKey('eqt_exam_question_exam', 'exam_question', 'exam_question_type_id', 'exam_question_type', 'id');
+        $this->addForeignKey('eqt_exam_question_exam_type_reletion_mk', 'exam_question', 'exam_question_type_id', 'exam_question_type', 'id');
 
     }
 

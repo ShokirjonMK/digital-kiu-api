@@ -118,7 +118,6 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examQuestions',
             'examStudentAnswers',
 
-            'description',
             'createdBy',
             'updatedBy',
         ];

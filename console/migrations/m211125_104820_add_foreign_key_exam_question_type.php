@@ -1,0 +1,45 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Class m211125_104820_add_foreign_key_exam_question_type
+ */
+class m211125_104820_add_foreign_key_exam_question_type extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        
+        $this->execute("ALTER TABLE `exam_question` CHANGE `type` `type` int NULL;");
+        $this->addForeignKey('eqt_exam_question_exam', 'exam_question', 'type', 'exam_question_type', 'id');
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        echo "m211125_104820_add_foreign_key_exam_question_type cannot be reverted.\n";
+
+        return false;
+    }
+
+    /*
+    // Use up()/down() to run migration code without a transaction.
+    public function up()
+    {
+
+    }
+
+    public function down()
+    {
+        echo "m211125_104820_add_foreign_key_exam_question_type cannot be reverted.\n";
+
+        return false;
+    }
+    */
+}

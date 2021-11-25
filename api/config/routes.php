@@ -51,6 +51,7 @@ $controllers = [
     'exam',
     'exam-student',
     'exam-question',
+    'exam-question-type',
     'exam-question-option',
     'exam-student-answer',
     'exam-teacher-check',

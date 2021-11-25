@@ -12,9 +12,9 @@ class m211125_104820_add_foreign_key_exam_question_type extends Migration
      */
     public function safeUp()
     {
-        
-        $this->execute("ALTER TABLE `exam_question` CHANGE `type` `type` int NULL;");
-        $this->addForeignKey('eqt_exam_question_exam', 'exam_question', 'type', 'exam_question_type', 'id');
+
+        $this->execute("ALTER TABLE `exam_question` CHANGE `type` `exam_question_type_id` int NULL;");
+        $this->addForeignKey('eqt_exam_question_exam', 'exam_question', 'exam_question_type_id', 'exam_question_type', 'id');
 
     }
 
@@ -23,6 +23,7 @@ class m211125_104820_add_foreign_key_exam_question_type extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('eqt_exam_question_exam_type_reletion_mk', 'exam_question');
         echo "m211125_104820_add_foreign_key_exam_question_type cannot be reverted.\n";
 
         return false;

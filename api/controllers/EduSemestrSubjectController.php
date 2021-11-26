@@ -43,9 +43,9 @@ class EduSemestrSubjectController extends ApiActiveController
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = EduSemestrSubject::createItem($model, $post);
-        if(!is_array($result)){
-            return $this->response(1, _e('EduSemestrSubject successfully created.'), $model, null, ResponseStatus::CREATED);
-        }else{
+        if (!is_array($result)) {
+            return $this->response(1, _e('Edu Semestr Subject successfully created.'), $model, null, ResponseStatus::CREATED);
+        } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
@@ -53,15 +53,15 @@ class EduSemestrSubjectController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = EduSemestrSubject::findOne($id);
-        if(!$model){
+        if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = EduSemestrSubject::updateItem($model, $post);
-        if(!is_array($result)){
-            return $this->response(1, _e('EduSemestrSubject successfully updated.'), $model, null, ResponseStatus::OK);
-        }else{
+        if (!is_array($result)) {
+            return $this->response(1, _e('Edu Semestr Subject successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
@@ -71,7 +71,7 @@ class EduSemestrSubjectController extends ApiActiveController
         $model = EduSemestrSubject::find()
             ->andWhere(['id' => $id])
             ->one();
-        if(!$model){
+        if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
@@ -80,27 +80,21 @@ class EduSemestrSubjectController extends ApiActiveController
     public function actionDelete($lang, $id)
     {
         $model = EduSemestrSubject::findOne($id);
-        if(!$model){
+        if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
         // remove model
-        $result = EduSemestrSubject::findOne($id);
 
-        if($result){
-            $result->delete();
-            
-            return $this->response(1, _e('EduSemestrSubject succesfully removed.'), null, null, ResponseStatus::OK);
+        if ($model) {
+            $result = EduSemestrSubject::deleteMode($model);
+
+            if (!is_array($result)) {
+                return $this->response(1, _e('EduSemestrSubject succesfully removed.'), null, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
-
-
-
-
-
-
-
 }

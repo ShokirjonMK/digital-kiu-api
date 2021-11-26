@@ -132,6 +132,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     }
 
 
+
     /**
      * Gets query for [[EduSemestrExamsTypes]].
      *
@@ -199,45 +200,52 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             return $errors;
         }
         if ($model->save()) {
+            $subjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id']]);
             $all_ball_yuklama = 0;
             $max_ball = 0;
-            if (isset($post['SubjectCategory'])) {
-                $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
-                foreach ($SubjectCategory as $subjectCatId => $subjectCatValues) {
-                    $EduSemestrSubjectCategoryTime1 = new EduSemestrSubjectCategoryTime();
-                    $EduSemestrSubjectCategoryTime1->edu_semestr_subject_id = $model->id;
-                    $EduSemestrSubjectCategoryTime1->subject_category_id = $subjectCatId;
-                    $EduSemestrSubjectCategoryTime1->hours = $subjectCatValues;
-                    $EduSemestrSubjectCategoryTime1->save();
-                    $all_ball_yuklama  = $all_ball_yuklama + $subjectCatValues;
-                }
-            }
-            if (isset($post['EduSemestrExamType'])) {
-                $EduSemestrExamType = json_decode(str_replace("'", "", $post['EduSemestrExamType']));
-                foreach ($EduSemestrExamType as $examsTypeId => $examsTypeMaxBal) {
-                    $EduSemestrExamsType1 = new EduSemestrExamsType();
-                    $EduSemestrExamsType1->edu_semestr_subject_id = $model->id;
-                    $EduSemestrExamsType1->exams_type_id = $examsTypeId;
-                    $EduSemestrExamsType1->max_ball = $examsTypeMaxBal;
-                    $EduSemestrExamsType1->save();
-                    $max_ball  = $max_ball + $examsTypeMaxBal;
 
-                    /**
-                     *   imtihonlar  imtixon turlari bo'yicha avto yaralishi 
-                     */
-                    $newExam = new Exam();
-                    $newExam->exam_type_id = $examsTypeId;
-                    $newExam->edu_semestr_subject_id = $model->id;
-                    $newExam->start = date("Y-m-d H:i:s");
-                    $newExam->finish = date("Y-m-d H:i:s");
-                    $newExam->max_ball = $examsTypeMaxBal;
-                    $newExam->min_ball = $examsTypeMaxBal;
-                    $newExam->save();
-                    /** */
+            if (isset($subjectSillabus)) {
+
+                if (isset($subjectSillabus->edu_semestr_subject_category_times)) {
+                    $EduSemestrSubjectCategoryTimes = json_decode(str_replace("'", "", $subjectSillabus->edu_semestr_subject_category_times));
+                    foreach ($EduSemestrSubjectCategoryTimes as $subjectCatId => $subjectCatValues) {
+                        $EduSemestrSubjectCategoryTime1 = new EduSemestrSubjectCategoryTime();
+                        $EduSemestrSubjectCategoryTime1->edu_semestr_subject_id = $model->id;
+                        $EduSemestrSubjectCategoryTime1->subject_category_id = $subjectCatId;
+                        $EduSemestrSubjectCategoryTime1->hours = $subjectCatValues;
+                        $EduSemestrSubjectCategoryTime1->save();
+                        $all_ball_yuklama  = $all_ball_yuklama + $subjectCatValues;
+                    }
                 }
+
+                if (isset($subjectSillabus->edu_semestr_exams_types)) {
+                    $EduSemestrExamType = json_decode(str_replace("'", "", $subjectSillabus->edu_semestr_exams_types));
+                    foreach ($EduSemestrExamType as $examsTypeId => $examsTypeMaxBal) {
+                        $EduSemestrExamsType1 = new EduSemestrExamsType();
+                        $EduSemestrExamsType1->edu_semestr_subject_id = $model->id;
+                        $EduSemestrExamsType1->exams_type_id = $examsTypeId;
+                        $EduSemestrExamsType1->max_ball = $examsTypeMaxBal;
+                        $EduSemestrExamsType1->save();
+                        $max_ball  = $max_ball + $examsTypeMaxBal;
+
+                        /**
+                         *   imtihonlar  imtixon turlari bo'yicha avto yaralishi 
+                         */
+                        $newExam = new Exam();
+                        $newExam->exam_type_id = $examsTypeId;
+                        $newExam->edu_semestr_subject_id = $model->id;
+                        $newExam->start = date("Y-m-d H:i:s");
+                        $newExam->finish = date("Y-m-d H:i:s");
+                        $newExam->max_ball = $examsTypeMaxBal;
+                        $newExam->min_ball = $examsTypeMaxBal;
+                        $newExam->save();
+                        /** */
+                    }
+                }
+                $model->all_ball_yuklama = $all_ball_yuklama;
+                $model->max_ball = $max_ball;
+                $model->credit = $subjectSillabus->credit;
             }
-            $model->all_ball_yuklama = $all_ball_yuklama;
-            $model->max_ball = $max_ball;
             $model->update();
             $transaction->commit();
             return true;
@@ -253,6 +261,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
         if ($model->save()) {
             $all_ball_yuklama = 0;
             $max_ball = 0;
@@ -320,6 +329,19 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
 
             return simplify_errors($errors);
         }
+    }
+
+    public function deleteMode($model)
+    {
+        $errors = [];
+
+        sad gd fsd gdsf g
+
+    /*    shularni topib hemmasini o\'chirish kk
+        EduSemestrSubjectCategoryTime
+EduSemestrExamsType
+        // return true;
+        */
     }
 
 

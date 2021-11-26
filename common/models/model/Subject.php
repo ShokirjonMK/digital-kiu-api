@@ -104,6 +104,8 @@ class Subject extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+            'subjectSillabus',
+
             'timeTables',
             'teacherAccesses',
             'kafedra',
@@ -185,6 +187,17 @@ class Subject extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TimeTable::className(), ['subject_id' => 'id']);
     }
+
+    /**
+     * Gets query for [[SubjectSillabus]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubjectSillabus()
+    {
+        return $this->hasOne(SubjectSillabus::className(), ['subject_id' => 'id']);
+    }
+
 
     public static function createItem($model, $post)
     {

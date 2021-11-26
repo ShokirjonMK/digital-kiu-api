@@ -55,6 +55,8 @@ $controllers = [
     'exam-question-option',
     'exam-student-answer',
     'exam-teacher-check',
+    
+    'subject-sillabus',
 
 ];
 

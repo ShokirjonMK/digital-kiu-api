@@ -99,7 +99,7 @@ function double_errors($errs, $trErrs)
         }
     }
     $result[] = $res;
-    
+
     return $result;
 }
 
@@ -117,4 +117,10 @@ function api_sortby($sortby, $sort, $prefix = null)
     }
 
     return array($sortby => $sort);
+}
+
+function isJsonMK($string)
+{
+    json_decode($string);
+    return json_last_error() === JSON_ERROR_NONE;
 }

@@ -170,7 +170,11 @@ class User extends CommonUser
         if (count($errors) == 0) {
 
             if (isset($post['password']) && !empty($post['password'])) {
-                $password = $post['password'];
+                if ($post['password'] != 'undefined' && $post['password'] != 'null' && $post['password'] != '') {
+                    $password = $post['password'];
+                } else {
+                    $password = _random_string();
+                }
             } else {
                 $password = _random_string();
             }
@@ -286,9 +290,17 @@ class User extends CommonUser
         }
 
         if (count($errors) == 0) {
+            /* * Password */
             if (isset($post['password']) && !empty($post['password'])) {
-                $model->password_hash = \Yii::$app->security->generatePasswordHash($post['password']);
+                if ($post['password'] != 'undefined' && $post['password'] != 'null' && $post['password'] != '') {
+                    $password = $post['password'];
+                    //**parolni shifrlab saqlaymiz */
+                    $model->savePassword($password, $model->id);
+                    //**** */
+                    $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
+                }
             }
+
             if ($model->save()) {
 
                 // avatarni saqlaymiz

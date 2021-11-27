@@ -27,7 +27,7 @@ class UserController extends ApiActiveController
             ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->join('INNER JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            // ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')])
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')])
         ;
 
         //  Filter from Profile 

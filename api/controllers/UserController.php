@@ -34,7 +34,7 @@ class UserController extends ApiActiveController
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if($attribute == 'role_name' ){
-                     $query = $query->andFilterWhere(['aa.' . $attribute => $id]);
+                     $query = $query->andFilterWhere(['auth_assignment.' . $attribute => $id]);
                 }
                 if (in_array($attribute, $profile->attributes())) {
                     $query = $query->andFilterWhere(['profile.' . $attribute => $id]);

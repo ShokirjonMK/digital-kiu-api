@@ -458,12 +458,12 @@ class User extends CommonUser
     public function savePassword($password, $user_id)
     {
         // if exist delete and create new one 
-        // $oldPassword = PasswordEncrypts::findAll(['user_id', $user_id]);
-        // if (isset($oldPassword)) {
-        //     $oldPassword->deleteA();
-        // }
-
-        PasswordEncrypts::deleteAll(['user_id', $user_id]);
+        $oldPassword = PasswordEncrypts::find(['user_id', $user_id])->all();
+        if (isset($oldPassword)) {
+            foreach ($oldPassword as $pass){
+                $pass->delete();
+            }
+        }
 
         $uu = new EncryptPass();
         $max = Keys::find()->count();

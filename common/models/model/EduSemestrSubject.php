@@ -335,7 +335,16 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         $errors = [];
 
-        sad gd fsd gdsf g
+        $eduSemestrSubjectCategoryTimes = EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id'=> $model->id]);
+
+        
+        $EduSemestrExamsType = EduSemestrExamsType::deleteAll(['edu_semestr_subject_id'=> $model->id]);
+        
+        if($eduSemestrSubjectCategoryTimes && $EduSemestrExamsType){
+            return true;
+        }
+
+        455645645 56 45 45 45  545 645 645 45 45 4 5
 
     /*    shularni topib hemmasini o\'chirish kk
         EduSemestrSubjectCategoryTime

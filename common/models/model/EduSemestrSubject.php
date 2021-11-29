@@ -331,7 +331,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         }
     }
 
-    public function deleteItem($model)
+    public static function deleteItem($model)
     {
         $errors = [];
 

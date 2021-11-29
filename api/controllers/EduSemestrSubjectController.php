@@ -85,7 +85,7 @@ class EduSemestrSubjectController extends ApiActiveController
         // remove model
 
         if ($model) {
-            $result = EduSemestrSubject::deleteMode($model);
+            $result = EduSemestrSubject::deleteItem($model);
 
             if (!is_array($result)) {
                 return $this->response(1, _e('EduSemestrSubject succesfully removed.'), null, null, ResponseStatus::OK);

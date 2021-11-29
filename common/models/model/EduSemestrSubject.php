@@ -331,24 +331,16 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         }
     }
 
-    public function deleteMode($model)
+    public function deleteItem($model)
     {
         $errors = [];
 
-        EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id'=> $model->id]);
-        EduSemestrExamsType::deleteAll(['edu_semestr_subject_id'=> $model->id]);
-        
-        if($model->delete()){
+        EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]);
+        EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]);
+
+        if ($model->delete()) {
             return true;
         }
-
-        // 455645645 56 45 45 45  545 645 645 45 45 4 5
-
-    /*    shularni topib hemmasini o\'chirish kk
-        EduSemestrSubjectCategoryTime
-EduSemestrExamsType
-        // return true;
-        */
     }
 
 

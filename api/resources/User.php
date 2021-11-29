@@ -293,6 +293,10 @@ class User extends CommonUser
             /* * Password */
             if (isset($post['password']) && !empty($post['password'])) {
                 if ($post['password'] != 'undefined' && $post['password'] != 'null' && $post['password'] != '') {
+                    if(strlen($post['password']) < 6){
+                        $errors[] = [_e('Password ')];
+                        return $errors;
+                    }
                     $password = $post['password'];
                     //**parolni shifrlab saqlaymiz */
                     $model->savePassword($password, $model->id);

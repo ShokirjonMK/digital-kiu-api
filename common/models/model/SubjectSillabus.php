@@ -223,7 +223,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
         foreach (json_decode($post['edu_semestr_subject_category_times']) as $subjectCatId => $subjectCatValues) {
             // $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $post['subject_id'];
             $edu_semestr_subject_category_timesMODEL->subject_category_id = $subjectCatId;
-            $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;
+            $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;sss
 
             if (!$edu_semestr_subject_category_timesMODEL->validate()) {
                // $errors[] = $edu_semestr_subject_category_timesMODEL->errors;

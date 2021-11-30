@@ -214,7 +214,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             $edu_semestr_exams_typesMODEL->max_ball = $examsTypeMaxBal;
 
             if (!$edu_semestr_exams_typesMODEL->validate()) {
-                $errors[] = $edu_semestr_exams_typesMODEL->errors;
+              //  $errors[] = $edu_semestr_exams_typesMODEL->errors;
             }
         }
 
@@ -226,7 +226,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;
 
             if (!$edu_semestr_subject_category_timesMODEL->validate()) {
-                $errors[] = $edu_semestr_subject_category_timesMODEL->errors;
+               // $errors[] = $edu_semestr_subject_category_timesMODEL->errors;
             }
         }
 

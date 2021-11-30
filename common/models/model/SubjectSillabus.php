@@ -209,7 +209,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
         $edu_semestr_exams_typesMODEL = new EduSemestrExamsType();
         //  [['edu_semestr_subject_id', 'exams_type_id', 'max_ball'], 'required']
         foreach (json_decode($post['edu_semestr_exams_types']) as $examsTypeId => $examsTypeMaxBal) {
-            $edu_semestr_exams_typesMODEL->edu_semestr_subject_id = $post['subject_id'];
+            // $edu_semestr_exams_typesMODEL->edu_semestr_subject_id = $post['subject_id'];
             $edu_semestr_exams_typesMODEL->exams_type_id = $examsTypeId;
             $edu_semestr_exams_typesMODEL->max_ball = $examsTypeMaxBal;
 
@@ -221,7 +221,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
         $edu_semestr_subject_category_timesMODEL = new EduSemestrSubjectCategoryTime();
         //  [['edu_semestr_subject_id', 'subject_category_id', 'hours'], 'required'],
         foreach (json_decode($post['edu_semestr_subject_category_times']) as $subjectCatId => $subjectCatValues) {
-            $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $post['subject_id'];
+            // $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $post['subject_id'];
             $edu_semestr_subject_category_timesMODEL->subject_category_id = $subjectCatId;
             $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;
 

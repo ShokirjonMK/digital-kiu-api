@@ -49,9 +49,8 @@ class RegionController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Region::find()
-            ->andWhere($id)
-            ->one();
+        $model = Region::findOne($id);
+        
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }

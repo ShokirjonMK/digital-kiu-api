@@ -84,7 +84,7 @@ class Profile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[ 'user_id'], 'required'],
+            [['user_id'], 'required'],
             // [[
             //     'user_id', 'image', 'phone', 'phone_secondary',
             //     'is_foreign', 'last_name', 'first_name', 'middle_name',
@@ -94,13 +94,15 @@ class Profile extends \yii\db\ActiveRecord
             //     'passport_issued_date', 'passport_given_by', 'permanent_country_id',
             //     'permanent_region_id', 'permanent_area_id', 'permanent_address'
             // ], 'required'],
-            [['user_id', 'is_foreign', 'birthday', 'country_id', 'region_id', 'area_id', 'gender', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['passport_given_date', 'passport_issued_date'], 'safe'],
+
+
+            [['user_id', 'is_foreign', 'country_id', 'region_id', 'area_id', 'gender', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['passport_given_date', 'birthday',  'passport_issued_date'], 'safe'],
             [['image', 'last_name', 'first_name', 'middle_name', 'passport_seria', 'passport_number', 'passport_pin', 'passport_file', 'address', 'passport_given_by', 'permanent_address'], 'string', 'max' => 255],
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
 
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
-           // [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->passportFileMaxSize],
+            // [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->passportFileMaxSize],
             [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['area_id' => 'id']],
             [['permanent_area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['permanent_area_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],

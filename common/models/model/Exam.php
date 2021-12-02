@@ -258,8 +258,6 @@ class Exam extends \yii\db\ActiveRecord
         }
     }
 
-
-
     public function beforeSave($insert)
     {
         if ($insert) {

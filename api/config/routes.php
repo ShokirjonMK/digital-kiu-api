@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $controllers = [
     'student',
@@ -47,7 +47,7 @@ $controllers = [
     'student-time-table',
     'student-exam',
     'country',
-    
+
     'exam',
     'exam-student',
     'exam-question',
@@ -55,7 +55,7 @@ $controllers = [
     'exam-question-option',
     'exam-student-answer',
     'exam-teacher-check',
-    
+
     'subject-sillabus',
 
 ];
@@ -64,11 +64,11 @@ $controllerRoutes = [];
 
 foreach ($controllers as $controller) {
     $rule = [
-        'class' => 'yii\rest\UrlRule', 
+        'class' => 'yii\rest\UrlRule',
         'controller' => $controller,
         'prefix' => '<lang:\w{2}>'
     ];
-    if($controller == 'basis-of-learning'){
+    if ($controller == 'basis-of-learning') {
         $rule['pluralize'] = false;
     }
     $controllerRoutes[] = $rule;
@@ -78,9 +78,14 @@ $routes = [
 
     'POST <lang:\w{2}>/employees/<employee_id:\d+>/bind-subject' => 'employee/bind-subject', // Bind subjects to teacher
     'GET <lang:\w{2}>/employees/<employee_id:\d+>/subjects' => 'employee/subjects', // Get teacher subjects
-    
+
     // Login and get access_token from server
-    'POST <lang:\w{2}>/auth/login' => 'auth/login', 
+    'POST <lang:\w{2}>/auth/login' => 'auth/login',
+
+    // Get me
+//    'GET <lang:\w{2}>/rooms/free' => 'room/free',
+
+    'GET <lang:\w{2}>/users/me' => 'user/me',
 
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list

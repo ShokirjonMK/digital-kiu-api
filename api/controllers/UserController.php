@@ -16,6 +16,37 @@ class UserController extends ApiActiveController
         return [];
     }
 
+    public function actionMe()
+    {
+        $data = null;
+        $errors = [];
+        $user = User::findOne(Yii::$app->user->identity->id);
+        if (isset($user)) {
+            if ($user->status === User::STATUS_ACTIVE) {
+                $profile = $user->profile;
+                $data = [
+                    'user_id' => $user->id,
+                    'username' => $user->username,
+                    'last_name' => $profile->last_name,
+                    'first_name' => $profile->first_name,
+                    'role' => $user->roleItem,
+                    'permissions' => $user->permissions,
+                    'access_token' => $user->access_token,
+                    'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
+                ];
+            } else {
+                $errors[] = [_e('User is not active.')];
+            }
+            if (count($errors) == 0) {
+                return $this->response(1, _e('User successfully refreshed'), $data, null, ResponseStatus::OK);
+            } else {
+                return ['is_ok' => false, 'errors' => simplify_errors($errors)];
+            }
+        } else {
+            return ['is_ok' => false, 'errors' => simplify_errors($errors)];
+        }
+    }
+
     public function actionIndex($lang)
     {
         $model = new User();
@@ -27,8 +58,7 @@ class UserController extends ApiActiveController
             ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->join('INNER JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')])
-        ;
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
 
         //  Filter from Profile 
         $profile = new Profile();
@@ -60,7 +90,7 @@ class UserController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data =  $this->getData($query);
+        $data = $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);
     }
@@ -126,4 +156,5 @@ class UserController extends ApiActiveController
     {
         return $this->response(1, _e('Success.'), User::statusList(), null, ResponseStatus::OK);
     }
+
 }

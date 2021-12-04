@@ -47,6 +47,25 @@ class UserController extends ApiActiveController
         }
     }
 
+
+    public function actionLogout()
+    {
+        $data = null;
+        $errors = [];
+        $user = User::findOne(Yii::$app->user->identity->id);
+        if (isset($user)) {
+            Yii::$app->user->logout();
+            $user->access_token = NULL;
+            $user->access_token_time = NULL;
+            $user->save(false);
+//            $user->logout();
+
+            return $this->response(1, _e('User successfully Log Out'), null, null, ResponseStatus::OK);
+        } else {
+            return ['status' => 0, 'errors' => "User not found"];
+        }
+    }
+
     public function actionIndex($lang)
     {
         $model = new User();

@@ -10,24 +10,16 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "Exam".
  *
  * @property int $id
- * @property string name from translate $name
- 
- * @property int $student_id
- * @property int $exam_id
- * @property int $teacher_id
- * @property int $ball
- * @property int $attempt
- * 
+ * @property int|null $name
  * @property int|null $order
- * @property int|null $status
+ * @property int $status
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
- * @property int $is_deleted
  *
  */
-class StudentExam extends \yii\db\ActiveRecord
+class QuestionType extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -45,7 +37,7 @@ class StudentExam extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'student_exam';
+        return 'question_type';
     }
 
     /**
@@ -56,13 +48,9 @@ class StudentExam extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'exam_id', 'ball'], 'required'],
-            [['student_id', 'exam_id', 'teacher_id', 'attempt', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['ball'], 'double'],
-
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
-            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
-            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_id' => 'id']],
+            [['name'], 'required'],
+            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['name'], 'string'],
         ];
     }
 
@@ -73,13 +61,7 @@ class StudentExam extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-
-            'student_id' => 'Student Id',
-            'exam_id' => 'Exam Id',
-            'teacher_id' => 'Teacher Id',
-            'ball' => 'Ball',
-            'attempt' => 'Attempt',
-
+            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -92,14 +74,10 @@ class StudentExam extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
-            
-            'student_id',
-            'exam_id',
-            'ball',
-            'attempt',
 
+            'name',
             'order',
             'status',
             'created_at',
@@ -114,11 +92,8 @@ class StudentExam extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
-            'teacher',
-            'student',
-            'exam',
-            
+        $extraFields = [
+
             'createdBy',
             'updatedBy',
         ];
@@ -126,44 +101,11 @@ class StudentExam extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    /**
-     * Gets query for [['Student ']].
-     * Student
-     * @return \yii\db\ActiveQuery
-     */ 
-    public function getTeacher()
-    {
-        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_id']);
-    }
-
-    /**
-     * Gets query for [['Student ']].
-     * Student
-     * @return \yii\db\ActiveQuery
-     */ 
-    public function getStudent()
-    {
-        return $this->hasOne(Student::className(), ['id' => 'student_id']);
-    }
-
-    /**
-     * Gets query for [['Exam']].
-     * 
-     * @return \yii\db\ActiveQuery
-     */ 
-    public function getExam()
-    {
-        return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
-    }
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-
-        // must check here dublicate or attemp increment
-        
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

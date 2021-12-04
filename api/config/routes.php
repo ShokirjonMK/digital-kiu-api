@@ -86,6 +86,7 @@ $routes = [
 //    'GET <lang:\w{2}>/rooms/free' => 'room/free',
 
     'GET <lang:\w{2}>/users/me' => 'user/me',
+    'POST <lang:\w{2}>/auth/logout' => 'user/logout',
 
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list

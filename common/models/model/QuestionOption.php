@@ -10,14 +10,11 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "Exam".
  *
  * @property int $id
- * @property string name from translate $name
- 
- * @property int $student_id
- * @property int $exam_id
- * @property int $teacher_id
- * @property int $ball
- * @property int $attempt
- * 
+ * @property int $question_id
+ * @property int $file
+ * @property int $is_correct
+ * @property int $option
+ *
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -27,7 +24,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $is_deleted
  *
  */
-class StudentExam extends \yii\db\ActiveRecord
+class QuestionOption extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -45,7 +42,7 @@ class StudentExam extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'student_exam';
+        return 'question_option';
     }
 
     /**
@@ -56,13 +53,28 @@ class StudentExam extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'exam_id', 'ball'], 'required'],
-            [['student_id', 'exam_id', 'teacher_id', 'attempt', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['ball'], 'double'],
+            [
+                [
+                    'question_id',
+                    'option'
+                ],
+                'required'],
 
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
-            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
-            [['teacher_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_id' => 'id']],
+            [
+                ['course_id',
+                    'question_id',
+
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ],
+                'integer'],
+
+            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
         ];
     }
 
@@ -74,11 +86,10 @@ class StudentExam extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
 
-            'student_id' => 'Student Id',
-            'exam_id' => 'Exam Id',
-            'teacher_id' => 'Teacher Id',
-            'ball' => 'Ball',
-            'attempt' => 'Attempt',
+            'question_id' => 'Question Id',
+            'file' => 'File',
+            'is_correct' => 'Is Correct',
+            'option' => 'Option',
 
             'order' => 'Order',
             'status' => 'Status',
@@ -92,13 +103,13 @@ class StudentExam extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
-            
-            'student_id',
-            'exam_id',
-            'ball',
-            'attempt',
+
+            'question_id',
+            'file',
+            'is_correct',
+            'option',
 
             'order',
             'status',
@@ -114,11 +125,9 @@ class StudentExam extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
-            'teacher',
-            'student',
-            'exam',
-            
+        $extraFields = [
+            'question',
+
             'createdBy',
             'updatedBy',
         ];
@@ -127,33 +136,13 @@ class StudentExam extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [['Student ']].
-     * Student
+     * Gets query for [['Question ']].
+     * Question
      * @return \yii\db\ActiveQuery
-     */ 
-    public function getTeacher()
+     */
+    public function getQuestion()
     {
-        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_id']);
-    }
-
-    /**
-     * Gets query for [['Student ']].
-     * Student
-     * @return \yii\db\ActiveQuery
-     */ 
-    public function getStudent()
-    {
-        return $this->hasOne(Student::className(), ['id' => 'student_id']);
-    }
-
-    /**
-     * Gets query for [['Exam']].
-     * 
-     * @return \yii\db\ActiveQuery
-     */ 
-    public function getExam()
-    {
-        return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
+        return $this->hasOne(Question::className(), ['id' => 'question_id']);
     }
 
     public static function createItem($model, $post)
@@ -161,9 +150,6 @@ class StudentExam extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-
-        // must check here dublicate or attemp increment
-        
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

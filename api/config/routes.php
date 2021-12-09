@@ -58,6 +58,9 @@ $controllers = [
 
     'subject-sillabus',
 
+    'question',
+    'question-type',
+
 ];
 
 $controllerRoutes = [];

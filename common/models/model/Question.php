@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "Exam".
@@ -42,6 +43,12 @@ class Question extends \yii\db\ActiveRecord
         ];
     }
 
+
+    const UPLOADS_FOLDER = 'uploads/question_files/';
+    public $question_file;
+    public $questionFileMaxSize = 1024 * 1024 * 3; // 3 Mb
+
+
     /**
      * {@inheritdoc}
      */
@@ -68,10 +75,12 @@ class Question extends \yii\db\ActiveRecord
                     'lang_id',
                     'question_type_id'
                 ],
-                'required'],
+                'required'
+            ],
 
             [
-                ['course_id',
+                [
+                    'course_id',
                     'semestr_id',
                     'subject_id',
                     'lang_id',
@@ -83,9 +92,12 @@ class Question extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
-                    'is_deleted'],
-                'integer'],
+                    'is_deleted'
+                ],
+                'integer'
+            ],
 
+            [['file'], 'string', 'max' => 255],
 
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
@@ -127,6 +139,9 @@ class Question extends \yii\db\ActiveRecord
             'course_id',
             'semestr_id',
             'subject_id',
+            'question_file' => function ($model) {
+                return $model->file ?? '';
+            },
             'file',
             'ball',
             'question',
@@ -217,7 +232,18 @@ class Question extends \yii\db\ActiveRecord
         $errors = [];
 
 
-        // must check here dublicate or attemp increment
+        // question file saqlaymiz
+        $model->question_file = UploadedFile::getInstancesByName('question_file');
+        if ($model->question_file) {
+            $model->question_file = $model->question_file[0];
+            $questionFileUrl = $model->uploadFile();
+            if ($questionFileUrl) {
+                $model->file = $questionFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -237,7 +263,23 @@ class Question extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+        
+        $oldFile = $model->file;
+        // question file saqlaymiz
+        $model->question_file = UploadedFile::getInstancesByName('question_file');
+        if ($model->question_file) {
+            $model->question_file = $model->question_file[0];
+            $questionFileUrl = $model->uploadFile();
+            if ($questionFileUrl) {
+                $model->file = $questionFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
         if ($model->save()) {
+            $model->deleteFile($oldFile);
             $transaction->commit();
             return true;
         } else {
@@ -275,4 +317,36 @@ class Question extends \yii\db\ActiveRecord
 
         return $array;
     }
+
+    
+    public function uploadFile()
+    {
+        if ($this->validate()) {
+            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+            if ($this->isNewRecord) {
+                $fileName = ExamQuestion::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
+            } else {
+                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
+            }
+            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->question_file->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteFile($oldFile = NULL)
+    {
+        if (isset($oldFile)) {
+            if (file_exists(HOME_PATH . $oldFile)) {
+                unlink(HOME_PATH  . $oldFile);
+            }
+        }
+        return true;
+    }
+
 }

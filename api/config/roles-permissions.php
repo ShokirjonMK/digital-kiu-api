@@ -118,6 +118,8 @@ return [
         'job_index',
         'time-table_index',
         'time-table_view',
+        'edu-semestr-subject_index',
+        'edu-semestr-subject_view',
 
     ],
 

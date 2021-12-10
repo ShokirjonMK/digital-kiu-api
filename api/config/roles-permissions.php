@@ -116,10 +116,9 @@ return [
         'password_index',
         'password_update',
         'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
+        'time-table_index',
+        'time-table_view',
+
     ],
 
     'edu_admin' => [

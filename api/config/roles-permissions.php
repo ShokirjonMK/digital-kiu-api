@@ -15,6 +15,10 @@ return [
         'student-time-table_update',
         'student-time-table_view',
         'student-time-table_delete',
+        'semestr_index',
+        'semestr_view',
+        'edu-semestr_index',
+        'edu-semestr_view',
         
     ],
 

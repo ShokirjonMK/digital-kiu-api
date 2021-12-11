@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\EduSemestrSubject;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduSemestr;
 use common\models\model\Student;
 
 class EduSemestrSubjectController extends ApiActiveController
@@ -22,9 +23,13 @@ class EduSemestrSubjectController extends ApiActiveController
 
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
         if (isset($student)) {
+            $eduSemesterIds = EduSemestr::find()
+                ->select('id')
+                ->where(['edu_plan_id' => $student->edu_plan_id]);
+
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0])
-                ->andWhere(['edu_plan_id' => $student->edu_plan_id]);
+                ->andWhere(['in', 'edu_semestr_id', $eduSemesterIds]);
         } else {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0]);

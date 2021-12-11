@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\EduSemestrSubject;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Student;
 
 class EduSemestrSubjectController extends ApiActiveController
 {
@@ -19,9 +20,15 @@ class EduSemestrSubjectController extends ApiActiveController
     {
         $model = new EduSemestrSubject();
 
-        $query = $model->find()
-            ->andWhere(['is_deleted' => 0]);
-        // ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        if (isset($student)) {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['edu_plan_id' => $student->edu_plan_id]);
+        } else {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0]);
+        }
 
         //filter
         $query = $this->filterAll($query, $model);

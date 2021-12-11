@@ -5,6 +5,7 @@ namespace api\controllers;
 use Yii;
 
 use base\ResponseStatus;
+use common\models\model\Student;
 use common\models\model\StudentTimeTable;
 use common\models\model\TimeTable;
 
@@ -24,8 +25,15 @@ class  StudentTimeTableController extends ApiActiveController
     {
         $model = new StudentTimeTable();
 
-        $query = $model->find()
-            ->andWhere(['is_deleted' => 0]);
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        if (isset($student)) {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['student_id' => $student->id]);
+        } else {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0]);
+        }
 
         //filter
         $query = $this->filterAll($query, $model);

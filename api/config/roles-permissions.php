@@ -1,6 +1,23 @@
 <?php
 // rollar va dostup
 return [
+
+    'student' => [
+        'password_index',
+        'password_update',
+        'time-table_index',
+        'time-table_view',
+        'edu-semestr-subject_index',
+        'edu-semestr-subject_view',
+
+        'student-time-table_index',
+        'student-time-table_create',
+        'student-time-table_update',
+        'student-time-table_view',
+        'student-time-table_delete',
+        
+    ],
+
     'chair_admin' => [
         'password_index',
         'password_update',
@@ -112,16 +129,6 @@ return [
         'job_delete',
     ],
 
-    'student' => [
-        'password_index',
-        'password_update',
-        'job_index',
-        'time-table_index',
-        'time-table_view',
-        'edu-semestr-subject_index',
-        'edu-semestr-subject_view',
-
-    ],
 
     'edu_admin' => [
         'password_index',

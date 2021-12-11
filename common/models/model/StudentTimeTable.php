@@ -142,13 +142,12 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          *  Faqat  Student user  
          */
 
-        // $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
-        // if (!isset($student)) {
-        //     $errors[] = _e('Student not found');
-        //     return $errors;
-        // }
-        // $model->student_id = $student->id;
-
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        if (!isset($student)) {
+            $errors[] = _e('Student not found');
+            return $errors;
+        }
+        $model->student_id = $student->id;
 
 
         if (!($model->validate())) {

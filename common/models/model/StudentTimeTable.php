@@ -4,7 +4,7 @@ namespace common\models\model;
 
 use api\resources\ResourceTrait;
 use api\resources\StudentUser;
-use common\models\Student;
+
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -14,7 +14,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property int $student_id
  * @property int $time_table_id
-
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -25,7 +24,6 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property Course $student
  * @property EduPlan $timeTable
-
  */
 class StudentTimeTable extends \yii\db\ActiveRecord
 {
@@ -84,7 +82,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'student_id',
             'time_table_id',
@@ -101,15 +99,13 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'student',
             'timeTable',
         ];
 
         return $extraFields;
     }
-
-
 
 
     /**
@@ -139,17 +135,15 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $errors = [];
 
         /**
-         *  Faqat  Student user  
+         *  Faqat  Student user
          */
 
-        // $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
-        // if (!isset($student)) {
-        //     $errors[] = _e('Student not found');
-        //     return $errors;
-        // }
-        // $model->student_id = $student->id;
-
-
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        if (!isset($student)) {
+            $errors[] = _e('Student not found');
+            return $errors;
+        }
+        $model->student_id = $student->id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -202,7 +196,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         /**
-         *  Faqat  Student user  
+         *  Faqat  Student user
          */
 
         // $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);

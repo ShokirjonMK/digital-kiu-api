@@ -44,7 +44,7 @@ class QuestionTypeController extends ApiActiveController
     public function actionCreate($lang)
     {
         $model = new QuestionType();
-        $post = Yii::$app->request->post();
+        $post = Yii::$app->request->post(); 
         $this->load($model, $post);
 
         $result = QuestionType::createItem($model, $post);

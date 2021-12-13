@@ -2,38 +2,38 @@
 
 namespace api\controllers;
 
+
+use common\models\model\Translate;
 use Yii;
-
 use base\ResponseStatus;
-use common\models\model\Student;
-use common\models\model\StudentTimeTable;
-use common\models\model\TimeTable;
+use common\models\model\QuestionType;
 
-class  StudentTimeTableController extends ApiActiveController
+class QuestionTypeController extends ApiActiveController
 {
-
-    public $modelClass = 'api\resources\StudentTimeTable';
+    public $modelClass = 'api\resources\QuestionType';
 
     public function actions()
     {
         return [];
     }
-    public $table_name = 'student_time_table';
-    public $controller_name = 'StudentTimeTable';
+
+    public $table_name = 'question_type';
+    public $controller_name = 'Question Type';
 
     public function actionIndex($lang)
     {
-        $model = new StudentTimeTable();
+        $model = new QuestionType();
 
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
-        if (isset($student)) {
-            $query = $model->find()
-                ->andWhere(['is_deleted' => 0])
-                ->andWhere(['student_id' => $student->id]);
-        } else {
-            $query = $model->find()
-                ->andWhere(['is_deleted' => 0]);
-        }
+        $query = $model->find()
+            ->with(['infoRelation'])
+            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->groupBy($this->table_name . '.id')
+            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
+            // ->andWhere(['tr.tabel_name' => 'faculty'])
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         //filter
         $query = $this->filterAll($query, $model);
@@ -43,17 +43,16 @@ class  StudentTimeTableController extends ApiActiveController
 
         // data
         $data =  $this->getData($query);
-
         return $this->response(1, _e('Success'), $data);
     }
 
     public function actionCreate($lang)
     {
-        $model = new StudentTimeTable();
+        $model = new QuestionType();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = StudentTimeTable::createItem($model, $post);
+        $result = QuestionType::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -63,16 +62,13 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = StudentTimeTable::findOne($id);
+        $model = QuestionType::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-
-        $model_new = new StudentTimeTable();
         $post = Yii::$app->request->post();
-        $this->load($model_new, $post);
-
-        $result = StudentTimeTable::updateItem($model_new, $post, $model);
+        $this->load($model, $post);
+        $result = QuestionType::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -82,7 +78,9 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = StudentTimeTable::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = QuestionType::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -91,17 +89,25 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = StudentTimeTable::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = QuestionType::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        // remove model
         if ($model) {
+            Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 
-            return $this->response(1, _e('Student succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
+
+
+
 }

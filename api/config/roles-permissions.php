@@ -1,6 +1,78 @@
 <?php
 // rollar va dostup
 return [
+
+    'student' => [
+        'password_index',
+        'password_update',
+        'faculty_view',
+        'direction_view',
+        'subject_view',
+        'languages_view',
+        'building_view',
+        'room_view',
+        'kafedra_view',
+        'para_view',
+        'edu-year_view',
+        'subject-category_view',
+        'exams-type_view',
+        'edu-type_view',
+        'edu-plan_view',
+        'edu-semestr_index',
+        'edu-semestr_view',
+        'edu-semestr-subject_index',
+        'edu-semestr-subject_view',
+        'edu-semestr-subject-category-time_view',
+
+        'time-table_index',
+        'time-table_view',
+        'week_index',
+        'week_view',
+        'region_view',
+        'area_view',
+        'country_view',
+        'semestr_index',
+        'semestr_view',
+        'course_index',
+        'course_view',
+        'subject-type_index',
+        'subject-type_view',
+
+        'student-time-table_index',
+        'student-time-table_create',
+        'student-time-table_update',
+        'student-time-table_view',
+        'student-time-table_delete',
+
+        'student-exam_index',
+        'student-exam_create',
+        'student-exam_update',
+        'student-exam_view',
+        'student-exam_delete',
+
+        'exam-student-answer_index',
+        'exam-student-answer_create',
+        'exam-student-answer_update',
+        'exam-student-answer_view',
+        'exam-student-answer_delete',
+
+
+    ],
+
+    'teacher' => [
+        'password_index',
+        'password_update',
+        'exam-teacher-check_index',
+        'exam-teacher-check_update',
+
+        
+        'subject-topic_index',
+        'subject-topic_create',
+        'subject-topic_update',
+        'subject-topic_view',
+        'subject-topic_delete',
+    ],
+
     'chair_admin' => [
         'password_index',
         'password_update',
@@ -9,16 +81,6 @@ return [
         'subject_update',
         'subject_view',
         'subject_delete',
-    ],
-
-    'teacher' => [
-        'password_index',
-        'password_update',
-        'subject-topic_index',
-        'subject-topic_create',
-        'subject-topic_update',
-        'subject-topic_view',
-        'subject-topic_delete',
     ],
 
     'directory_editor' => [
@@ -112,15 +174,6 @@ return [
         'job_delete',
     ],
 
-    'student' => [
-        'password_index',
-        'password_update',
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
-    ],
 
     'edu_admin' => [
         'password_index',

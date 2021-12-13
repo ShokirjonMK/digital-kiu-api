@@ -57,7 +57,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_id', 'subject_id'], 'required'],
+            [['edu_semestr_id', 'subject_id'], 'subject_type_id', 'required'],
             //    [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
             [['edu_semestr_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['credit'], 'number'],

@@ -37,5 +37,17 @@ class CountryController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
+    
+    public function actionView($lang, $id)
+    {
+        $model = Countries::find()
+            ->andWhere(['id' => $id])
+            ->one();
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+    }
+
 
 }

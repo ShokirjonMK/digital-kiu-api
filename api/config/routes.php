@@ -6,7 +6,6 @@ $controllers = [
     'user',
     'department',
     'job',
-    'direction',
     'subject',
     'subject-topic',
     'nationality',
@@ -16,7 +15,6 @@ $controllers = [
     'scientific-title',
     'special-title',
     'basis-of-learning',
-    'faculty',
     'building',
     'course',
     'room',
@@ -57,6 +55,9 @@ $controllers = [
     'exam-teacher-check',
 
     'subject-sillabus',
+
+    'question',
+    'question-type',
 
 ];
 

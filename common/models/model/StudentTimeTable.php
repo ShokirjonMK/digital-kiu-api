@@ -199,12 +199,12 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          *  Faqat  Student user
          */
 
-        // $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
-        // if (!isset($student)) {
-        //     $errors[] = _e('Student not found');
-        //     return $errors;
-        // }
-        // $model->student_id = $student->id;
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        if (!isset($student)) {
+            $errors[] = _e('Student not found');
+            return $errors;
+        }
+        $model->student_id = $student->id;
 
 
         if (!($model->validate())) {
@@ -222,12 +222,13 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         /**
          *    Student Edu Plan bo'chicha tekshirish
          */
-        // if (isset($timeTableCheck)) {
-        //     if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
-        //         $errors[] = _e('This Time Table is not for this Student');
-        //         return $errors;
-        //     }
-        // }
+
+        if (isset($timeTableCheck)) {
+            if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+                $errors[] = _e('This Time Table is not for this Student');
+                return $errors;
+            }
+        }
 
 
         if (isset($hasModel)) {

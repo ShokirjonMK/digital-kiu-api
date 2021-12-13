@@ -3,8 +3,12 @@
 return [
 
     'student' => [
+        'user_me',
+        'user_logout',
+
         'password_index',
         'password_update',
+        
         'faculty_view',
         'direction_view',
         'subject_view',
@@ -55,7 +59,7 @@ return [
         'exam-student-answer_update',
         'exam-student-answer_view',
         'exam-student-answer_delete',
-
+       
 
     ],
 
@@ -65,7 +69,7 @@ return [
         'exam-teacher-check_index',
         'exam-teacher-check_update',
 
-        
+
         'subject-topic_index',
         'subject-topic_create',
         'subject-topic_update',

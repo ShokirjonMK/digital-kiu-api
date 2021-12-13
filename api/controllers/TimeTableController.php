@@ -38,6 +38,27 @@ class TimeTableController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
+    public function actionParentNull($lang)
+    {
+        $model = new TimeTable();
+
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0])
+            ->andWhere(['parent_id' => null])
+            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+
+        //filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionCreate($lang)
     {
         $model = new TimeTable();

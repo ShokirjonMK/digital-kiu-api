@@ -30,6 +30,8 @@ return [
 
         'time-table_index',
         'time-table_view',
+        'time-table_parent-null',
+
         'week_index',
         'week_view',
         'region_view',

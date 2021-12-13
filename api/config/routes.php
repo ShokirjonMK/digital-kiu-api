@@ -84,7 +84,10 @@ $routes = [
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
 
     // Get me
-//    'GET <lang:\w{2}>/rooms/free' => 'room/free',
+    //    'GET <lang:\w{2}>/rooms/free' => 'room/free',
+    'GET <lang:\w{2}>/time-table/parent-null' => 'time-table/parent-null',
+
+
 
     'GET <lang:\w{2}>/users/me' => 'user/me',
     'POST <lang:\w{2}>/auth/logout' => 'user/logout',

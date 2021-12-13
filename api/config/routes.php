@@ -85,7 +85,7 @@ $routes = [
 
     // Get me
     //    'GET <lang:\w{2}>/rooms/free' => 'room/free',
-    'GET <lang:\w{2}>/time-table/parent-null' => 'time-table/parent-null',
+    'GET <lang:\w{2}>/time-tables/parent-null' => 'time-table/parent-null',
 
 
 

@@ -15,6 +15,7 @@ class m211012_121546_semestr extends Migration
         $this->createTable('semestr', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),
+            'course_id'=>$this->integer()->notNull(),
 
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -25,6 +26,7 @@ class m211012_121546_semestr extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+        $this->addForeignKey('sc_semestr_course_id','semestr','course_id', 'course','id');
     }
 
     /**
@@ -32,6 +34,7 @@ class m211012_121546_semestr extends Migration
      */
     public function safeDown()
     {
+         $this->dropForeignKey('sc_semestr_course_id','semestr');
         $this->dropTable('semestr');
     }
 

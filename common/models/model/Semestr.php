@@ -52,8 +52,10 @@ class Semestr extends \yii\db\ActiveRecord
     {
         return [
             //            [['name'], 'required'],
-            [['order', 'type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['course_id', 'type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             //            [['name'], 'string', 'max' => 255],
+            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
+
         ];
     }
 
@@ -64,6 +66,7 @@ class Semestr extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'course_id' => 'Course ID',
             //            'name' => 'Name',
             'order' => 'Order',
             'type' => 'Type',
@@ -100,6 +103,7 @@ class Semestr extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+            'course',
             'eduSemestrs',
             'timeTables',
             'description',
@@ -143,6 +147,16 @@ class Semestr extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
+
+    /**
+     * Gets query for [[Course]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCourse()
+    {
+        return $this->hasOne(Course::className(), ['id' => 'course_id']);
+    }
 
     /**
      * Gets query for [[EduSemestrs]].

@@ -119,6 +119,7 @@ class m211104_055719_insert_smester_course extends Migration
         $this->execute("TRUNCATE table  `semestr`;");
         $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
         $this->insert('{{%semestr}}', [
+            'course_id' => 1,
             'id' => 1,
             'type' => 1,
             'updated_at' => 0,
@@ -136,6 +137,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 1,
             'id' => 2,
             'type' => 2,
             'updated_at' => 0,
@@ -153,6 +155,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 2,
             'id' => 3,
             'type' => 1,
             'updated_at' => 0,
@@ -170,6 +173,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 2,
             'id' => 4,
             'type' => 2,
             'updated_at' => 0,
@@ -187,6 +191,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 3,
             'id' => 5,
             'type' => 1,
             'updated_at' => 0,
@@ -204,6 +209,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 3,
             'id' => 6,
             'type' => 2,
             'updated_at' => 0,
@@ -221,6 +227,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 4,
             'id' => 7,
             'type' => 1,
             'updated_at' => 0,
@@ -238,6 +245,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 4,
             'id' => 8,
             'type' => 2,
             'updated_at' => 0,
@@ -255,6 +263,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 5,
             'id' => 9,
             'type' => 1,
             'updated_at' => 0,
@@ -272,6 +281,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 5,
             'id' => 10,
             'type' => 2,
             'updated_at' => 0,
@@ -289,6 +299,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 6,
             'id' => 11,
             'type' => 1,
             'updated_at' => 0,
@@ -306,6 +317,7 @@ class m211104_055719_insert_smester_course extends Migration
         ]);
 
         $this->insert('{{%semestr}}', [
+            'course_id' => 6,
             'id' => 12,
             'type' => 2,
             'updated_at' => 0,
@@ -333,18 +345,5 @@ class m211104_055719_insert_smester_course extends Migration
         return false;
     }
 
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
 
-    }
-
-    public function down()
-    {
-        echo "m211104_055719_insert_smester_course cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

@@ -67,7 +67,7 @@ class Question extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'course_id',
+                    // 'course_id',
                     'semestr_id',
                     'subject_id',
                     'ball',

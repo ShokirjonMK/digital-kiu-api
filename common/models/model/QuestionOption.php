@@ -69,7 +69,7 @@ class QuestionOption extends \yii\db\ActiveRecord
             [
                 [
                     'question_id',
-
+                    'is_correct',
                     'order',
                     'status',
                     'created_at',

@@ -58,6 +58,7 @@ $controllers = [
 
     'question',
     'question-type',
+    'question-option',
 
 ];
 

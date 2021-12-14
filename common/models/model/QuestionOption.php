@@ -136,7 +136,7 @@ class QuestionOption extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [['Question ']].
+     * Gets query for [['Question']].
      * Question
      * @return \yii\db\ActiveQuery
      */

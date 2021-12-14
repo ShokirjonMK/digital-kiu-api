@@ -61,7 +61,7 @@ class QuestionOption extends \yii\db\ActiveRecord
                 'required'],
 
             [
-                ['course_id',
+                [
                     'question_id',
 
                     'order',

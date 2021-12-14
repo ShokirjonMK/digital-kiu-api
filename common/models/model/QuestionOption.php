@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "Exam".
@@ -36,6 +37,11 @@ class QuestionOption extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
+
+    const UPLOADS_FOLDER = 'uploads/option_files/';
+    public $option_file;
+    public $optionFileMaxSize = 1024 * 1024 * 3; // 3 Mb
+
 
     /**
      * {@inheritdoc}
@@ -75,6 +81,7 @@ class QuestionOption extends \yii\db\ActiveRecord
                 'integer'],
 
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
+            [['option_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->optionFileMaxSize],
         ];
     }
 
@@ -150,6 +157,19 @@ class QuestionOption extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        // option file saqlaymiz
+        $model->option_file = UploadedFile::getInstancesByName('option_file');
+        if ($model->option_file) {
+            $model->option_file = $model->option_file[0];
+            $optionFileUrl = $model->uploadFile();
+            if ($optionFileUrl) {
+                $model->file = $optionFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -165,10 +185,27 @@ class QuestionOption extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $oldFile = $model->file;
+        // option file saqlaymiz
+        $model->option_file = UploadedFile::getInstancesByName('option_file');
+        if ($model->option_file) {
+            $model->option_file = $model->option_file[0];
+            $optionFileUrl = $model->uploadFile();
+            if ($optionFileUrl) {
+                $model->file = $optionFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
         if ($model->save()) {
+            $model->deleteFile($oldFile);
             $transaction->commit();
             return true;
         } else {
@@ -205,5 +242,36 @@ class QuestionOption extends \yii\db\ActiveRecord
         }
 
         return $array;
+    }
+
+
+    public function uploadFile()
+    {
+        if ($this->validate()) {
+            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+            if ($this->isNewRecord) {
+                $fileName = QuestionOption::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->option_file->extension;
+            } else {
+                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->option_file->extension;
+            }
+            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->option_file->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteFile($oldFile = NULL)
+    {
+        if (isset($oldFile)) {
+            if (file_exists(HOME_PATH . $oldFile)) {
+                unlink(HOME_PATH  . $oldFile);
+            }
+        }
+        return true;
     }
 }

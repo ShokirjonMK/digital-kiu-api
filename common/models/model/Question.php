@@ -104,6 +104,7 @@ class Question extends \yii\db\ActiveRecord
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
             [['question_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => QuestionType::className(), 'targetAttribute' => ['question_type_id' => 'id']],
+            [['question_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->questionFileMaxSize],
         ];
     }
 
@@ -326,7 +327,7 @@ class Question extends \yii\db\ActiveRecord
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
             if ($this->isNewRecord) {
-                $fileName = ExamQuestion::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
+                $fileName = Question::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
             } else {
                 $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
             }

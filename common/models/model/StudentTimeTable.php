@@ -100,6 +100,15 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields = [
+            'subject',
+            'teacher',
+            'building',
+            'room',
+            'week',
+            'para',
+            'subjectCategory',
+
+
             'student',
             'timeTable',
         ];
@@ -107,6 +116,88 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+
+    /* 
+    subject,
+    teacher,
+    building,
+    room,
+    week,
+    para,
+    sillabus(seminar | amaliy | ...)
+ */
+
+
+
+    /**
+     * Gets query for [[SubjectCategory]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubjectCategory()
+    {
+        return $this->timeTable->subjectCategory ?? "";
+    }
+
+    /**
+     * Gets query for [[para]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPara()
+    {
+        return $this->timeTable->para ?? "";
+    }
+
+    /**
+     * Gets query for [[week]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWeek()
+    {
+        return $this->timeTable->week ?? "";
+    }
+
+    /**
+     * Gets query for [[room]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRoom()
+    {
+        return $this->timeTable->room ?? "";
+    }
+
+    /**
+     * Gets query for [[building]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBuilding()
+    {
+        return $this->timeTable->building ?? "";
+    }
+
+    /**
+     * Gets query for [[teacher]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTeacher()
+    {
+        return $this->timeTable->teacher ?? "";
+    }
+
+    /**
+     * Gets query for [[subject]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubject()
+    {
+        return $this->timeTable->subject ?? "";
+    }
 
     /**
      * Gets query for [[Course]].

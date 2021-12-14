@@ -252,7 +252,7 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TeacherAccess]].
+     * Gets query for [[EduSemestr]].
      *
      * @return \yii\db\ActiveQuery
      */

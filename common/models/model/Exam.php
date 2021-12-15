@@ -219,7 +219,19 @@ class Exam extends \yii\db\ActiveRecord
                 $json_errors['question_count_by_type'] = [_e('Must be Json')];
             }
 
-            $model->question_count_by_type = $post['question_count_by_type'];
+            foreach (array_unique((array)json_decode($post['question_count_by_type'])) as $questionTypeId => $questionTypeCount) {
+
+                $q = QuestionType::findOne($questionTypeId);
+                if (!(isset($q))) {
+                    $errors[] = _e("Question Type Id (" . $questionTypeId . ") not found");
+                }
+            }
+
+            if (count($errors) > 0) {
+                return $errors;
+            }
+
+            $model->question_count_by_type = json_encode(array_unique((array)json_decode($post['question_count_by_type'])));
         }
 
         $has_error = Translate::checkingAll($post);

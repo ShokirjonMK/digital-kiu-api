@@ -59,8 +59,9 @@ class Exam extends \yii\db\ActiveRecord
         return [
             [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [['exam_type_id', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['start', 'finish'],'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'number'],
+            [['question_count_by_type'], 'safe'],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
         ];
@@ -74,6 +75,7 @@ class Exam extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             // name in translate
+            'question_count_by_type' => 'Question Count By Type',
             'exam_type_id' => 'Exam Type ID',
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
             'start' => 'Start',
@@ -98,6 +100,7 @@ class Exam extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            'question_count_by_type',
             'exam_type_id',
             'edu_semestr_subject_id',
             'start',
@@ -210,6 +213,15 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
+        if (isset($post['question_count_by_type'])) {
+            $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
+            if (!isJsonMK($post['question_count_by_type'])) {
+                $json_errors['question_count_by_type'] = [_e('Must be Json')];
+            }
+
+            $model->question_count_by_type = $post['question_count_by_type'];
+        }
+
         $has_error = Translate::checkingAll($post);
 
         if ($has_error['status']) {
@@ -237,6 +249,28 @@ class Exam extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
+        if (isset($post['question_count_by_type'])) {
+            $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
+            if (!isJsonMK($post['question_count_by_type'])) {
+                $json_errors['question_count_by_type'] = [_e('Must be Json')];
+            }
+            
+            foreach (array_unique((array)json_decode($post['question_count_by_type'])) as $questionTypeId => $questionTypeCount) {
+               
+                $q = QuestionType::findOne($questionTypeId);
+                if (!(isset($q))) {
+                    $errors[] = _e("Question Type Id (" . $questionTypeId . ") not found");
+                }
+            }
+            
+            if (count($errors) > 0) {
+                return $errors;
+            }
+
+            $model->question_count_by_type = json_encode(array_unique((array)json_decode($post['question_count_by_type'])));
+        }
+
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {

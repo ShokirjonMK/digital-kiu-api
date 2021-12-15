@@ -68,10 +68,17 @@ class ExamController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = Exam::findOne($id);
+        $post = Yii::$app->request->post();
+        if (isset($post->start)) {
+            $model->start = date('Y-m-d H:i:s', strtotime($post->start));
+        }
+        if (isset($post->finish)) {
+            $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
+        }
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        $post = Yii::$app->request->post();
+        
         $this->load($model, $post);
         $result = Exam::updateItem($model, $post);
         if (!is_array($result)) {

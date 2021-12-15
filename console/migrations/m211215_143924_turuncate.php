@@ -13,13 +13,13 @@ class m211215_143924_turuncate extends Migration
     public function safeUp()
     {
 
-        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
-        $this->execute("TRUNCATE table  `edu_semestr_subject`;");
-        $this->execute("TRUNCATE table  `exam`;");
-        $this->execute("TRUNCATE table  `edu_semestr_exams_type`;");
-        $this->execute("TRUNCATE table  `time_table`;");
-        $this->execute("TRUNCATE table  `student_time_table`;");
-        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
+        // $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
+        // $this->execute("TRUNCATE table  `edu_semestr_subject`;");
+        // $this->execute("TRUNCATE table  `exam`;");
+        // $this->execute("TRUNCATE table  `edu_semestr_exams_type`;");
+        // $this->execute("TRUNCATE table  `time_table`;");
+        // $this->execute("TRUNCATE table  `student_time_table`;");
+        // $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
 
     }
 

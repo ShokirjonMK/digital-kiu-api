@@ -13,7 +13,6 @@ use common\models\model\Student;
 
 class  StudentController extends ApiActiveController
 {
-
     public $modelClass = 'api\resources\Student';
 
     public function actions()

@@ -18,6 +18,19 @@ class ExamStudentAnswerController extends ApiActiveController
     public $table_name = 'exam_student_answer';
     public $controller_name = 'Exam Student Answer';
 
+    public function actionGetQuestion($lang)
+    {
+        $data = [];
+        $model = new ExamStudentAnswer();
+        $post = Yii::$app->request->post();
+        $result = ExamStudentAnswer::randomQuestions($data, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully created.'), $result, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
     public function actionIndex($lang)
     {
         $model = new ExamStudentAnswer();

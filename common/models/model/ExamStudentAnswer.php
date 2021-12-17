@@ -4,6 +4,8 @@ namespace common\models\model;
 
 use api\resources\ResourceTrait;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "exam_student_answer".
@@ -11,7 +13,7 @@ use Yii;
  * @property int $id
  * @property string|null $file
  * @property int $exam_id
- * @property int $exam_question_id
+ * @property int $question_id
  * @property int $student_id
  * @property int|null $option_id
  * @property string|null $answer
@@ -47,6 +49,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     }
 
 
+    const STATUS_COMPLETE = 1;
+    const STATUS_NEW = 2;
+    const STATUS_IN_CHECKING = 3;
+
     /**
      * {@inheritdoc}
      */
@@ -61,13 +67,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['exam_id', 'exam_question_id', 'student_id', 'type'], 'required'],
-            [['exam_id', 'exam_question_id', 'student_id', 'option_id', 'ball', 'teacher_access_id', 'attempt', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
+            [['exam_id', 'question_id', 'student_id', 'option_id', 'ball', 'teacher_access_id', 'attempt', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['answer'], 'string'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
-            [['exam_question_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamQuestion::className(), 'targetAttribute' => ['exam_question_id' => 'id']],
-            [['option_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamQuestionOption::className(), 'targetAttribute' => ['option_id' => 'id']],
+            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
+            [['option_id'], 'exist', 'skipOnError' => true, 'targetClass' => QuestionOption::className(), 'targetAttribute' => ['option_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
         ];
@@ -82,7 +88,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'id' => 'ID',
             'file' => 'File',
             'exam_id' => 'Exam ID',
-            'exam_question_id' => 'Exam Question ID',
+            'question_id' => ' Question ID',
             'student_id' => 'Student ID',
             'option_id' => 'Option ID',
             'answer' => 'Answer',
@@ -103,11 +109,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'file',
             'exam_id',
-            'exam_question_id',
+            'question_id',
             'student_id',
             'option_id',
             'answer',
@@ -129,9 +135,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'exam',
-            'examQuestion',
+            'question',
             'option',
             'student',
             'teacherAccess',
@@ -158,9 +164,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getExamQuestion()
+    public function getQuestion()
     {
-        return $this->hasOne(ExamQuestion::className(), ['id' => 'exam_question_id']);
+        return $this->hasOne(Question::className(), ['id' => 'question_id']);
     }
 
     /**
@@ -193,6 +199,65 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
+    public static function randomQuestions($data, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $exam_id = $post["exam_id"];
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        // $student_id = $student->id;
+        $student_id = 1;
+        if (isset($exam_id)) {
+            $exam = Exam::findOne($exam_id);
+            if (isset($exam)) {
+                $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                if (isset($hasExamStudentAnswer)) {
+                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                    return $data;
+                }
+
+                // $now_date = date('Y-m-d H:i:s');
+                $now_second = time();
+                if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
+                    $question_count_by_type = json_decode($exam->question_count_by_type);
+                    $edu_semestr_subject_id = $exam->eduSemestrSubject->id;
+                    $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
+                    foreach ($question_count_by_type as $type => $question_count) {
+                        $questionAll = Question::find()
+                            ->where(['subject_id' => $edu_semestr_subject_id, 'semestr_id' => $semestr_id, 'question_type_id' => $type])
+                            ->orderBy(new Expression('rand()'))
+                            ->limit($question_count)
+                            ->all();
+                        if (count($questionAll) == $question_count) {
+//                        if (count($questionAll) > 0) {
+                            foreach ($questionAll as $question) {
+                                $ExamStudentAnswer = new ExamStudentAnswer();
+                                $ExamStudentAnswer->exam_id = $exam_id;
+                                $ExamStudentAnswer->question_id = $question->id;
+                                $ExamStudentAnswer->student_id = $student_id;
+                                $ExamStudentAnswer->type = $type;
+                                $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
+                                $ExamStudentAnswer->save(false);
+                            }
+                        } else {
+                            ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                            $errors[] = _e("Questions not found for this exam");
+                            return $errors;
+                        }
+                    }
+                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                    return $data;
+                } else {
+                    $errors[] = _e("This exam`s time expired");
+                }
+            } else {
+                $errors[] = _e("This exam not found");
+            }
+            return simplify_errors($errors);
+        }
+        return $errors;
+    }
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -212,6 +277,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
     public static function updateItem($model, $post)
     {
+
+
+        // attemp esdan chiqmasin
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 

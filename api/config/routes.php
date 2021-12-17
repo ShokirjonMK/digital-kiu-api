@@ -84,13 +84,16 @@ $routes = [
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
 
+
     // Get me
+    'GET <lang:\w{2}>/users/me' => 'user/me',
     //    'GET <lang:\w{2}>/rooms/free' => 'room/free',
     'GET <lang:\w{2}>/time-tables/parent-null' => 'time-table/parent-null',
 
 
+    //    'POST studentga savollarni random tushirish
+    'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',
 
-    'GET <lang:\w{2}>/users/me' => 'user/me',
     'POST <lang:\w{2}>/auth/logout' => 'user/logout',
 
     // Roles and permissions endpoint

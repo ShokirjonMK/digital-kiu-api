@@ -61,7 +61,9 @@ return [
         'exam-student-answer_update',
         'exam-student-answer_view',
         'exam-student-answer_delete',
-       
+
+        'exam-student-answer_get-question',
+
 
     ],
 

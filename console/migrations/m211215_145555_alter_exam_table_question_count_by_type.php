@@ -12,7 +12,6 @@ class m211215_145555_alter_exam_table_question_count_by_type extends Migration
      */
     public function safeUp()
     {
-
         $this->execute("ALTER TABLE `exam` ADD `question_count_by_type` varchar(255)  NULL  AFTER `id`;");
     }
 

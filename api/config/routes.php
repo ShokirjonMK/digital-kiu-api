@@ -59,6 +59,7 @@ $controllers = [
     'question',
     'question-type',
     'question-option',
+    'exam-semeta',
 
 ];
 
@@ -93,6 +94,9 @@ $routes = [
 
     //    'POST studentga savollarni random tushirish
     'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',
+
+    //    'POST teacherga studentlarni random tushirish
+    'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',
 
     'POST <lang:\w{2}>/auth/logout' => 'user/logout',
 

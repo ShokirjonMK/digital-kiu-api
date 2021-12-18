@@ -14,7 +14,6 @@ class m211204_064926_create_question_option_table extends Migration
     {
         $this->createTable('{{%question_option}}', [
             'id' => $this->primaryKey(),
-
             'question_id' => $this->integer()->notNull(),
             'file' => $this->string(255)->Null(),
             'is_correct' => $this->tinyInteger(1)->defaultValue(0),

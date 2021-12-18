@@ -1,0 +1,51 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Handles the creation of table `{{%exam_semeta}}`.
+ */
+class m211218_095635_create_exam_semeta_table extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+
+        $this->createTable('{{%exam_semeta}}', [
+            'id' => $this->primaryKey(),
+
+            'edu_semestr_subject_id' => $this->integer()->notNull(),
+            'lang_id' => $this->integer()->notNull(),
+            'teacher_access_id' => $this->integer()->notNull(),
+            'count' => $this->integer()->notNull(),
+
+            'order' => $this->tinyInteger(1)->defaultValue(1),
+            'status' => $this->tinyInteger(1)->defaultValue(1),
+            'created_at' => $this->integer()->Null(),
+            'updated_at' => $this->integer()->Null(),
+            'created_by' => $this->integer()->notNull()->defaultValue(0),
+            'updated_by' => $this->integer()->notNull()->defaultValue(0),
+            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+
+        ]);
+
+        $this->addForeignKey('esess_exam_edu_semestr_subject', 'exam_semeta', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');
+        $this->addForeignKey('esl_language', 'exam_semeta', 'lang_id', 'languages', 'id');
+        $this->addForeignKey('esta_teacher_access_relection_bm', 'exam_semeta', 'teacher_access_id', 'teacher_access', 'id');
+
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        $this->dropForeignKey('esess_exam_edu_semestr_subject', 'exam_semeta');
+        $this->dropForeignKey('esl_language', 'exam_semeta');
+        $this->dropForeignKey('esta_teacher_access_relection_bm', 'exam_semeta');
+        $this->dropTable('{{%exam_semeta}}');
+    }
+}

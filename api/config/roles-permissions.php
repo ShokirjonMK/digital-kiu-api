@@ -73,6 +73,8 @@ return [
         'exam-teacher-check_index',
         'exam-teacher-check_update',
 
+        'exam-teacher-check_random-students',
+
 
         'subject-topic_index',
         'subject-topic_create',

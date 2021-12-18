@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "exam_teacher_check".
@@ -35,7 +36,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
- 
+
     /**
      * {@inheritdoc}
      */
@@ -83,13 +84,13 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'teacher_access_id',
             'student_id',
             'exam_id',
             'attempt',
- 
+
             'order',
             'status',
             'created_at',
@@ -103,7 +104,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'teacherAccess',
             'student',
             'exam',
@@ -145,9 +146,78 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
         return $this->hasOne(Exam::className(), ['exam_id' => 'id']);
     }
 
+    public static function randomStudent($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $exam_id = $post["exam_id"];
+        if (isset($exam_id)) {
+            $exam = Exam::findOne($exam_id);
+            if (isset($exam)) {
+                // $now_date = date('Y-m-d H:i:s');
+                $now_second = time();
+                if (strtotime($exam->finish) < $now_second) {
 
+                    $examSemetaSubjects = ExamSemeta::findAll(['edu_semestr_subject_id' => $exam->edu_semestr_subject_id]);
 
-    public static function createItem($model, $post)
+                    if (isset($examSemetaSubjects)) {
+                        foreach ($examSemetaSubjects as $examSemetaSubject) {
+
+                            $examStudent = ExamStudentAnswer::find()
+                                ->leftJoin('student', 'exam_student_answer.student_id = student.id')
+                                ->select('student_id')
+                                ->where([
+                                    'exam_id' => $exam_id,
+                                    'student.edu_lang_id' => $examSemetaSubject->lang_id,
+                                ])
+                                ->asArray()
+                                ->all();
+                            $studuntIds = self::getUniqueStudentId($examStudent);
+
+                            for ($i = 1; $i <= $examSemetaSubject->count; $i++) {
+                                    //random qilishga kallam ishlamay qoldi togrisi(((:::///
+                                $randomExamTeacherCheck = ExamTeacherCheck::find()
+                                    ->where([ 'exam_id' => $exam_id])
+                                    ->andWhere(['in','student_id',$studuntIds])
+                                    ->one();
+                                $studuntId = $randomExamTeacherCheck->student_id;
+                                $student = Student::findOne(['id' => $studuntId]);
+                                $subject_id = $exam->eduSemestrSubject->subject_id;
+                                $language_id = $student->edu_lang_id;
+                                $hasExamTeacherCheck = ExamTeacherCheck::find()
+                                    ->where(['student_id' => $studuntId, 'exam_id' => $exam_id])
+                                    ->one();
+                                if (!$hasExamTeacherCheck) {
+                                    $newEduTeacherCheck = new ExamTeacherCheck();
+                                    $newEduTeacherCheck->teacher_access_id = $examSemetaSubject->teacher_access_id;
+                                    $newEduTeacherCheck->student_id = $studuntId;
+                                    $newEduTeacherCheck->exam_id = $exam_id;
+                                    $newEduTeacherCheck->attempt = 0;
+                                   if ($newEduTeacherCheck->save()) {
+                                        if (($key = array_search($studuntId, $studuntIds)) !== false) {
+                                            unset($studuntIds[$key]);
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    $data = ExamTeacherCheck::findAll(['exam_id' => $exam_id]);
+                    return $data;
+
+                } else {
+                    $errors[] = _e("This exam`s time not expired");
+                }
+            } else {
+                $errors[] = _e("This exam not found");
+            }
+            return simplify_errors($errors);
+        }
+    }
+
+    public
+    static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -164,7 +234,8 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
         }
     }
 
-    public static function updateItem($model, $post)
+    public
+    static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -190,6 +261,19 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
+    }
+
+    public
+    static function getUniqueStudentId($studentIds)
+    {
+
+        $ids = [];
+        foreach ($studentIds as $studentId) {
+            if (!in_array($studentId['student_id'], $ids)) {
+                $ids [] = $studentId['student_id'];
+            }
+        }
+        return $ids;
     }
 
 }

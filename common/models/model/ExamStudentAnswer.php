@@ -6,6 +6,7 @@ use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "exam_student_answer".
@@ -28,6 +29,7 @@ use yii\db\Expression;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
+ * @property int $parent_id
  *
  * @property Exam $exam
  * @property ExamQuestion $examQuestion
@@ -53,6 +55,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     const STATUS_NEW = 2;
     const STATUS_IN_CHECKING = 3;
 
+    const UPLOADS_FOLDER = 'uploads/answer_files/';
+    public $answer_file;
+    public $answerFileMaxSize = 1024 * 1024 * 5; // 3 Mb
+
     /**
      * {@inheritdoc}
      */
@@ -68,7 +74,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     {
         return [
             [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
-            [['exam_id', 'question_id', 'student_id', 'option_id', 'ball', 'teacher_access_id', 'attempt', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_id', 'question_id', 'parent_id', 'student_id', 'option_id', 'ball', 'teacher_access_id', 'attempt', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['answer'], 'string'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -76,6 +82,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             [['option_id'], 'exist', 'skipOnError' => true, 'targetClass' => QuestionOption::className(), 'targetAttribute' => ['option_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
+            [['answer_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->answerFileMaxSize],
         ];
     }
 
@@ -87,6 +94,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'file' => 'File',
+            'parent_id' => 'parent_id',
             'exam_id' => 'Exam ID',
             'question_id' => ' Question ID',
             'student_id' => 'Student ID',
@@ -111,6 +119,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
+            'parent_id',
             'file',
             'exam_id',
             'question_id',
@@ -127,7 +136,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
-
         ];
 
         return $fields;
@@ -141,7 +149,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'option',
             'student',
             'teacherAccess',
-
             'createdBy',
             'updatedBy',
         ];
@@ -206,13 +213,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $exam_id = $post["exam_id"];
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
         // $student_id = $student->id;
-        $student_id = 1;
+        $student_id = 15;
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if (isset($exam)) {
                 $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
                 if (isset($hasExamStudentAnswer)) {
-                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id,'parent_id'=> null]);
                     return $data;
                 }
 
@@ -236,6 +243,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 $ExamStudentAnswer->question_id = $question->id;
                                 $ExamStudentAnswer->student_id = $student_id;
                                 $ExamStudentAnswer->type = $type;
+                                $ExamStudentAnswer->attempt = 0;
                                 $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
                                 $ExamStudentAnswer->save(false);
                             }
@@ -245,7 +253,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             return $errors;
                         }
                     }
-                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id,'parent_id'=> null]);
                     return $data;
                 } else {
                     $errors[] = _e("This exam`s time expired");
@@ -278,20 +286,88 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public static function updateItem($model, $post)
     {
 
-
         // attemp esdan chiqmasin
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        // studentni answer file ni saqlaymiz
+
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        // $student_id = $student->id;
+        $student_id = 14;
+        $exam_id = $model->exam_id;
+        $old_file = $model->file;
+
+        if (isset($exam_id)) {
+            $exam = Exam::findOne($exam_id);
+            if (isset($exam)) {
+                $now_second = time();
+                if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
+                    $model->answer_file = UploadedFile::getInstancesByName('answer_file');
+                    if ($model->answer_file) {
+                        $model->answer_file = $model->answer_file[0];
+                        $answer_fileFileUrl = $model->uploadFile();
+                        if ($answer_fileFileUrl) {
+                            $model->file = $answer_fileFileUrl;
+                            if($model->attempt >=1){
+
+                                /* Ikkinchi marta javob yuklasa bazaga yozib parent_id ni va attemptni o`zlartiramiz*/
+                                $attemptExam = ExamStudentAnswer::findOne(['id' => $model->id]);
+                                if ($attemptExam != null) {
+                                    $newAttemptExam = new ExamStudentAnswer();
+                                    $newAttemptExam->attributes = $model->attributes;
+                                    $newAttemptExam->file = $old_file;
+                                    $newAttemptExam->parent_id = $model->id;
+                                    $newAttemptExam->save();
+                                }
+                                /* Ikkinchi marta javob yuklasa bazaga yozib parent_id ni va attemptni o`zlartiramiz*/
+
+                            }
+                            $model->attempt = (int) $model->attempt + 1;
+
+                        } else {
+                            $errors[] = $model->errors;
+                        }
+                    }
+                } else {
+                    $errors[] = _e("This exam`s time expired");
+                }
+            } else {
+                $errors[] = _e("This exam not found");
+            }
+        }
+
+
+        // studentni answer file ni saqlaymiz
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
 
-        if ($model->save()) {
+        if ($model->save(false)) {
             $transaction->commit();
             return true;
         } else {
             return simplify_errors($errors);
+        }
+    }
+
+    public function uploadFile()
+    {
+        if ($this->validate()) {
+            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+            if ($this->isNewRecord) {
+                $fileName = ExamStudentAnswer::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
+            } else {
+                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
+            }
+            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->answer_file->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
         }
     }
 

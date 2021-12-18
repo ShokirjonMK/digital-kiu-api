@@ -4,26 +4,27 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
-use common\models\model\ExamTeacherCheck;
+use common\models\model\ExamSemeta;
 
-class ExamTeacherCheckController extends ApiActiveController
+class ExamSemetaController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\ExamTeacherCheck';
+    public $modelClass = 'api\resources\ExamSemeta';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'exam_teacher_check';
-    public $controller_name = 'Exam Teacher Check';
+    public $table_name = 'exam_semeta';
+    public $controller_name = 'ExamSemeta';
 
     public function actionIndex($lang)
     {
-        $model = new ExamTeacherCheck();
+        $model = new ExamSemeta();
 
         $query = $model->find()
-            ->andWhere(['.is_deleted' => 0]);
+            ->andWhere(['is_deleted' => 0])
+            ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
         //filter
         $query = $this->filterAll($query, $model);
@@ -36,28 +37,13 @@ class ExamTeacherCheckController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-    public function actionRandomStudents($lang)
-    {
-        $model = new ExamTeacherCheck();
-        $post = Yii::$app->request->post();
-
-        $this->load($model, $post);
-
-        $result = ExamTeacherCheck::randomStudent($model, $post);
-        if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
-        } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
-    }
-
     public function actionCreate($lang)
     {
-        $model = new ExamTeacherCheck();
+        $model = new ExamSemeta();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = ExamTeacherCheck::createItem($model, $post);
+        $result = ExamSemeta::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -67,13 +53,13 @@ class ExamTeacherCheckController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = ExamTeacherCheck::findOne($id);
+        $model = ExamSemeta::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = ExamTeacherCheck::updateItem($model, $post);
+        $result = ExamSemeta::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -83,7 +69,7 @@ class ExamTeacherCheckController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = ExamTeacherCheck::find()
+        $model = ExamSemeta::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -94,7 +80,7 @@ class ExamTeacherCheckController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = ExamTeacherCheck::find()
+        $model = ExamSemeta::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

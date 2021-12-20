@@ -4,11 +4,11 @@ namespace api\controllers;
 
 use Yii;
 use api\resources\StudentUser;
-use api\resources\Profile;
 use api\resources\User;
 
 use common\models\Student as CommonStudent;
 use base\ResponseStatus;
+use common\models\model\Profile;
 use common\models\model\Student;
 
 class  StudentController extends ApiActiveController

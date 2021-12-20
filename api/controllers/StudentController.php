@@ -24,8 +24,31 @@ class  StudentController extends ApiActiveController
         $model = new Student();
 
         $query = $model->find()
+            ->with(['profile'])
             ->andWhere(['is_deleted' => 0])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            ->groupBy('student.id');
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
         //filter
         $query = $this->filterAll($query, $model);
@@ -80,7 +103,7 @@ class  StudentController extends ApiActiveController
         $model = User::findOne(['id', $student->user_id]);
         $profile = Profile::findOne(['user_id', $student->user_id]);
 
-        
+
         $this->load($student, $post);
         $result = StudentUser::updateItem($model, $profile, $student, $post);
 
@@ -98,7 +121,7 @@ class  StudentController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Student::findOne(['id'=>$id, 'is_deleted' => 0]);
+        $model = Student::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }

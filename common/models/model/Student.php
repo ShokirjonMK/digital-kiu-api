@@ -67,10 +67,14 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
-                'edu_type_id', 'is_contract', 'edu_lang_id'], 'required'],
-            [['user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
-                'edu_type_id', 'is_contract', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [[
+                'user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
+                'edu_type_id', 'is_contract', 'edu_lang_id'
+            ], 'required'],
+            [[
+                'user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
+                'edu_type_id', 'is_contract', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
+            ], 'integer'],
             [['diplom_date'], 'safe'],
             [['description'], 'string'],
             [['diplom_number', 'diplom_seria'], 'string', 'max' => 255],
@@ -118,9 +122,19 @@ class Student extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
+
+            'user_id',
+            'faculty_id',
+            'direction_id',
+            'course_id',
+            'edu_year_id',
+            'edu_type_id',
             'is_contract',
+            'diplom_number',
+            'diplom_seria',
+            'diplom_date',
             'description',
-         
+
             'status',
             'created_at',
             'updated_at',
@@ -129,7 +143,7 @@ class Student extends \yii\db\ActiveRecord
         ];
         return $fields;
     }
-    
+
     public function extraFields()
     {
         $extraFields =  [
@@ -226,13 +240,13 @@ class Student extends \yii\db\ActiveRecord
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
 }

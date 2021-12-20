@@ -5,7 +5,6 @@ namespace api\resources;
 use Yii;
 use api\resources\Profile;
 use common\models\Student;
-use common\models\UserSubject;
 use yii\web\UploadedFile;
 
 class StudentUser extends ParentUser

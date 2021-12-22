@@ -462,7 +462,7 @@ class User extends CommonUser
     public function savePassword($password, $user_id)
     {
         // if exist delete and create new one 
-        $oldPassword = PasswordEncrypts::find(['user_id', $user_id])->all();
+        $oldPassword = PasswordEncrypts::find()->where(['user_id', $user_id])->all();
         if (isset($oldPassword)) {
             foreach ($oldPassword as $pass){
                 $pass->delete();

@@ -59,6 +59,7 @@ class Profile extends \yii\db\ActiveRecord
     const UPLOADS_FOLDER = 'uploads/user-images/';
     const UPLOADS_FOLDER_STUDENT_IMAGE = 'uploads/student-images/';
     public $avatar;
+    // public $passport_file;
     public $avatarMaxSize = 1024 * 200; // 200 Kb
     public $passportFileMaxSize = 1024 * 1024 * 5; // 5 Mb
 
@@ -102,7 +103,7 @@ class Profile extends \yii\db\ActiveRecord
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
 
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
-            // [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->passportFileMaxSize],
+            [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf, png, jpg', 'maxSize' => $this->passportFileMaxSize],
             [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['area_id' => 'id']],
             [['permanent_area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Area::className(), 'targetAttribute' => ['permanent_area_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],

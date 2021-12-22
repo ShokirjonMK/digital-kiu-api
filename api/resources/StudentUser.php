@@ -55,7 +55,7 @@ class StudentUser extends ParentUser
             $model->password_reset_token = null;
             $model->access_token = \Yii::$app->security->generateRandomString();
             $model->access_token_time = time();
-           
+
             if ($model->save()) {
 
                 //**parolni shifrlab saqlaymiz */
@@ -142,20 +142,19 @@ class StudentUser extends ParentUser
         }
 
         if (count($errors) == 0) {
-           
+
             if (isset($post['password']) && !empty($post['password'])) {
                 $password = $post['password'];
-            } else {
-                $password = _random_string();
-            }
-
-            $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
-
-            if ($model->save()) {
-
+                $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
                 //**parolni shifrlab saqlaymiz */
                 $model->savePassword($password, $model->id);
                 //**** */
+            }
+
+
+            if ($model->save()) {
+
+                
 
                 // avatarni saqlaymiz
                 $model->avatar = UploadedFile::getInstancesByName('avatar');
@@ -212,7 +211,7 @@ class StudentUser extends ParentUser
 
             // remove profile image
             $filePath = assets_url($model->profile->image);
-            if(file_exists($filePath)){
+            if (file_exists($filePath)) {
                 unlink($filePath);
             }
 
@@ -220,7 +219,7 @@ class StudentUser extends ParentUser
             $studentDeleted = Student::findOne(['user_id' => $id]);
             if (!$studentDeleted) {
                 $errors[] = [_e('Error in student deleting process.')];
-            }else{
+            } else {
                 $studentDeleted->is_deleted = 1;
                 $studentDeleted->save(false);
             }
@@ -229,7 +228,7 @@ class StudentUser extends ParentUser
             $profileDeleted = Profile::findOne(['user_id' => $id]);
             if (!$profileDeleted) {
                 $errors[] = [_e('Error in profile deleting process.')];
-            }else{
+            } else {
                 $profileDeleted->is_deleted = 1;
                 $profileDeleted->save(false);
             }
@@ -238,7 +237,7 @@ class StudentUser extends ParentUser
             $userDeleted = User::findOne($id);
             if (!$userDeleted) {
                 $errors[] = [_e('Error in user deleting process.')];
-            }else{
+            } else {
                 $userDeleted->status = 9;
                 $userDeleted->save(false);
             }

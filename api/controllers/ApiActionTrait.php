@@ -80,42 +80,7 @@ trait ApiActionTrait
         // die();
         // save logs here
 
-        
-            ob_start();
-            system('getmac');
-            $Content = ob_get_contents();
-            ob_clean();
-
-        $IP = $_SERVER['REMOTE_ADDR'];
-
-        // $IP stores the ip address of client
-        echo "Client's IP address is: $IP";
-
-       echo $Content;
-       echo "--------------------------------------- \n";
-       echo substr($Content, strpos($Content, '\\') - 20, 17);
-
-
-        $MAC = exec('getmac');
-
-        // Storing 'getmac' value in $MAC
-        $MAC = strtok($MAC, ' ');
-
-        // Updating $MAC value using strtok function, 
-        // strtok is used to split the string into tokens
-        // split character of strtok is defined as a space
-        // because getmac returns transport name after
-        // MAC address   
-        echo "MAC address of client is: $MAC";
-
-        echo "-------------------------------- \n";
-     
-
-       exit();
-
-            return substr($Content, strpos($Content, '\\') - 20, 17);
- 
-
+       
 
         $this->generate_access_key();
         Yii::$app->response->format = Response::FORMAT_JSON;

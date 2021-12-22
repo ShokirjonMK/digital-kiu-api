@@ -138,6 +138,7 @@ class  StudentController extends ApiActiveController
         if ($model) {
             $user = User::findOne($model->user_id);
             $user->status = User::STATUS_BANNED;
+            $user->save(false);
             $model->is_deleted = 1;
             $model->update();
 

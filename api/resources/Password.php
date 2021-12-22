@@ -31,21 +31,21 @@ class Password extends Model
     {
 
         // return "asd";
-       
+
         if (isset($user_id)) {
             $user = User::findOne($user_id);
-            if(!isset($user)){
+            if (!isset($user)) {
                 $data['username'] = '))';
                 $data['password'] = ':)';
                 return $data;
             }
         } else {
             $user = Yii::$app->user->identity;
-        } 
+        }
 
         $pass = PasswordEncrypts::find()
-                ->where(['user_id' => $user->id])
-                ->one();
+            ->where(['user_id' => $user->id])
+            ->one();
 
         if (isset($pass)) {
 
@@ -54,13 +54,11 @@ class Password extends Model
             $ded = $dec_m->decrypt($pass->password, $key->name);
             $data['username'] = $user->username;
             $data['password'] = $ded;
-
-            return $data;
         } else {
             $data['username'] = $user->username;
-            $data['password'] = ':)';
-            return $data;
+            $data['password'] = 'Not found ):';
         }
+        return $data;
     }
 
     /**

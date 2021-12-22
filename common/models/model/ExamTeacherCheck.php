@@ -158,52 +158,32 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
                 $now_second = time();
                 if (strtotime($exam->finish) < $now_second) {
 
-                    $examSemetaSubjects = ExamSemeta::findAll(['edu_semestr_subject_id' => $exam->edu_semestr_subject_id]);
+                    $examSemeta = ExamSemeta::findAll(['exam_id' => $exam->id]);
 
-                    if (isset($examSemetaSubjects)) {
-                        foreach ($examSemetaSubjects as $examSemetaSubject) {
+                    if (isset($examSemeta)) {
+                        foreach ($examSemeta as $examSemetaOne) {
+                            if ($examSemetaOne->status == ExamSemeta::STATUS_NEW) {
+                                $examStudent = ExamStudent::find()
+                                    ->where([
+                                        'exam_id' => $exam_id,
+                                        'lang_id' => $examSemetaOne->lang_id,
+                                    ])
+                                    ->andWhere(['teacher_access_id' => null])
+                                    ->orderBy(new Expression('rand()'))
+                                    ->limit($examSemetaOne->count)
+                                    ->all();
 
-                            $examStudent = ExamStudentAnswer::find()
-                                ->leftJoin('student', 'exam_student_answer.student_id = student.id')
-                                ->select('student_id')
-                                ->where([
-                                    'exam_id' => $exam_id,
-                                    'student.edu_lang_id' => $examSemetaSubject->lang_id,
-                                ])
-                                ->asArray()
-                                ->all();
-                            $studuntIds = self::getUniqueStudentId($examStudent);
-
-                            for ($i = 1; $i <= $examSemetaSubject->count; $i++) {
-                                    //random qilishga kallam ishlamay qoldi togrisi(((:::///
-                                $randomExamTeacherCheck = ExamTeacherCheck::find()
-                                    ->where([ 'exam_id' => $exam_id])
-                                    ->andWhere(['in','student_id',$studuntIds])
-                                    ->one();
-                                $studuntId = $randomExamTeacherCheck->student_id;
-                                $student = Student::findOne(['id' => $studuntId]);
-                                $subject_id = $exam->eduSemestrSubject->subject_id;
-                                $language_id = $student->edu_lang_id;
-                                $hasExamTeacherCheck = ExamTeacherCheck::find()
-                                    ->where(['student_id' => $studuntId, 'exam_id' => $exam_id])
-                                    ->one();
-                                if (!$hasExamTeacherCheck) {
-                                    $newEduTeacherCheck = new ExamTeacherCheck();
-                                    $newEduTeacherCheck->teacher_access_id = $examSemetaSubject->teacher_access_id;
-                                    $newEduTeacherCheck->student_id = $studuntId;
-                                    $newEduTeacherCheck->exam_id = $exam_id;
-                                    $newEduTeacherCheck->attempt = 0;
-                                   if ($newEduTeacherCheck->save()) {
-                                        if (($key = array_search($studuntId, $studuntIds)) !== false) {
-                                            unset($studuntIds[$key]);
-                                        }
-                                    }
+                                foreach ($examStudent as $examStudentOne) {
+                                    $examStudentOne->teacher_access_id = $examSemetaOne->teacher_access_id;
+                                    $examStudentOne->save(false);
                                 }
+                                $examSemetaOne->status = ExamSemeta::STATUS_IN_CHECKING;
+                                $examSemetaOne->save(false);
                             }
-
                         }
+
                     }
-                    $data = ExamTeacherCheck::findAll(['exam_id' => $exam_id]);
+                    $data = ExamStudent::findAll(['exam_id' => $exam_id]);
                     return $data;
 
                 } else {

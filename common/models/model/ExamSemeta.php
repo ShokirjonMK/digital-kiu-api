@@ -11,7 +11,7 @@ use yii\web\UploadedFile;
  * This is the model class for table "exam_question".
  *
  * @property int $id
- * @property int $edu_semestr_subject_id
+ * @property int $exam_id
  * @property string $lang_id
  * @property float|null $teacher_access_id
  * @property string $count
@@ -24,7 +24,7 @@ use yii\web\UploadedFile;
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property EduSemestrSubject $eduSemestrSubject
+ * @property Exam $Exam
  * @property Languages $lang
  * @property TeacherAccess[] $teacherAccess
  */
@@ -42,6 +42,10 @@ class ExamSemeta extends \yii\db\ActiveRecord
     }
 
 
+    const STATUS_NEW = 1;
+    const STATUS_IN_CHECKING = 2;
+    const STATUS_COMPLETED= 3;
+
     /**
      * {@inheritdoc}
      */
@@ -56,9 +60,9 @@ class ExamSemeta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_subject_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
-            [['edu_semestr_subject_id', 'teacher_access_id', 'lang_id', 'count', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
+            [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
+            [['exam_id', 'teacher_access_id', 'lang_id', 'count', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
         ];
@@ -71,7 +75,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'edu_semestr_subject_id',
+            'exam_id',
             'lang_id',
             'teacher_access_id',
             'count',
@@ -89,7 +93,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'edu_semestr_subject_id',
+            'exam_id',
             'lang_id',
             'teacher_access_id',
             'count',
@@ -108,7 +112,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'eduSemestrSubject',
+            'exam',
             'lang',
             'teacherAccess',
 
@@ -125,9 +129,9 @@ class ExamSemeta extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getEduSemestrSubject()
+    public function getExam()
     {
-        return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
+        return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
     }
 
     /**

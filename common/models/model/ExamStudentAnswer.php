@@ -219,7 +219,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             if (isset($exam)) {
                 $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
                 if (isset($hasExamStudentAnswer)) {
-                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id,'parent_id'=> null]);
+                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
                     return $data;
                 }
 
@@ -229,9 +229,35 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     $question_count_by_type = json_decode($exam->question_count_by_type);
                     $edu_semestr_subject_id = $exam->eduSemestrSubject->id;
                     $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
+
+                    /* BU yerga bolani imtixonga a`zo qilamiz*/
+                    $ExamStudentHas = ExamStudent::find()->where([
+                        'exam_id' => $exam_id,
+                        'student_id' => $student_id,
+                    ])
+                        ->orderBy('id desc')
+                        ->one();
+
+                    $student = Student::findOne(['id' => $student_id]);
+                    $student_lang_id = $student->edu_lang_id;
+                    $ExamStudent = new ExamStudent();
+                    $ExamStudent->exam_id = $exam_id;
+                    $ExamStudent->student_id = $student_id;
+                    $ExamStudent->lang_id = $student_lang_id;
+                    $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                    $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
+                    $ExamStudent->save(false);
+
+                    /* BU yerga bolani imtixonga a`zo qilamiz*/
+
                     foreach ($question_count_by_type as $type => $question_count) {
                         $questionAll = Question::find()
-                            ->where(['subject_id' => $edu_semestr_subject_id, 'semestr_id' => $semestr_id, 'question_type_id' => $type])
+                            ->where([
+                                'subject_id' => $edu_semestr_subject_id,
+                                'semestr_id' => $semestr_id,
+                                'lang_id' => $student_lang_id,
+                                'question_type_id' => $type
+                            ])
                             ->orderBy(new Expression('rand()'))
                             ->limit($question_count)
                             ->all();
@@ -243,7 +269,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 $ExamStudentAnswer->question_id = $question->id;
                                 $ExamStudentAnswer->student_id = $student_id;
                                 $ExamStudentAnswer->type = $type;
-                                $ExamStudentAnswer->attempt = 0;
+                                $ExamStudentAnswer->attempt = 1;
                                 $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
                                 $ExamStudentAnswer->save(false);
                             }
@@ -253,7 +279,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             return $errors;
                         }
                     }
-                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id,'parent_id'=> null]);
+                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
                     return $data;
                 } else {
                     $errors[] = _e("This exam`s time expired");
@@ -304,25 +330,26 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
                     $model->answer_file = UploadedFile::getInstancesByName('answer_file');
                     if ($model->answer_file) {
+
                         $model->answer_file = $model->answer_file[0];
                         $answer_fileFileUrl = $model->uploadFile();
                         if ($answer_fileFileUrl) {
                             $model->file = $answer_fileFileUrl;
-                            if($model->attempt >=1){
+                            if ($model->attempt >= 1) {
 
                                 /* Ikkinchi marta javob yuklasa bazaga yozib parent_id ni va attemptni o`zlartiramiz*/
-                                $attemptExam = ExamStudentAnswer::findOne(['id' => $model->id]);
-                                if ($attemptExam != null) {
-                                    $newAttemptExam = new ExamStudentAnswer();
-                                    $newAttemptExam->attributes = $model->attributes;
-                                    $newAttemptExam->file = $old_file;
-                                    $newAttemptExam->parent_id = $model->id;
-                                    $newAttemptExam->save();
-                                }
+//                                $attemptExam = ExamStudentAnswer::findOne(['id' => $model->id]);
+//                                if ($attemptExam != null) {
+//                                    $newAttemptExam = new ExamStudentAnswer();
+//                                    $newAttemptExam->attributes = $model->attributes;
+//                                    $newAttemptExam->file = $old_file;
+//                                    $newAttemptExam->parent_id = $model->id;
+//                                    $newAttemptExam->save(false);
+//                                }
                                 /* Ikkinchi marta javob yuklasa bazaga yozib parent_id ni va attemptni o`zlartiramiz*/
 
                             }
-                            $model->attempt = (int) $model->attempt + 1;
+                            $model->attempt = (int)$model->attempt + 1;
 
                         } else {
                             $errors[] = $model->errors;
@@ -354,8 +381,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function uploadFile()
     {
         if ($this->validate()) {
-            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
-                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            if (!file_exists(STORAGE_PATH . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH . self::UPLOADS_FOLDER, 0777, true);
             }
             if ($this->isNewRecord) {
                 $fileName = ExamStudentAnswer::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;

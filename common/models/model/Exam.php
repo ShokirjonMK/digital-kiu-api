@@ -62,7 +62,7 @@ class Exam extends \yii\db\ActiveRecord
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'number'],
             [['question_count_by_type'], 'safe'],
-            [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubjectEduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
+            [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
         ];
     }

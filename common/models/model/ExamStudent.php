@@ -57,11 +57,12 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'exam_id'], 'required'],
-            [['student_id', 'exam_id', 'teacher_access_id', 'attempt', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['student_id', 'exam_id', 'teacher_access_id', 'attempt','lang_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['ball'], 'number'],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
+            [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
         ];
     }
 
@@ -73,6 +74,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'student_id' => 'Student ID',
+            'lang_id' => 'Lang ID',
             'exam_id' => 'Exam ID',
             'teacher_access_id' => 'Teacher Access ID',
             'ball' => 'Ball',
@@ -94,6 +96,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'id',
             'student_id',
             'exam_id',
+            'lang_id',
             'teacher_access_id',
             'ball',
             'attempt',

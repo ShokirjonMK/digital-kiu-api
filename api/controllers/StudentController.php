@@ -130,7 +130,16 @@ class  StudentController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Student::findOne(['id' => $id, 'is_deleted' => 0]);
+        $result = StudentUser::deleteItem($id);
+
+        if (!is_array($result)) {
+            return $this->response(1, _e('Student successfully deleted.'), null, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        
+        /*
+        $model = StudentUser::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -145,5 +154,7 @@ class  StudentController extends ApiActiveController
             return $this->response(1, _e('Student succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+
+        */
     }
 }

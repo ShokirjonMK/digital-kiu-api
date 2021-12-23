@@ -269,6 +269,27 @@ class Profile extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    /**
+     * Get user fullname
+     *
+     * @param object $profile
+     * @return mixed
+     */
+    public static function getFullname($profile)
+    {
+        $fullname = '';
+
+        if ($profile && $profile->firstname) {
+            $fullname = _strtotitle($profile->firstname) . ' ';
+        }
+
+        if ($profile && $profile->lastname) {
+            $fullname .= _strtotitle($profile->lastname);
+        }
+
+        return $fullname ? trim($fullname) : 'Unknown User';
+    }
+
 
 
 
@@ -315,6 +336,25 @@ class Profile extends \yii\db\ActiveRecord
         }
     }
 
+    public static function deleteItem($id)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $model = Profile::findOne(['id' => $id]);
+
+        if (!isset($model)) {
+            $errors[] = [_e('Profile not found')];
+        } else {
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+
+                return simplify_errors($errors);
+            }
+        }
+    }
 
     public function beforeSave($insert)
     {

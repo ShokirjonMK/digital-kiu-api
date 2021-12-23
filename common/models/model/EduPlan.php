@@ -115,6 +115,7 @@ class EduPlan extends \yii\db\ActiveRecord
             'spring_end',
             'order',
             'status',
+            'is_deleted',
             'created_at',
             'updated_at',
             'created_by',

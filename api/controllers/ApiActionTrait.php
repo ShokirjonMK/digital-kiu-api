@@ -80,6 +80,26 @@ trait ApiActionTrait
         // die();
         // save logs here
 
+/*
+        ob_start();
+        system('getmac');
+        $Content = ob_get_contents();
+        ob_clean();
+        $IP = $_SERVER['REMOTE_ADDR'];
+       
+        echo "Client's IP address is: $IP";
+        echo $Content;
+        echo "--------------------------------------- \n";
+        echo substr($Content, strpos($Content, '\\') - 20, 17);
+        $MAC = exec('getmac');
+        
+        $MAC = strtok($MAC, ' ');
+        
+        echo "MAC address of client is: $MAC";
+        echo "-------------------------------- \n";
+
+        exit();
+*/
        
 
         $this->generate_access_key();

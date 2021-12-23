@@ -154,7 +154,7 @@ class StudentUser extends ParentUser
 
             if ($model->save()) {
 
-                
+
 
                 // avatarni saqlaymiz
                 $model->avatar = UploadedFile::getInstancesByName('avatar');
@@ -202,30 +202,29 @@ class StudentUser extends ParentUser
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model = self::findStudent($id);
-        if (!$model || !$model->student || !$model->profile) {
+        $model = Student::findOne($id);
+
+        if (!isset($model)) {
             $errors[] = [_e('Student not found.')];
+        } else {
+            $userId = $model->user_id;
         }
 
         if (count($errors) == 0) {
 
-            // remove profile image
-            $filePath = assets_url($model->profile->image);
-            if (file_exists($filePath)) {
-                unlink($filePath);
-            }
-
             // remove student
-            $studentDeleted = Student::findOne(['user_id' => $id]);
+            $studentDeleted = Student::findOne(['id' => $id]);
             if (!$studentDeleted) {
                 $errors[] = [_e('Error in student deleting process.')];
+            }elseif ($studentDeleted->is_deleted == 1) {
+                $errors[] = [_e('Student not found')];
             } else {
                 $studentDeleted->is_deleted = 1;
                 $studentDeleted->save(false);
             }
 
             // remove profile
-            $profileDeleted = Profile::findOne(['user_id' => $id]);
+            $profileDeleted = Profile::findOne(['user_id' => $userId]);
             if (!$profileDeleted) {
                 $errors[] = [_e('Error in profile deleting process.')];
             } else {
@@ -234,11 +233,11 @@ class StudentUser extends ParentUser
             }
 
             // remove model
-            $userDeleted = User::findOne($id);
+            $userDeleted = User::findOne($userId);
             if (!$userDeleted) {
                 $errors[] = [_e('Error in user deleting process.')];
             } else {
-                $userDeleted->status = 9;
+                $userDeleted->status = User::STATUS_BANNED;
                 $userDeleted->save(false);
             }
         }
@@ -255,7 +254,7 @@ class StudentUser extends ParentUser
     public static function findStudent($id)
     {
         return self::find()
-            ->with(['profile', 'student'])
+            ->with(['profile', 'user'])
             ->leftJoin('auth_assignment', 'auth_assignment.user_id = users.id')
             ->where(['and', ['id' => $id], ['in', 'auth_assignment.item_name', self::$roleList]])
             ->one();

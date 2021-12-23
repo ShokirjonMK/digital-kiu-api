@@ -81,38 +81,6 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '4',
         ]);
 
-        $this->insert('{{%course}}', [
-            'id' => 5,
-            'updated_at' => 0,
-            'created_at' => 0,
-            'status' => 1,
-        ]);
-
-        Yii::$app->db->createCommand()->delete('translate', ['model_id' => 5, 'table_name' => 'course', 'language' => 'uz'])->execute();
-        $this->insert('{{%translate}}', [
-            'model_id' => 5,
-            'name' => '5',
-            'table_name' => 'course',
-            'language' => 'uz',
-            'description' => '5',
-        ]);
-
-        $this->insert('{{%course}}', [
-            'id' => 6,
-            'updated_at' => 0,
-            'created_at' => 0,
-            'status' => 1,
-        ]);
-
-        Yii::$app->db->createCommand()->delete('translate', ['model_id' => 6, 'table_name' => 'course', 'language' => 'uz'])->execute();
-        $this->insert('{{%translate}}', [
-            'model_id' => 6,
-            'name' => '6',
-            'table_name' => 'course',
-            'language' => 'uz',
-            'description' => '6',
-        ]);
-
 
         // Yii::$app->db->createCommand()->truncateTable('semestr')->execute();
         $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
@@ -262,77 +230,7 @@ class m211104_055719_insert_smester_course extends Migration
             'description' => '8',
         ]);
 
-        $this->insert('{{%semestr}}', [
-            'course_id' => 5,
-            'id' => 9,
-            'type' => 1,
-            'updated_at' => 0,
-            'created_at' => 0,
-            'status' => 1,
-        ]);
-
-        Yii::$app->db->createCommand()->delete('translate', ['model_id' => 9, 'table_name' => 'semestr', 'language' => 'uz'])->execute();
-        $this->insert('{{%translate}}', [
-            'model_id' => 9,
-            'name' => '9',
-            'table_name' => 'semestr',
-            'language' => 'uz',
-            'description' => '9',
-        ]);
-
-        $this->insert('{{%semestr}}', [
-            'course_id' => 5,
-            'id' => 10,
-            'type' => 2,
-            'updated_at' => 0,
-            'created_at' => 0,
-            'status' => 1,
-        ]);
-
-        Yii::$app->db->createCommand()->delete('translate', ['model_id' => 10, 'table_name' => 'semestr', 'language' => 'uz'])->execute();
-        $this->insert('{{%translate}}', [
-            'model_id' => 10,
-            'name' => '10',
-            'table_name' => 'semestr',
-            'language' => 'uz',
-            'description' => '10',
-        ]);
-
-        $this->insert('{{%semestr}}', [
-            'course_id' => 6,
-            'id' => 11,
-            'type' => 1,
-            'updated_at' => 0,
-            'created_at' => 0,
-            'status' => 1,
-        ]);
-
-        Yii::$app->db->createCommand()->delete('translate', ['model_id' => 11, 'table_name' => 'semestr', 'language' => 'uz'])->execute();
-        $this->insert('{{%translate}}', [
-            'model_id' => 11,
-            'name' => '11',
-            'table_name' => 'semestr',
-            'language' => 'uz',
-            'description' => '11',
-        ]);
-
-        $this->insert('{{%semestr}}', [
-            'course_id' => 6,
-            'id' => 12,
-            'type' => 2,
-            'updated_at' => 0,
-            'created_at' => 0,
-            'status' => 1,
-        ]);
-
-        Yii::$app->db->createCommand()->delete('translate', ['model_id' => 12, 'table_name' => 'semestr', 'language' => 'uz'])->execute();
-        $this->insert('{{%translate}}', [
-            'model_id' => 12,
-            'name' => '12',
-            'table_name' => 'semestr',
-            'language' => 'uz',
-            'description' => '12',
-        ]);
+      
     }
 
     /**

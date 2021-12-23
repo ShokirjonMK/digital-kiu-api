@@ -6,6 +6,7 @@ use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Exam;
+use DateTime;
 
 class ExamController extends ApiActiveController
 {
@@ -78,7 +79,7 @@ class ExamController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        
+
         $this->load($model, $post);
         $result = Exam::updateItem($model, $post);
         if (!is_array($result)) {
@@ -96,6 +97,7 @@ class ExamController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

@@ -143,7 +143,7 @@ class EduPlan extends \yii\db\ActiveRecord
     }
 
     /**
-     * For tranlating 
+     * For translating 
      */
     public function getTranslate()
     {
@@ -172,11 +172,6 @@ class EduPlan extends \yii\db\ActiveRecord
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
-
-    /**
-     * For tranlating 
-     */
-
 
     /**
      * Gets query for [[Direction]].

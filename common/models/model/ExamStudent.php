@@ -57,7 +57,7 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'exam_id'], 'required'],
-            [['student_id', 'exam_id', 'teacher_access_id', 'attempt','lang_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['student_id', 'start', 'exam_id', 'teacher_access_id', 'attempt','lang_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['ball'], 'number'],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
@@ -78,6 +78,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'exam_id' => 'Exam ID',
             'teacher_access_id' => 'Teacher Access ID',
             'ball' => 'Ball',
+            'start' => 'Start',
             'attempt' => 'Attempt',
             'order' => 'Order',
             'status' => 'Status',
@@ -99,6 +100,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'lang_id',
             'teacher_access_id',
             'ball',
+            'start',
             'attempt',
 
             'order',

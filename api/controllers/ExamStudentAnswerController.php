@@ -23,13 +23,14 @@ class ExamStudentAnswerController extends ApiActiveController
         $data = [];
         $model = new ExamStudentAnswer();
         $post = Yii::$app->request->post();
-        $result = ExamStudentAnswer::randomQuestions($data, $post);
-        if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully created.'), $result, null, ResponseStatus::CREATED);
-        } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        $result = ExamStudentAnswer::randomQuestions($post);
+
+        if (isset($result['questions'])) {
+            return $this->response(1, _e('Questions and times'), $result, null, ResponseStatus::OK);
         }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
     }
+
 
     public function actionIndex($lang)
     {
@@ -112,6 +113,4 @@ class ExamStudentAnswerController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
 }

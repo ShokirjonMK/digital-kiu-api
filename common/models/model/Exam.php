@@ -31,8 +31,6 @@ use yii\behaviors\TimestampBehavior;
  */
 class Exam extends \yii\db\ActiveRecord
 {
-
-
     public static $selected_language = 'uz';
 
     use ResourceTrait;
@@ -58,7 +56,7 @@ class Exam extends \yii\db\ActiveRecord
     {
         return [
             [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
-            [['exam_type_id', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_type_id', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'number'],
             [['question_count_by_type'], 'safe'],
@@ -80,6 +78,7 @@ class Exam extends \yii\db\ActiveRecord
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
             'start' => 'Start',
             'finish' => 'Finish',
+            'duration' => 'Duration',
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
             'order' => 'Order',
@@ -105,6 +104,7 @@ class Exam extends \yii\db\ActiveRecord
             'edu_semestr_subject_id',
             'start',
             'finish',
+            'duration',
             'max_ball',
             'min_ball',
 
@@ -237,6 +237,15 @@ class Exam extends \yii\db\ActiveRecord
         $has_error = Translate::checkingAll($post);
 
         if ($has_error['status']) {
+            $model->duration =  str_replace("'", "", $model->duration);
+            $model->duration =  str_replace('"', "", $model->duration);
+            $duration = explode(":", $model->duration);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $model->duration = $hours * 3600 + $min * 60;
+
+            // $model->duration = strtotime($model->finish) - strtotime($model->start);
+            // $model->duration = ($model->duration > 0) ? $model->duration : 0;
             if ($model->save()) {
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
@@ -285,6 +294,14 @@ class Exam extends \yii\db\ActiveRecord
 
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
+
+            $model->duration =  str_replace("'", "", $model->duration);
+            $model->duration =  str_replace('"', "", $model->duration);
+            $duration = explode(":", $model->duration);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $model->duration = $hours * 3600 + $min * 60;
+
             if ($model->save()) {
                 if (isset($post['name'])) {
                     if (isset($post['description'])) {

@@ -206,43 +206,54 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
-    public static function randomQuestions($data, $post)
+    public static function randomQuestions( $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        $data = [];
         $exam_id = $post["exam_id"];
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $exam_times = [];
         // $student_id = $student->id;
         $student_id = 15;
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if (isset($exam)) {
+                $ExamStudentHas = ExamStudent::find()->where([
+                    'exam_id' => $exam_id,
+                    'student_id' => $student_id,
+                ])
+                    ->orderBy('id desc')
+                    ->one();
+
                 $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
                 if (isset($hasExamStudentAnswer)) {
-                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                    $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                    $exam_times['start'] = date("Y-m-d H:i:s",$ExamStudentHas->start);
+                    $exam_times['duration'] = $exam->duration;
+                    $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+
+                    $data['times'] = $exam_times;
                     return $data;
                 }
 
                 // $now_date = date('Y-m-d H:i:s');
                 $now_second = time();
                 if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
+                    
                     $question_count_by_type = json_decode($exam->question_count_by_type);
                     $edu_semestr_subject_id = $exam->eduSemestrSubject->id;
                     $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
 
                     /* BU yerga bolani imtixonga a`zo qilamiz*/
-                    $ExamStudentHas = ExamStudent::find()->where([
-                        'exam_id' => $exam_id,
-                        'student_id' => $student_id,
-                    ])
-                        ->orderBy('id desc')
-                        ->one();
+                    
 
                     $student = Student::findOne(['id' => $student_id]);
                     $student_lang_id = $student->edu_lang_id;
                     $ExamStudent = new ExamStudent();
                     $ExamStudent->exam_id = $exam_id;
                     $ExamStudent->student_id = $student_id;
+                    $ExamStudent->start = time();
                     $ExamStudent->lang_id = $student_lang_id;
                     $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
                     $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
@@ -262,7 +273,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             ->limit($question_count)
                             ->all();
                         if (count($questionAll) == $question_count) {
-//                        if (count($questionAll) > 0) {
+                            //                        if (count($questionAll) > 0) {
                             foreach ($questionAll as $question) {
                                 $ExamStudentAnswer = new ExamStudentAnswer();
                                 $ExamStudentAnswer->exam_id = $exam_id;
@@ -275,11 +286,18 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             }
                         } else {
                             ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                            ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                             $errors[] = _e("Questions not found for this exam");
                             return $errors;
                         }
                     }
                     $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+
+                    $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                    $exam_times['duration'] = $exam->duration;
+                    $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+
+                    $data['times'] = $exam_times;
                     return $data;
                 } else {
                     $errors[] = _e("This exam`s time expired");
@@ -294,9 +312,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
     public static function createItem($model, $post)
     {
+        return true;
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
+        $model->start = time();
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -326,54 +346,52 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if (isset($exam)) {
+                $examStudent = ExamStudent::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
                 $now_second = time();
-                if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
-                    $model->answer_file = UploadedFile::getInstancesByName('answer_file');
-                    if ($model->answer_file) {
+                if (isset($examStudent)) {
+                    $finishExamStudent = strtotime($examStudent->start) + $exam->duration;
 
-                        $model->answer_file = $model->answer_file[0];
-                        $answer_fileFileUrl = $model->uploadFile();
-                        if ($answer_fileFileUrl) {
-                            $model->file = $answer_fileFileUrl;
-                            if ($model->attempt >= 1) {
+                    if ((strtotime($exam->start) <= $now_second)
+                        && (strtotime($exam->finish) >= $now_second)
+                        && strtotime($examStudent->start) <= $finishExamStudent
+                    ) {
+                        $model->answer_file = UploadedFile::getInstancesByName('answer_file');
+                        if ($model->answer_file) {
 
-                                /* Ikkinchi marta javob yuklasa bazaga yozib parent_id ni va attemptni o`zlartiramiz*/
-//                                $attemptExam = ExamStudentAnswer::findOne(['id' => $model->id]);
-//                                if ($attemptExam != null) {
-//                                    $newAttemptExam = new ExamStudentAnswer();
-//                                    $newAttemptExam->attributes = $model->attributes;
-//                                    $newAttemptExam->file = $old_file;
-//                                    $newAttemptExam->parent_id = $model->id;
-//                                    $newAttemptExam->save(false);
-//                                }
-                                /* Ikkinchi marta javob yuklasa bazaga yozib parent_id ni va attemptni o`zlartiramiz*/
-
+                            $model->answer_file = $model->answer_file[0];
+                            $answer_fileFileUrl = $model->uploadFile();
+                            if ($answer_fileFileUrl) {
+                                $model->file = $answer_fileFileUrl;
+                            } else {
+                                $errors[] = $model->errors;
                             }
-                            $model->attempt = (int)$model->attempt + 1;
-
-                        } else {
+                        }
+                        if (!($model->validate())) {
                             $errors[] = $model->errors;
                         }
+                    } else {
+                        $errors[] = _e("This exam`s time expired or ");
                     }
                 } else {
-                    $errors[] = _e("This exam`s time expired");
+                    $errors[] = _e("Student not found for this exam");
                 }
             } else {
                 $errors[] = _e("This exam not found");
             }
-        }
-
-
-        // studentni answer file ni saqlaymiz
-
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-
-        if ($model->save(false)) {
-            $transaction->commit();
-            return true;
         } else {
+            $errors[] = _e("This exam not found");
+        }
+
+        if (count($errors) == 0) {
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                return simplify_errors($errors);
+            }
+        } else {
+            $errors[] = count($errors);
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

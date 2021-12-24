@@ -300,7 +300,7 @@ class Exam extends \yii\db\ActiveRecord
             $duration = explode(":", $model->duration);
             $hours = isset($duration[0]) ? $duration[0] : 0;
             $min = isset($duration[1]) ? $duration[1] : 0;
-            $model->duration = $hours * 3600 + $min * 60;
+            $model->duration = (int)$hours * 3600 + (int)$min * 60;
 
             if ($model->save()) {
                 if (isset($post['name'])) {

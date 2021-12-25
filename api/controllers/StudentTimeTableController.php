@@ -91,14 +91,14 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = StudentTimeTable::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = StudentTimeTable::findOne(['id' => $id]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
         if ($model) {
-            $model->is_deleted = 1;
-            $model->update();
+
+            $model->detele();
 
             return $this->response(1, _e('Student succesfully removed.'), null, null, ResponseStatus::OK);
         }

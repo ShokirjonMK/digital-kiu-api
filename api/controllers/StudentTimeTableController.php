@@ -96,12 +96,13 @@ class  StudentTimeTableController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if ($model) {
+        // remove model
+        $result = StudentTimeTable::findOne($id)->delete();
 
-            $model->detele();
-
-            return $this->response(1, _e('Student succesfully removed.'), null, null, ResponseStatus::OK);
+        if ($result) {
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+
     }
 }

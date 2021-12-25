@@ -38,8 +38,6 @@ class Direction extends \yii\db\ActiveRecord
         ];
     }
 
-
-
     /**
      * {@inheritdoc}
      */

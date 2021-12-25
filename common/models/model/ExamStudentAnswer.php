@@ -51,8 +51,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     }
 
 
-    const STATUS_COMPLETE = 1;
     const STATUS_NEW = 2;
+    const STATUS_COMPLETE = 1;
     const STATUS_IN_CHECKING = 3;
 
     const UPLOADS_FOLDER = 'uploads/answer_files/';
@@ -206,7 +206,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
-    public static function randomQuestions( $post)
+    public static function randomQuestions($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -222,7 +222,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             $checkPassword = $exam->id . $exam->edu_semestr_subject_id . $student_id;
 
             if (isset($exam)) {
-                if($password == $checkPassword){
+                if ($password == $checkPassword) {
                     $ExamStudentHas = ExamStudent::find()->where([
                         'exam_id' => $exam_id,
                         'student_id' => $student_id,
@@ -251,19 +251,23 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                         /* BU yerga bolani imtixonga a`zo qilamiz*/
 
-
                         $student = Student::findOne(['id' => $student_id]);
                         $student_lang_id = $student->edu_lang_id;
-                        $ExamStudent = new ExamStudent();
+                        if (isset($ExamStudentHas)) {
+                            $ExamStudent = $ExamStudentHas;
+                        } else {
+                            $ExamStudent = new ExamStudent();
+                        }
+
                         $ExamStudent->exam_id = $exam_id;
                         $ExamStudent->student_id = $student_id;
                         $ExamStudent->start = time();
                         $ExamStudent->lang_id = $student_lang_id;
-                        $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                        // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
                         $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
                         $ExamStudent->save(false);
 
-                        /* BU yerga bolani imtixonga a`zo qilamiz*/
+                        /* *****************************/
 
                         foreach ($question_count_by_type as $type => $question_count) {
                             $questionAll = Question::find()
@@ -277,7 +281,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 ->limit($question_count)
                                 ->all();
                             if (count($questionAll) == $question_count) {
-                                //                        if (count($questionAll) > 0) {
+                                // if (count($questionAll) > 0) {
                                 foreach ($questionAll as $question) {
                                     $ExamStudentAnswer = new ExamStudentAnswer();
                                     $ExamStudentAnswer->exam_id = $exam_id;
@@ -306,10 +310,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     } else {
                         $errors[] = _e("This exam`s time expired");
                     }
-                }else{
+                } else {
                     $errors[] = _e("Exam password incorrect");
                 }
-               
             } else {
                 $errors[] = _e("This exam not found");
             }
@@ -354,15 +357,22 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if (isset($exam)) {
-                $examStudent = ExamStudent::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                $examStudent = ExamStudent::find()->where([
+                    'exam_id' => $exam_id,
+                    'student_id' => $student_id,
+                ])
+                    ->orderBy('id desc')
+                    ->one();
                 $now_second = time();
                 if (isset($examStudent)) {
-                    $finishExamStudent = strtotime($examStudent->start) + $exam->duration;
+                    $finishExamStudent = strtotime($examStudent->start) + $exam->duration + $examStudent->duration;
 
-                    if ((strtotime($exam->start) <= $now_second)
+                    if (
+                        (strtotime($exam->start) <= $now_second)
                         && (strtotime($exam->finish) >= $now_second)
-                        && strtotime($examStudent->start) <= $finishExamStudent
+                        && ($now_second <= $finishExamStudent)
                     ) {
+                        $model->attempt = $examStudent->attempt;
                         $model->answer_file = UploadedFile::getInstancesByName('answer_file');
                         if ($model->answer_file) {
 

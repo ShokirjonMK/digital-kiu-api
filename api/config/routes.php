@@ -91,6 +91,12 @@ $routes = [
     //    'GET <lang:\w{2}>/rooms/free' => 'room/free',
     'GET <lang:\w{2}>/time-tables/parent-null' => 'time-table/parent-null',
 
+    // Exam Passwords
+    'POST <lang:\w{2}>/exams/get-passwords' => 'exam/get-passwords',
+
+    // Exam Passwords
+    'POST <lang:\w{2}>/exams/generate-passwords' => 'exam/generate-passwords',
+
 
     //    'POST studentga savollarni random tushirish
     'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',

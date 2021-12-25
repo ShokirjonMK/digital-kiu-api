@@ -56,7 +56,7 @@ class Exam extends \yii\db\ActiveRecord
     {
         return [
             [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
-            [['exam_type_id', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_type_id', 'is_protected', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'number'],
             [['question_count_by_type'], 'safe'],
@@ -78,6 +78,7 @@ class Exam extends \yii\db\ActiveRecord
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
             'start' => 'Start',
             'finish' => 'Finish',
+            'is_protected' => 'Is Protected',
             'duration' => 'Duration',
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
@@ -105,6 +106,7 @@ class Exam extends \yii\db\ActiveRecord
             'start',
             'finish',
             'duration',
+            'is_protected',
             'max_ball',
             'min_ball',
             'order',
@@ -201,6 +203,121 @@ class Exam extends \yii\db\ActiveRecord
         return $this->hasMany(ExamStudentAnswer::className(), ['exam_id' => 'id']);
     }
 
+
+    public static function generatePasswords($post)
+    {
+        $errors = [];
+        $examId = isset($post['exam_id']) ?  $post['exam_id'] : null;
+
+        if (isset($examId)) {
+            $exam = Exam::findOne($examId);
+            if (isset($exam)) {
+                $eduSemestrSubject = EduSemestrSubject::findOne($exam->edu_semestr_subject_id);
+                if (isset($eduSemestrSubject)) {
+                    $studentTimeTable = StudentTimeTable::find()
+                        // ->select(['student_time_table.id as id', 'student_time_table.student_id as student_id', 'tt.language_id as lang_id'])
+                        ->leftJoin("time_table tt", "tt.id = student_time_table.time_table_id")
+                        ->where([
+                            'tt.edu_semester_id' => $eduSemestrSubject->edu_semestr_id,
+                            'tt.subject_id' => $eduSemestrSubject->subject_id,
+                        ])
+                        ->all();
+
+                    foreach ($studentTimeTable as $studentTimeTableOne) {
+                        $student_id = $studentTimeTableOne->student_id;
+                        $langId = $studentTimeTableOne->timeTable->language_id;
+
+                        $ExamStudentHas = ExamStudent::find()->where([
+                            'exam_id' => $examId,
+                            'student_id' => $student_id,
+                        ])
+                            ->orderBy('id desc')
+                            ->one();
+
+                        if (isset($ExamStudentHas)) {
+                            $ExamStudent = $ExamStudentHas;
+                        } else {
+                            $ExamStudent = new ExamStudent();
+                        }
+
+                        $ExamStudent->exam_id = $examId;
+                        $ExamStudent->student_id = $student_id;
+                        $ExamStudent->lang_id = $langId;
+                        $ExamStudent->password = _random_string('numeric', 4);
+                        // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                        $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
+                        $ExamStudent->save(false);
+                    }
+
+                    ////
+
+                } else {
+                    $errors[] = _e("This subject does not belongs to this smester");
+                }
+            } else {
+                $errors[] = _e("Exam not found");
+            }
+        } else {
+            $errors[] = _e("Exam Id is required");
+        }
+
+
+        if (count($errors) > 0) {
+            return $errors;
+        } else {
+            return true;
+        }
+    }
+    public static function getPasswords($post)
+    {
+        $errors = [];
+        $data = [];
+        $examId = $post['exam_id'];
+
+        if (isset($examId)) {
+            $exam = Exam::findOne($examId);
+            if (isset($exam)) {
+                $examStudents = ExamStudent::find()
+                    ->where(['exam_id' => $examId])
+                    ->leftJoin("student std", "std.id = exam_student.student_id")
+                    ->orderBy('std.direction_id')
+                    ->all();
+
+                foreach ($examStudents as $examStudentOne) {
+                    $oneStd = [];
+                    $oneStd['full_name'] = Profile::getFullname($examStudentOne->student->profile);
+                    $oneStd['direction'] = $examStudentOne->student->direction->translate->name;
+                    $oneStd['password'] = $examStudentOne->password;
+                    $data['students'][] = $oneStd;
+                }
+                $eduSemestrSubject = EduSemestrSubject::findOne($exam->edu_semestr_subject_id);
+                if (isset($eduSemestrSubject)) {
+                    $info = [];
+                    $info['subject'] = $eduSemestrSubject->subject->translate->name;
+                    $info['start'] = $exam->start;
+                    $info['finish'] = $exam->finish;
+                    $info['exam_type'] = $exam->examType->translate->name;
+
+                    $data['info'] = $info;
+                } else {
+                    $errors[] = _e("This subject does not belongs to this smester");
+                }
+
+                return $data;
+            } else {
+                $errors[] = _e("Exam not found");
+            }
+        } else {
+            $errors[] = _e("Exam Id is required");
+        }
+
+
+        if (count($errors) > 0) {
+            return $errors;
+        } else {
+            return true;
+        }
+    }
 
     public static function createItem($model, $post)
     {

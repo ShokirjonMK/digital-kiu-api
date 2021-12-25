@@ -144,8 +144,6 @@ class User extends CommonUser
 
     public static function createItem($model, $profile, $post)
     {
-
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 

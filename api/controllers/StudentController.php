@@ -79,6 +79,7 @@ class  StudentController extends ApiActiveController
         $this->load($model, $post);
         $this->load($profile, $post);
         $this->load($student, $post);
+        
         $result = StudentUser::createItem($model, $profile, $student, $post);
         $data = [];
         $data['student'] = $student;

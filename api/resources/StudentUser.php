@@ -11,6 +11,7 @@ class StudentUser extends ParentUser
 {
     public static $roleList = ['student', 'master'];
 
+
     public static function createItem($model, $profile, $student, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -71,6 +72,20 @@ class StudentUser extends ParentUser
                     $avatarUrl = $model->upload();
                     if ($avatarUrl) {
                         $profile->image = $avatarUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+
+                // Passport file ni saqlaymiz
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
                     } else {
                         $errors[] = $model->errors;
                     }
@@ -216,7 +231,7 @@ class StudentUser extends ParentUser
             $studentDeleted = Student::findOne(['id' => $id]);
             if (!$studentDeleted) {
                 $errors[] = [_e('Error in student deleting process.')];
-            }elseif ($studentDeleted->is_deleted == 1) {
+            } elseif ($studentDeleted->is_deleted == 1) {
                 $errors[] = [_e('Student not found')];
             } else {
                 $studentDeleted->is_deleted = 1;

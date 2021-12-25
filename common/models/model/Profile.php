@@ -279,20 +279,17 @@ class Profile extends \yii\db\ActiveRecord
     {
         $fullname = '';
 
-        if ($profile && $profile->firstname) {
-            $fullname = _strtotitle($profile->firstname) . ' ';
+        if ($profile && $profile->first_name) {
+            $fullname = _strtotitle($profile->first_name) . ' ';
         }
 
-        if ($profile && $profile->lastname) {
-            $fullname .= _strtotitle($profile->lastname);
+        if ($profile && $profile->last_name) {
+            $fullname .= _strtotitle($profile->last_name);
         }
 
         return $fullname ? trim($fullname) : 'Unknown User';
     }
-
-
-
-
+ 
     public function extraFields()
     {
         $extraFields =  [

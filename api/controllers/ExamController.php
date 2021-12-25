@@ -20,6 +20,33 @@ class ExamController extends ApiActiveController
     public $table_name = 'exam';
     public $controller_name = 'Exam';
 
+    public function actionGeneratePasswords($lang)
+    {
+        $post = Yii::$app->request->post();
+        $result = Exam::generatePasswords($post);
+
+        if (!is_array($result)) {
+            return $this->response(1, _e('Passwords successfully generated.'), null, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        return $result;
+    }
+
+    public function actionGetPasswords($lang)
+    {
+        $post = Yii::$app->request->post();
+        $result = Exam::getPasswords($post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Passwords for students for this exam'), $result, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        
+        return $result;
+    }
+
     public function actionIndex($lang)
     {
         $model = new Exam();

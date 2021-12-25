@@ -212,96 +212,104 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         $data = [];
         $exam_id = $post["exam_id"];
+        $password = isset($post["password"]) ? $post["password"] : "";
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
         $exam_times = [];
         // $student_id = $student->id;
         $student_id = 15;
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
+            $checkPassword = $exam->id . $exam->edu_semestr_subject_id . $student_id;
+
             if (isset($exam)) {
-                $ExamStudentHas = ExamStudent::find()->where([
-                    'exam_id' => $exam_id,
-                    'student_id' => $student_id,
-                ])
-                    ->orderBy('id desc')
-                    ->one();
+                if($password == $checkPassword){
+                    $ExamStudentHas = ExamStudent::find()->where([
+                        'exam_id' => $exam_id,
+                        'student_id' => $student_id,
+                    ])
+                        ->orderBy('id desc')
+                        ->one();
 
-                $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                if (isset($hasExamStudentAnswer)) {
-                    $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
-                    $exam_times['start'] = date("Y-m-d H:i:s",$ExamStudentHas->start);
-                    $exam_times['duration'] = $exam->duration;
-                    $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+                    $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                    if (isset($hasExamStudentAnswer)) {
+                        $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                        $exam_times['duration'] = $exam->duration;
+                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
 
-                    $data['times'] = $exam_times;
-                    return $data;
-                }
-
-                // $now_date = date('Y-m-d H:i:s');
-                $now_second = time();
-                if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
-                    
-                    $question_count_by_type = json_decode($exam->question_count_by_type);
-                    $edu_semestr_subject_id = $exam->eduSemestrSubject->id;
-                    $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
-
-                    /* BU yerga bolani imtixonga a`zo qilamiz*/
-                    
-
-                    $student = Student::findOne(['id' => $student_id]);
-                    $student_lang_id = $student->edu_lang_id;
-                    $ExamStudent = new ExamStudent();
-                    $ExamStudent->exam_id = $exam_id;
-                    $ExamStudent->student_id = $student_id;
-                    $ExamStudent->start = time();
-                    $ExamStudent->lang_id = $student_lang_id;
-                    $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
-                    $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
-                    $ExamStudent->save(false);
-
-                    /* BU yerga bolani imtixonga a`zo qilamiz*/
-
-                    foreach ($question_count_by_type as $type => $question_count) {
-                        $questionAll = Question::find()
-                            ->where([
-                                'subject_id' => $edu_semestr_subject_id,
-                                'semestr_id' => $semestr_id,
-                                'lang_id' => $student_lang_id,
-                                'question_type_id' => $type
-                            ])
-                            ->orderBy(new Expression('rand()'))
-                            ->limit($question_count)
-                            ->all();
-                        if (count($questionAll) == $question_count) {
-                            //                        if (count($questionAll) > 0) {
-                            foreach ($questionAll as $question) {
-                                $ExamStudentAnswer = new ExamStudentAnswer();
-                                $ExamStudentAnswer->exam_id = $exam_id;
-                                $ExamStudentAnswer->question_id = $question->id;
-                                $ExamStudentAnswer->student_id = $student_id;
-                                $ExamStudentAnswer->type = $type;
-                                $ExamStudentAnswer->attempt = 1;
-                                $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
-                                $ExamStudentAnswer->save(false);
-                            }
-                        } else {
-                            ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                            ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                            $errors[] = _e("Questions not found for this exam");
-                            return $errors;
-                        }
+                        $data['times'] = $exam_times;
+                        return $data;
                     }
-                    $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
 
-                    $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
-                    $exam_times['duration'] = $exam->duration;
-                    $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+                    // $now_date = date('Y-m-d H:i:s');
+                    $now_second = time();
+                    if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
 
-                    $data['times'] = $exam_times;
-                    return $data;
-                } else {
-                    $errors[] = _e("This exam`s time expired");
+                        $question_count_by_type = json_decode($exam->question_count_by_type);
+                        $edu_semestr_subject_id = $exam->eduSemestrSubject->id;
+                        $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
+
+                        /* BU yerga bolani imtixonga a`zo qilamiz*/
+
+
+                        $student = Student::findOne(['id' => $student_id]);
+                        $student_lang_id = $student->edu_lang_id;
+                        $ExamStudent = new ExamStudent();
+                        $ExamStudent->exam_id = $exam_id;
+                        $ExamStudent->student_id = $student_id;
+                        $ExamStudent->start = time();
+                        $ExamStudent->lang_id = $student_lang_id;
+                        $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                        $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
+                        $ExamStudent->save(false);
+
+                        /* BU yerga bolani imtixonga a`zo qilamiz*/
+
+                        foreach ($question_count_by_type as $type => $question_count) {
+                            $questionAll = Question::find()
+                                ->where([
+                                    'subject_id' => $edu_semestr_subject_id,
+                                    'semestr_id' => $semestr_id,
+                                    'lang_id' => $student_lang_id,
+                                    'question_type_id' => $type
+                                ])
+                                ->orderBy(new Expression('rand()'))
+                                ->limit($question_count)
+                                ->all();
+                            if (count($questionAll) == $question_count) {
+                                //                        if (count($questionAll) > 0) {
+                                foreach ($questionAll as $question) {
+                                    $ExamStudentAnswer = new ExamStudentAnswer();
+                                    $ExamStudentAnswer->exam_id = $exam_id;
+                                    $ExamStudentAnswer->question_id = $question->id;
+                                    $ExamStudentAnswer->student_id = $student_id;
+                                    $ExamStudentAnswer->type = $type;
+                                    $ExamStudentAnswer->attempt = 1;
+                                    $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
+                                    $ExamStudentAnswer->save(false);
+                                }
+                            } else {
+                                ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                                ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                                $errors[] = _e("Questions not found for this exam");
+                                return $errors;
+                            }
+                        }
+                        $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+
+                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                        $exam_times['duration'] = $exam->duration;
+                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+
+                        $data['times'] = $exam_times;
+                        return $data;
+                    } else {
+                        $errors[] = _e("This exam`s time expired");
+                    }
+                }else{
+                    $errors[] = _e("Exam password incorrect");
                 }
+               
             } else {
                 $errors[] = _e("This exam not found");
             }

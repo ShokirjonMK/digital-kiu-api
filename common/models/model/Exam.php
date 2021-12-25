@@ -107,7 +107,6 @@ class Exam extends \yii\db\ActiveRecord
             'duration',
             'max_ball',
             'min_ball',
-
             'order',
             'status',
             'created_at',
@@ -116,7 +115,6 @@ class Exam extends \yii\db\ActiveRecord
             'updated_by',
 
         ];
-
         return $fields;
     }
 
@@ -127,7 +125,6 @@ class Exam extends \yii\db\ActiveRecord
             'examType',
             'examQuestions',
             'examStudentAnswers',
-
             'description',
             'createdBy',
             'updatedBy',
@@ -237,12 +234,14 @@ class Exam extends \yii\db\ActiveRecord
         $has_error = Translate::checkingAll($post);
 
         if ($has_error['status']) {
-            $model->duration =  str_replace("'", "", $model->duration);
-            $model->duration =  str_replace('"', "", $model->duration);
-            $duration = explode(":", $model->duration);
-            $hours = isset($duration[0]) ? $duration[0] : 0;
-            $min = isset($duration[1]) ? $duration[1] : 0;
-            $model->duration = $hours * 3600 + $min * 60;
+            if (isset($post['duration'])) {
+                $model->duration =  str_replace("'", "", $post['duration']);
+                $model->duration =  str_replace('"', "", $model->duration);
+                $duration = explode(":", $model->duration);
+                $hours = isset($duration[0]) ? $duration[0] : 0;
+                $min = isset($duration[1]) ? $duration[1] : 0;
+                $model->duration = (int)$hours * 3600 + (int)$min * 60;
+            }
 
             // $model->duration = strtotime($model->finish) - strtotime($model->start);
             // $model->duration = ($model->duration > 0) ? $model->duration : 0;
@@ -255,7 +254,6 @@ class Exam extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-
                 return simplify_errors($errors);
             }
         } else {
@@ -276,15 +274,15 @@ class Exam extends \yii\db\ActiveRecord
             if (!isJsonMK($post['question_count_by_type'])) {
                 $json_errors['question_count_by_type'] = [_e('Must be Json')];
             }
-            
+
             foreach (array_unique((array)json_decode($post['question_count_by_type'])) as $questionTypeId => $questionTypeCount) {
-               
+
                 $q = QuestionType::findOne($questionTypeId);
                 if (!(isset($q))) {
                     $errors[] = _e("Question Type Id (" . $questionTypeId . ") not found");
                 }
             }
-            
+
             if (count($errors) > 0) {
                 return $errors;
             }
@@ -294,13 +292,14 @@ class Exam extends \yii\db\ActiveRecord
 
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
-
-            $model->duration =  str_replace("'", "", $model->duration);
-            $model->duration =  str_replace('"', "", $model->duration);
-            $duration = explode(":", $model->duration);
-            $hours = isset($duration[0]) ? $duration[0] : 0;
-            $min = isset($duration[1]) ? $duration[1] : 0;
-            $model->duration = (int)$hours * 3600 + (int)$min * 60;
+            if (isset($post['duration'])) {
+                $model->duration =  str_replace("'", "", $post['duration']);
+                $model->duration =  str_replace('"', "", $model->duration);
+                $duration = explode(":", $model->duration);
+                $hours = isset($duration[0]) ? $duration[0] : 0;
+                $min = isset($duration[1]) ? $duration[1] : 0;
+                $model->duration = (int)$hours * 3600 + (int)$min * 60;
+            }
 
             if ($model->save()) {
                 if (isset($post['name'])) {

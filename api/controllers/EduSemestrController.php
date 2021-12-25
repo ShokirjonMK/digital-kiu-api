@@ -7,6 +7,7 @@ use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
 use common\models\JobInfo;
+use common\models\model\Student;
 
 class EduSemestrController extends ApiActiveController
 {
@@ -21,9 +22,18 @@ class EduSemestrController extends ApiActiveController
     {
         $model = new EduSemestr();
 
-        $query = $model->find()
-            ->andWhere(['is_deleted' => 0])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+
+        if (isset($student)) {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['edu_plan_id' => $student->edu_plan_id])
+                ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        } else {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0])
+                ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        }
 
         //filter
         $query = $this->filterAll($query, $model);

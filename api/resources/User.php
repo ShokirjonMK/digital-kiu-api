@@ -291,7 +291,7 @@ class User extends CommonUser
             /* * Password */
             if (isset($post['password']) && !empty($post['password'])) {
                 if ($post['password'] != 'undefined' && $post['password'] != 'null' && $post['password'] != '') {
-                    if(strlen($post['password']) < 6){
+                    if (strlen($post['password']) < 6) {
                         $errors[] = [_e('Password ')];
                         return $errors;
                     }
@@ -432,7 +432,7 @@ class User extends CommonUser
     public function upload()
     {
         if ($this->validate()) {
-            $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->avatar->extension;
+            $fileName = $this->id . \Yii::$app->security->generateRandomString(10) . '.' . $this->avatar->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->avatar->saveAs($url, false);
@@ -445,7 +445,7 @@ class User extends CommonUser
     public function uploadPassport()
     {
         if ($this->validate()) {
-            $fileName = \Yii::$app->security->generateRandomString(10) . '.' . $this->passport_file->extension;
+            $fileName = $this->id . \Yii::$app->security->generateRandomString(10) . '.' . $this->passport_file->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->passport_file->saveAs($url, false);
@@ -462,7 +462,7 @@ class User extends CommonUser
         // if exist delete and create new one 
         $oldPassword = PasswordEncrypts::find()->where(['user_id' => $user_id])->all();
         if (isset($oldPassword)) {
-            foreach ($oldPassword as $pass){
+            foreach ($oldPassword as $pass) {
                 $pass->delete();
             }
         }

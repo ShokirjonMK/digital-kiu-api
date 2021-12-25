@@ -184,6 +184,19 @@ class StudentUser extends ParentUser
                 }
                 // ***
 
+                // Passport file ni saqlaymiz
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {

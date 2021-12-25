@@ -169,8 +169,6 @@ class StudentUser extends ParentUser
 
             if ($model->save()) {
 
-
-
                 // avatarni saqlaymiz
                 $model->avatar = UploadedFile::getInstancesByName('avatar');
                 if ($model->avatar) {
@@ -197,7 +195,7 @@ class StudentUser extends ParentUser
                 }
                 // ***
 
-                if (!$profile->save()) {
+                if (!$profile->save(false)) {
                     $errors[] = $profile->errors;
                 } else {
                     if ($student->save()) {

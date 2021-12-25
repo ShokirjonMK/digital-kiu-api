@@ -215,32 +215,43 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $password = isset($post["password"]) ? $post["password"] : "";
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
         $exam_times = [];
-        // $student_id = $student->id;
-        $student_id = 15;
+        $student_id = $student->id;
+        // $student_id = 15;
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             $checkPassword = $exam->id . $exam->edu_semestr_subject_id . $student_id;
 
             if (isset($exam)) {
-                if ($password == $checkPassword) {
-                    $ExamStudentHas = ExamStudent::find()->where([
-                        'exam_id' => $exam_id,
-                        'student_id' => $student_id,
-                    ])
-                        ->orderBy('id desc')
-                        ->one();
+                $ExamStudentHas = ExamStudent::find()->where([
+                    'exam_id' => $exam_id,
+                    'student_id' => $student_id,
+                ])
+                    ->orderBy('id desc')
+                    ->one();
 
-                    $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                    if (isset($hasExamStudentAnswer)) {
-                        $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
-                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
-                        $exam_times['duration'] = $exam->duration;
-                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+                $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                if (isset($hasExamStudentAnswer)) {
+                    $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                    $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                    $exam_times['duration'] = $exam->duration;
+                    $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
 
-                        $data['times'] = $exam_times;
-                        return $data;
-                    }
+                    $data['times'] = $exam_times;
+                    return $data;
+                }
 
+
+                // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
+                $t = true;
+                if ($exam->is_protected == 1) {
+                   if($password == $ExamStudentHas->password){
+                       $t = true;
+                   }else{
+                       $t = false;
+                   }
+                }
+
+                if ($t) {
                     // $now_date = date('Y-m-d H:i:s');
                     $now_second = time();
                     if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {

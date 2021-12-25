@@ -18,6 +18,7 @@ class EduSemestrController extends ApiActiveController
         return [];
     }
 
+    
     public function actionIndex($lang)
     {
         $model = new EduSemestr();

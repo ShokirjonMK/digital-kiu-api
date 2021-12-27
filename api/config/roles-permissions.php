@@ -28,6 +28,8 @@ return [
         'edu-semestr-subject_view',
         'edu-semestr-subject-category-time_view',
 
+        'exam_index',
+
         'time-table_index',
         'time-table_view',
         'time-table_parent-null',

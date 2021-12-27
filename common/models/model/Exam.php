@@ -41,6 +41,12 @@ class Exam extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
+
+    const STATUS_ACTIVE_FOR_ALL = 1;
+    const STATUS_INACTIVE = 9;
+    const STATUS_FINISHED = 2;
+
+
     /**
      * {@inheritdoc}
      */

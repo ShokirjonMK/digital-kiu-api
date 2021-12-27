@@ -5,7 +5,10 @@ namespace api\controllers;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduSemestr;
+use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
+use common\models\model\Student;
 use DateTime;
 
 class ExamController extends ApiActiveController
@@ -43,25 +46,51 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
-        
+
         return $result;
     }
 
     public function actionIndex($lang)
     {
         $model = new Exam();
+        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        // return $student;
+        $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
-        $query = $model->find()
-            ->with(['infoRelation'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            ->groupBy($this->table_name . '.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
-
+        if (isset($student)) {
+            if (isset($eduSmesterId)) {
+                $eduSmesterSubjectIds = EduSemestrSubject::find()
+                    ->leftJoin("edu_semestr es", "es.id = edu_semestr_subject.edu_semestr_id")
+                    ->andWhere(['es.edu_plan_id' => $student->edu_plan_id])
+                    ->andWhere(['es.id' => $eduSmesterId])
+                    ->andWhere(['edu_semestr_subject.id' => Exam::STATUS_ACTIVE_FOR_ALL])
+                    ->select('edu_semestr_subject.id');
+            } else {
+                $eduSmesterSubjectIds = EduSemestrSubject::find()
+                    ->leftJoin("edu_semestr es", "es.id = edu_semestr_subject.edu_semestr_id")
+                    ->andWhere(['es.edu_plan_id' => $student->edu_plan_id])
+                    ->select('edu_semestr_subject.id');
+            }
+            if (isset($eduSmesterSubjectIds)) {
+                $query = $model->find()
+                    ->with(['infoRelation'])
+                    ->andWhere([$this->table_name . '.is_deleted' => 0])
+                    ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+                    ->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
+                    ->groupBy($this->table_name . '.id')
+                    ->andWhere([$this->table_name . '.id' => Exam::STATUS_ACTIVE_FOR_ALL])
+                    ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            } else {
+                return $this->response(0, _e('Your exams not found.'), null, null, ResponseStatus::NOT_FOUND);
+            }
+        } else {
+            $query = $model->find()
+                ->with(['infoRelation'])
+                ->andWhere([$this->table_name . '.is_deleted' => 0])
+                ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+                ->groupBy($this->table_name . '.id')
+                ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+        }
         //filter
         $query = $this->filterAll($query, $model);
 

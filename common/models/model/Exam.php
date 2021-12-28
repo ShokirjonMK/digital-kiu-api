@@ -46,6 +46,11 @@ class Exam extends \yii\db\ActiveRecord
     const STATUS_INACTIVE = 9;
     const STATUS_FINISHED = 2;
 
+    const PROTECTED_TURE = 1;
+    const PROTECTED_FALSE = 0;
+
+
+
 
     /**
      * {@inheritdoc}
@@ -254,9 +259,7 @@ class Exam extends \yii\db\ActiveRecord
                         $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
                         $ExamStudent->save(false);
                     }
-
                     ////
-
                 } else {
                     $errors[] = _e("This subject does not belongs to this smester");
                 }
@@ -266,14 +269,13 @@ class Exam extends \yii\db\ActiveRecord
         } else {
             $errors[] = _e("Exam Id is required");
         }
-
-
         if (count($errors) > 0) {
             return $errors;
         } else {
             return true;
         }
     }
+
     public static function getPasswords($post)
     {
         $errors = [];
@@ -319,11 +321,10 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = _e("Exam Id is required");
         }
 
-
         if (count($errors) > 0) {
             return $errors;
         } else {
-            return true;
+            return $data;
         }
     }
 

@@ -61,19 +61,20 @@ class ExamController extends ApiActiveController
         // return $student;
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
+
         if (isset($student)) {
             if (isset($eduSmesterId)) {
                 $eduSmesterSubjectIds = EduSemestrSubject::find()
-                    ->leftJoin("edu_semestr es", "es.id = edu_semestr_subject.edu_semestr_id")
-                    ->andWhere(['es.edu_plan_id' => $student->edu_plan_id])
-                    ->andWhere(['es.id' => $eduSmesterId])
-                    ->andWhere(['edu_semestr_subject.id' => Exam::STATUS_ACTIVE_FOR_ALL])
-                    ->select('edu_semestr_subject.id');
+                    ->andWhere(['edu_semestr_id' => $eduSmesterId])
+                    ->select('id');
+
             } else {
+                
                 $eduSmesterSubjectIds = EduSemestrSubject::find()
                     ->leftJoin("edu_semestr es", "es.id = edu_semestr_subject.edu_semestr_id")
-                    ->andWhere(['es.edu_plan_id' => $student->edu_plan_id])
+                    ->where(['es.edu_plan_id' => $student->edu_plan_id])
                     ->select('edu_semestr_subject.id');
+
             }
             if (isset($eduSmesterSubjectIds)) {
                 $query = $model->find()
@@ -81,9 +82,11 @@ class ExamController extends ApiActiveController
                     ->andWhere([$this->table_name . '.is_deleted' => 0])
                     ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
                     ->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
+                    // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     ->groupBy($this->table_name . '.id')
-                    ->andWhere([$this->table_name . '.id' => Exam::STATUS_ACTIVE_FOR_ALL])
+                    ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE_FOR_ALL])
                     ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+                    ;
             } else {
                 return $this->response(0, _e('Your exams not found.'), null, null, ResponseStatus::NOT_FOUND);
             }

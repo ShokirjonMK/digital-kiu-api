@@ -37,7 +37,6 @@ use yii\behaviors\TimestampBehavior;
  */
 class TimeTable extends \yii\db\ActiveRecord
 {
-
     use ResourceTrait;
 
     public function behaviors()
@@ -46,6 +45,11 @@ class TimeTable extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
+
+    const STATUS_NEW = 1;
+    const STATUS_CHECKED = 2;
+    const STATUS_CHANGED = 3;
+    const STATUS_INACTIVE = 9;
 
     /**
      * {@inheritdoc}

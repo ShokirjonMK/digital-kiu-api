@@ -40,12 +40,16 @@ class ExamController extends ApiActiveController
     {
         $post = Yii::$app->request->post();
         $result = Exam::getPasswords($post);
-        if (!is_array($result)) {
-            return $this->response(1, _e('Passwords for students for this exam'), $result, null, ResponseStatus::OK);
+        if (is_array($result)) {
+            if($result['is_ok']){
+                // unset($result['is_ok']);
+                return $this->response(1, _e('Passwords for students for this exam'), $result, null, ResponseStatus::OK);
+            }else{
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-
 
         return $result;
     }

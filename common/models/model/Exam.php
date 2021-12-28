@@ -278,6 +278,7 @@ class Exam extends \yii\db\ActiveRecord
     {
         $errors = [];
         $data = [];
+        $data['is_ok'] = false;
         $examId = $post['exam_id'];
 
         if (isset($examId)) {
@@ -308,6 +309,7 @@ class Exam extends \yii\db\ActiveRecord
                 } else {
                     $errors[] = _e("This subject does not belongs to this smester");
                 }
+                $data['is_ok'] = true;
 
                 return $data;
             } else {

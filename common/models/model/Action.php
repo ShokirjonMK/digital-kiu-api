@@ -55,7 +55,7 @@ class Action extends \yii\db\ActiveRecord
             [['controller', 'action', 'method', 'user_id'], 'required'],
             [['user_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['controller', 'action', 'method'], 'string', 'max' => 255],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -148,7 +148,5 @@ class Action extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
-
 
 }

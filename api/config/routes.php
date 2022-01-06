@@ -61,6 +61,9 @@ $controllers = [
     'question-option',
     'exam-semeta',
 
+    'user-access-type',
+    'user-access'
+
 ];
 
 $controllerRoutes = [];

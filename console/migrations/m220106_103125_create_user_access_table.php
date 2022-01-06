@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%relation}}`.
+ * Handles the creation of table `{{%user_access}}`.
  */
-class m220105_143031_create_relation_table extends Migration
+class m220106_103125_create_user_access_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -18,6 +18,7 @@ class m220105_143031_create_relation_table extends Migration
             'table_name' => $this->string()->notNull(),
             'table_id' => $this->integer()->notNull(),
             'role_name' => $this->string()->Null(),
+            'user_access_type_id' => $this->integer()->notNull(),
 
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -31,7 +32,7 @@ class m220105_143031_create_relation_table extends Migration
         ]);
 
         $this->addForeignKey('rui_user_access_user', 'user_access', 'user_id', 'user', 'id');
-
+        $this->addForeignKey('rui_user_access_user_access_type', 'user_access', 'user_access_type_id', 'user_access_type', 'id');
     }
 
     /**
@@ -40,7 +41,7 @@ class m220105_143031_create_relation_table extends Migration
     public function safeDown()
     {
         $this->dropForeignKey('rui_user_access_user', 'user_access');
-
+        $this->dropForeignKey('rui_user_access_user_access_type', 'user_access');
 
         $this->dropTable('{{%user_access}}');
     }

@@ -22,12 +22,20 @@ class RegionController extends ApiActiveController
     {
         $model = new Region();
 
+        $countryId = Yii::$app->request->get('country_id');
+        // return $countryId;
+
         $query = $model->find()
 
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
         //filter
         $query = $this->filterAll($query, $model);
+        if (isset($countryId)) {
+            if ((int)$countryId != 229) {
+                $query = $query->andFilterWhere(['!=', 'country_id',  229]);
+            }
+        }
 
         // sort
         $query = $this->sort($query);
@@ -50,7 +58,7 @@ class RegionController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = Region::findOne($id);
-        
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }

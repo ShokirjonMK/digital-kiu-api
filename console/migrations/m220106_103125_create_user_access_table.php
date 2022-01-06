@@ -32,7 +32,7 @@ class m220106_103125_create_user_access_table extends Migration
 
         ]);
 
-        $this->addForeignKey('rui_user_access_user', 'user_access', 'user_id', 'user', 'id');
+        $this->addForeignKey('rui_user_access_user', 'user_access', 'user_id', 'users', 'id');
         $this->addForeignKey('rui_user_access_user_access_type', 'user_access', 'user_access_type_id', 'user_access_type', 'id');
     }
 

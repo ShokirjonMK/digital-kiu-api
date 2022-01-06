@@ -14,7 +14,7 @@ class m220106_120834_alter_table_faculty_user_id extends Migration
     {
         $this->execute("ALTER TABLE `faculty` ADD `user_id` INT(11)  NULL COMMENT 'Lead of faculty or Dean (dekan)' ;");
 
-        $this->addForeignKey('fu_faculty_user_id', 'faculty', 'user_id', 'user', 'id');
+        $this->addForeignKey('fu_faculty_user_id', 'faculty', 'user_id', 'users', 'id');
 
     }
 

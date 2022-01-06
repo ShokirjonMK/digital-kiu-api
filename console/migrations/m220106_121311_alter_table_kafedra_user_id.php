@@ -14,7 +14,7 @@ class m220106_121311_alter_table_kafedra_user_id extends Migration
     {
         $this->execute("ALTER TABLE `kafedra` ADD `user_id` INT(11)  NULL COMMENT 'Lead of kafedra or Mudir' ;");
 
-        $this->addForeignKey('fu_kafedra_user_id', 'kafedra', 'user_id', 'user', 'id');
+        $this->addForeignKey('fu_kafedra_user_id', 'kafedra', 'user_id', 'users', 'id');
     }
 
     /**

@@ -91,7 +91,8 @@ $routes = [
 
     // Get me
     'GET <lang:\w{2}>/users/me' => 'user/me',
-    //    'GET <lang:\w{2}>/rooms/free' => 'room/free',
+
+    // TimeTable parent null
     'GET <lang:\w{2}>/time-tables/parent-null' => 'time-table/parent-null',
 
     // Exam Passwords
@@ -100,14 +101,21 @@ $routes = [
     // Exam Passwords
     'POST <lang:\w{2}>/exams/generate-passwords' => 'exam/generate-passwords',
 
+    // Department type list
+    'GET <lang:\w{2}>/departments/types' => 'department/types',
 
-    //    'POST studentga savollarni random tushirish
+    // 'POST studentga savollarni random tushirish
     'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',
 
-    //    'POST teacherga studentlarni random tushirish
+    // 'POST teacherga studentlarni random tushirish
     'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',
 
     'POST <lang:\w{2}>/auth/logout' => 'user/logout',
+
+    /** Free teachers for time tables */
+    'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
+    'POST <lang:\w{2}>/rooms/free' => 'room/free',
+    /** Free teachers for time tables */
 
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list
@@ -133,10 +141,7 @@ $routes = [
     'GET <lang:\w{2}>/yesno' => 'enum/yesno',
     // ***
 
-    // Free teachers for time tables
 
-    'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
-    'POST <lang:\w{2}>/rooms/free' => 'room/free',
 
 ];
 

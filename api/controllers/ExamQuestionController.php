@@ -26,7 +26,7 @@ class ExamQuestionController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

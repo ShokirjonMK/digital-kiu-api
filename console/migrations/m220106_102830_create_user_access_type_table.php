@@ -16,6 +16,7 @@ class m220106_102830_create_user_access_type_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'url' => $this->string()->notNull(),
+            'table_name' => $this->string()->notNull(),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
@@ -29,10 +30,17 @@ class m220106_102830_create_user_access_type_table extends Migration
         $this->insert('user_access_type', [
             'name' => 'Faculty',
             'url' => 'faculties',
+            'table_name' => 'faculty',
         ]);
         $this->insert('user_access_type', [
             'name' => 'Kafedra',
             'url' => 'kafedras',
+            'table_name' => 'kafedra',
+        ]);
+        $this->insert('user_access_type', [
+            'name' => 'Department',
+            'url' => 'departments',
+            'table_name' => 'department',
         ]);
     }
 

@@ -15,10 +15,11 @@ class m220106_103125_create_user_access_table extends Migration
         $this->createTable('{{%user_access}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'table_name' => $this->string()->notNull(),
-            'table_id' => $this->integer()->notNull(),
-            'role_name' => $this->string()->Null(),
+            'is_leader' => $this->tinyInteger(1)->defaultValue(0),
             'user_access_type_id' => $this->integer()->notNull(),
+            'table_id' => $this->integer()->notNull(),
+            'table_name' => $this->string()->notNull(),
+            'role_name' => $this->string()->Null(),
 
 
             'order' => $this->tinyInteger(1)->defaultValue(1),

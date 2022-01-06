@@ -25,7 +25,7 @@ class EduSemestrSubjectCategoryTimeController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

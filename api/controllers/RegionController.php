@@ -29,7 +29,7 @@ class RegionController extends ApiActiveController
 
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
         if (isset($countryId)) {
             if ((int)$countryId != 229) {

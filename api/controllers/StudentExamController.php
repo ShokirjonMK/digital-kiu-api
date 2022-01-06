@@ -26,7 +26,7 @@ class StudentExamController extends ApiActiveController
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

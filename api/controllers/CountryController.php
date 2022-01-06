@@ -26,7 +26,7 @@ class CountryController extends ApiActiveController
 
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

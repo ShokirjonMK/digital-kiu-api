@@ -60,13 +60,14 @@ class UserAccess extends \yii\db\ActiveRecord
                     'user_id',
                     'table_name',
                     'table_id',
+                    'user_access_type_id',
                 ], 'required'
             ],
             [
                 [
                     'user_id',
                     'table_id',
-
+                    'user_access_type_id',
                     'order',
                     'status',
                     'created_at',
@@ -79,6 +80,7 @@ class UserAccess extends \yii\db\ActiveRecord
             ],
             [['role_name'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_access_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccessType::className(), 'targetAttribute' => ['user_access_type_id' => 'id']],
         ];
     }
 
@@ -93,6 +95,7 @@ class UserAccess extends \yii\db\ActiveRecord
             'table_name' => 'Table Name',
             'table_id' => 'Table Id',
             'role_name' => 'Role Name',
+            'user_access_type_id' => 'Type',
 
             'order' => 'Order',
             'status' => 'Status',
@@ -113,6 +116,7 @@ class UserAccess extends \yii\db\ActiveRecord
             'table_name',
             'table_id',
             'role_name',
+            'user_access_type_id',
 
             'order',
             'status',
@@ -129,7 +133,8 @@ class UserAccess extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'user',
-            
+            'userAccessType',
+
             'createdBy',
             'updatedBy',
         ];
@@ -145,6 +150,16 @@ class UserAccess extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[user_access_type_id]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserAccessType()
+    {
+        return $this->hasOne(UserAccessType::className(), ['id' => 'user_access_type_id']);
     }
 
     /**

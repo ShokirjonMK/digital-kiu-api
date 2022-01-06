@@ -39,7 +39,7 @@ class ExamStudentAnswerController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['.is_deleted' => 0]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

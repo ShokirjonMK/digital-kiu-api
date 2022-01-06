@@ -34,7 +34,7 @@ class SubjectController extends ApiActiveController
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

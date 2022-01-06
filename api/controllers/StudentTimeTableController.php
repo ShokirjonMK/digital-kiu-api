@@ -35,7 +35,7 @@ class  StudentTimeTableController extends ApiActiveController
                 ->andWhere(['is_deleted' => 0]);
         }
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

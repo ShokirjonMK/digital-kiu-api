@@ -24,7 +24,7 @@ class UserAccessTypeController extends ApiActiveController
 
         $query = $model->find();
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

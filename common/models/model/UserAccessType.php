@@ -58,6 +58,7 @@ class UserAccessType extends \yii\db\ActiveRecord
                 [
                     'name',
                     'url',
+                    'table_name',
                 ], 'required'
             ],
             [
@@ -72,7 +73,7 @@ class UserAccessType extends \yii\db\ActiveRecord
                 ],
                 'integer'
             ],
-            [['name','url'], 'safe'],
+            [['name', 'table_name', 'url'], 'safe'],
         ];
     }
 
@@ -85,7 +86,8 @@ class UserAccessType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'url' => 'Url',
-    
+            'table_name' => 'Table Name',
+
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -103,7 +105,8 @@ class UserAccessType extends \yii\db\ActiveRecord
             'id',
             'name',
             'url',
-            
+            'table_name',
+
 
             'order',
             'status',
@@ -119,7 +122,7 @@ class UserAccessType extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-           
+
             'createdBy',
             'updatedBy',
         ];

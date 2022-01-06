@@ -15,6 +15,12 @@ class UserAccessController extends ApiActiveController
         return [];
     }
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        return $behaviors;
+    }
+
     public $table_name = 'user_access';
     public $controller_name = 'UserAccess';
 
@@ -24,7 +30,7 @@ class UserAccessController extends ApiActiveController
 
         $query = $model->find();
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

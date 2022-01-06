@@ -27,7 +27,7 @@ class SubjectTopicController extends ApiActiveController
             ->andWhere(['language' => Yii::$app->request->get('lang')])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

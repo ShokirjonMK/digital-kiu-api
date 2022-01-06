@@ -29,7 +29,7 @@ class EmployeeController extends ApiActiveController
             ->andWhere(['in', 'auth_assignment.item_name', EmployeeUser::$roleList])
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

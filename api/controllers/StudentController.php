@@ -50,7 +50,7 @@ class  StudentController extends ApiActiveController
         }
         // ***
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

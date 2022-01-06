@@ -99,7 +99,7 @@ class ExamController extends ApiActiveController
                 ->groupBy($this->table_name . '.id')
                 ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
         }
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

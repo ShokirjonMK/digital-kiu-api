@@ -7,7 +7,6 @@ use Yii;
 use common\models\model\Direction;
 use common\models\model\Translate;
 use base\ResponseStatus;
-use common\models\DirectionInfo;
 
 class DirectionController extends ApiActiveController
 {
@@ -37,7 +36,7 @@ class DirectionController extends ApiActiveController
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

@@ -6,6 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+use common\models\model\Action;
 use common\models\model\Translate;
 use common\models\User;
 use Yii;
@@ -76,32 +77,6 @@ trait ApiActionTrait
     public function beforeAction($action)
     {
 
-        // var_dump($action);
-        // die();
-        // save logs here
-
-/*
-        ob_start();
-        system('getmac');
-        $Content = ob_get_contents();
-        ob_clean();
-        $IP = $_SERVER['REMOTE_ADDR'];
-       
-        echo "Client's IP address is: $IP";
-        echo $Content;
-        echo "--------------------------------------- \n";
-        echo substr($Content, strpos($Content, '\\') - 20, 17);
-        $MAC = exec('getmac');
-        
-        $MAC = strtok($MAC, ' ');
-        
-        echo "MAC address of client is: $MAC";
-        echo "-------------------------------- \n";
-
-        exit();
-*/
-       
-
         $this->generate_access_key();
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -123,15 +98,11 @@ trait ApiActionTrait
             $this->asJson($this->response(0, _e('Wrong language code selected (' . $lang . ').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
         } else {
 
-            //            $action_logos = new \common\models\model\Action();
-            //
-            //            $action_logos-> user_id = Yii::$app->user->identity->id();
-            //            $action_logos-> controller=Yii::$app->controller->id;
-            //            $action_logos-> action=Yii::$app->controller->action->id;
-            //            $action_logos-> method= $_SERVER['REQUEST_METHOD'];
-            //
-            //            var_dump($action_logos);
-            //            die();
+            /* $action_logos = new Action();
+            $action_logos->user_id = Yii::$app->user->identity->id();
+            $action_logos->controller = Yii::$app->controller->id;
+            $action_logos->action = Yii::$app->controller->action->id;
+            $action_logos->method = $_SERVER['REQUEST_METHOD']; */
 
             Yii::$app->language = $lang;
             return parent::beforeAction($action);
@@ -144,8 +115,6 @@ trait ApiActionTrait
      *
      * @return void
      */
-
-
     public function generate_access_key()
     {
         $api_salt_key = API_SALT_KEY;
@@ -211,7 +180,7 @@ trait ApiActionTrait
         if (isset($queryfilter)) {
             foreach ($queryfilter as $attributeq => $word) {
                 if (in_array($attributeq, $model->attributes())) {
-                    $query = $query->andFilterWhere(['like', $attributeq, '%'.$word.'%', false]);
+                    $query = $query->andFilterWhere(['like', $attributeq, '%' . $word . '%', false]);
                 }
             }
         }

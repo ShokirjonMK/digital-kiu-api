@@ -4,10 +4,7 @@ namespace api\controllers;
 
 use common\models\model\Building;
 use Yii;
-use api\resources\Job;
 use base\ResponseStatus;
-use common\models\JobInfo;
-use common\models\model\Faculty;
 use common\models\model\Translate;
 
 class BuildingController extends ApiActiveController
@@ -38,7 +35,7 @@ class BuildingController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
 
-        //filter
+        // filter
         $query = $this->filterAll($query, $model);
 
         // sort

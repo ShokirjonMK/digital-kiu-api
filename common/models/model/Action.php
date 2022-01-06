@@ -94,7 +94,6 @@ class Action extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
             'createdBy',
             'updatedBy',
         ];

@@ -91,6 +91,7 @@ class ExamController extends ApiActiveController
                 return $this->response(0, _e('Your exams not found.'), null, null, ResponseStatus::NOT_FOUND);
             }
         } else {
+            
             $query = $model->find()
                 ->with(['infoRelation'])
                 ->andWhere([$this->table_name . '.is_deleted' => 0])

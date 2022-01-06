@@ -50,19 +50,17 @@ class UserController extends ApiActiveController
 
     public function actionLogout()
     {
-        $data = null;
-        $errors = [];
         $user = User::findOne(Yii::$app->user->identity->id);
         if (isset($user)) {
             Yii::$app->user->logout();
             $user->access_token = NULL;
             $user->access_token_time = NULL;
             $user->save(false);
-//            $user->logout();
+            $user->logout();
 
             return $this->response(1, _e('User successfully Log Out'), null, null, ResponseStatus::OK);
         } else {
-            return ['status' => 0, 'errors' => "User not found"];
+            return $this->response(0, _e('User not found'), null, null, ResponseStatus::NOT_FOUND);
         }
     }
 
@@ -82,12 +80,16 @@ class UserController extends ApiActiveController
         //  Filter from Profile 
         $profile = new Profile();
         if (isset($filter)) {
-            foreach ($filter as $attribute => $id) {
+            foreach ($filter as $attribute => $value) {
                 if ($attribute == 'role_name') {
-                    $query = $query->andFilterWhere(['like', 'auth_assignment.item_name', '%' . $id . '%', false]);
+                    if(is_array($value)){
+                        $query = $query->andWhere(['in', 'auth_assignment.item_name', $value]);
+                    }else{
+                        $query = $query->andFilterWhere(['like', 'auth_assignment.item_name', '%' . $value . '%', false]);
+                    }
                 }
                 if (in_array($attribute, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $value]);
                 }
             }
         }
@@ -175,7 +177,4 @@ class UserController extends ApiActiveController
     {
         return $this->response(1, _e('Success.'), User::statusList(), null, ResponseStatus::OK);
     }
-
-    
-
 }

@@ -4,11 +4,9 @@ namespace api\controllers;
 
 use common\models\model\Kafedra;
 use common\models\model\Translate;
-use common\models\model\Room;
 use Yii;
-use api\resources\Job;
 use base\ResponseStatus;
-use common\models\JobInfo;
+
 
 class KafedraController extends ApiActiveController
 {

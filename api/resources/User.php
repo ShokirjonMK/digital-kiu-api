@@ -11,8 +11,10 @@ use common\models\model\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
 use common\models\model\Profile as ModelProfile;
+use common\models\model\UserAccessType;
 use common\models\User as CommonUser;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Query;
 use yii\web\UploadedFile;
 
 class User extends CommonUser
@@ -182,11 +184,26 @@ class User extends CommonUser
             $model->password_reset_token = null;
             $model->access_token = \Yii::$app->security->generateRandomString();
             $model->access_token_time = time();
+
+
             if ($model->save()) {
 
                 //**parolni shifrlab saqlaymiz */
                 $model->savePassword($password, $model->id);
                 //**** */
+
+                /** UserAccess */
+                /* if (isset($post['user_access_type_id']) && isset($post['table_id'])) {
+                    $userAccessType = UserAccessType::find($post['user_access_type_id']);
+                    if (isset($userAccessType)) {
+                        $query = new Query();
+                        $query->from($userAccessType->table_name)->where(['id', $post['table_id']])->one();
+                        $tableId = (new \yii\db\Query())-> from($userAccessType->table_name)->where(['id', $post['table_id']])->one();
+                        var_dump($tableId);
+                        die();
+                    }
+                } */
+                /** UserAccess */
 
                 $profile->user_id = $model->id;
 

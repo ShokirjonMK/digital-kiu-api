@@ -56,7 +56,7 @@ class UserController extends ApiActiveController
             $user->access_token = NULL;
             $user->access_token_time = NULL;
             $user->save(false);
-            $user->logout();
+            // $user->logout()
 
             return $this->response(1, _e('User successfully Log Out'), null, null, ResponseStatus::OK);
         } else {
@@ -81,10 +81,18 @@ class UserController extends ApiActiveController
         $profile = new Profile();
         if (isset($filter)) {
             foreach ($filter as $attribute => $value) {
+                $attributeMinus = explode('-', $attribute);
+                if (isset($attributeMinus[1])) {
+                    if ($attributeMinus[1] == 'role_name') {
+                        if (is_array($value)) {
+                            $query = $query->andWhere(['not in', 'auth_assignment.item_name', $value]);
+                        }
+                    }
+                }
                 if ($attribute == 'role_name') {
-                    if(is_array($value)){
+                    if (is_array($value)) {
                         $query = $query->andWhere(['in', 'auth_assignment.item_name', $value]);
-                    }else{
+                    } else {
                         $query = $query->andFilterWhere(['like', 'auth_assignment.item_name', '%' . $value . '%', false]);
                     }
                 }

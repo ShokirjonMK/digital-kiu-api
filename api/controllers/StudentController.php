@@ -100,8 +100,8 @@ class  StudentController extends ApiActiveController
         if (!$student) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        $model = User::findOne(['id', $student->user_id]);
-        $profile = Profile::findOne(['user_id', $student->user_id]);
+        $model = User::findOne(['id' => $student->user_id]);
+        $profile = Profile::findOne(['user_id' => $student->user_id]);
 
 
         $this->load($student, $post);
@@ -137,7 +137,7 @@ class  StudentController extends ApiActiveController
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-        
+
         /*
         $model = StudentUser::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {

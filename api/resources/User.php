@@ -207,17 +207,24 @@ class User extends CommonUser
                     $user_access = json_decode(str_replace("'", "", $post['user_access']));
                     if (isJsonMK($user_access)) {
                         foreach ($user_access as $user_access_type_id => $tableIds) {
-                            foreach ($tableIds as $table_id) {
+                            foreach ($tableIds as $table_id => $is_leader) {
                                 $userAccessType = UserAccessType::findOne($user_access_type_id);
                                 if (isset($userAccessType)) {
                                     $tableId = (new \yii\db\Query())->from($userAccessType->table_name)->where(['id' => $table_id])->one();
+                                    
                                     if (isset($tableId)) {
                                         $userAccessNew = new UserAccess();
                                         $userAccessNew->table_name = $userAccessType->table_name;
-                                        $userAccessNew->table_id = $table_id;
+                                        $userAccessNew->table_id = $tableId->id;
                                         $userAccessNew->user_access_type_id = $user_access_type_id;
                                         $userAccessNew->user_id = $model->id;
+                                        $userAccessNew->is_leader = $is_leader;
                                         $userAccessNew->save(false);
+
+                                        if($is_leader){
+                                            $tableId->user_id = $model->id;
+                                            $tableId->save(false);
+                                        }
                                     } else {
                                         $errors[] = ['table_id' => [_e('Not found')]];
                                     }
@@ -349,6 +356,43 @@ class User extends CommonUser
             }
 
             if ($model->save()) {
+
+                /** UserAccess */
+                if (isset($post['user_access'])) {
+                    $user_access = json_decode(str_replace("'", "", $post['user_access']));
+                    if (isJsonMK($user_access)) {
+                        UserAccess::deleteAll(['user_id'=> $model->id]);
+
+                        foreach ($user_access as $user_access_type_id => $tableIds) {
+                            foreach ($tableIds as $table_id => $is_leader) {
+                                $userAccessType = UserAccessType::findOne($user_access_type_id);
+                                if (isset($userAccessType)) {
+                                    $tableId = (new \yii\db\Query())->from($userAccessType->table_name)->where(['id' => $table_id])->one();
+                                    if (isset($tableId)) {
+                                        $userAccessNew = new UserAccess();
+                                        $userAccessNew->table_name = $userAccessType->table_name;
+                                        $userAccessNew->table_id = $tableId->id;
+                                        $userAccessNew->user_access_type_id = $user_access_type_id;
+                                        $userAccessNew->user_id = $model->id;
+                                        $userAccessNew->is_leader = $is_leader;
+                                        $userAccessNew->save(false);
+                                        if ($is_leader) {
+                                            $tableId->user_id = $model->id;
+                                            $tableId->save(false);
+                                        }
+                                    } else {
+                                        $errors[] = ['table_id' => [_e('Not found')]];
+                                    }
+                                } else {
+                                    $errors[] = ['user_access_type_id' => [_e('Not found')]];
+                                }
+                            }
+                        }
+                    } else {
+                        $errors[] = ["ucer_access" => _e("Not json")];
+                    }
+                }
+                /** UserAccess */
 
                 // avatarni saqlaymiz
                 $model->avatar = UploadedFile::getInstancesByName('avatar');

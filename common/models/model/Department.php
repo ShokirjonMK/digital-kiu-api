@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -111,6 +112,7 @@ class Department extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+            'leader',
 
             'children',
             'parent',
@@ -168,6 +170,17 @@ class Department extends \yii\db\ActiveRecord
     public function getChildren()
     {
         return $this->hasMany(Department::className(), ['parent_id' => 'id']);
+    }
+
+
+    /**
+     * Gets query for [[Leader]].
+     * leader
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLeader()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
 

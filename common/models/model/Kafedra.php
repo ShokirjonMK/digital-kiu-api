@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -107,6 +108,8 @@ class Kafedra extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'direction',
+            'leader',
+
             'faculty',
             'subjects',
             'description',
@@ -174,6 +177,17 @@ class Kafedra extends \yii\db\ActiveRecord
     public function getSubjects()
     {
         return $this->hasMany(Subject::className(), ['kafedra_id' => 'id']);
+    }
+
+
+    /**
+     * Gets query for [[Leader]].
+     * leader
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLeader()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
 

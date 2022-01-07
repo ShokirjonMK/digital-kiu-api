@@ -67,6 +67,7 @@ class UserAccess extends \yii\db\ActiveRecord
                 [
                     'user_id',
                     'table_id',
+                    'is_leader',
                     'user_access_type_id',
                     'order',
                     'status',
@@ -92,6 +93,7 @@ class UserAccess extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User Id',
+            'is_leader' => 'Is Leader',
             'table_name' => 'Table Name',
             'table_id' => 'Table Id',
             'role_name' => 'Role Name',
@@ -113,6 +115,7 @@ class UserAccess extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'user_id',
+            'is_leader',
             'table_name',
             'table_id',
             'role_name',

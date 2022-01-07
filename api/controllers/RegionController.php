@@ -33,7 +33,8 @@ class RegionController extends ApiActiveController
         $query = $this->filterAll($query, $model);
         if (isset($countryId)) {
             if ((int)$countryId != 229) {
-                $query = $query->andFilterWhere(['!=', 'country_id',  229]);
+                // $query = $query->andFilterWhere(['!=', 'country_id',  229]);
+                $query = $query->andFilterWhere(['id' => 15]);
             }
         }
 

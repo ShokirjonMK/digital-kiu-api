@@ -10,7 +10,7 @@ use Yii;
 use common\models\model\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
-use common\models\model\Profile as ModelProfile;
+use common\models\model\UserAccess;
 use common\models\model\UserAccessType;
 use common\models\User as CommonUser;
 use yii\behaviors\TimestampBehavior;
@@ -92,6 +92,8 @@ class User extends CommonUser
         return $fields;
     }
 
+
+
     /**
      * Fields
      *
@@ -102,7 +104,8 @@ class User extends CommonUser
         $extraFields = [
             'created_at',
             'updated_at',
-            'profile'
+            'profile',
+            'userAccess'
         ];
 
         return $extraFields;
@@ -141,7 +144,13 @@ class User extends CommonUser
 
     public function getProfile()
     {
-        return $this->hasOne(ModelProfile::className(), ['user_id' => 'id']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'id']);
+    }
+
+    // UserAccess
+    public function getUserAccess()
+    {
+        return $this->hasMany(UserAccess::className(), ['user_id' => 'id']);
     }
 
     public static function createItem($model, $profile, $post)
@@ -167,6 +176,8 @@ class User extends CommonUser
             }
         }
 
+        
+
         if (count($errors) == 0) {
 
             if (isset($post['password']) && !empty($post['password'])) {
@@ -185,7 +196,6 @@ class User extends CommonUser
             $model->access_token = \Yii::$app->security->generateRandomString();
             $model->access_token_time = time();
 
-
             if ($model->save()) {
 
                 //**parolni shifrlab saqlaymiz */
@@ -193,17 +203,35 @@ class User extends CommonUser
                 //**** */
 
                 /** UserAccess */
-                /* if (isset($post['user_access_type_id']) && isset($post['table_id'])) {
-                    $userAccessType = UserAccessType::find($post['user_access_type_id']);
-                    if (isset($userAccessType)) {
-                        $query = new Query();
-                        $query->from($userAccessType->table_name)->where(['id', $post['table_id']])->one();
-                        $tableId = (new \yii\db\Query())-> from($userAccessType->table_name)->where(['id', $post['table_id']])->one();
-                        var_dump($tableId);
-                        die();
+                if (isset($post['user_access'])) {
+                    $user_access = json_decode(str_replace("'", "", $post['user_access']));
+                    if (isJsonMK($user_access)) {
+                        foreach ($user_access as $user_access_type_id => $tableIds) {
+                            foreach ($tableIds as $table_id) {
+                                $userAccessType = UserAccessType::findOne($user_access_type_id);
+                                if (isset($userAccessType)) {
+                                    $tableId = (new \yii\db\Query())->from($userAccessType->table_name)->where(['id' => $table_id])->one();
+                                    if (isset($tableId)) {
+                                        $userAccessNew = new UserAccess();
+                                        $userAccessNew->table_name = $userAccessType->table_name;
+                                        $userAccessNew->table_id = $table_id;
+                                        $userAccessNew->user_access_type_id = $user_access_type_id;
+                                        $userAccessNew->user_id = $model->id;
+                                        $userAccessNew->save(false);
+                                    } else {
+                                        $errors[] = ['table_id' => [_e('Not found')]];
+                                    }
+                                } else {
+                                    $errors[] = ['user_access_type_id' => [_e('Not found')]];
+                                }
+                            }
+                        }
+                    } else {
+                        $errors[] = ["ucer_access" => _e("Not json")];
                     }
-                } */
+                }
                 /** UserAccess */
+
 
                 $profile->user_id = $model->id;
 

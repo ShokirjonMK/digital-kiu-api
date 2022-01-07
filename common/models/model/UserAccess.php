@@ -78,7 +78,7 @@ class UserAccess extends \yii\db\ActiveRecord
                 ],
                 'integer'
             ],
-            [['role_name'], 'safe'],
+            [['role_name', 'table_name'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['user_access_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccessType::className(), 'targetAttribute' => ['user_access_type_id' => 'id']],
         ];

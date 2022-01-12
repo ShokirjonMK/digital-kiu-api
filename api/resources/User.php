@@ -204,17 +204,11 @@ class User extends CommonUser
 
                 /** UserAccess */
                 if (isset($post['user_access'])) {
-                    // var_dump("asdasd");
-                    // if (isJsonMK($post['user_access'])) {  
-
-
                     $post['user_access'] = str_replace("'", "", $post['user_access']);
                     $user_access = json_decode(str_replace("'", "", $post['user_access']));
-                    // var_dump($user_access);
-                    // die();
-                    $da = [];
+
                     foreach ($user_access as $user_access_type_id => $tableIds) {
-                        //  $da['tableIds'][] = $tableIds;  
+
                         $userAccessType = UserAccessType::findOne($user_access_type_id);
                         if (isset($userAccessType)) {
                             foreach ($tableIds as $tableIdandIsLeader) {
@@ -222,18 +216,18 @@ class User extends CommonUser
                                 $tableIdandIsLeaderExplode = explode('-', $tableIdandIsLeader);  // tableId-isLeader
 
                                 if (isset($tableIdandIsLeaderExplode[0]) && isset($tableIdandIsLeaderExplode[1])) {
-                                $tableId = $userAccessType->table_name::find()->where(['id' => $tableIdandIsLeaderExplode[0]])->one();
-                                   $da['tableId'][] = $tableId;
+                                    $tableId = $userAccessType->table_name::find()->where(['id' => $tableIdandIsLeaderExplode[0]])->one();
+                                    $da['tableId'][] = $tableId;
                                     if ($tableId && isset($tableId)) {
                                         $userAccessNew = new UserAccess();
-                                         $userAccessNew->table_id = $tableId->id;
+                                        $userAccessNew->table_id = $tableId->id;
                                         $userAccessNew->user_access_type_id = $user_access_type_id;
                                         $userAccessNew->user_id = $model->id;
                                         $userAccessNew->is_leader = $tableIdandIsLeaderExplode[1];
                                         $userAccessNew->save(false);
                                         if ($tableIdandIsLeaderExplode[1]) {
-                                             $tableId->user_id = $model->id;
-                                             $tableId->save(false);
+                                            $tableId->user_id = $model->id;
+                                            $tableId->save(false);
                                         }
                                     } else {
                                         $errors[] = ['table_id' => [_e('Not found')]];
@@ -368,24 +362,29 @@ class User extends CommonUser
 
                 /** UserAccess */
                 if (isset($post['user_access'])) {
+                    $post['user_access'] = str_replace("'", "", $post['user_access']);
                     $user_access = json_decode(str_replace("'", "", $post['user_access']));
-                    if (isJsonMK($user_access)) {
-                        UserAccess::deleteAll(['user_id' => $model->id]);
 
-                        foreach ($user_access as $user_access_type_id => $tableIds) {
-                            foreach ($tableIds as $table_id => $is_leader) {
-                                $userAccessType = UserAccessType::findOne($user_access_type_id);
-                                if (isset($userAccessType)) {
-                                    $tableId = (new \yii\db\Query())->from($userAccessType->table_name)->where(['id' => $table_id])->one();
-                                    if (isset($tableId)) {
+                    UserAccess::deleteAll(['user_id' => $model->id]);
+                    foreach ($user_access as $user_access_type_id => $tableIds) {
+
+                        $userAccessType = UserAccessType::findOne($user_access_type_id);
+                        if (isset($userAccessType)) {
+                            foreach ($tableIds as $tableIdandIsLeader) {
+
+                                $tableIdandIsLeaderExplode = explode('-', $tableIdandIsLeader);  // tableId-isLeader
+
+                                if (isset($tableIdandIsLeaderExplode[0]) && isset($tableIdandIsLeaderExplode[1])) {
+                                    $tableId = $userAccessType->table_name::find()->where(['id' => $tableIdandIsLeaderExplode[0]])->one();
+                                    $da['tableId'][] = $tableId;
+                                    if ($tableId && isset($tableId)) {
                                         $userAccessNew = new UserAccess();
-                                        $userAccessNew->table_name = $userAccessType->table_name;
                                         $userAccessNew->table_id = $tableId->id;
                                         $userAccessNew->user_access_type_id = $user_access_type_id;
                                         $userAccessNew->user_id = $model->id;
-                                        $userAccessNew->is_leader = $is_leader;
+                                        $userAccessNew->is_leader = $tableIdandIsLeaderExplode[1];
                                         $userAccessNew->save(false);
-                                        if ($is_leader) {
+                                        if ($tableIdandIsLeaderExplode[1]) {
                                             $tableId->user_id = $model->id;
                                             $tableId->save(false);
                                         }
@@ -396,9 +395,9 @@ class User extends CommonUser
                                     $errors[] = ['user_access_type_id' => [_e('Not found')]];
                                 }
                             }
+                        } else {
+                            $errors[] = ['userAccessType' => [_e('Not found')]];
                         }
-                    } else {
-                        $errors[] = ["ucer_access" => _e("Not json")];
                     }
                 }
                 /** UserAccess */
@@ -428,7 +427,6 @@ class User extends CommonUser
                     }
                 }
                 // ***
-
 
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
@@ -492,10 +490,10 @@ class User extends CommonUser
         if (count($errors) == 0) {
 
             // remove profile image
-            // $filePath = assets_url($model->profile->image);
-            // if(file_exists($filePath)){
-            //     unlink($filePath);
-            // }
+            /* $filePath = assets_url($model->profile->image);
+            if(file_exists($filePath)){
+                unlink($filePath);
+            } */
             // remove profile
             $profileDeleted = Profile::deleteAll(['user_id' => $id]);
             if (!$profileDeleted) {
@@ -553,7 +551,7 @@ class User extends CommonUser
         }
     }
 
-    //**parolni shifrlab saqlaymiz */
+    //**parolni shifrlab saqlash */
 
     public function savePassword($password, $user_id)
     {

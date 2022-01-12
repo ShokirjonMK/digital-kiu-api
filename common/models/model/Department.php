@@ -30,6 +30,9 @@ class Department extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'en';
 
+    const USER_ACCESS_TYPE_ID = 3;
+
+
     const TYPE_DEPARTMENT = 1;
     const TYPE_CENTER = 2;
     const TYPE_CHAIR = 3;
@@ -113,6 +116,7 @@ class Department extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'leader',
+            'userAccess',
 
             'children',
             'parent',
@@ -183,11 +187,25 @@ class Department extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    /**
+     * Gets query for [[UserAccess]].
+     * userAccess
+     * @return \yii\db\ActiveQuery
+     */
+    public function getuserAccess()
+    {
+        return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
+            ->andOnCondition(['user_access_type_id' => self::USER_ACCESS_TYPE_ID]);
+    }
+
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        if (!$post) {
+            $errors[] = ['all' => [_e('Please send data.')]];
+        }
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -201,14 +219,17 @@ class Department extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-                $transaction->commit();
-                return true;
-            } else {
-
-                return simplify_errors($errors);
             }
         } else {
-            return double_errors($errors, $has_error['errors']);
+            $errors = double_errors($errors, $has_error['errors']);
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return $errors;
         }
     }
 
@@ -222,6 +243,17 @@ class Department extends \yii\db\ActiveRecord
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
+                /* update User Access */
+                if ($post['user_id']) {
+                    $userAccessUser = User::findOne($post['user_id']);
+                    if (isset($userAccessUser)) {
+                        if (!(UserAccess::changeLeader($model->id, self::USER_ACCESS_TYPE_ID, $userAccessUser->id))) {
+                            $errors = ['user_id' => _e('Error occured on updating UserAccess')];
+                        }
+                    }
+                }
+                /* User Access */
+
                 if (isset($post['name'])) {
                     if (isset($post['description'])) {
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
@@ -229,14 +261,17 @@ class Department extends \yii\db\ActiveRecord
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                     }
                 }
-                $transaction->commit();
-                return true;
-            } else {
-
-                return simplify_errors($errors);
             }
         } else {
-            return double_errors($errors, $has_error['errors']);
+            $errors = double_errors($errors, $has_error['errors']);
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return $errors;
         }
     }
 
@@ -249,7 +284,7 @@ class Department extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-    
+
 
     /**
      * Status array

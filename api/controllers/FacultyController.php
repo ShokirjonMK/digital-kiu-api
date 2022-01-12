@@ -8,6 +8,7 @@ use yii\web\ForbiddenHttpException;
 
 use common\models\model\Faculty;
 use common\models\model\Translate;
+use common\models\model\UserAccess;
 
 class FacultyController extends ApiController
 {
@@ -19,20 +20,29 @@ class FacultyController extends ApiController
 
     public $table_name = 'faculty';
     public $controller_name = 'Faculty';
-    
+
+    const USER_ACCESS_TYPE_ID = 2;
+
+    public function actionUserAccess($lang)
+    {
+        $post = Yii::$app->request->post();
+        $result = UserAccess::createItems(self::USER_ACCESS_TYPE_ID, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully created.'), null, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
     public function actionIndex($lang)
     {
         $model = new Faculty();
-        
+
         $query = $model->find()
             ->with(['infoRelation'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name.'.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            ->groupBy($this->table_name.'.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
+            ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // filter
@@ -40,11 +50,13 @@ class FacultyController extends ApiController
 
         // sort
         $query = $this->sort($query);
-        
+
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
+
+
 
     public function actionCreate($lang)
     {
@@ -54,7 +66,7 @@ class FacultyController extends ApiController
 
         $result = Faculty::createItem($model, $post);
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name.' successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

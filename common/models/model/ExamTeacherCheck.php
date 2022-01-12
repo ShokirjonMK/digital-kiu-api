@@ -150,54 +150,67 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $exam_id = $post["exam_id"];
-        if (isset($exam_id)) {
-            $exam = Exam::findOne($exam_id);
-            if (isset($exam)) {
-                // $now_date = date('Y-m-d H:i:s');
-                $now_second = time();
-                if (strtotime($exam->finish) < $now_second) {
 
-                    $examSemeta = ExamSemeta::findAll(['exam_id' => $exam->id]);
+        if (isset($post["exam_id"])) {
+            $exam_id = $post["exam_id"];
 
-                    if (isset($examSemeta)) {
-                        foreach ($examSemeta as $examSemetaOne) {
-                            if ($examSemetaOne->status == ExamSemeta::STATUS_NEW) {
-                                $examStudent = ExamStudent::find()
-                                    ->where([
-                                        'exam_id' => $exam_id,
-                                        'lang_id' => $examSemetaOne->lang_id,
-                                    ])
-                                    ->andWhere(['teacher_access_id' => null])
-                                    ->orderBy(new Expression('rand()'))
-                                    ->limit($examSemetaOne->count)
-                                    ->all();
+            if (isset($exam_id)) {
+                $exam = Exam::findOne($exam_id);
+                if (isset($exam)) {
 
-                                foreach ($examStudent as $examStudentOne) {
-                                    $examStudentOne->teacher_access_id = $examSemetaOne->teacher_access_id;
-                                    $examStudentOne->save(false);
+                    $now_second = time();
+                    if (strtotime($exam->finish) < $now_second) {
+
+                        $examSemeta = ExamSemeta::findAll(['exam_id' => $exam->id]);
+
+                        if (isset($examSemeta)) {
+                            foreach ($examSemeta as $examSemetaOne) {
+                                if ($examSemetaOne->status == ExamSemeta::STATUS_NEW) {
+                                    $examStudent = ExamStudent::find()
+                                        ->where([
+                                            'exam_id' => $exam_id,
+                                            'lang_id' => $examSemetaOne->lang_id,
+                                        ])
+                                        ->andWhere(['teacher_access_id' => null])
+                                        ->orderBy(new Expression('rand()'))
+                                        ->limit($examSemetaOne->count)
+                                        ->all();
+
+                                    foreach ($examStudent as $examStudentOne) {
+                                        $examStudentOne->teacher_access_id = $examSemetaOne->teacher_access_id;
+                                        $examStudentOne->save(false);
+                                    }
+                                    $examSemetaOne->status = ExamSemeta::STATUS_IN_CHECKING;
+                                    $examSemetaOne->save(false);
                                 }
-                                $examSemetaOne->status = ExamSemeta::STATUS_IN_CHECKING;
-                                $examSemetaOne->save(false);
                             }
                         }
-
+                        $data = ExamStudent::findAll(['exam_id' => $exam_id]);
+                        return $data;
+                    } else {
+                        $errors[] = _e("This exam`s time not expired");
                     }
-                    $data = ExamStudent::findAll(['exam_id' => $exam_id]);
-                    return $data;
-
                 } else {
-                    $errors[] = _e("This exam`s time not expired");
+                    $errors[] = _e("This exam not found");
                 }
+                return simplify_errors($errors);
             } else {
                 $errors[] = _e("This exam not found");
             }
-            return simplify_errors($errors);
+        } else {
+            $errors[] = _e("This exam not found");
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return $errors;
         }
     }
 
-    public
-    static function createItem($model, $post)
+    public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -214,8 +227,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
         }
     }
 
-    public
-    static function updateItem($model, $post)
+    public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -243,17 +255,15 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public
-    static function getUniqueStudentId($studentIds)
+    public static function getUniqueStudentId($studentIds)
     {
 
         $ids = [];
         foreach ($studentIds as $studentId) {
             if (!in_array($studentId['student_id'], $ids)) {
-                $ids [] = $studentId['student_id'];
+                $ids[] = $studentId['student_id'];
             }
         }
         return $ids;
     }
-
 }

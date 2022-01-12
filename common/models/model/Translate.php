@@ -162,37 +162,36 @@ class Translate extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
-        if(isset($nameArr)){
-           foreach ($nameArr as $key => $value) {
-            if ($value != 'undefined' && $value != 'null' && $value != '') {
-                $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
-                if (isset($update_tranlate)) {
-                    $update_tranlate->name = $value;
-                    $update_tranlate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
-                    // var_dump($update_tranlate);
-                    // $update_tranlate->save(false);
-                    if ($update_tranlate->save(false)) {
+        if (isset($nameArr)) {
+            foreach ($nameArr as $key => $value) {
+                if ($value != 'undefined' && $value != 'null' && $value != '') {
+                    $update_tranlate = Translate::find()->where(['model_id' => $model_id, 'table_name' => $table_name, 'language' => $key])->one();
+                    if (isset($update_tranlate)) {
+                        $update_tranlate->name = $value;
+                        $update_tranlate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
+
+                        if ($update_tranlate->save(false)) {
+                        } else {
+                            $errors[] = $$update_tranlate->getErrorSummary(true);
+                            return simplify_errors($errors);
+                        }
                     } else {
-                        $errors[] = $$update_tranlate->getErrorSummary(true);
-                        return simplify_errors($errors);
-                    }
-                } else {
-                    $new_translate = new Translate();
-                    $new_translate->name = $value;
-                    $new_translate->table_name = $table_name;
-                    $new_translate->model_id = $model_id;
-                    $new_translate->language = $key;
-                    $new_translate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
-                    if ($new_translate->save(false)) {
-                    } else {
-                        $errors[] = $new_translate->getErrorSummary(true);
-                        return simplify_errors($errors);
+                        $new_translate = new Translate();
+                        $new_translate->name = $value;
+                        $new_translate->table_name = $table_name;
+                        $new_translate->model_id = $model_id;
+                        $new_translate->language = $key;
+                        $new_translate->description = isset($descArr[$key]) ? (($descArr[$key] != "undefined" && $descArr[$key] != "null" && $descArr[$key] != "") ? $descArr[$key] : null) : null;
+                        if ($new_translate->save(false)) {
+                        } else {
+                            $errors[] = $new_translate->getErrorSummary(true);
+                            return simplify_errors($errors);
+                        }
                     }
                 }
             }
-        } 
         }
-        
+
         $transaction->commit();
         return true;
     }
@@ -253,8 +252,7 @@ class Translate extends \yii\db\ActiveRecord
                 }
                 $errors[] = $nameErrors;
             }
-        } 
-        else {
+        } else {
             $errors[]['name'] = [_e('Please send Name attribute as array.')];
             // $data['errors'][] = $errors;
             $data['status'] = 0;

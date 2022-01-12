@@ -88,9 +88,11 @@ $routes = [
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
 
-
     // Get me
     'GET <lang:\w{2}>/users/me' => 'user/me',
+
+    // Log out
+    'POST <lang:\w{2}>/auth/logout' => 'user/logout',
 
     // TimeTable parent null
     'GET <lang:\w{2}>/time-tables/parent-null' => 'time-table/parent-null',
@@ -110,7 +112,11 @@ $routes = [
     // 'POST teacherga studentlarni random tushirish
     'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',
 
-    'POST <lang:\w{2}>/auth/logout' => 'user/logout',
+
+    // Faculty UserAccess fakultitetga user biriktirish
+    'POST <lang:\w{2}>/faculties/user-access' => 'faculty/user-access',
+
+
 
     /** Free teachers for time tables */
     'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
@@ -129,7 +135,7 @@ $routes = [
 
     'GET <lang:\w{2}>/user-statuses' => 'user/status-list', // Get user statuses
 
-    // Enums
+    /* Enums */
     'GET <lang:\w{2}>/genders' => 'enum/genders',
     'GET <lang:\w{2}>/educations' => 'enum/educations',
     'GET <lang:\w{2}>/education-degrees' => 'enum/education-degrees',
@@ -139,7 +145,7 @@ $routes = [
     'GET <lang:\w{2}>/rates' => 'enum/rates',
     'GET <lang:\w{2}>/topic-types' => 'enum/topic-types',
     'GET <lang:\w{2}>/yesno' => 'enum/yesno',
-    // ***
+    /* Enums */
 
 
 

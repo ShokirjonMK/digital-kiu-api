@@ -41,6 +41,11 @@ class UserAccess extends \yii\db\ActiveRecord
 
     const STATUS_ACTIVE = 1;
 
+    // leader status
+    const IS_LEADER_TRUE = 1;
+    const IS_LEADER_FALSE = 1;
+
+
     /**
      * {@inheritdoc}
      */
@@ -109,7 +114,6 @@ class UserAccess extends \yii\db\ActiveRecord
         ];
     }
 
-
     public function fields()
     {
         $fields =  [
@@ -175,6 +179,23 @@ class UserAccess extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'table_id']);
     }
 
+    public static function createItems($user_access_type_id, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+
+        // if (!($model->validate())) {
+        //     $errors[] = $model->errors;
+        // }
+
+        // if ($model->save()) {
+            // $transaction->commit();
+            return true;
+        // } else {
+        //     return simplify_errors($errors);
+        // }
+    }
 
     public static function createItem($model, $post)
     {
@@ -207,6 +228,22 @@ class UserAccess extends \yii\db\ActiveRecord
             return true;
         } else {
             return simplify_errors($errors);
+        }
+    }
+
+    public static function changeLeader($table_id, $user_access_type_id, $user_id)
+    {
+        $userAccesLast = UserAccess::findOne(['table_id' => $table_id, 'user_access_type_id' => $user_access_type_id, 'is_leader' => self::IS_LEADER_TRUE]);
+        $userAccesLast->is_leader = self::IS_LEADER_FALSE;
+        $userAccesLast->update();
+
+        $userAcces = UserAccess::findOne(['user_id' => $user_id, 'table_id' => $table_id, 'user_access_type_id' => $user_access_type_id]);
+        $userAcces->is_leader = self::IS_LEADER_TRUE;
+        if ($userAcces->save(false)) {
+
+            return true;
+        } else {
+            return false;
         }
     }
 

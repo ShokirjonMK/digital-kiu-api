@@ -6,7 +6,7 @@ use common\models\model\Kafedra;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
-
+use common\models\model\UserAccess;
 
 class KafedraController extends ApiActiveController
 {
@@ -20,6 +20,19 @@ class KafedraController extends ApiActiveController
     public $table_name = 'kafedra';
     public $controller_name = 'Kafedra';
 
+    const USER_ACCESS_TYPE_ID = 2;
+
+
+    public function actionUserAccess($lang)
+    {
+        $post = Yii::$app->request->post();
+        $result = UserAccess::createItems(self::USER_ACCESS_TYPE_ID, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Users successfully atached to ' . $this->controller_name), null, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
     public function actionIndex($lang)
     {
         $model = new Kafedra();
@@ -107,12 +120,4 @@ class KafedraController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
-
-
-
-
-
-
 }

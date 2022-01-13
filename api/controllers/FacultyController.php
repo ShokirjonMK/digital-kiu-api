@@ -21,14 +21,14 @@ class FacultyController extends ApiController
     public $table_name = 'faculty';
     public $controller_name = 'Faculty';
 
-    const USER_ACCESS_TYPE_ID = 2;
+    const USER_ACCESS_TYPE_ID = 1;
 
     public function actionUserAccess($lang)
     {
         $post = Yii::$app->request->post();
         $result = UserAccess::createItems(self::USER_ACCESS_TYPE_ID, $post);
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully created.'), null, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('Users successfully atached to ' . $this->controller_name), null, null, ResponseStatus::CREATED);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

@@ -63,7 +63,7 @@ class Direction extends CommonDirection
     {
         self::$selected_language = Yii::$app->request->get('lang') ?? 'en';
         return $this->hasMany(DirectionInfo::class, ['direction_id' => 'id'])
-                    ->andOnCondition(['language' => self::$selected_language]);
+            ->andOnCondition(['language' => self::$selected_language]);
     }
 
     /**
@@ -90,12 +90,12 @@ class Direction extends CommonDirection
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;         
-        if($model->save()){
+        $model->status = 1;
+        if ($model->save()) {
             if (isset($post['name'])) {
                 if (!is_array($post['name'])) {
-                    $errors[] = [_e('Please send Name attribute as array.')];   
-                }else{
+                    $errors[] = [_e('Please send Name attribute as array.')];
+                } else {
                     foreach ($post['name'] as $lang => $name) {
                         $info = new DirectionInfo();
                         $info->direction_id = $model->id;
@@ -106,32 +106,32 @@ class Direction extends CommonDirection
                         }
                     }
                 }
-            }else{
-                $errors[] = [_e('Please send at least one Name attribute.')];      
+            } else {
+                $errors[] = [_e('Please send at least one Name attribute.')];
             }
-        }else{
-            $errors[] = $model->getErrorSummary(true);  
+        } else {
+            $errors[] = $model->getErrorSummary(true);
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-    } 
+    }
 
     public static function updateItem($model, $post)
     {
-        
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        if($model->save()){
+        if ($model->save()) {
             if (isset($post['name'])) {
                 if (!is_array($post['name'])) {
-                    $errors[] = [_e('Please send Name attribute as array.')];       
-                }else{
+                    $errors[] = [_e('Please send Name attribute as array.')];
+                } else {
                     foreach ($post['name'] as $lang => $name) {
                         $info = DirectionInfo::find()->where(['direction_id' => $model->id, 'language' => $lang])->one();
                         if ($info) {
@@ -143,19 +143,16 @@ class Direction extends CommonDirection
                     }
                 }
             }
-        }else{
-            $errors[] = $model->getErrorSummary(true);  
+        } else {
+            $errors[] = $model->getErrorSummary(true);
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-    } 
-
-
-
+    }
 }

@@ -115,6 +115,10 @@ $routes = [
 
     // Faculty UserAccess fakultitetga user biriktirish
     'POST <lang:\w{2}>/faculties/user-access' => 'faculty/user-access',
+    // Kafedra UserAccess fakultitetga user biriktirish
+    'POST <lang:\w{2}>/kafedras/user-access' => 'kafedra/user-access',
+    // Department UserAccess fakultitetga user biriktirish
+    'POST <lang:\w{2}>/departments/user-access' => 'department/user-access',
 
 
 

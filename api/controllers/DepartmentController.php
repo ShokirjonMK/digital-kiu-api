@@ -6,6 +6,7 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\Department;
 use common\models\model\Translate;
+use common\models\model\UserAccess;
 
 class DepartmentController extends ApiActiveController
 {
@@ -18,6 +19,19 @@ class DepartmentController extends ApiActiveController
 
     public $table_name = 'department';
     public $controller_name = 'Department';
+
+    const USER_ACCESS_TYPE_ID = 3;
+
+    public function actionUserAccess($lang)
+    {
+        $post = Yii::$app->request->post();
+        $result = UserAccess::createItems(self::USER_ACCESS_TYPE_ID, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Users successfully atached to ' . $this->controller_name), null, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
 
     public function actionTypes($lang)
     {
@@ -107,7 +121,5 @@ class DepartmentController extends ApiActiveController
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
-        
-    }  
-
+    }
 }

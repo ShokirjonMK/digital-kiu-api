@@ -184,6 +184,7 @@ class UserAccess extends \yii\db\ActiveRecord
         $errors = [];
 $da = [];
         $table_id = isset($post['table_id']) ? $post['table_id'] : null;
+        
         if ($table_id) {
             if (isset($post['user_access'])) {
                 $user_access = json_decode(str_replace("'", "", $post['user_access']));

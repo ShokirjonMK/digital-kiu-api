@@ -172,8 +172,9 @@ class Translate extends \yii\db\ActiveRecord
 
                         if ($update_tranlate->save(false)) {
                         } else {
-                            $errors[] = $$update_tranlate->getErrorSummary(true);
-                            return simplify_errors($errors);
+                            $errors[] = $update_tranlate->getErrorSummary(true);
+                            $transaction->rollBack();
+                            return $errors;
                         }
                     } else {
                         $new_translate = new Translate();
@@ -185,7 +186,8 @@ class Translate extends \yii\db\ActiveRecord
                         if ($new_translate->save(false)) {
                         } else {
                             $errors[] = $new_translate->getErrorSummary(true);
-                            return simplify_errors($errors);
+                            $transaction->rollBack();
+                            return $errors;
                         }
                     }
                 }
@@ -210,6 +212,7 @@ class Translate extends \yii\db\ActiveRecord
             if ($delete_one->save(false)) {
             } else {
                 $errors[] = $delete_one->getErrorSummary(true);
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         }

@@ -243,7 +243,8 @@ class EduPlan extends \yii\db\ActiveRecord
             ]);
             if (isset($eduPlan)) {
                 $errors[] = _e('This Edu Plan already exists');
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
             if ($model->save()) {
                 if (isset($post['description'])) {
@@ -301,14 +302,17 @@ class EduPlan extends \yii\db\ActiveRecord
 
                 if (count($errors) > 0) {
                     $model->delete();
+                    $transaction->rollBack();
                     return simplify_errors($errors);
                 }
                 $transaction->commit();
                 return true;
             } else {
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }
@@ -335,9 +339,11 @@ class EduPlan extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }

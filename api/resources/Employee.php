@@ -11,7 +11,7 @@ use yii\base\Model;
 
 class Employee extends Model
 {
-    
+
     public $user_id;
     public $subject_id;
     public $language_ids;
@@ -24,29 +24,30 @@ class Employee extends Model
     public function rules()
     {
         return [
-            [['user_id', 'subject_id','language_ids'], 'required'],
+            [['user_id', 'subject_id', 'language_ids'], 'required'],
             [['user_id', 'subject_id'], 'integer'],
             [['language_ids'], 'string'],
         ];
     }
 
 
-    public static function bindSubject($model, $body){
+    public static function bindSubject($model, $body)
+    {
 
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        
+
         // Validate data
         // check user_id
         $user = User::findOne($model->user_id);
-        if(!$user){
+        if (!$user) {
             $errors[] = [_e('User not found.')];
         }
 
         $bodyObj = json_decode($body);
-        if(!$bodyObj){
-            $errors[] = [_e('Request body is not in valid JSON format.')];    
-        }else{
+        if (!$bodyObj) {
+            $errors[] = [_e('Request body is not in valid JSON format.')];
+        } else {
             foreach ($bodyObj as $obj) {
                 // check subject_id
                 $subject = Subject::findOne($obj->subject_id);
@@ -77,30 +78,30 @@ class Employee extends Model
                 }
             }
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
-    public static function getSubjects($employee_id){   
-        
+    public static function getSubjects($employee_id)
+    {
+
         // check user_id
         $errors = [];
         $data = [];
         $user = User::findOne($employee_id);
-        if(!$user){
+        if (!$user) {
             $errors[] = [_e('User not found.')];
-        } 
+        }
 
         if (count($errors) == 0) {
             $userSubjects = UserSubject::find()->where(['user_id' => $employee_id])->all();
-            
+
             $subjects = [];
             foreach ($userSubjects as $one) {
                 $subjects[] = $one->subject_id;
@@ -126,13 +127,10 @@ class Employee extends Model
             'subjects' => $data
         ];
 
-        if(count($errors) > 0){
+        if (count($errors) > 0) {
             return ['is_ok' => false, 'errors' => $errors];
-        }else{
+        } else {
             return ['is_ok' => true, 'data' => $data];
         }
-
-                    
     }
-
 }

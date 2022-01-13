@@ -57,7 +57,7 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'exam_id'], 'required'],
-            [['student_id', 'start', 'exam_id', 'teacher_access_id', 'attempt','lang_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['student_id', 'start', 'exam_id', 'teacher_access_id', 'attempt', 'lang_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['ball'], 'number'],
             [['password'], 'safe'],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -179,6 +179,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -196,6 +197,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

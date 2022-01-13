@@ -148,10 +148,6 @@ class Translate11 extends \yii\db\ActiveRecord
 
     public static function updateTranslate($nameArr, $table_name, $model_id, $descArr = null)
     {
-
-        var_dump($nameArr);
-
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         //$deleteAll = Translate::deleteAll(['model_id' => $model_id]);
@@ -171,6 +167,7 @@ class Translate11 extends \yii\db\ActiveRecord
                 if ($new_translate->save(false)) {
                 } else {
                     $errors[] = $new_translate->getErrorSummary(true);
+                    $transaction->rollBack();
                     return simplify_errors($errors);
                 }
             }
@@ -185,7 +182,7 @@ class Translate11 extends \yii\db\ActiveRecord
         if (isset($post['name'])) {
             if (!is_array($post['name'])) {
                 $errors[] = [_e('Please send Name attribute as array.')];
-                return simplify_errors($errors);
+                return $errors;
             }else{
                 foreach($post as $key => $value){
                     
@@ -193,12 +190,12 @@ class Translate11 extends \yii\db\ActiveRecord
             }
         } else {
             $errors[] = [_e('Please send Name attribute as array.')];
-            return simplify_errors($errors);
+            return $errors;
         }
         if (isset($post['description'])) {
             if (!is_array($post['description'])) {
                 $errors[] = [_e('Please send Description attribute as array.')];
-                return simplify_errors($errors);
+                return $errors;
             }else{
 
             }

@@ -217,6 +217,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function generatePasswords($post)
     {
+        $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $examId = isset($post['exam_id']) ?  $post['exam_id'] : null;
 
@@ -270,14 +271,17 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = _e("Exam Id is required");
         }
         if (count($errors) > 0) {
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         } else {
+            $transaction->commit();
             return true;
         }
     }
 
     public static function getPasswords($post)
     {
+        $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $data = [];
         $data['is_ok'] = false;
@@ -322,8 +326,10 @@ class Exam extends \yii\db\ActiveRecord
         }
 
         if (count($errors) > 0) {
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         } else {
+            $transaction->commit();
             return $data;
         }
     }
@@ -351,7 +357,8 @@ class Exam extends \yii\db\ActiveRecord
             }
 
             if (count($errors) > 0) {
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
 
             $model->question_count_by_type = json_encode(array_unique((array)json_decode($post['question_count_by_type'])));
@@ -380,9 +387,11 @@ class Exam extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }
@@ -410,7 +419,8 @@ class Exam extends \yii\db\ActiveRecord
             }
 
             if (count($errors) > 0) {
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
 
             $model->question_count_by_type = json_encode(array_unique((array)json_decode($post['question_count_by_type'])));
@@ -438,10 +448,11 @@ class Exam extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }

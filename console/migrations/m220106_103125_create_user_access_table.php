@@ -18,7 +18,7 @@ class m220106_103125_create_user_access_table extends Migration
             'is_leader' => $this->tinyInteger(1)->defaultValue(0),
             'user_access_type_id' => $this->integer()->notNull(),
             'table_id' => $this->integer()->notNull(),
-            'table_name' => $this->string()->notNull(),
+            'table_name' => $this->string()->Null(),
             'role_name' => $this->string()->Null(),
 
 

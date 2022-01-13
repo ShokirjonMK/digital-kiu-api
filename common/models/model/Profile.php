@@ -289,7 +289,7 @@ class Profile extends \yii\db\ActiveRecord
 
         return $fullname ? trim($fullname) : 'Unknown User';
     }
- 
+
     public function extraFields()
     {
         $extraFields =  [
@@ -313,6 +313,7 @@ class Profile extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -328,7 +329,7 @@ class Profile extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -347,7 +348,7 @@ class Profile extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         }

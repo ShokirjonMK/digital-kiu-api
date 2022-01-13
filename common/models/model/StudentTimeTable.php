@@ -232,7 +232,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
         $model->student_id = $student->id;
 
@@ -256,13 +257,15 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         // if (isset($timeTableCheck)) {
         //     if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
         //         $errors[] = _e('This Time Table is not for this Student');
-        //         return $errors;
+        // $transaction->rollBack();
+        //         return simplify_errors($errors);
         //     }
         // }
 
         if (isset($hasModel)) {
             $errors[] = _e('This Student Time Table already exists ');
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if ($model->save()) {
@@ -278,6 +281,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -293,7 +297,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
         $model->student_id = $student->id;
 
@@ -317,14 +322,16 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         if (isset($timeTableCheck)) {
             if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
                 $errors[] = _e('This Time Table is not for this Student');
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
 
 
         if (isset($hasModel)) {
             $errors[] = _e('This Student Time Table already exists ');
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         $timeTableChilds = TimeTable::find()->select('id')->where(['parent_id' => $model_old->time_table_id]);
@@ -347,7 +354,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

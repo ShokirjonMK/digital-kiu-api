@@ -315,7 +315,7 @@ class User extends CommonUser
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 
@@ -347,8 +347,9 @@ class User extends CommonUser
             if (isset($post['password']) && !empty($post['password'])) {
                 if ($post['password'] != 'undefined' && $post['password'] != 'null' && $post['password'] != '') {
                     if (strlen($post['password']) < 6) {
-                        $errors[] = [_e('Password ')];
-                        return $errors;
+                        $errors[] = [_e('Password is too short')];
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
                     }
                     $password = $post['password'];
                     //**parolni shifrlab saqlaymiz */
@@ -474,7 +475,7 @@ class User extends CommonUser
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 

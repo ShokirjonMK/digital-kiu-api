@@ -230,7 +230,7 @@ class Kafedra extends \yii\db\ActiveRecord
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 
@@ -272,7 +272,7 @@ class Kafedra extends \yii\db\ActiveRecord
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 

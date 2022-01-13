@@ -112,7 +112,7 @@ class StudentUser extends ParentUser
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 
@@ -219,7 +219,7 @@ class StudentUser extends ParentUser
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 

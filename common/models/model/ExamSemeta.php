@@ -44,7 +44,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
     const STATUS_NEW = 1;
     const STATUS_IN_CHECKING = 2;
-    const STATUS_COMPLETED= 3;
+    const STATUS_COMPLETED = 3;
 
     /**
      * {@inheritdoc}
@@ -166,7 +166,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -183,7 +183,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -197,5 +197,4 @@ class ExamSemeta extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
 }

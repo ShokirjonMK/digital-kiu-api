@@ -224,7 +224,7 @@ class ExamQuestion extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -255,7 +255,7 @@ class ExamQuestion extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

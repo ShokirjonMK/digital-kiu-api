@@ -89,7 +89,7 @@ class Course extends \yii\db\ActiveRecord
             'eduSemestrs',
             'timeTables',
 
-            
+
             'description',
             'createdBy',
             'updatedBy',
@@ -156,10 +156,11 @@ class Course extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }
@@ -184,10 +185,11 @@ class Course extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }

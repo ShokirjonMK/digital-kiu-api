@@ -295,7 +295,8 @@ class TimeTable extends \yii\db\ActiveRecord
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
@@ -311,7 +312,8 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isset($timeTable)) {
             if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
                 $errors[] = _e("This Room and Para is busy for this Edu Year's semestr");
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
 
@@ -327,7 +329,8 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isset($checkTeacherTimeTable)) {
             if ($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) {
                 $errors[] = _e("This Teacher in this Para are busy for this Edu Year's semestr");
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
         /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
@@ -340,6 +343,7 @@ class TimeTable extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -354,7 +358,8 @@ class TimeTable extends \yii\db\ActiveRecord
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
@@ -370,7 +375,8 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isset($timeTable)) {
             if (($model->semester_id % 2 == $timeTable->semester_id % 2) && ($model->id != $timeTable->id)) {
                 $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
 
@@ -386,7 +392,8 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isset($checkTeacherTimeTable)) {
             if (($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) && ($model->id != $checkTeacherTimeTable->id)) {
                 $errors[] = _e("This Teacher in this Para are busy for this Edu Year's semestr");
-                return $errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
         /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
@@ -398,6 +405,7 @@ class TimeTable extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

@@ -182,13 +182,15 @@ class SubjectSillabus extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         $oldSubjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id']]);
         if (isset($oldSubjectSillabus)) {
             $errors[] = [_e('This Sillabus already created!')];
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         $json_errors = [];
@@ -238,6 +240,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
@@ -308,6 +311,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {

@@ -63,7 +63,6 @@ class UserAccess extends \yii\db\ActiveRecord
             [
                 [
                     'user_id',
-                    'table_name',
                     'table_id',
                     'user_access_type_id',
                 ], 'required'
@@ -183,18 +182,57 @@ class UserAccess extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+$da = [];
+        $table_id = isset($post['table_id']) ? $post['table_id'] : null;
+        if ($table_id) {
+            if (isset($post['user_access'])) {
+                $user_access = json_decode(str_replace("'", "", $post['user_access']));
+                foreach ($user_access as $user_id ) {
+                    $user = User::findOne($user_id);
+$da['user_id'][] = $user_id;
 
+                    $hasUserAccess = UserAccess::findOne([
+                        'user_access_type_id' => $user_access_type_id,
+                        'table_id' => $table_id,
+                        'user_id' => $user_id
+                    ]);
 
-        // if (!($model->validate())) {
-        //     $errors[] = $model->errors;
-        // }
+                    if ($user) {
+                        $da['user'][] = $user->id;
+                        if (!($hasUserAccess)) {
+                            $da['hasUserAccess'][] = $hasUserAccess;
+                            $newUserAccess = new UserAccess();
+                            $newUserAccess->user_id = $user_id;
+                            $newUserAccess->user_access_type_id = $user_access_type_id;
+                            $newUserAccess->table_id = $table_id;
+                            if (!($newUserAccess->validate())) {
+                                $errors[] = $newUserAccess->errors;
+                            } else {
+                                $newUserAccess->save();
+                            }
+                        } else {
+                            $errors[] = ['user_id' => [_e('This user already attached (' . $user_id . ')')]];
+                        }
+                    } else {
+                        $errors[] = ['user_id' => [_e('User Id not found (' . $user_id . ')')]];
+                    }
+                }
+            } else {
+                $errors[] = ['user_access' => [_e('User Access is required')]];
+            }
+        } else {
+            $errors[] = ['table_id' => [_e('Table Id is required')]];
+        }
+// var_dump($da);
+// die();
 
-        // if ($model->save()) {
-            // $transaction->commit();
+        if (count($errors) == 0) {
+            $transaction->commit();
             return true;
-        // } else {
-        //     return simplify_errors($errors);
-        // }
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
     }
 
     public static function createItem($model, $post)
@@ -210,6 +248,7 @@ class UserAccess extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -227,6 +266,7 @@ class UserAccess extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -240,7 +280,6 @@ class UserAccess extends \yii\db\ActiveRecord
         $userAcces = UserAccess::findOne(['user_id' => $user_id, 'table_id' => $table_id, 'user_access_type_id' => $user_access_type_id]);
         $userAcces->is_leader = self::IS_LEADER_TRUE;
         if ($userAcces->save(false)) {
-
             return true;
         } else {
             return false;

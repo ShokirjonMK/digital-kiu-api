@@ -12,7 +12,7 @@ use yii\helpers\Inflector;
 class AuthItem extends CommonAuthItem
 {
     use ResourceTrait;
-    
+
     public function behaviors()
     {
         return [
@@ -31,16 +31,16 @@ class AuthItem extends CommonAuthItem
     {
         $fields =  [
             'name',
-            'category' => function($model){
+            'category' => function ($model) {
                 return $model->getParsedDesc('category');
             },
-            'description' => function($model){
+            'description' => function ($model) {
                 return $model->getParsedDesc('description');
             },
-            'created_at' => function($model) {
+            'created_at' => function ($model) {
                 return date('Y-m-d H:i', $model->created_at);
             },
-            'updated_at' => function($model) {
+            'updated_at' => function ($model) {
                 return date('Y-m-d H:i', $model->updated_at);
             },
         ];
@@ -63,121 +63,122 @@ class AuthItem extends CommonAuthItem
     }
 
 
-    public static function createRole($body){
+    public static function createRole($body)
+    {
 
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        
+
         $bodyObj = json_decode($body);
-        if(!$bodyObj){
-            $errors[] = [_e('Request body is not in valid JSON format.')];    
-        }else{
+        if (!$bodyObj) {
+            $errors[] = [_e('Request body is not in valid JSON format.')];
+        } else {
             foreach ($bodyObj as $obj) {
                 $role = new AuthItem();
                 $role->type = AuthItem::TYPE_ROLE;
                 $role->name = $obj->role;
                 $role->description = $obj->role;
-                if(!$role->save()){
-                    $errors[] = $role->getErrorSummary(true);         
-                }else{
+                if (!$role->save()) {
+                    $errors[] = $role->getErrorSummary(true);
+                } else {
                     foreach ($obj->permissions as $permission) {
                         // check permission
                         $permissionItem = AuthItem::find()->where(['name' => $permission, 'type' => AuthItem::TYPE_PERMISSION])->one();
-                        if(!$permissionItem){
-                            $errors[] = [_e('Permission \'{permission}\' not found.',['permission' => $permission])];      
-                        }else{
+                        if (!$permissionItem) {
+                            $errors[] = [_e('Permission \'{permission}\' not found.', ['permission' => $permission])];
+                        } else {
                             $authItemChild = new AuthItemChild();
                             $authItemChild->parent = $obj->role;
                             $authItemChild->child = $permission;
-                            if(!$authItemChild->save()){
-                                $errors[] = $authItemChild->getErrorSummary(true);    
+                            if (!$authItemChild->save()) {
+                                $errors[] = $authItemChild->getErrorSummary(true);
                             }
                         }
                     }
                 }
             }
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             Yii::$app->authManager->invalidateCache();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
-    public static function updateRole($body){
+    public static function updateRole($body)
+    {
 
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        
+
         // Validate data
 
         $bodyObj = json_decode($body);
-        if(!$bodyObj){
-            $errors[] = [_e('Request body is not in valid JSON format.')];    
-        }else{
+        if (!$bodyObj) {
+            $errors[] = [_e('Request body is not in valid JSON format.')];
+        } else {
             foreach ($bodyObj as $obj) {
                 // check role
                 $role = AuthItem::find()->where(['name' => $obj->role, 'type' => AuthItem::TYPE_ROLE])->one();
-                if(!$role){
-                    $errors[] = [_e('Role \'{role}\' not found.',['role' => $obj->role])];    
-                }else{
+                if (!$role) {
+                    $errors[] = [_e('Role \'{role}\' not found.', ['role' => $obj->role])];
+                } else {
                     AuthItemChild::deleteAll(['parent' => $obj->role]);
                     foreach ($obj->permissions as $permission) {
                         // check permission
                         $permissionItem = AuthItem::find()->where(['name' => $permission, 'type' => AuthItem::TYPE_PERMISSION])->one();
-                        if(!$permissionItem){
-                            $errors[] = [_e('Permission \'{permission}\' not found.',['permission' => $permission])];      
-                        }else{
+                        if (!$permissionItem) {
+                            $errors[] = [_e('Permission \'{permission}\' not found.', ['permission' => $permission])];
+                        } else {
                             $authItemChild = new AuthItemChild();
                             $authItemChild->parent = $obj->role;
                             $authItemChild->child = $permission;
-                            if(!$authItemChild->save()){
-                                $errors[] = $authItemChild->getErrorSummary(true);    
+                            if (!$authItemChild->save()) {
+                                $errors[] = $authItemChild->getErrorSummary(true);
                             }
                         }
                     }
                 }
             }
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             Yii::$app->authManager->invalidateCache();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
-    public static function deleteRole($role){
+    public static function deleteRole($role)
+    {
 
         $errors = [];
 
         // check role is exists
         $roleItem = AuthItem::find()->where(['name' => $role, 'type' => AuthItem::TYPE_ROLE])->one();
-        if(!$roleItem){
-            $errors[] = [_e('Role \'{role}\' not found.',['role' => $role])];    
-        }else{
+        if (!$roleItem) {
+            $errors[] = [_e('Role \'{role}\' not found.', ['role' => $role])];
+        } else {
             // check role assignments exists or not
             $itemChild = AuthAssignment::find()->where(['item_name' => $role])->one();
             if ($itemChild) {
                 $errors[] = [_e('This role has assigned to user. Please remove this assignment first.')];
-            }else{
+            } else {
                 $roleItem->delete();
             }
         }
 
-        if(count($errors) == 0){
+        if (count($errors) == 0) {
             Yii::$app->authManager->invalidateCache();
             return true;
-        }else{
+        } else {
             return simplify_errors($errors);
         }
     }
@@ -192,13 +193,14 @@ class AuthItem extends CommonAuthItem
         return $this->hasMany(AuthItem::className(), ['name' => 'child'])->viaTable('auth_item_child', ['parent' => 'name']);
     }
 
-    public function getParsedDesc($field){
+    public function getParsedDesc($field)
+    {
         $exists = strpos($this->description, '|');
         $result = [
             'category' => $this->description,
             'description' => $this->description
         ];
-        if($exists){
+        if ($exists) {
             list($category, $description) = explode('|', $this->description);
             $result = [
                 'category' => Inflector::pluralize($category),
@@ -208,7 +210,8 @@ class AuthItem extends CommonAuthItem
         return $result[$field];
     }
 
-    public static function getData($query){
+    public static function getData($query)
+    {
         $items = $query->all();
         $categories = [];
         foreach ($items as $one) {
@@ -220,7 +223,7 @@ class AuthItem extends CommonAuthItem
         foreach ($categories as $cate) {
             $permissions = [];
             foreach ($items as $one) {
-                if($cate == $one->getParsedDesc('category')){
+                if ($cate == $one->getParsedDesc('category')) {
                     $permissions[] = [
                         'name' => $one->name,
                         'title' => $one->getParsedDesc('description'),
@@ -234,12 +237,5 @@ class AuthItem extends CommonAuthItem
         }
 
         return $data;
-
     }
-
-
-
-
-
-
 }

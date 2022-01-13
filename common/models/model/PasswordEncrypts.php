@@ -61,7 +61,7 @@ class PasswordEncrypts extends \yii\db\ActiveRecord
             'password' => 'Password',
             'user_id' => 'User ID',
             'key_id' => 'Key ID',
-           
+
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -89,9 +89,7 @@ class PasswordEncrypts extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
-
-        ];
+        $extraFields =  [];
 
         return $extraFields;
     }
@@ -104,13 +102,13 @@ class PasswordEncrypts extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -120,12 +118,12 @@ class PasswordEncrypts extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
-
 }

@@ -253,6 +253,7 @@ class Question extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -264,7 +265,7 @@ class Question extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        
+
         $oldFile = $model->file;
         // question file saqlaymiz
         $model->question_file = UploadedFile::getInstancesByName('question_file');
@@ -284,6 +285,7 @@ class Question extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -319,7 +321,7 @@ class Question extends \yii\db\ActiveRecord
         return $array;
     }
 
-    
+
     public function uploadFile()
     {
         if ($this->validate()) {
@@ -349,5 +351,4 @@ class Question extends \yii\db\ActiveRecord
         }
         return true;
     }
-
 }

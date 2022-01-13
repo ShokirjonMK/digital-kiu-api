@@ -64,7 +64,8 @@ class QuestionOption extends \yii\db\ActiveRecord
                     'question_id',
                     'option'
                 ],
-                'required'],
+                'required'
+            ],
 
             [
                 [
@@ -78,7 +79,8 @@ class QuestionOption extends \yii\db\ActiveRecord
                     'updated_by',
                     'is_deleted'
                 ],
-                'integer'],
+                'integer'
+            ],
 
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
             [['option_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->optionFileMaxSize],
@@ -177,6 +179,7 @@ class QuestionOption extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -209,6 +212,7 @@ class QuestionOption extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

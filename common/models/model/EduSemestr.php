@@ -216,6 +216,7 @@ class EduSemestr extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -242,7 +243,7 @@ class EduSemestr extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

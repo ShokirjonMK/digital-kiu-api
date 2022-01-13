@@ -193,7 +193,6 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
                 } else {
                     $errors[] = _e("This exam not found");
                 }
-                return simplify_errors($errors);
             } else {
                 $errors[] = _e("This exam not found");
             }
@@ -206,7 +205,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
             return true;
         } else {
             $transaction->rollBack();
-            return $errors;
+            return simplify_errors($errors);
         }
     }
 
@@ -223,6 +222,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -240,6 +240,7 @@ class ExamTeacherCheck extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

@@ -244,11 +244,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                 $t = true;
                 if ($exam->is_protected == 1) {
-                   if($password == $ExamStudentHas->password){
-                       $t = true;
-                   }else{
-                       $t = false;
-                   }
+                    if ($password == $ExamStudentHas->password) {
+                        $t = true;
+                    } else {
+                        $t = false;
+                    }
                 }
 
                 if ($t) {
@@ -307,7 +307,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 $errors[] = _e("Questions not found for this exam");
-                                return $errors;
+                                $transaction->rollBack();
+                                return simplify_errors($errors);
                             }
                         }
                         $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
@@ -327,9 +328,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             } else {
                 $errors[] = _e("This exam not found");
             }
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
-        return $errors;
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
     public static function createItem($model, $post)
@@ -347,6 +350,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -416,6 +420,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+                $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {

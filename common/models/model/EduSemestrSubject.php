@@ -197,7 +197,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         ]);
         if (isset($EduSemestrSubject)) {
             $errors[] = _e('This Edu Subject already exists in This Semester');
-            return $errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
         if ($model->save()) {
             $subjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id']]);
@@ -251,6 +252,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -327,20 +329,26 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
-
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
 
     public static function deleteItem($model)
     {
+        $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
         EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]);
         EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]);
 
         if ($model->delete()) {
+            $transaction->commit();
             return true;
+        } else {
+            $errors[] = _e('Error occured');
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
     }
 

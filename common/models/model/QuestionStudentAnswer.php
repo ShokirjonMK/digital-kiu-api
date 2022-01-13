@@ -67,10 +67,12 @@ class QuestionStudentAnswer extends \yii\db\ActiveRecord
                     'question_type_id',
                     'student_id',
                 ],
-                'required'],
+                'required'
+            ],
 
             [
-                ['course_id',
+                [
+                    'course_id',
                     'exam_id',
                     'question_id',
                     'question_type_id',
@@ -88,7 +90,8 @@ class QuestionStudentAnswer extends \yii\db\ActiveRecord
                     'updated_by',
                     'is_deleted'
                 ],
-                'integer'],
+                'integer'
+            ],
 
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
@@ -246,6 +249,7 @@ class QuestionStudentAnswer extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -261,6 +265,7 @@ class QuestionStudentAnswer extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

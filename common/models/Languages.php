@@ -134,7 +134,7 @@ class Languages extends \base\libs\RedisDB
     public function extraFields()
     {
         $extraFields =  [
-//            'department',
+            //            'department',
             'createdBy',
             'updatedBy',
         ];
@@ -148,14 +148,14 @@ class Languages extends \base\libs\RedisDB
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $errors[] = $model->getErrorSummary(true);
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -163,25 +163,24 @@ class Languages extends \base\libs\RedisDB
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $model->status = 1;
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $errors[] = $model->getErrorSummary(true);
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Yii::$app->user->identity->getId();
-        }else{
+        } else {
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
     }
-
-
-
 }

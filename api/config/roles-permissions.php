@@ -106,12 +106,6 @@ return [
         'direction_view',
         'direction_delete',
 
-        'direction_index',
-        'direction_create',
-        'direction_update',
-        'direction_view',
-        'direction_delete',
-
         'edu-plan_index',
         'edu-plan_create',
         'edu-plan_update',
@@ -162,7 +156,7 @@ return [
         'password_update',
         'user_logout',
         'user_me',
-        
+
         'job_index',
         'job_create',
         'job_update',

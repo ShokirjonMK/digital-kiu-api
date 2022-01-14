@@ -8,7 +8,7 @@ return [
 
         'password_index',
         'password_update',
-        
+
         'faculty_view',
         'direction_view',
         'subject_view',
@@ -72,17 +72,102 @@ return [
     'teacher' => [
         'password_index',
         'password_update',
+        'user_logout',
+        'user_me',
+
         'exam-teacher-check_index',
         'exam-teacher-check_update',
 
         'exam-teacher-check_random-students',
-
 
         'subject-topic_index',
         'subject-topic_create',
         'subject-topic_update',
         'subject-topic_view',
         'subject-topic_delete',
+    ],
+
+    /* Dekan huquqlari */
+    'dean' => [
+        'password_index',
+        'password_update',
+        'user_logout',
+        'user_me',
+        
+        'faculty_update',
+        'faculty_view',
+        'area_index',
+        'region_index',
+        'country_index',
+
+        'direction_index',
+        'direction_create',
+        'direction_update',
+        'direction_view',
+        'direction_delete',
+
+        'direction_index',
+        'direction_create',
+        'direction_update',
+        'direction_view',
+        'direction_delete',
+
+        'edu-plan_index',
+        'edu-plan_create',
+        'edu-plan_update',
+        'edu-plan_view',
+        'edu-plan_delete',
+
+        'edu-semestr-subject_index',
+        'edu-semestr-subject_create',
+        'edu-semestr-subject_update',
+        'edu-semestr-subject_view',
+        'edu-semestr-subject_delete',
+
+        'edu-semestr_index',
+        'edu-semestr_create',
+        'edu-semestr_update',
+        'edu-semestr_view',
+        'edu-semestr_delete',
+
+        'exam_index',
+        'exam_create',
+        'exam_update',
+        'exam_view',
+        'exam_delete',
+
+        'kafedra_index',
+        'kafedra_create',
+        'kafedra_update',
+        'kafedra_view',
+        'kafedra_delete',
+
+        'student_index',
+        'student_create',
+        'student_update',
+        'student_view',
+        'student_delete',
+
+
+        'job_index',
+        'job_create',
+        'job_update',
+        'job_view',
+        'job_delete',
+    ],
+    /* Dekan huquqlari */
+
+    'dean_deputy' => [
+        'password_index',
+        'password_update',
+        'user_logout',
+        'user_me',
+        
+        'job_index',
+        'job_create',
+        'job_update',
+        'job_view',
+        'job_delete',
     ],
 
     'chair_admin' => [
@@ -114,26 +199,15 @@ return [
         'department_update',
         'department_view',
         'department_delete',
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
+
     ],
 
     'hr_viewer' => [
         'password_index',
         'password_update',
         'department_index',
-        'department_create',
-        'department_update',
+
         'department_view',
-        'department_delete',
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
     ],
 
     'rector' => [
@@ -156,25 +230,7 @@ return [
         'job_delete',
     ],
 
-    'dekan' => [
-        'password_index',
-        'password_update',
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
-    ],
 
-    'zamdekan' => [
-        'password_index',
-        'password_update',
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
-    ],
 
     'mudir' => [
         'password_index',

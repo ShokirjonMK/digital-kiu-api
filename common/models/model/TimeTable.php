@@ -285,7 +285,6 @@ class TimeTable extends \yii\db\ActiveRecord
         return Building::find()->where(['id' => $this->room->building_id])->one();
     }
 
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -409,7 +408,6 @@ class TimeTable extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
     }
-
 
     public function beforeSave($insert)
     {

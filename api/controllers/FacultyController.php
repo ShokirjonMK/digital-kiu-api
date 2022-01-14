@@ -46,7 +46,7 @@ class FacultyController extends ApiController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // filter
-        $query = $this->filterAll($query, $model);
+        $query = $this->filterAll($query, $model); 
 
         // sort
         $query = $this->sort($query);

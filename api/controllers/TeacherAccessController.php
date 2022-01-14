@@ -22,13 +22,25 @@ class TeacherAccessController extends ApiActiveController
     public function actionFree($lang)
     {
         $get = Yii::$app->request->get();
+        $errors = [];
+        if (empty(Yii::$app->request->get('para_id'))) {
+            $errors[] = ['para_id' => _e('Para Id is required')];
+        }
+        if (empty(Yii::$app->request->get('edu_year_id'))) {
+            $errors[] = ['edu_year_id' => _e('Edu Year Id is required')];
+        }
+        if (empty(Yii::$app->request->get('semester_id'))) {
+            $errors[] = ['semester_id' => _e('Semester Id is required')];
+        }
+        if (empty(Yii::$app->request->get('week_id'))) {
+            $errors[] = ['week_id' => _e('Week Id is required')];
+        }
 
-        $para_id = Yii::$app->request->get('para_id');
-        $edu_year_id = Yii::$app->request->get('edu_year_id');
-        $semester_id = Yii::$app->request->get('semester_id');
-        $week_id = Yii::$app->request->get('week_id');
+        if (count($errors) > 0) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
 
-        $semester = Semestr::findOne($semester_id);
+        $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
 
         if (!isset($semester)) {
             return $this->response(0, _e('Semester not found.'), null, null, ResponseStatus::NOT_FOUND);
@@ -46,7 +58,7 @@ class TeacherAccessController extends ApiActiveController
 
             ])->andWhere(['in', 'semester_id', $semester_ids]);
 
-            
+
         $model = new TeacherAccess();
 
         $query = $model->find()

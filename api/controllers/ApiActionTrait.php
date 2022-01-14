@@ -190,7 +190,6 @@ trait ApiActionTrait
 
     public function sort($query)
     {
-
         if (Yii::$app->request->get('sort')) {
 
             $sortVal = Yii::$app->request->get('sort');

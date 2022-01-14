@@ -31,6 +31,11 @@ class m200605_201020_init_rbac extends Migration
         $dean = $auth->createRole('dean');
         $dean->description = 'Dean of the faculty';
         $auth->add($dean);
+
+        // add "dean_deputy" role
+        $dean = $auth->createRole('dean_deputy');
+        $dean->description = 'Deputy dean of the faculty';
+        $auth->add($dean);
         
         // add "employee" role
         $employee = $auth->createRole('employee');

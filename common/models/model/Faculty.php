@@ -54,7 +54,7 @@ class Faculty extends \yii\db\ActiveRecord
     {
         return [
             // [['name'], 'required'],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['order', 'user_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             // [['name'], 'string', 'max' => 255],
         ];
     }
@@ -84,6 +84,7 @@ class Faculty extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            'user_id',
             'order',
             'status',
             'created_at',
@@ -240,7 +241,7 @@ class Faculty extends \yii\db\ActiveRecord
         if ($has_error['status']) {
             if ($model->save()) {
                 /* update User Access */
-                if ($post['user_id']) {
+                if (isset($post['user_id'])) {
                     $userAccessUser = User::findOne($post['user_id']);
                     if (isset($userAccessUser)) {
                         if (!(UserAccess::changeLeader($model->id, self::USER_ACCESS_TYPE_ID, $userAccessUser->id))) {

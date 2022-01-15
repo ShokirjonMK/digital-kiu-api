@@ -182,15 +182,15 @@ class UserAccess extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-$da = [];
+        $da = [];
         $table_id = isset($post['table_id']) ? $post['table_id'] : null;
-        
+
         if ($table_id) {
             if (isset($post['user_access'])) {
                 $user_access = json_decode(str_replace("'", "", $post['user_access']));
-                foreach ($user_access as $user_id ) {
+                foreach ($user_access as $user_id) {
                     $user = User::findOne($user_id);
-$da['user_id'][] = $user_id;
+                    $da['user_id'][] = $user_id;
 
                     $hasUserAccess = UserAccess::findOne([
                         'user_access_type_id' => $user_access_type_id,
@@ -224,8 +224,8 @@ $da['user_id'][] = $user_id;
         } else {
             $errors[] = ['table_id' => [_e('Table Id is required')]];
         }
-// var_dump($da);
-// die();
+        // var_dump($da);
+        // die();
 
         if (count($errors) == 0) {
             $transaction->commit();
@@ -274,9 +274,16 @@ $da['user_id'][] = $user_id;
 
     public static function changeLeader($table_id, $user_access_type_id, $user_id)
     {
-        $userAccesLast = UserAccess::findOne(['table_id' => $table_id, 'user_access_type_id' => $user_access_type_id, 'is_leader' => self::IS_LEADER_TRUE]);
-        $userAccesLast->is_leader = self::IS_LEADER_FALSE;
-        $userAccesLast->update();
+        $userAccesLast = UserAccess::findOne([
+            'table_id' => $table_id,
+            'user_access_type_id' => $user_access_type_id,
+            'is_leader' => self::IS_LEADER_TRUE
+        ]);
+        if ($userAccesLast) {
+            $userAccesLast->is_leader = self::IS_LEADER_FALSE;
+            $userAccesLast->update();
+        }
+
 
         $userAcces = UserAccess::findOne(['user_id' => $user_id, 'table_id' => $table_id, 'user_access_type_id' => $user_access_type_id]);
         $userAcces->is_leader = self::IS_LEADER_TRUE;

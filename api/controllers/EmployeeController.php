@@ -50,6 +50,7 @@ class EmployeeController extends ApiActiveController
         $this->load($model, $post);
         $this->load($profile, $post);
         $this->load($employee, $post);
+        
         $result = EmployeeUser::createItem($model, $profile, $employee, $post);
         if(!is_array($result)){
             return $this->response(1, _e('Employee successfully created.'), $model, null, ResponseStatus::CREATED);     

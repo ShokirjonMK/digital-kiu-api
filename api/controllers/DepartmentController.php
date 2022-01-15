@@ -12,6 +12,9 @@ class DepartmentController extends ApiActiveController
 {
     public $modelClass = 'api\resources\Department';
 
+    const ROLE = 'dep_lead';
+
+
     public function actions()
     {
         return [];
@@ -81,6 +84,11 @@ class DepartmentController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        
+        if ($this->checkLead($model, self::ROLE)) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = Department::updateItem($model, $post);

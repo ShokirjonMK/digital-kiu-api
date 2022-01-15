@@ -7,6 +7,8 @@ use Yii;
 use common\models\model\Direction;
 use common\models\model\Translate;
 use base\ResponseStatus;
+use common\models\model\Faculty;
+use common\models\model\UserAccess;
 
 class DirectionController extends ApiActiveController
 {
@@ -27,14 +29,23 @@ class DirectionController extends ApiActiveController
 
         $query = $model->find()
             ->with(['infoRelation'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             ->groupBy($this->table_name . '.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
+
+        // is Self 
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query->andFilterWhere([
+                'faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'id' => -1
+            ]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -67,6 +78,13 @@ class DirectionController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        // is Self 
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = Direction::updateItem($model, $post);
@@ -85,6 +103,13 @@ class DirectionController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        // is Self 
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -96,6 +121,12 @@ class DirectionController extends ApiActiveController
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        // is Self 
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
         // remove model

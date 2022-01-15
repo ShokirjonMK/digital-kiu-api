@@ -8,6 +8,7 @@ use base\ResponseStatus;
 use common\models\model\EduSemestr;
 use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
+use common\models\model\Faculty;
 use common\models\model\Student;
 use DateTime;
 
@@ -41,10 +42,10 @@ class ExamController extends ApiActiveController
         $post = Yii::$app->request->post();
         $result = Exam::getPasswords($post);
         if (is_array($result)) {
-            if($result['is_ok']){
+            if ($result['is_ok']) {
                 // unset($result['is_ok']);
                 return $this->response(1, _e('Passwords for students for this exam'), $result, null, ResponseStatus::OK);
-            }else{
+            } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
             }
         } else {
@@ -67,14 +68,12 @@ class ExamController extends ApiActiveController
                 $eduSmesterSubjectIds = EduSemestrSubject::find()
                     ->andWhere(['edu_semestr_id' => $eduSmesterId])
                     ->select('id');
-
             } else {
-                
+
                 $eduSmesterSubjectIds = EduSemestrSubject::find()
                     ->leftJoin("edu_semestr es", "es.id = edu_semestr_subject.edu_semestr_id")
                     ->where(['es.edu_plan_id' => $student->edu_plan_id])
                     ->select('edu_semestr_subject.id');
-
             }
             if (isset($eduSmesterSubjectIds)) {
                 $query = $model->find()
@@ -85,19 +84,30 @@ class ExamController extends ApiActiveController
                     // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     ->groupBy($this->table_name . '.id')
                     ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE_FOR_ALL])
-                    ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
-                    ;
+                    ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
             } else {
                 return $this->response(0, _e('Your exams not found.'), null, null, ResponseStatus::NOT_FOUND);
             }
         } else {
-            
+
             $query = $model->find()
                 ->with(['infoRelation'])
                 ->andWhere([$this->table_name . '.is_deleted' => 0])
                 ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
                 ->groupBy($this->table_name . '.id')
                 ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
+            /*  is Self  */
+            // EduSemestrSubject -> EduSemestrSubject -> EduSemestr -> EduPlan -> facuty_id
+            /* $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                $query = $query->leftJoin("edu_plan ep", "ep.id = edu_semestr.edu_plan_id")->andWhere(['in', 'ep.faculty_id', $t['UserAccess']->table_id]);
+            } elseif ($t['status'] == 2) {
+                $query->andFilterWhere([
+                    'id' => -1
+                ]);
+            } */
+            /*  is Self  */
         }
         // filter
         $query = $this->filterAll($query, $model);

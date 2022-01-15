@@ -25,7 +25,7 @@ $main_config = array(
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
-            'defaultRoles' => ['customer'],
+          //  'defaultRoles' => ['customer'],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

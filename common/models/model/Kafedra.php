@@ -245,7 +245,7 @@ class Kafedra extends \yii\db\ActiveRecord
         if ($has_error['status']) {
             if ($model->save()) {
                 /* update User Access */
-                if ($post['user_id']) {
+                if (isset($post['user_id'])) {
                     $userAccessUser = User::findOne($post['user_id']);
                     if (isset($userAccessUser)) {
                         if (!(UserAccess::changeLeader($model->id, self::USER_ACCESS_TYPE_ID, $userAccessUser->id))) {

@@ -6,6 +6,7 @@ use common\models\model\EduSemestrSubject;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\EduSemestr;
+use common\models\model\Faculty;
 use common\models\model\Student;
 
 class EduSemestrSubjectController extends ApiActiveController
@@ -30,7 +31,6 @@ class EduSemestrSubjectController extends ApiActiveController
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0])
                 ->andWhere(['in', 'edu_semestr_id', $eduSemesterIds]);
-                
         } else {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0]);
@@ -67,6 +67,18 @@ class EduSemestrSubjectController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = EduSemestrSubject::updateItem($model, $post);
@@ -85,6 +97,18 @@ class EduSemestrSubjectController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -98,6 +122,16 @@ class EduSemestrSubjectController extends ApiActiveController
         // remove model
 
         if ($model) {
+            /*  is Self  */
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+            } elseif ($t['status'] == 2) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+            /*  is Self  */
             $result = EduSemestrSubject::deleteItem($model);
 
             if (!is_array($result)) {

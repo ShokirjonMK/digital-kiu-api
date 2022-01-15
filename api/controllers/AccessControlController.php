@@ -20,6 +20,14 @@ class AccessControlController extends ApiActiveController
     {
         $model = new AuthItem();
 
+        $nimadi = AuthItem::findOne(['name'=> 'admin']);
+
+
+        // $nimadi->getChildren();
+
+        // return $nimadi;
+
+
         $query = $model->find()
             ->where(['type' => AuthItem::TYPE_ROLE])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);

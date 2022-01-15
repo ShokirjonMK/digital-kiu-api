@@ -6,9 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
-use common\models\model\Action;
-use common\models\model\Translate;
-use common\models\User;
+use common\models\model\UserAccess;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Response;
@@ -70,9 +68,6 @@ trait ApiActionTrait
      * @param $action
      * @return void
      */
-
-
-
 
     public function beforeAction($action)
     {
@@ -234,5 +229,40 @@ trait ApiActionTrait
     public function load($model, $data)
     {
         return $model->load($data, '');
+    }
+
+    public function checkLead($model, $role)
+    {
+        $user_id = Yii::$app->user->identity->getId();
+        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+
+        if (property_exists($roles, $role)) {
+            if ($model->user_id != $user_id) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isSelf($userAccessTypeId)
+    {
+        $user_id = Yii::$app->user->identity->getId();
+        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+
+        $userAccess = UserAccess::findOne([
+            'user_id' => $user_id,
+            'user_access_type_id' => $userAccessTypeId,
+        ]);
+
+        $t['status'] = 3;
+
+        if ($userAccess) {
+            $t['status'] = 1;
+            $t['UserAccess'] = $userAccess;
+        } elseif (!property_exists($roles, 'admin')) {
+            $t['status'] = 2;
+        }
+
+        return $t;
     }
 }

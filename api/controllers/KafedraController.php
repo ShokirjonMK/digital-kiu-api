@@ -21,6 +21,8 @@ class KafedraController extends ApiActiveController
     public $controller_name = 'Kafedra';
 
     const USER_ACCESS_TYPE_ID = 2;
+    const ROLE = 'mudir';
+
 
 
     public function actionUserAccess($lang)
@@ -79,6 +81,11 @@ class KafedraController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if ($this->checkLead($model, self::ROLE)) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = Kafedra::updateItem($model, $post);

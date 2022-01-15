@@ -2,6 +2,8 @@
 
 namespace api\controllers;
 
+use api\resources\AccessControl;
+use api\resources\User;
 use Yii;
 use base\ResponseStatus;
 use yii\web\ForbiddenHttpException;
@@ -9,6 +11,8 @@ use yii\web\ForbiddenHttpException;
 use common\models\model\Faculty;
 use common\models\model\Translate;
 use common\models\model\UserAccess;
+
+use function PHPSTORM_META\type;
 
 class FacultyController extends ApiController
 {
@@ -22,6 +26,7 @@ class FacultyController extends ApiController
     public $controller_name = 'Faculty';
 
     const USER_ACCESS_TYPE_ID = 1;
+    const ROLE = 'dean';
 
     public function actionUserAccess($lang)
     {
@@ -46,7 +51,7 @@ class FacultyController extends ApiController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // filter
-        $query = $this->filterAll($query, $model); 
+        $query = $this->filterAll($query, $model);
 
         // sort
         $query = $this->sort($query);
@@ -55,7 +60,6 @@ class FacultyController extends ApiController
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
-
 
 
     public function actionCreate($lang)
@@ -78,6 +82,11 @@ class FacultyController extends ApiController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if ($this->checkLead($model, self::ROLE)) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = Faculty::updateItem($model, $post);
@@ -93,6 +102,7 @@ class FacultyController extends ApiController
         $model = Faculty::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }

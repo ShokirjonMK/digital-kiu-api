@@ -52,6 +52,18 @@ class EduSemestrSubjectController extends ApiActiveController
     {
         $model = new EduSemestrSubject();
         $post = Yii::$app->request->post();
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $this->load($model, $post);
         $result = EduSemestrSubject::createItem($model, $post);
         if (!is_array($result)) {

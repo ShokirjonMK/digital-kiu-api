@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduPlan;
 use common\models\model\EduSemestr;
 use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
@@ -98,15 +99,28 @@ class ExamController extends ApiActiveController
                 ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
             /*  is Self  */
-            // EduSemestrSubject -> EduSemestrSubject -> EduSemestr -> EduPlan -> facuty_id
-            /* $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            // Exam(current) EduSemestrSubject -> EduSemestr -> EduPlan -> facuty_id
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
-                $query = $query->leftJoin("edu_plan ep", "ep.id = edu_semestr.edu_plan_id")->andWhere(['in', 'ep.faculty_id', $t['UserAccess']->table_id]);
+
+                $query = $query->leftJoin("edu_semestr_subject ess", "ess.id = exam.edu_semestr_subject_id")
+                    ->leftJoin("edu_semestr es", "es.id = ess.edu_semestr_id")
+                    ->leftJoin("edu_plan ep", "ep.id = es.edu_plan_id")
+                    ->andWhere(['ep.faculty_id' => $t['UserAccess']->table_id]);
+
+                /*  $eduPlanIds = EduPlan::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
+                $eduSmesterIds = EduSemestr::find()->where(['in', 'edu_plan_id', $eduPlanIds])->select('id');
+                $eduSmesterSubjectIds = EduSemestrSubject::find()->where(['in', 'edu_semestr_id', $eduSmesterIds])->select('id');
+
+                $query = $query->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds]);
+                // */
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
                     'id' => -1
                 ]);
-            } */
+            }
+
+            // return $query->all();
             /*  is Self  */
         }
         // filter
@@ -143,6 +157,18 @@ class ExamController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = Exam::findOne($id);
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->eduSemestrSubject->eduSemestr->eduPlan->facuty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $post = Yii::$app->request->post();
         if (isset($post->start)) {
             $model->start = date('Y-m-d H:i:s', strtotime($post->start));
@@ -172,6 +198,17 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->eduSemestrSubject->eduSemestr->eduPlan->facuty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -184,6 +221,17 @@ class ExamController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->eduSemestrSubject->eduSemestr->eduPlan->facuty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
 
         // remove model
         if ($model) {

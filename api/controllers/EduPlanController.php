@@ -31,7 +31,7 @@ class EduPlanController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-        // is Self 
+        /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
             $query->andFilterWhere([
@@ -42,6 +42,8 @@ class EduPlanController extends ApiActiveController
                 'id' => -1
             ]);
         }
+        /*  is Self  */
+
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -58,6 +60,16 @@ class EduPlanController extends ApiActiveController
     {
         $model = new EduPlan();
         $post = Yii::$app->request->post();
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $post['faculty_id'] = $t['UserAccess']->table_id;
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $this->load($model, $post);
         $result = EduPlan::createItem($model, $post);
         if (!is_array($result)) {

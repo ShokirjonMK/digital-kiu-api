@@ -34,7 +34,6 @@ class DirectionController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-
         // is Self 
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
@@ -62,6 +61,16 @@ class DirectionController extends ApiActiveController
     {
         $model = new Direction();
         $post = Yii::$app->request->post();
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $post['faculty_id'] = $t['UserAccess']->table_id;
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $this->load($model, $post);
 
         $result = Direction::createItem($model, $post);
@@ -79,11 +88,16 @@ class DirectionController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // is Self 
+        /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 2) {
+        if ($t['status'] == 1) {
+            if ($model->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }
+        /*  is Self  */
 
         $post = Yii::$app->request->post();
         $this->load($model, $post);
@@ -104,11 +118,16 @@ class DirectionController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // is Self 
+        /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 2) {
+        if ($t['status'] == 1) {
+            if ($model->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }
+        /*  is Self  */
 
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
@@ -123,11 +142,16 @@ class DirectionController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // is Self 
+        /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 2) {
+        if ($t['status'] == 1) {
+            if ($model->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }
+        /*  is Self  */
 
         // remove model
         if ($model) {

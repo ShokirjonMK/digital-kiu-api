@@ -73,6 +73,8 @@ class Exam extends \yii\db\ActiveRecord
             [['question_count_by_type'], 'safe'],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
+            [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
+            [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
         ];
     }
 
@@ -84,6 +86,10 @@ class Exam extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             // name in translate
+
+            'faculty_id' => 'Faculty Id',
+            'direction_id' => 'Direction Id',
+
             'question_count_by_type' => 'Question Count By Type',
             'exam_type_id' => 'Exam Type ID',
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
@@ -116,6 +122,8 @@ class Exam extends \yii\db\ActiveRecord
             'edu_semestr_subject_id',
             'start',
             'finish',
+            'faculty_id',
+            'direction_id',
             'duration',
             'is_protected',
             'max_ball',
@@ -136,6 +144,9 @@ class Exam extends \yii\db\ActiveRecord
         $extraFields =  [
             'eduSemestrSubject',
             'examType',
+            'faculty',
+            'direction',
+
             'examQuestions',
             'examStudentAnswers',
             'description',
@@ -212,6 +223,26 @@ class Exam extends \yii\db\ActiveRecord
     public function getExamStudentAnswers()
     {
         return $this->hasMany(ExamStudentAnswer::className(), ['exam_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[faculty_id]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExamFaculty()
+    {
+        return $this->hasOne(Faculty::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[direction_id]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDirection()
+    {
+        return $this->hasOne(Direction::className(), ['direction_id' => 'id']);
     }
 
 
@@ -376,14 +407,15 @@ class Exam extends \yii\db\ActiveRecord
                 $model->duration = (int)$hours * 3600 + (int)$min * 60;
             }
 
-            // $model->duration = strtotime($model->finish) - strtotime($model->start);
-            // $model->duration = ($model->duration > 0) ? $model->duration : 0;
             if ($model->save()) {
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
+                $model->faculty_id = $model->eduSemestrSubject->eduSemestr->eduPlan->faculty_id;
+                $model->direction_id = $model->eduSemestrSubject->eduSemestr->eduPlan->direction_id;
+                $model->update();
                 $transaction->commit();
                 return true;
             } else {

@@ -63,7 +63,7 @@ class EmployeeUser extends ParentUser
                     if ($avatarUrl) {
                         $profile->image = $avatarUrl;
                     } else {
-                        $errors[] = $model->errors;;
+                        $errors[] = $model->errors;
                     }
                 }
                 // ***

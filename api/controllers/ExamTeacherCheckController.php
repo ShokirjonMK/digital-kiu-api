@@ -24,7 +24,7 @@ class ExamTeacherCheckController extends ApiActiveController
     {
         $model = new ExamTeacherCheck();
 
-    /*     $teacherAcces = TeacherAccess::find()->where(['user_id' => Yii::$app->user->identity->id]);
+        /*     $teacherAcces = TeacherAccess::find()->where(['user_id' => Yii::$app->user->identity->id]);
         // return $student;
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
@@ -34,11 +34,11 @@ class ExamTeacherCheckController extends ApiActiveController
             $query = $model->find()->andWhere(['id' => -1]);
         } else {
  */
-            $query = $model->find()
-                ->andWhere(['.is_deleted' => 0]);
+        $query = $model->find()
+            ->andWhere(['.is_deleted' => 0]);
         /* } */
 
- 
+
         // filter
         $query = $this->filterAll($query, $model);
 

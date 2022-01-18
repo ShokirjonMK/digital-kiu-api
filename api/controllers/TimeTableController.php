@@ -110,8 +110,8 @@ class TimeTableController extends ApiActiveController
         $result = TimeTable::findOne($id);
 
         if ($result) {
-            $result->is_deleted = 1;
-            $result->update();
+            TimeTable::deleteAll(['parent_id' => $result->id]);
+            $result->delete();
 
             return $this->response(1, _e('TimeTable succesfully removed.'), null, null, ResponseStatus::OK);
         }

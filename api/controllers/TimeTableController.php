@@ -113,7 +113,7 @@ class TimeTableController extends ApiActiveController
             TimeTable::deleteAll(['parent_id' => $result->id]);
             $result->delete();
 
-            return $this->response(1, _e('TimeTable succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e('TimeTable and its children succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

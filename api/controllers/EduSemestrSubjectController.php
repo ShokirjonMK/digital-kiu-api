@@ -56,8 +56,12 @@ class EduSemestrSubjectController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
-                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            // EduSemestr -> EduPlan faculty_id
+            $eduSemester = EduSemestr::findOne($post['edu_semestr_id'] ?? null);
+            if ($eduSemester) {
+                if ($eduSemester->eduPlan->faculty_id != $t['UserAccess']->table_id) {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                }
             }
         } elseif ($t['status'] == 2) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);

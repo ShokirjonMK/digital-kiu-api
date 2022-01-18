@@ -83,7 +83,7 @@ class m130524_201442_init extends Migration
             'scientific_work' => $this->text()->null(),
             'languages' => $this->string()->null(),
             'lang_certs' => $this->string()->null(),
-            'rate' => $this->decimal(10,2)->null(),
+            'rate' => $this->decimal(10, 2)->null(),
             'rank_id' => $this->integer()->null(),
             'science_degree_id' => $this->integer()->null(),
             'scientific_title_id' => $this->integer()->null(),
@@ -91,7 +91,7 @@ class m130524_201442_init extends Migration
             'reception_time' => $this->string()->null(),
             'out_staff' => $this->tinyInteger(1)->null(),
             'basic_job' => $this->tinyInteger(1)->null(),
-            
+
             'is_convicted' => $this->tinyInteger(1)->null(),
             'party_membership' => $this->tinyInteger(1)->null(),
             'awords' => $this->string()->null(),
@@ -101,7 +101,7 @@ class m130524_201442_init extends Migration
             'family_status' => $this->tinyInteger(1)->null(),
             'children' => $this->string()->null(),
             'other_info' => $this->text()->null(),
-            
+
         ], $tableOptions);
 
         $this->createTable('{{%student}}', [
@@ -111,7 +111,7 @@ class m130524_201442_init extends Migration
             'education_direction_id' => $this->integer()->null(),
             'basis_of_learning' => $this->integer()->null(),
             'education_type' => $this->tinyInteger()->null(),
-            
+
             'diploma_number' => $this->string()->null(),
             'diploma_date' => $this->timestamp()->null(),
 
@@ -119,7 +119,7 @@ class m130524_201442_init extends Migration
             'landlord_info' => $this->text()->null(),
             'student_live_with' => $this->text()->null(),
             'other_info' => $this->text()->null(),
-            
+
         ], $tableOptions);
 
 
@@ -143,15 +143,15 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%profile}}', [
             'user_id' => 1,
-            'firstname' => "ShokirjonMK",
+            'firstname' => "Shokirjon MK",
             'lastname' => "Developer",
         ]);
 
 
         $this->insert('{{%users}}', [
-            'username' => 'webadmin',
+            'username' => 'suadmin',
             'auth_key' => \Yii::$app->security->generateRandomString(20),
-            'password_hash' => \Yii::$app->security->generatePasswordHash("helloDev20"),
+            'password_hash' => \Yii::$app->security->generatePasswordHash("susu1221"),
             'password_reset_token' => null,
             'access_token' => \Yii::$app->security->generateRandomString(),
             'access_token_time' => time(),
@@ -166,14 +166,14 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%profile}}', [
             'user_id' => 1,
-            'firstname' => "Web",
-            'lastname' => "Developer",
+            'firstname' => "Super",
+            'lastname' => "Admin",
         ]);
 
         $this->insert('{{%users}}', [
-            'username' => 'tsuladmin',
+            'username' => 'professor',
             'auth_key' => \Yii::$app->security->generateRandomString(20),
-            'password_hash' => \Yii::$app->security->generatePasswordHash("yuridika2112"),
+            'password_hash' => \Yii::$app->security->generatePasswordHash("tsul2022"),
             'password_reset_token' => null,
             'access_token' => \Yii::$app->security->generateRandomString(),
             'access_token_time' => time(),
@@ -188,8 +188,8 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%profile}}', [
             'user_id' => 2,
-            'firstname' => "TSUL",
-            'lastname' => "Admin",
+            'firstname' => "Prof",
+            'lastname' => "Dev",
         ]);
     }
 

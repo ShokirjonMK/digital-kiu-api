@@ -64,7 +64,7 @@ class ExamController extends ApiActiveController
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
 
-        if (isset($student)) {
+        if ($student) {
             if (isset($eduSmesterId)) {
                 $eduSmesterSubjectIds = EduSemestrSubject::find()
                     ->andWhere(['edu_semestr_id' => $eduSmesterId])
@@ -85,9 +85,9 @@ class ExamController extends ApiActiveController
                     // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     ->groupBy($this->table_name . '.id')
                     ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE_FOR_ALL])
-                    ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
+                    ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
             } else {
-                return $this->response(0, _e('Your exams not found.'), null, null, ResponseStatus::NOT_FOUND);
+                $query = $model->find()->andWhere(['id' => -1]);
             }
         } else {
 
@@ -99,28 +99,14 @@ class ExamController extends ApiActiveController
                 ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
             /*  is Self  */
-            // Exam(current) EduSemestrSubject -> EduSemestr -> EduPlan -> facuty_id
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
-
-                $query = $query->leftJoin("edu_semestr_subject ess", "ess.id = exam.edu_semestr_subject_id")
-                    ->leftJoin("edu_semestr es", "es.id = ess.edu_semestr_id")
-                    ->leftJoin("edu_plan ep", "ep.id = es.edu_plan_id")
-                    ->andWhere(['ep.faculty_id' => $t['UserAccess']->table_id]);
-
-                /*  $eduPlanIds = EduPlan::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
-                $eduSmesterIds = EduSemestr::find()->where(['in', 'edu_plan_id', $eduPlanIds])->select('id');
-                $eduSmesterSubjectIds = EduSemestrSubject::find()->where(['in', 'edu_semestr_id', $eduSmesterIds])->select('id');
-
-                $query = $query->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds]);
-                // */
+                $query = $query->andWhere(['faculty_id' => $t['UserAccess']->table_id]);
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
                     'id' => -1
                 ]);
             }
-
-            // return $query->all();
             /*  is Self  */
         }
         // filter
@@ -161,7 +147,7 @@ class ExamController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            if ($model->eduSemestrSubject->eduSemestr->eduPlan->facuty_id != $t['UserAccess']->table_id) {
+            if ($model->facuty_id != $t['UserAccess']->table_id) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
             }
         } elseif ($t['status'] == 2) {
@@ -201,7 +187,7 @@ class ExamController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            if ($model->eduSemestrSubject->eduSemestr->eduPlan->facuty_id != $t['UserAccess']->table_id) {
+            if ($model->facuty_id != $t['UserAccess']->table_id) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
             }
         } elseif ($t['status'] == 2) {
@@ -225,7 +211,7 @@ class ExamController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            if ($model->eduSemestrSubject->eduSemestr->eduPlan->facuty_id != $t['UserAccess']->table_id) {
+            if ($model->facuty_id != $t['UserAccess']->table_id) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
             }
         } elseif ($t['status'] == 2) {

@@ -34,13 +34,14 @@ class EduSemestrController extends ApiActiveController
                 ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
         } else {
             $query = $model->find()
-                ->andWhere(['is_deleted' => 0])
-                ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+                ->andWhere(['edu_semestr.is_deleted' => 0])
+                ->andFilterWhere(['like', 'edu_semestr.name', Yii::$app->request->get('q')]);
 
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
-                $query = $query->leftJoin("edu_plan ep", "ep.id = edu_semestr.edu_plan_id")->andWhere(['in', 'ep.faculty_id', $t['UserAccess']->table_id]);
+                $query = $query->leftJoin("edu_plan ep", "ep.id = edu_semestr.edu_plan_id")
+                    ->andWhere(['in', 'ep.faculty_id', $t['UserAccess']->table_id]);
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
                     'id' => -1

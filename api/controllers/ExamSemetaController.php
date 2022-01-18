@@ -4,7 +4,9 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Exam;
 use common\models\model\ExamSemeta;
+use common\models\model\Faculty;
 
 class ExamSemetaController extends ApiActiveController
 {
@@ -26,6 +28,18 @@ class ExamSemetaController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->leftJoin('exam', 'exam.id = exam_semeta.exam_id',)
+                ->andWhere(['exam.faculty_id' => $t['UserAccess']->table_id]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'id' => -1
+            ]);
+        }
+        /*  is Self  */
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -41,6 +55,25 @@ class ExamSemetaController extends ApiActiveController
     {
         $model = new ExamSemeta();
         $post = Yii::$app->request->post();
+        $errors = [];
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $exam = Exam::findOne($post('exam_id') ?? null);
+            if ($exam) {
+                if ($exam->faculty_id != $t['UserAccess']->table_id) {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+            } else {
+                $errors[] = ['exam_id' => _e('Exam is not found')];
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $this->load($model, $post);
 
         $result = ExamSemeta::createItem($model, $post);
@@ -57,6 +90,18 @@ class ExamSemetaController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->exam->facuty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = ExamSemeta::updateItem($model, $post);
@@ -75,6 +120,18 @@ class ExamSemetaController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->exam->facuty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -90,6 +147,18 @@ class ExamSemetaController extends ApiActiveController
 
         // remove model
         if ($model) {
+
+            /*  is Self  */
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                if ($model->exam->facuty_id != $t['UserAccess']->table_id) {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+            } elseif ($t['status'] == 2) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+            /*  is Self  */
+
             $model->is_deleted = 1;
             $model->update();
 
@@ -97,6 +166,4 @@ class ExamSemetaController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
 }

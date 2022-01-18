@@ -23,6 +23,7 @@ class ExamStudentAnswerController extends ApiActiveController
         $data = [];
         $model = new ExamStudentAnswer();
         $post = Yii::$app->request->post();
+
         $result = ExamStudentAnswer::randomQuestions($post);
 
         if (isset($result['questions'])) {

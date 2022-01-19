@@ -130,6 +130,7 @@ class EduSemestrSubjectController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
+        $errors = [];
         $model = EduSemestrSubject::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
@@ -142,16 +143,18 @@ class EduSemestrSubjectController extends ApiActiveController
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
                 if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
-                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                    $errors[] = _e('You don\'t have access');
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::FORBIDDEN);
                 }
             } elseif ($t['status'] == 2) {
-                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                $errors[] = _e('You don\'t have access');
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::FORBIDDEN);
             }
             /*  is Self  */
             $result = EduSemestrSubject::deleteItem($model);
 
             if (!is_array($result)) {
-                return $this->response(1, _e('EduSemestrSubject succesfully removed.'), null, null, ResponseStatus::OK);
+                return $this->response(1, _e('Edu Semestr Subject succesfully removed.'), null, null, ResponseStatus::OK);
             } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
             }

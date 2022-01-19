@@ -76,6 +76,14 @@ return [
         'user_logout',
         'user_me',
 
+        'user_status-list',
+        'user_index',
+        'user_create',
+        'user_update',
+        'user_view',
+        'user_delete',
+
+
         'faculty_update',
         'faculty_view',
         'area_index',
@@ -133,17 +141,50 @@ return [
     ],
     /* Dekan huquqlari */
 
+    /* Zam Dekan huquqlari */
     'dean_deputy' => [
         'password_index',
         'password_update',
         'user_logout',
         'user_me',
 
+        'user_status-list',
+        'user_index',
+        'user_create',
+        'user_update',
+        'user_view',
+        'user_delete',
+
         'job_index',
         'job_create',
         'job_update',
         'job_view',
         'job_delete',
+    ],
+
+    /* tutor tarbiyachi huquqlari */
+    'tutor' => [
+        'password_index',
+        'password_update',
+        'user_logout',
+        'user_me',
+
+        'user_status-list',
+        'languages_index',
+        'areas_index',
+        'countries_index',
+        'regions_index',
+        'courses_index',
+        'directions_index',
+        'edu-years_index',
+        'edu-plans_index',
+        'edu-types_index',
+
+        'student_index',
+        'student_create',
+        'student_update',
+        'student_view',
+        'student_delete',
     ],
 
     /* Kafedra mudiri */

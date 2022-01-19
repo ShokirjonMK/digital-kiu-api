@@ -94,7 +94,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
 
             'edu_semestr_id',
@@ -118,7 +118,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'eduSemestrExamsTypes',
             'eduSemestr',
             'subject',
@@ -130,7 +130,6 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
-
 
 
     /**
@@ -216,7 +215,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $EduSemestrSubjectCategoryTime1->subject_category_id = $subjectCatId;
                         $EduSemestrSubjectCategoryTime1->hours = $subjectCatValues;
                         $EduSemestrSubjectCategoryTime1->save();
-                        $all_ball_yuklama  = $all_ball_yuklama + $subjectCatValues;
+                        $all_ball_yuklama = $all_ball_yuklama + $subjectCatValues;
                     }
                 }
 
@@ -228,7 +227,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $EduSemestrExamsType1->exams_type_id = $examsTypeId;
                         $EduSemestrExamsType1->max_ball = $examsTypeMaxBal;
                         $EduSemestrExamsType1->save();
-                        $max_ball  = $max_ball + $examsTypeMaxBal;
+                        $max_ball = $max_ball + $examsTypeMaxBal;
 
                         /** imtihonlar  imtixon turlari bo'yicha avto yaralishi  */
                         $newExam = new Exam();
@@ -278,7 +277,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                     $EduSemestrSubjectCategoryTime->subject_category_id = $subjectCatId;
                     $EduSemestrSubjectCategoryTime->hours = $subjectCatValues;
                     $EduSemestrSubjectCategoryTime->save();
-                    $all_ball_yuklama  = $all_ball_yuklama + $subjectCatValues;
+                    $all_ball_yuklama = $all_ball_yuklama + $subjectCatValues;
                 }
             }
             if (isset($post['EduSemestrExamType'])) {
@@ -298,10 +297,10 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                     $EduSemestrExamsType->exams_type_id = $examsTypeId1;
                     $EduSemestrExamsType->max_ball = $examsTypeMaxBal1;
                     $EduSemestrExamsType->save();
-                    $max_ball  = $max_ball + $examsTypeMaxBal1;
+                    $max_ball = $max_ball + $examsTypeMaxBal1;
 
                     /**
-                     *  imtihonlar  imtixon turlari bo'yicha avto yaralishi 
+                     *  imtihonlar  imtixon turlari bo'yicha avto yaralishi
                      */
                     $hasExam = Exam::findOne(['exam_type_id' => $examsTypeId1, 'edu_semestr_subject_id' => $model->id]);
                     if (!isset($hasExam)) {
@@ -342,21 +341,27 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if(!(EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]))){
+        if (!(EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]))) {
             $errors[] = _e('Error occurred on deleting EduSemestrSubjectCategoryTime');
         }
-        if(!(EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]))){
+        if (!(EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]))) {
             $errors[] = _e('Error occurred on deleting EduSemestrExamsType');
         }
-
-        if ($model->delete()) {
-            $transaction->commit();
-            return true;
-        } else {
+        if (count($errors) > 0) {
             $errors[] = _e('Error occurred');
             $transaction->rollBack();
             return simplify_errors($errors);
+        } else {
+            if ($model->delete()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = _e('Error occurred');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         }
+
     }
 
 

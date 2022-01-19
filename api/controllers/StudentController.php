@@ -8,6 +8,7 @@ use api\resources\User;
 
 use common\models\Student as CommonStudent;
 use base\ResponseStatus;
+use common\models\model\Faculty;
 use common\models\model\Profile;
 use common\models\model\Student;
 
@@ -75,6 +76,15 @@ class  StudentController extends ApiActiveController
         $count = $users + 10001;
         $post['username'] = 'tsul-std-' . $count;
         $post['email'] = 'tsul-std' . $count . '@tsul.uz';
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $post['faculty_id'] = $t['UserAccess']->table_id;
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
 
         $this->load($model, $post);
         $this->load($profile, $post);

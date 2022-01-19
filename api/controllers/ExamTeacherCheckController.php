@@ -6,6 +6,7 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\Exam;
 use common\models\model\ExamTeacherCheck;
+use common\models\model\Faculty;
 use common\models\model\TeacherAccess;
 
 class ExamTeacherCheckController extends ApiActiveController
@@ -24,21 +25,27 @@ class ExamTeacherCheckController extends ApiActiveController
     {
         $model = new ExamTeacherCheck();
 
-        /*     $teacherAcces = TeacherAccess::find()->where(['user_id' => Yii::$app->user->identity->id]);
-        // return $student;
-        $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
+        $user_id = Yii::$app->user->identity->getId() ?? null;
 
-        $roles = Yii::$app->authManager->getRoles();
-
-        if ($teacherAcces) {
-            $query = $model->find()->andWhere(['id' => -1]);
+        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+        if (property_exists($roles, 'teacher')) {
+            $query = $model->find()->andWhere(['in', 'teacher_access_id', TeacherAccess::find()->where(['user_id' => $user_id])->select('id')]);
         } else {
- */
-        $query = $model->find()
-            ->andWhere(['.is_deleted' => 0]);
-        /* } */
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0]);
+        }
 
-
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere(['faculty_id' => $t['UserAccess']->table_id]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'id' => -1
+            ]);
+        }
+            /*  is Self  */
+            
         // filter
         $query = $this->filterAll($query, $model);
 

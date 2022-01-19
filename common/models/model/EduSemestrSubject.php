@@ -342,14 +342,18 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]);
-        EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]);
+        if(!(EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]))){
+            $errors[] = _e('Error occurred on deleting EduSemestrSubjectCategoryTime');
+        }
+        if(!(EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]))){
+            $errors[] = _e('Error occurred on deleting EduSemestrExamsType');
+        }
 
         if ($model->delete()) {
             $transaction->commit();
             return true;
         } else {
-            $errors[] = _e('Error occured');
+            $errors[] = _e('Error occurred');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

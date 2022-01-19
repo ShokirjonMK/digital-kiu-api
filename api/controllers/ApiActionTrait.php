@@ -256,13 +256,20 @@ trait ApiActionTrait
 
         $t['status'] = 3;
 
+
+        foreach (_eduRoles() as $eduRole) {
+            if (property_exists($roles, $eduRole)) {
+                return $t;
+            }
+        }
+
         if ($userAccess) {
             $t['status'] = 1;
             $t['UserAccess'] = $userAccess;
+            return $t;
         } elseif (!property_exists($roles, 'admin')) {
             $t['status'] = 2;
+            return $t;
         }
-
-        return $t;
     }
 }

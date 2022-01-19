@@ -172,7 +172,7 @@ return [
         'user_status-list',
         'languages_index',
         'area_index',
-        'countrie_index',
+        'country_index',
         'region_index',
         'course_index',
         'direction_index',

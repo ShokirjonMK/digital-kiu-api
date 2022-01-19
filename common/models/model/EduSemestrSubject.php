@@ -341,26 +341,29 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if (!(EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]))) {
-            $errors[] = _e('Error occurred on deleting EduSemestrSubjectCategoryTime');
+        $eduSemestrSubjectCategoryTime = EduSemestrSubjectCategoryTime::findAll(['edu_semestr_subject_id' => $model->id]);
+        $eduSemestrExamsType = EduSemestrExamsType::findAll(['edu_semestr_subject_id' => $model->id]);
+        foreach ($eduSemestrExamsType as $eduSemestrExamsTypeOne) {
+            $eduSemestrExamsTypeOne->delete();
         }
-        if (!(EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]))) {
-            $errors[] = _e('Error occurred on deleting EduSemestrExamsType');
+        foreach ($eduSemestrSubjectCategoryTime as $eduSemestrSubjectCategoryTimeOne) {
+            $eduSemestrSubjectCategoryTimeOne->delete();
         }
-        if (count($errors) > 0) {
+
+//        if (count($errors) > 0) {
+//            $errors[] = _e('Error occurred');
+//            $transaction->rollBack();
+//            return simplify_errors($errors);
+//        } else {
+        if ($model->delete()) {
+            $transaction->commit();
+            return true;
+        } else {
             $errors[] = _e('Error occurred');
             $transaction->rollBack();
             return simplify_errors($errors);
-        } else {
-            if ($model->delete()) {
-                $transaction->commit();
-                return true;
-            } else {
-                $errors[] = _e('Error occurred');
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
         }
+//        }
 
     }
 

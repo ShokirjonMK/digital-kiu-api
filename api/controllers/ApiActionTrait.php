@@ -271,5 +271,7 @@ trait ApiActionTrait
             $t['status'] = 2;
             return $t;
         }
+
+        return $t;
     }
 }

@@ -192,7 +192,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         }
         $EduSemestrSubject = EduSemestrSubject::findOne([
             'edu_semestr_id' => $model->edu_semestr_id,
-            'subject_id' => $model->subject_id,
+            'subject_id' => $post['subject_id'] ?? null,
         ]);
 
         if (isset($EduSemestrSubject)) {
@@ -201,7 +201,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
         if ($model->save()) {
-            $subjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id']]);
+            $subjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id'] ?? null]);
             $all_ball_yuklama = 0;
             $max_ball = 0;
 
@@ -340,30 +340,20 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-var_dump("asas");
-        $eduSemestrSubjectCategoryTime = EduSemestrSubjectCategoryTime::findAll(['edu_semestr_subject_id' => $model->id]);
-        $eduSemestrExamsType = EduSemestrExamsType::findAll(['edu_semestr_subject_id' => $model->id]);
-        foreach ($eduSemestrExamsType as $eduSemestrExamsTypeOne) {
-            $eduSemestrExamsTypeOne->delete();
-        }
-        foreach ($eduSemestrSubjectCategoryTime as $eduSemestrSubjectCategoryTimeOne) {
-            $eduSemestrSubjectCategoryTimeOne->delete();
-        }
 
-//        if (count($errors) > 0) {
-//            $errors[] = _e('Error occurred');
-//            $transaction->rollBack();
-//            return simplify_errors($errors);
-//        } else {
+        EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]);
+        EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]);
+        Exam::deleteAll(['edu_semestr_subject_id' => $model->id]);
+
+
         if ($model->delete()) {
             $transaction->commit();
             return true;
         } else {
-            $errors[] = _e('Error occurred');
+            $errors[] = _e('Error occurred on deleting');
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-//        }
 
     }
 

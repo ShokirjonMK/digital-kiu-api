@@ -43,7 +43,7 @@ class EduSemestrSubjectController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data =  $this->getData($query);
+        $data = $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);
     }
@@ -141,16 +141,18 @@ class EduSemestrSubjectController extends ApiActiveController
         if ($model) {
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+//            return $t;
             if ($t['status'] == 1) {
                 if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
                     $errors[] = _e('You don\'t have access');
                     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::FORBIDDEN);
                 }
             } elseif ($t['status'] == 2) {
-                $errors[] = _e('You don\'t have access');
+                $errors[] = _e('You don\'t have access or you are not admin');
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::FORBIDDEN);
             }
             /*  is Self  */
+
             $result = EduSemestrSubject::deleteItem($model);
 
             if (!is_array($result)) {

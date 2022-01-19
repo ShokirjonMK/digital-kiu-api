@@ -340,7 +340,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
+var_dump("asas");
         $eduSemestrSubjectCategoryTime = EduSemestrSubjectCategoryTime::findAll(['edu_semestr_subject_id' => $model->id]);
         $eduSemestrExamsType = EduSemestrExamsType::findAll(['edu_semestr_subject_id' => $model->id]);
         foreach ($eduSemestrExamsType as $eduSemestrExamsTypeOne) {

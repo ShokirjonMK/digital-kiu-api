@@ -49,7 +49,6 @@ class m211022_134710_student_new extends Migration
         $this->addForeignKey('es_student_edu_year_id','student','edu_year_id','edu_year','id');
         $this->addForeignKey('es_student_edu_type_id','student','edu_type_id','edu_type','id');
 
-
     }
 
     /**

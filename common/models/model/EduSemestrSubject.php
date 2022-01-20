@@ -239,8 +239,9 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $newExam->finish = date("Y-m-d H:i:s");
                         $newExam->max_ball = $examsTypeMaxBal;
                         $newExam->min_ball = $examsTypeMaxBal;
+                        $newExam->status = Exam::STATUS_INACTIVE;
                         $newExam->save();
-                        /** */
+                        /** imtihonlar  imtixon turlari bo'yicha avto yaralishi  */
                     }
                 }
                 $model->all_ball_yuklama = $all_ball_yuklama;
@@ -299,9 +300,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                     $EduSemestrExamsType->save();
                     $max_ball = $max_ball + $examsTypeMaxBal1;
 
-                    /**
-                     *  imtihonlar  imtixon turlari bo'yicha avto yaralishi
-                     */
+                    /** imtihonlar  imtixon turlari bo'yicha avto yaralishi */
                     $hasExam = Exam::findOne(['exam_type_id' => $examsTypeId1, 'edu_semestr_subject_id' => $model->id]);
                     if (!isset($hasExam)) {
                         $newExam = new Exam();
@@ -313,6 +312,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $newExam->finish = date("Y-m-d H:i:s");
                         $newExam->max_ball = $examsTypeMaxBal1;
                         $newExam->min_ball = $examsTypeMaxBal1;
+                        $newExam->status = Exam::STATUS_INACTIVE;
                         $newExam->save();
                     } else {
                         $hasExam->is_deleted = 0;
@@ -322,7 +322,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $hasExam->min_ball = $examsTypeMaxBal1;
                         $hasExam->save();
                     }
-                    /** */
+                    /** imtihonlar  imtixon turlari bo'yicha avto yaralishi */
                 }
             }
             $model->all_ball_yuklama = $all_ball_yuklama;
@@ -354,9 +354,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
-
 
     public function beforeSave($insert)
     {

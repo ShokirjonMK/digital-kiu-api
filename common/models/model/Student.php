@@ -68,12 +68,33 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             [[
-                'user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
-                'edu_type_id', 'is_contract', 'edu_lang_id'
+                'user_id',
+                'faculty_id',
+                'direction_id',
+                'course_id',
+                'edu_year_id',
+
+                'edu_type_id',
+                'is_contract',
+                'edu_lang_id'
             ], 'required'],
             [[
-                'user_id', 'faculty_id', 'direction_id', 'course_id', 'edu_year_id',
-                'edu_type_id', 'is_contract', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
+                'tutor_id',
+                'user_id',
+                'faculty_id',
+                'direction_id',
+                'course_id',
+                'edu_plan_id',
+                'edu_year_id',
+                'edu_type_id',
+                'is_contract',
+                'order',
+                'status',
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by',
+                'is_deleted'
             ], 'integer'],
             [['diplom_date'], 'safe'],
             [['description'], 'string'],
@@ -84,6 +105,7 @@ class Student extends \yii\db\ActiveRecord
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['tutor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['tutor_id' => 'id']],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['edu_lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['edu_lang_id' => 'id']],
         ];
@@ -97,6 +119,7 @@ class Student extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'tutor_id' => 'Tutor ID',
             'faculty_id' => 'Faculty ID',
             'direction_id' => 'Direction ID',
             'course_id' => 'Course ID',
@@ -126,6 +149,7 @@ class Student extends \yii\db\ActiveRecord
             'id',
 
             'user_id',
+            'tutor_id',
             'faculty_id',
             'direction_id',
             'course_id',
@@ -157,6 +181,7 @@ class Student extends \yii\db\ActiveRecord
             'eduYear',
             'faculty',
             'user',
+            'tutor',
             'profile',
             'eduPlan',
             'createdBy',
@@ -232,6 +257,16 @@ class Student extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[Tutor]].
+     * tutor_id
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTutor()
+    {
+        return $this->hasOne(User::className(), ['id' => 'tutor_id']);
     }
 
     /**

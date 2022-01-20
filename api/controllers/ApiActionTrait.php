@@ -93,6 +93,9 @@ trait ApiActionTrait
             $this->asJson($this->response(0, _e('Wrong language code selected (' . $lang . ').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
         } else {
 
+
+            // return _eduRoles();
+
             /* $action_logos = new Action();
             $action_logos->user_id = Yii::$app->user->identity->id();
             $action_logos->controller = Yii::$app->controller->id;
@@ -242,6 +245,18 @@ trait ApiActionTrait
             }
         }
         return true;
+    }
+
+    public function isRole($roleName)
+    {
+        $user_id = Yii::$app->user->identity->getId();
+        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+
+        if (property_exists($roles, $roleName)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function isSelf($userAccessTypeId)

@@ -5,6 +5,8 @@ namespace api\controllers;
 use api\resources\AccessControl;
 use api\resources\AuthItem;
 use base\ResponseStatus;
+use common\models\AuthAssignment;
+use common\models\model\AuthChild;
 use Yii;
 
 class AccessControlController extends ApiActiveController
@@ -18,26 +20,24 @@ class AccessControlController extends ApiActiveController
 
     public function actionRoles()
     {
-        $model = new AuthItem();
+        $model = new AuthChild();
 
-        $nimadi = AuthItem::findOne(['name'=> 'admin']);
+        $user_id = Yii::$app->user->identity->getId();
 
-
-        // $nimadi->getChildren();
-
-        // return $nimadi;
-
+        $getMyRoles = AuthAssignment::find()->select("item_name")->where([
+            'user_id' => $user_id
+        ]);
 
         $query = $model->find()
-            ->where(['type' => AuthItem::TYPE_ROLE])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
-        
+            ->where(['in', 'parent', $getMyRoles])
+            ->andFilterWhere(['like', 'child', Yii::$app->request->get('q')]);
+
         // sort
         $query = $this->sort($query);
-        
+
         // data
         $data =  $this->getData($query);
-        
+
         return $this->response(1, _e('Success'), $data);
     }
     

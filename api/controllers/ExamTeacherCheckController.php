@@ -36,16 +36,18 @@ class ExamTeacherCheckController extends ApiActiveController
         }
 
         /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $query = $query->andWhere(['faculty_id' => $t['UserAccess']->table_id]);
-        } elseif ($t['status'] == 2) {
-            $query->andFilterWhere([
-                'id' => -1
-            ]);
-        }
-            /*  is Self  */
-            
+        // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+        //     $query = $query->andWhere([
+        //         'faculty_id' => $t['UserAccess']->table_id
+        //     ]);
+        // } elseif ($t['status'] == 2) {
+        //     $query->andFilterWhere([
+        //         'faculty_id' => -1
+        //     ]);
+        // }
+        /*  is Self  */
+
         // filter
         $query = $this->filterAll($query, $model);
 

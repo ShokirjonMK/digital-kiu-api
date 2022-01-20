@@ -39,7 +39,7 @@ class EduPlanController extends ApiActiveController
             ]);
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([
-                'id' => -1
+                'faculty_id' => -1
             ]);
         }
         /*  is Self  */

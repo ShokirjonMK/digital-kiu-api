@@ -36,7 +36,7 @@ class ExamSemetaController extends ApiActiveController
                 ->andWhere(['exam.faculty_id' => $t['UserAccess']->table_id]);
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([
-                'id' => -1
+                'exam_id' => -1
             ]);
         }
         /*  is Self  */

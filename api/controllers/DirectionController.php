@@ -42,7 +42,7 @@ class DirectionController extends ApiActiveController
             ]);
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([
-                'id' => -1
+                'id' => 0
             ]);
         }
 

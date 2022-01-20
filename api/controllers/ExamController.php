@@ -87,7 +87,9 @@ class ExamController extends ApiActiveController
                     ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE_FOR_ALL])
                     ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
             } else {
-                $query = $model->find()->andWhere(['id' => -1]);
+                $query = $model->find()->andWhere([
+                    'edu_semestr_subject_id' => -1
+                ]);
             }
         } else {
 
@@ -101,10 +103,12 @@ class ExamController extends ApiActiveController
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
-                $query = $query->andWhere(['faculty_id' => $t['UserAccess']->table_id]);
+                $query = $query->andWhere([
+                    'faculty_id' => $t['UserAccess']->table_id
+                ]);
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
-                    'id' => -1
+                    'faculty_id' => -1
                 ]);
             }
             /*  is Self  */

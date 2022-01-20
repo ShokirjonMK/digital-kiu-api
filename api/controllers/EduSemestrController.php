@@ -44,7 +44,7 @@ class EduSemestrController extends ApiActiveController
                     ->andWhere(['in', 'ep.faculty_id', $t['UserAccess']->table_id]);
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
-                    'id' => -1
+                    'edu_plan_id' => -1
                 ]);
             }
             /*  is Self  */

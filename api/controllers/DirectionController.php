@@ -38,11 +38,11 @@ class DirectionController extends ApiActiveController
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
             $query->andFilterWhere([
-                $this->table_name.'faculty_id' => $t['UserAccess']->table_id
+               'faculty_id' => $t['UserAccess']->table_id
             ]);
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([
-                'id' => 0
+                'faculty_id' => -1
             ]);
         }
 

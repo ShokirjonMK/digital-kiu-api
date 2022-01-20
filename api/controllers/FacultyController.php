@@ -50,7 +50,7 @@ class FacultyController extends ApiController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-        // is Self 
+       /*  // is Self 
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
             $query->andFilterWhere([
@@ -60,7 +60,7 @@ class FacultyController extends ApiController
             $query->andFilterWhere([
                 'is_deleted' => -1
             ]);
-        }
+        } */
 
 
         // filter

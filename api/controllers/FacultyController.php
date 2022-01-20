@@ -50,6 +50,19 @@ class FacultyController extends ApiController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
+        // is Self 
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query->andFilterWhere([
+                'id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'id' => -1
+            ]);
+        }
+
+
         // filter
         $query = $this->filterAll($query, $model);
 

@@ -5,6 +5,7 @@ namespace api\resources;
 use common\models\AuthAssignment;
 use common\models\AuthItem as CommonAuthItem;
 use common\models\AuthItemChild;
+use common\models\model\AuthChild;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
@@ -95,6 +96,30 @@ class AuthItem extends CommonAuthItem
                             }
                         }
                     }
+                    foreach ($obj->parents as $parent) {
+                        $hasParent = AuthChild::findOne(['parent' => $parent, 'child' => $obj->role]);
+                        $hasParentChild = AuthChild::findOne(['child' => $parent, 'parent' => $obj->role]);
+                        if (!$hasParent&& !$hasParentChild) {
+                            $authChildModel = new AuthChild();
+                            $authChildModel->parent = $parent;
+                            $authChildModel->child = $obj->role;
+                            $authChildModel->save();
+                        }
+                    }
+
+                    foreach ($obj->childs as $child) {
+                        $hasChild = AuthChild::findOne(['parent' => $obj->role, 'child' => $child]);
+                        $hasChildParent = AuthChild::findOne(['child' => $obj->role, 'parent' => $child]);
+                        if (!$hasChild && !$hasChildParent) {
+                            $authChildModel = new AuthChild();
+                            $authChildModel->parent = $obj->role;
+                            $authChildModel->child = $child;
+                            $authChildModel->save();
+                        }
+                    }
+
+
+
                 }
             }
         }

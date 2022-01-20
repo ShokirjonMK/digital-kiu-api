@@ -31,6 +31,25 @@ class  StudentController extends ApiActiveController
             ->groupBy('student.id');
 
 
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere([
+                'faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'faculty_id' => -1
+            ]);
+        }
+        /*  is Self  */
+
+        if ($this->isRole('turor')) {
+            $query = $query->andWhere([
+                'tutor_id' => Yii::$app->user->identity->getId()
+            ]);
+        }
+
         //  Filter from Profile 
         $profile = new Profile();
         if (isset($filter)) {
@@ -66,7 +85,9 @@ class  StudentController extends ApiActiveController
     public function actionCreate($lang)
     {
         $post = Yii::$app->request->post();
-
+        if ($this->isRole('turor')) {
+            $post['tutor_id'] = Yii::$app->user->identity->getId();
+        }
         $post['role'] = 'student';
         $model = new User();
         $profile = new Profile();
@@ -105,8 +126,22 @@ class  StudentController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $post = Yii::$app->request->post();
-        $post['role'] = 'student';
         $student = Student::findOne($id);
+        if (!$student) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($student->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+        $post['role'] = 'student';
+
         if (!$student) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -135,11 +170,36 @@ class  StudentController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
     public function actionDelete($lang, $id)
     {
+        $model = Student::findOne(['id' => $id, 'is_deleted' => 0]);
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            if ($model->faculty_id != $t['UserAccess']->table_id) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         $result = StudentUser::deleteItem($id);
 
         if (!is_array($result)) {

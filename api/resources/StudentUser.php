@@ -116,6 +116,7 @@ class StudentUser extends ParentUser
         }
     }
 
+    
     public static function updateItem($model, $profile, $student, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -165,7 +166,6 @@ class StudentUser extends ParentUser
                 $model->savePassword($password, $model->id);
                 //**** */
             }
-
 
             if ($model->save()) {
 

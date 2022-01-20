@@ -54,7 +54,7 @@ class FacultyController extends ApiController
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
             $query->andFilterWhere([
-                'id' => $t['UserAccess']->table_id
+                'in', 'id', $t['UserAccess']->table_id
             ]);
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([

@@ -18,7 +18,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
 
         'job_index',
         'job_create',
@@ -43,7 +43,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'job_index',
         'job_create',
         'job_update',
@@ -67,7 +67,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -91,7 +91,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -115,7 +115,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -139,7 +139,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'time-table_index',
         'job_create',
         'job_update',
@@ -163,7 +163,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'user_logout',
         'user_me',
 
@@ -174,7 +174,14 @@ return [
         'user_view',
         'user_delete',
 
+        'languages_index',
 
+        'exams-types_index',
+        'edu-types_index',
+        'edu-years_index',
+        'courses_index',
+        'courses_index',
+        'faculty_index',
         'faculty_update',
         'faculty_view',
         'area_index',
@@ -224,11 +231,7 @@ return [
         'student_delete',
 
 
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
+        
     ],
     /* Dekan huquqlari */
 
@@ -248,7 +251,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'user_logout',
         'user_me',
 
@@ -259,11 +262,7 @@ return [
         'user_view',
         'user_delete',
 
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
+        
     ],
 
     /* tutor tarbiyachi huquqlari */
@@ -282,7 +281,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'user_logout',
         'user_me',
 
@@ -320,17 +319,13 @@ return [
         'enum_yesno',
         ////
 
-        
+
 
         'area_index',
         'region_index',
         'country_index',
 
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
+        
     ],
 
     /* Bo'lim boshlig'i */
@@ -349,7 +344,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'user_logout',
         'user_me',
 
@@ -357,11 +352,7 @@ return [
         'department_view',
 
 
-        'job_index',
-        'job_create',
-        'job_update',
-        'job_view',
-        'job_delete',
+        
     ],
 
 
@@ -381,7 +372,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
 
         'department_index',
         'department_create',
@@ -406,7 +397,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'department_index',
 
         'department_view',
@@ -428,7 +419,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
         'user_logout',
         'user_me',
 
@@ -463,7 +454,7 @@ return [
         'enum_yesno',
         ////
 
-        
+
 
         'faculty_view',
         'direction_view',

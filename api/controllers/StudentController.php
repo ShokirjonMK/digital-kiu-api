@@ -6,7 +6,6 @@ use Yii;
 use api\resources\StudentUser;
 use api\resources\User;
 
-use common\models\Student as CommonStudent;
 use base\ResponseStatus;
 use common\models\model\Faculty;
 use common\models\model\Profile;

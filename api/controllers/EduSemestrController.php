@@ -40,8 +40,8 @@ class EduSemestrController extends ApiActiveController
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
-                $query = $query->leftJoin("edu_plan ep", "ep.id = edu_semestr.edu_plan_id")
-                    ->andWhere(['in', 'ep.faculty_id', $t['UserAccess']->table_id]);
+                $eduPlan = EduPlan::find()->where(['faculty_id'=> $t['UserAccess']->table_id])->select('id');
+                $query->andWhere(['in', 'edu_plan_id', $eduPlan]);
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
                     'edu_plan_id' => -1

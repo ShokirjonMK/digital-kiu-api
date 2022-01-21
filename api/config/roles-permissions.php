@@ -180,7 +180,6 @@ return [
         'edu-type_index',
         'edu-year_index',
         'course_index',
-        'course_index',
         'faculty_index',
         'faculty_update',
         'faculty_view',

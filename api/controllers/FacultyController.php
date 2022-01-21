@@ -53,7 +53,7 @@ class FacultyController extends ApiController
         // is Self 
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            $query->andFilterWhere([
+            $query = $model->find()->where([
                 'id' => $t['UserAccess']->table_id
             ])->one();
             return $this->response(1, _e('Success'), $query);

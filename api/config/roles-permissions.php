@@ -199,6 +199,12 @@ return [
         'direction_view',
         'direction_delete',
 
+        'semestr_index',
+        // 'semestr_create',
+        'semestr_update',
+        'semestr_view',
+        // 'semestr_delete',
+
         'subject_index',
         'subject_create',
         'subject_update',

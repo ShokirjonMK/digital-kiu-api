@@ -67,7 +67,7 @@ class Exam extends \yii\db\ActiveRecord
     {
         return [
             [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
-            [['exam_type_id', 'is_protected', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['exam_type_id', 'faculty_id', 'is_protected', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'number'],
             [['question_count_by_type'], 'safe'],

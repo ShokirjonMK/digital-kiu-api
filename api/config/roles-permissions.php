@@ -205,6 +205,12 @@ return [
         'subject_view',
         'subject_delete',
 
+        'subject-sillabus_index',
+        'subject-sillabus_create',
+        'subject-sillabus_update',
+        'subject-sillabus_view',
+        'subject-sillabus_delete',
+
         'edu-plan_index',
         'edu-plan_create',
         'edu-plan_update',

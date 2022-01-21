@@ -205,6 +205,18 @@ return [
         'subject_view',
         'subject_delete',
 
+        'subject-category_index',
+        'subject-category_create',
+        'subject-category_update',
+        'subject-category_view',
+        'subject-category_delete',
+
+        'subject-type_index',
+        'subject-type_create',
+        'subject-type_update',
+        'subject-type_view',
+        'subject-type_delete',
+
         'subject-sillabus_index',
         'subject-sillabus_create',
         'subject-sillabus_update',

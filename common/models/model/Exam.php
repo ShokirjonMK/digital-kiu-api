@@ -230,7 +230,7 @@ class Exam extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getExamFaculty()
+    public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['faculty_id' => 'id']);
     }

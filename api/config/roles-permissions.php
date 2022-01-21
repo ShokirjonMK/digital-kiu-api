@@ -6,6 +6,19 @@ return [
     'rector' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
 
         'job_index',
         'job_create',
@@ -18,6 +31,19 @@ return [
     'prorector' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'job_index',
         'job_create',
         'job_update',
@@ -29,6 +55,19 @@ return [
     'edu_admin' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -40,6 +79,19 @@ return [
     'edu_moderator' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -51,6 +103,19 @@ return [
     'edu_editor' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'time-table_index',
         'time-table_create',
         'time-table_update',
@@ -62,6 +127,19 @@ return [
     'edu_viewer' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'time-table_index',
         'job_create',
         'job_update',
@@ -73,6 +151,19 @@ return [
     'dean' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'user_logout',
         'user_me',
 
@@ -145,6 +236,19 @@ return [
     'dean_deputy' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'user_logout',
         'user_me',
 
@@ -166,6 +270,19 @@ return [
     'tutor' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'user_logout',
         'user_me',
 
@@ -191,6 +308,19 @@ return [
     'mudir' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
 
         'area_index',
         'region_index',
@@ -207,6 +337,19 @@ return [
     'dep_lead' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'user_logout',
         'user_me',
 
@@ -226,6 +369,19 @@ return [
     'hr' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
 
         'department_index',
         'department_create',
@@ -238,6 +394,19 @@ return [
     'hr_viewer' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'department_index',
 
         'department_view',
@@ -247,6 +416,19 @@ return [
     'teacher' => [
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
         'user_logout',
         'user_me',
 
@@ -269,6 +451,19 @@ return [
 
         'password_index',
         'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        ////
+
+        
 
         'faculty_view',
         'direction_view',

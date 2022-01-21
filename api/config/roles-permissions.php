@@ -174,7 +174,6 @@ return [
         'user_update',
         'user_view',
         'user_delete',
-        'user_status-list',
 
         'languages_index',
 

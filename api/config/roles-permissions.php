@@ -315,7 +315,7 @@ return [
         'enum_topic-types',
         'enum_yesno',
         ////
-
+        'faculty_index',
 
         'user_logout',
         'user_me',

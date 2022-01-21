@@ -33,7 +33,7 @@ class EduSemestrSubjectController extends ApiActiveController
                 ->andWhere(['in', 'edu_semestr_id', $eduSemesterIds]);
         } else {
             $query = $model->find()
-                ->andWhere(['is_deleted' => 0]);
+                ->andWhere(['edu_semestr_subject.is_deleted' => 0]);
 
             /*  is Self  */
             // EduSemestr  -> EduPlan -> faculty_id

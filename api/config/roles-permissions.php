@@ -151,6 +151,7 @@ return [
     'dean' => [
         'password_index',
         'password_update',
+        'password_view',
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -196,6 +197,12 @@ return [
         'direction_update',
         'direction_view',
         'direction_delete',
+
+        'subject_index',
+        'subject_create',
+        'subject_update',
+        'subject_view',
+        'subject_delete',
 
         'edu-plan_index',
         'edu-plan_create',

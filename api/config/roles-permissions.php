@@ -306,8 +306,6 @@ return [
     'tutor' => [
         'password_index',
         'password_update',
-        'access-control_roles',
-        'access-control_permissions',
         'enum_education-degrees',
         'enum_education-types',
         'enum_educations',

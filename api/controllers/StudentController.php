@@ -45,6 +45,8 @@ class  StudentController extends ApiActiveController
         /*  is Self  */
 
         if ($this->isRole('turor')) {
+            return 1;
+            
             $query = $query->andWhere([
                 'tutor_id' => Yii::$app->user->identity->getId()
             ]);

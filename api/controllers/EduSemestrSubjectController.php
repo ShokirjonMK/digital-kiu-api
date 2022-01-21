@@ -45,8 +45,6 @@ class EduSemestrSubjectController extends ApiActiveController
                     ->leftJoin("edu_plan ep", "ep.id = es.edu_plan_id")
                     ->andWhere(['ep.faculty_id' => $t['UserAccess']->table_id]);
 
-
-
                 // $query = $query->andFilterWhere([
                 //     'faculty_id' => $t['UserAccess']->table_id
                 // ]);

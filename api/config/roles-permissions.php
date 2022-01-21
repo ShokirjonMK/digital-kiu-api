@@ -176,11 +176,11 @@ return [
 
         'languages_index',
 
-        'exams-types_index',
-        'edu-types_index',
-        'edu-years_index',
-        'courses_index',
-        'courses_index',
+        'exams-type_index',
+        'edu-type_index',
+        'edu-year_index',
+        'course_index',
+        'course_index',
         'faculty_index',
         'faculty_update',
         'faculty_view',

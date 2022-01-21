@@ -278,7 +278,7 @@ trait ApiActionTrait
             }
         }
 
-        if ($userAccess && (property_exists($roles, 'admin'))) {
+        if ($userAccess && !(property_exists($roles, 'admin'))) {
             $t['status'] = 1;
             $t['UserAccess'] = $userAccess;
             return $t;

@@ -34,6 +34,28 @@ class EduSemestrSubjectController extends ApiActiveController
         } else {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0]);
+
+            /*  is Self  */
+            // EduSemestr  -> EduPlan -> faculty_id
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+
+
+                $query = $query->leftJoin("edu_semestr es", "es.id = edu_semestr_subject.edu_semestr_id")
+                    ->leftJoin("edu_plan ep", "ep.id = es.edu_plan_id")
+                    ->andWhere(['ep.faculty_id' => $t['UserAccess']->table_id]);
+
+
+
+                // $query = $query->andFilterWhere([
+                //     'faculty_id' => $t['UserAccess']->table_id
+                // ]);
+            } elseif ($t['status'] == 2) {
+                $query->andFilterWhere([
+                    'edu_semestr_id' => -1
+                ]);
+            }
+            /*  is Self  */
         }
 
         // filter
@@ -141,7 +163,7 @@ class EduSemestrSubjectController extends ApiActiveController
         if ($model) {
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-//            return $t;
+            //            return $t;
             if ($t['status'] == 1) {
                 if ($model->eduSemestr->eduPlan->faculty_id != $t['UserAccess']->table_id) {
                     $errors[] = _e('You don\'t have access');

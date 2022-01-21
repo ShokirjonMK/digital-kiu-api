@@ -199,6 +199,8 @@ return [
         'direction_view',
         'direction_delete',
 
+        'user-access-type_index',
+
         'semestr_index',
         // 'semestr_create',
         'semestr_update',

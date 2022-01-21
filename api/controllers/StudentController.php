@@ -42,11 +42,9 @@ class  StudentController extends ApiActiveController
                 'faculty_id' => -1
             ]);
         }
-        /*  is Self  */
 
-        if ($this->isRole('turor')) {
-            return 1;
-            
+        /*  is Role check  */
+        if ($this->isRole('tutor')) {
             $query = $query->andWhere([
                 'tutor_id' => Yii::$app->user->identity->getId()
             ]);
@@ -87,7 +85,7 @@ class  StudentController extends ApiActiveController
     public function actionCreate($lang)
     {
         $post = Yii::$app->request->post();
-        if ($this->isRole('turor')) {
+        if ($this->isRole('tutor')) {
             $post['tutor_id'] = Yii::$app->user->identity->getId();
         }
         $post['role'] = 'student';

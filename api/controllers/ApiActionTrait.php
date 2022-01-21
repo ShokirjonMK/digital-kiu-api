@@ -252,7 +252,7 @@ trait ApiActionTrait
         $user_id = Yii::$app->user->identity->getId();
         $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
 
-        if (property_exists($roles, 'turor')) {
+        if (property_exists($roles, $roleName)) {
             return true;
         } else {
             return false;

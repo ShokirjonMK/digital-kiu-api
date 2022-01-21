@@ -373,6 +373,10 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
+        if ($model->start > $model->finish) {
+            $errors[] = _e("Start of exam can not be greater than finish");
+        }
+
         if (isset($post['question_count_by_type'])) {
             $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
             if (!isJsonMK($post['question_count_by_type'])) {

@@ -110,6 +110,7 @@ class ExamController extends ApiActiveController
                 $query->andFilterWhere([
                     'faculty_id' => -1
                 ]);
+                
             }
             /*  is Self  */
         }

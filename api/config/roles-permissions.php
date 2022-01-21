@@ -174,8 +174,10 @@ return [
         'user_update',
         'user_view',
         'user_delete',
+        'user_status-list',
 
         'languages_index',
+
 
         'exams-type_index',
         'teacher-access_index',
@@ -241,7 +243,7 @@ return [
         'student_delete',
 
 
-        
+
     ],
     /* Dekan huquqlari */
 
@@ -272,7 +274,7 @@ return [
         'user_view',
         'user_delete',
 
-        
+
     ],
 
     /* tutor tarbiyachi huquqlari */
@@ -335,7 +337,7 @@ return [
         'region_index',
         'country_index',
 
-        
+
     ],
 
     /* Bo'lim boshlig'i */
@@ -362,7 +364,7 @@ return [
         'department_view',
 
 
-        
+
     ],
 
 

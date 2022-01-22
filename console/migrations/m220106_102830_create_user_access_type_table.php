@@ -30,17 +30,18 @@ class m220106_102830_create_user_access_type_table extends Migration
         $this->insert('user_access_type', [
             'name' => 'Faculty',
             'url' => 'faculties',
-            'table_name' => 'faculty',
+            
+            'table_name' => '\common\models\model\Faculty',
         ]);
         $this->insert('user_access_type', [
             'name' => 'Kafedra',
             'url' => 'kafedras',
-            'table_name' => 'kafedra',
+            'table_name' => '\common\models\model\Kafedra',
         ]);
         $this->insert('user_access_type', [
             'name' => 'Department',
             'url' => 'departments',
-            'table_name' => 'department',
+            'table_name' => '\common\models\model\Department',
         ]);
     }
 

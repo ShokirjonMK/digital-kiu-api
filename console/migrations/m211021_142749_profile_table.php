@@ -15,66 +15,77 @@ class m211021_142749_profile_table extends Migration
     {
         $this->createTable('profile', [
             'id' => $this->primaryKey(),
-            'user_id'=>$this->integer()->notNull(),
-            'image'=>$this->string(255)->Null(),
-            'phone'=>$this->string(50)->Null(),
-            'phone_secondary'=>$this->string(50)->Null(),
-            'is_foreign'=>$this->integer()->Null(),
-            'last_name'=>$this->string(255)->Null(),
-            'first_name'=>$this->string(255)->Null(),
-            'middle_name'=>$this->string(255)->Null(),
-            'passport_seria'=>$this->string(255)->Null(),
-            'passport_number'=>$this->string(255)->Null(),
-            'passport_pin'=>$this->string(255)->Null(),
-            'birthday'=>$this->integer()->Null(),
-            'passport_file'=>$this->string(255)->Null(),
-            'country_id'=>$this->integer()->Null(),
-            'region_id'=>$this->integer()->Null(),
-            'area_id'=>$this->integer()->Null(),
-            'address'=>$this->string(255)->Null(),
-            'gender'=>$this->integer()->Null(),
-            'passport_given_date'=>$this->date()->Null(),
-            'passport_issued_date'=>$this->date()->Null(),
-            'passport_given_by'=>$this->string(255)->Null(),
-            'permanent_country_id'=>$this->integer()->Null(),
-            'permanent_region_id'=>$this->integer()->Null(),
-            'permanent_area_id'=>$this->integer()->Null(),
-            'permanent_address'=>$this->string(255)->Null(),
+            'user_id' => $this->integer()->notNull(),
+            'image' => $this->string(255)->Null(),
+            'phone' => $this->string(50)->Null(),
+            'phone_secondary' => $this->string(50)->Null(),
+            'is_foreign' => $this->integer()->Null(),
+            'last_name' => $this->string(255)->Null(),
+            'first_name' => $this->string(255)->Null(),
+            'middle_name' => $this->string(255)->Null(),
+            'passport_seria' => $this->string(255)->Null(),
+            'passport_number' => $this->string(255)->Null(),
+            'passport_pin' => $this->string(255)->Null(),
+            'birthday' => $this->integer()->Null(),
+            'passport_file' => $this->string(255)->Null(),
+            'country_id' => $this->integer()->Null(),
+            'region_id' => $this->integer()->Null(),
+            'area_id' => $this->integer()->Null(),
+            'address' => $this->string(255)->Null(),
+            'gender' => $this->integer()->Null(),
+            'passport_given_date' => $this->date()->Null(),
+            'passport_issued_date' => $this->date()->Null(),
+            'passport_given_by' => $this->string(255)->Null(),
+            'permanent_country_id' => $this->integer()->Null(),
+            'permanent_region_id' => $this->integer()->Null(),
+            'permanent_area_id' => $this->integer()->Null(),
+            'permanent_address' => $this->string(255)->Null(),
 
 
 
-            'order'=>$this->tinyInteger(1)->defaultValue(1),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
-            'created_at'=>$this->integer()->Null(),
-            'updated_at'=>$this->integer()->Null(),
+            'created_at' => $this->integer()->Null(),
+            'updated_at' => $this->integer()->Null(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
 
-        $this->addForeignKey('up_profile_user_id','profile','user_id','users','id');
-        $this->addForeignKey('cp_profile_country_id','profile','country_id','countries','id');
-        $this->addForeignKey('rp_profile_region_id','profile','region_id','region','id');
-        $this->addForeignKey('ap_profile_area_id','profile','area_id','area','id');
+        $this->addForeignKey('up_profile_user_id', 'profile', 'user_id', 'users', 'id');
+        $this->addForeignKey('cp_profile_country_id', 'profile', 'country_id', 'countries', 'id');
+        $this->addForeignKey('rp_profile_region_id', 'profile', 'region_id', 'region', 'id');
+        $this->addForeignKey('ap_profile_area_id', 'profile', 'area_id', 'area', 'id');
 
-        $this->addForeignKey('cp_profile_permanent_country_id','profile','permanent_country_id','countries','id');
-        $this->addForeignKey('rp_profile_permanent_region_id','profile','permanent_region_id','region','id');
-        $this->addForeignKey('ap_profile_permanent_area_id','profile','permanent_area_id','area','id');
+        $this->addForeignKey('cp_profile_permanent_country_id', 'profile', 'permanent_country_id', 'countries', 'id');
+        $this->addForeignKey('rp_profile_permanent_region_id', 'profile', 'permanent_region_id', 'region', 'id');
+        $this->addForeignKey('ap_profile_permanent_area_id', 'profile', 'permanent_area_id', 'area', 'id');
 
-
-        $this->insert('{{%profile}}', [
-            'user_id' => 2,
-            'last_name' => "TSUL",
-            'first_name' => "Admin",
-        ]);
 
         $this->insert('{{%profile}}', [
             'user_id' => 1,
-            'last_name' => "Web",
-            'first_name' => "Developer",
+            'first_name' => "Shokirjon MK",
+            'last_name' => "Developer",
         ]);
 
+        $this->insert('{{%profile}}', [
+            'user_id' => 2,
+            'first_name' => "Super",
+            'last_name' => "Admin",
+        ]);
+
+        $this->insert('{{%profile}}', [
+            'user_id' => 3,
+            'first_name' => "Prof",
+            'last_name' => "Dev",
+        ]);
+
+        $this->insert('{{%profile}}', [
+            'user_id' => 4,
+            'first_name' => "Black",
+            'last_name' => "Moon",
+        ]);
     }
 
     /**
@@ -82,14 +93,14 @@ class m211021_142749_profile_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('up_profile_user_id','profile');
-        $this->dropForeignKey('cp_profile_country_id','profile');
-        $this->dropForeignKey('rp_profile_region_id','profile');
-        $this->dropForeignKey('ap_profile_area_id','profile');
+        $this->dropForeignKey('up_profile_user_id', 'profile');
+        $this->dropForeignKey('cp_profile_country_id', 'profile');
+        $this->dropForeignKey('rp_profile_region_id', 'profile');
+        $this->dropForeignKey('ap_profile_area_id', 'profile');
 
-        $this->dropForeignKey('cp_profile_permanent_country_id','profile');
-        $this->dropForeignKey('rp_profile_permanent_region_id','profile');
-        $this->dropForeignKey('ap_profile_permanent_area_id','profile');
+        $this->dropForeignKey('cp_profile_permanent_country_id', 'profile');
+        $this->dropForeignKey('rp_profile_permanent_region_id', 'profile');
+        $this->dropForeignKey('ap_profile_permanent_area_id', 'profile');
         $this->dropTable('profile');
     }
 

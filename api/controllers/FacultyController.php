@@ -53,14 +53,9 @@ class FacultyController extends ApiController
         // is Self 
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            $da= [];
-            $data = $model->find()->where([
-                'in', 'id', $t['UserAccess']->table_id
+            $query->where([
+                'in', 'faculty.id', $t['UserAccess']->table_id
             ])->all();
-
-            $da['items'] = $data;
-            // $data =  $this->getData($query);
-            return $this->response(1, _e('Success'), $da);
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([
                 'is_deleted' => -1

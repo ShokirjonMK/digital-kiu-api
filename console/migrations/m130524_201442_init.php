@@ -40,8 +40,8 @@ class m130524_201442_init extends Migration
 
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->null(),
-            'firstname' => $this->string(255),
-            'lastname' => $this->string(255)->null(),
+            'first_name' => $this->string(255),
+            'last_name' => $this->string(255)->null(),
             'middlename' => $this->string(255)->null(),
             'image' => $this->string(255)->null(),
             'dob' => $this->timestamp()->null(),
@@ -143,8 +143,8 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%profile}}', [
             'user_id' => 1,
-            'firstname' => "Shokirjon MK",
-            'lastname' => "Developer",
+            'first_name' => "Shokirjon MK",
+            'last_name' => "Developer",
         ]);
 
 
@@ -166,8 +166,8 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%profile}}', [
             'user_id' => 1,
-            'firstname' => "Super",
-            'lastname' => "Admin",
+            'first_name' => "Super",
+            'last_name' => "Admin",
         ]);
 
         $this->insert('{{%users}}', [
@@ -188,8 +188,8 @@ class m130524_201442_init extends Migration
 
         $this->insert('{{%profile}}', [
             'user_id' => 2,
-            'firstname' => "Prof",
-            'lastname' => "Dev",
+            'first_name' => "Prof",
+            'last_name' => "Dev",
         ]);
     }
 

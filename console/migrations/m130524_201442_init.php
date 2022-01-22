@@ -165,7 +165,7 @@ class m130524_201442_init extends Migration
         ]);
 
         $this->insert('{{%profile}}', [
-            'user_id' => 1,
+            'user_id' => 2,
             'first_name' => "Super",
             'last_name' => "Admin",
         ]);
@@ -187,9 +187,31 @@ class m130524_201442_init extends Migration
         ]);
 
         $this->insert('{{%profile}}', [
-            'user_id' => 2,
+            'user_id' => 3,
             'first_name' => "Prof",
             'last_name' => "Dev",
+        ]);
+
+        $this->insert('{{%users}}', [
+            'username' => 'blackmoon',
+            'auth_key' => \Yii::$app->security->generateRandomString(20),
+            'password_hash' => \Yii::$app->security->generatePasswordHash("blackmoonuz"),
+            'password_reset_token' => null,
+            'access_token' => \Yii::$app->security->generateRandomString(),
+            'access_token_time' => time(),
+            'email' => 'admin@tsul.uz',
+            'template' => '',
+            'layout' => '',
+            'view' => '',
+            'status' => 10,
+            'created_at' => time(),
+            'updated_at' => time(),
+        ]);
+
+        $this->insert('{{%profile}}', [
+            'user_id' => 4,
+            'first_name' => "Black",
+            'last_name' => "Moon",
         ]);
     }
 

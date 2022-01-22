@@ -243,7 +243,7 @@ class Faculty extends \yii\db\ActiveRecord
                 /* update User Access */
                 if (isset($post['user_id'])) {
                     $userAccessUser = User::findOne($post['user_id']);
-                    if (isset($userAccessUser)) {
+                    if (($userAccessUser)) {
                         if (!(UserAccess::changeLeader($model->id, self::USER_ACCESS_TYPE_ID, $userAccessUser->id))) {
                             $errors = ['user_id' => _e('Error occured on updating UserAccess')];
                         }

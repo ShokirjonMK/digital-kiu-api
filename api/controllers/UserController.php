@@ -5,7 +5,10 @@ namespace api\controllers;
 use Yii;
 use api\resources\User;
 use base\ResponseStatus;
+use common\models\AuthAssignment;
+use common\models\model\Faculty;
 use common\models\model\Profile;
+use common\models\model\UserAccess;
 
 class UserController extends ApiActiveController
 {
@@ -76,6 +79,28 @@ class UserController extends ApiActiveController
             ->join('INNER JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+           $query->andFilterWhere([
+               'in', 'user_id' , UserAccess::find()->select('user_id')->where([
+                    'table_id' => $t['UserAccess']->table_id,
+                    'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+            $query->andFilterWhere(['in', 'child',
+                AuthAssignment::find()->select("item_name")->where([
+                    'user_id' => Yii::$app->user->identity->getId()
+                ])
+            ]);
+
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'users.id' => -1
+            ]);
+        }
+            /*  is Self  */
 
         //  Filter from Profile 
         $profile = new Profile();

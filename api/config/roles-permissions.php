@@ -323,6 +323,8 @@ return [
 
         'faculty_index',
         'kafedra_index',
+        'languages_index',
+
         'user-access-type_index',
         'semestr_index',
         'subject-category_index',

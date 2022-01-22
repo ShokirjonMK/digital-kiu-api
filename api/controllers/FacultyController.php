@@ -58,7 +58,7 @@ class FacultyController extends ApiController
             ])->all();
         } elseif ($t['status'] == 2) {
             $query->andFilterWhere([
-                'is_deleted' => -1
+                'faculty.is_deleted' => -1
             ]);
         }
 

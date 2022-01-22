@@ -84,12 +84,12 @@ class UserController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            $query->andFilterWhere([
-                'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                    'table_id' => $t['UserAccess']->table_id,
-                    'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
-                ])
-            ]);
+            // $query->andFilterWhere([
+            //     'in', 'users.id', UserAccess::find()->select('user_id')->where([
+            //         'table_id' => $t['UserAccess']->table_id,
+            //         'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+            //     ])
+            // ]);
             
             $userIds = AuthAssignment::find()->select('user_id')->where(['in', 'auth_assignment.item_name',
                 AuthChild::find()->select('child')->where([

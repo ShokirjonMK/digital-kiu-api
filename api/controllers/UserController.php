@@ -90,10 +90,19 @@ class UserController extends ApiActiveController
                     'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
                 ])
             ]);
-          
+            
+            // $userIds = AuthAssignment::find()->select('user_id')->where(['in', 'auth_assignment.item_name',
+            //     AuthChild::find()->select('child')->where([
+            //         'in', 'parent',
+            //         AuthAssignment::find()->select("item_name")->where([
+            //             'user_id' => Yii::$app->user->identity->getId()
+            //         ])
+            //     ])
+            //  ]);
+
             $query->andFilterWhere([
                 'in', 'auth_assignment.item_name',
-                AuthChild::find()->select('child')->where([
+                AuthChild::find()->select('parent')->where([
                     'in', 'child',
                     AuthAssignment::find()->select("item_name")->where([
                         'user_id' => Yii::$app->user->identity->getId()

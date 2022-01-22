@@ -59,11 +59,14 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         return [
             [['edu_semestr_id', 'subject_id'], 'required'],
             //    [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
-            [['edu_semestr_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['edu_semestr_id', 'faculty_id', 'direction_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['credit'], 'number'],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['subject_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectType::className(), 'targetAttribute' => ['subject_type_id' => 'id']],
+            [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
+            [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
+
         ];
     }
 
@@ -74,6 +77,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'faculty_id' => 'Faculty Id',
+            'direction_id' => 'Direction Id',
             'edu_semestr_id' => 'Edu Semestr ID',
             'subject_id' => 'Subject ID',
             'subject_type_id' => 'Subject Type ID',
@@ -119,6 +124,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields = [
+            'faculty',
+            'direction',
             'eduSemestrExamsTypes',
             'eduSemestr',
             'subject',
@@ -132,6 +139,25 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * Gets query for [[faculty_id]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFaculty()
+    {
+        return $this->hasOne(Faculty::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[direction_id]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDirection()
+    {
+        return $this->hasOne(Direction::className(), ['direction_id' => 'id']);
+    }
     /**
      * Gets query for [[EduSemestrExamsTypes]].
      *
@@ -200,10 +226,15 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
         if ($model->save()) {
             $subjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id'] ?? null]);
             $all_ball_yuklama = 0;
             $max_ball = 0;
+
+            $model->faculty_id = $model->eduSemestr->eduPlan->faculty_id;
+            $model->direction_id = $model->eduSemestr->eduPlan->direction_id;
+            $model->update();
 
             if (isset($subjectSillabus)) {
 

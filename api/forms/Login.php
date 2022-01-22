@@ -84,7 +84,7 @@ class Login extends Model
                         'username' => $user->username,
                         'last_name' => $profile->last_name,
                         'first_name' => $profile->first_name,
-                        'role' => $user->roleItem,
+                        'role' => $user->getRoles(),
                         'permissions' => $user->permissions,
                         'access_token' => $user->access_token,
                         'expire_time' => date("Y-m-d H:i:s", $user->expireTime),

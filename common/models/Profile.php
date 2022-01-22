@@ -63,7 +63,7 @@ class Profile extends \yii\db\ActiveRecord
             [['user_id', 'gender', 'is_stateless', 'is_foreign', 'country_id', 'nationality_id', 'birth_place_id', 'permanent_place_id', 'temporary_place_id', 'residence_permit'], 'integer'],
             [['region_id', 'birth_country_id', 'birth_region_id', 'temporary_country_id', 'temporary_region_id'], 'integer'],
             [['dob', 'passport_given_date', 'passport_validity_date', 'residence_permit_date', 'residence_permit_expire'], 'safe'],
-            [['firstname', 'lastname', 'middlename', 'image', 'permanent_address', 'temporary_address', 'passport_serial', 'passport_number', 'passport_given_place', 'residence_permit_no'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'middle_name', 'image', 'permanent_address', 'temporary_address', 'passport_serial', 'passport_number', 'passport_given_place', 'residence_permit_no'], 'string', 'max' => 255],
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
             [['passport_pinip'], 'string', 'max' => 14],
         ];
@@ -77,9 +77,9 @@ class Profile extends \yii\db\ActiveRecord
         return [
             'id' => _e('ID'),
             'user_id' => _e('User'),
-            'firstname' => _e('First name'),
-            'lastname' => _e('Last name'),
-            'middlename' => _e('Middle name'),
+            'first_name' => _e('First name'),
+            'last_name' => _e('Last name'),
+            'middle_name' => _e('Middle name'),
             'image' => _e('Photo'),
             'dob' => _e('Date of birth'),
             'gender' => _e('Gender'),

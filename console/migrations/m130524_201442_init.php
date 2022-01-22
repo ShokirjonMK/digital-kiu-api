@@ -42,7 +42,7 @@ class m130524_201442_init extends Migration
             'user_id' => $this->integer()->null(),
             'first_name' => $this->string(255),
             'last_name' => $this->string(255)->null(),
-            'middlename' => $this->string(255)->null(),
+            'middle_name' => $this->string(255)->null(),
             'image' => $this->string(255)->null(),
             'dob' => $this->timestamp()->null(),
             'gender' => $this->tinyInteger(1)->null(),
@@ -141,12 +141,7 @@ class m130524_201442_init extends Migration
             'updated_at' => time(),
         ]);
 
-        $this->insert('{{%profile}}', [
-            'user_id' => 1,
-            'first_name' => "Shokirjon MK",
-            'last_name' => "Developer",
-        ]);
-
+       
 
         $this->insert('{{%users}}', [
             'username' => 'suadmin',
@@ -164,12 +159,7 @@ class m130524_201442_init extends Migration
             'updated_at' => time(),
         ]);
 
-        $this->insert('{{%profile}}', [
-            'user_id' => 2,
-            'first_name' => "Super",
-            'last_name' => "Admin",
-        ]);
-
+       
         $this->insert('{{%users}}', [
             'username' => 'professor',
             'auth_key' => \Yii::$app->security->generateRandomString(20),
@@ -186,12 +176,7 @@ class m130524_201442_init extends Migration
             'updated_at' => time(),
         ]);
 
-        $this->insert('{{%profile}}', [
-            'user_id' => 3,
-            'first_name' => "Prof",
-            'last_name' => "Dev",
-        ]);
-
+       
         $this->insert('{{%users}}', [
             'username' => 'blackmoon',
             'auth_key' => \Yii::$app->security->generateRandomString(20),
@@ -208,12 +193,7 @@ class m130524_201442_init extends Migration
             'updated_at' => time(),
         ]);
 
-        $this->insert('{{%profile}}', [
-            'user_id' => 4,
-            'first_name' => "Black",
-            'last_name' => "Moon",
-        ]);
-    }
+           }
 
     public function down()
     {

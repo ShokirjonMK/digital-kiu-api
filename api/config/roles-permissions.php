@@ -302,6 +302,66 @@ return [
 
     ],
 
+    /* Kafedra mudiri */
+    'mudir' => [
+        'password_index',
+        'password_update',
+        'access-control_roles',
+        'access-control_permissions',
+        'enum_education-degrees',
+        'enum_education-types',
+        'enum_educations',
+        'enum_family-statuses',
+        'enum_genders',
+        'enum_rates',
+        'enum_topic-types',
+        'enum_yesno',
+        'user_logout',
+        'user_me',
+        ////
+
+
+        'faculty_index',
+        'kafedra_index',
+        'user-access-type_index',
+        'semestr_index',
+        'subject-category_index',
+        'subject-category_view',
+        'subject-type_index',
+        'subject-type_view',
+
+
+
+
+        'area_index',
+        'region_index',
+        'country_index',
+
+
+        'user_status-list',
+        'user_index',
+        'user_create',
+        'user_update',
+        'user_view',
+        'user_delete',
+
+
+        'subject_index',
+        'subject_create',
+        'subject_update',
+        'subject_view',
+        'subject_delete',
+
+        'subject-sillabus_index',
+        'subject-sillabus_create',
+        'subject-sillabus_update',
+        'subject-sillabus_view',
+        'subject-sillabus_delete',
+
+
+    ],
+
+
     /* tutor tarbiyachi huquqlari */
     'tutor' => [
         'password_index',
@@ -338,30 +398,6 @@ return [
         'student_delete',
     ],
 
-    /* Kafedra mudiri */
-    'mudir' => [
-        'password_index',
-        'password_update',
-        'access-control_roles',
-        'access-control_permissions',
-        'enum_education-degrees',
-        'enum_education-types',
-        'enum_educations',
-        'enum_family-statuses',
-        'enum_genders',
-        'enum_rates',
-        'enum_topic-types',
-        'enum_yesno',
-        ////
-
-
-
-        'area_index',
-        'region_index',
-        'country_index',
-
-
-    ],
 
     /* Bo'lim boshlig'i */
     'dep_lead' => [

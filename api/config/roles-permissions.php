@@ -333,8 +333,6 @@ return [
         'subject-type_view',
 
 
-
-
         'area_index',
         'region_index',
         'country_index',

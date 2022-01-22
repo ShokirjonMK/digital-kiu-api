@@ -94,7 +94,7 @@ class UserController extends ApiActiveController
             $query->andFilterWhere([
                 'in', 'auth_assignment.item_name',
                 AuthChild::find()->select('child')->where([
-                    'in', 'childs',
+                    'in', 'child',
                     AuthAssignment::find()->select("item_name")->where([
                         'user_id' => Yii::$app->user->identity->getId()
                     ])

@@ -7,7 +7,9 @@ use api\resources\User;
 use base\ResponseStatus;
 use common\models\AuthAssignment;
 use common\models\model\AuthChild;
+use common\models\model\Department;
 use common\models\model\Faculty;
+use common\models\model\Kafedra;
 use common\models\model\Profile;
 use common\models\model\UserAccess;
 
@@ -82,14 +84,16 @@ class UserController extends ApiActiveController
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
 
         /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            // $query->andFilterWhere([
-            //     'in', 'users.id', UserAccess::find()->select('user_id')->where([
-            //         'table_id' => $t['UserAccess']->table_id,
-            //         'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
-            //     ])
-            // ]);
+        $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+        $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
+        if ($f['status'] == 1) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $f['UserAccess']->table_id,
+                    'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
             
             $userIds = AuthAssignment::find()->select('user_id')->where(['in', 'auth_assignment.item_name',
                 AuthChild::find()->select('child')->where([
@@ -100,10 +104,57 @@ class UserController extends ApiActiveController
                 ])
              ]);
 
-            $query->andFilterWhere([
+            $query->orFilterWhere([
                 'in', 'users.id', $userIds
             ]);
-        } elseif ($t['status'] == 2) {
+        }
+
+        if ($k['status'] == 1) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $k['UserAccess']->table_id,
+                    'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+
+            $userIds = AuthAssignment::find()->select('user_id')->where([
+                'in', 'auth_assignment.item_name',
+                AuthChild::find()->select('child')->where([
+                    'in', 'parent',
+                    AuthAssignment::find()->select("item_name")->where([
+                        'user_id' => Yii::$app->user->identity->getId()
+                    ])
+                ])
+            ]);
+
+            $query->orFilterWhere([
+                'in', 'users.id', $userIds
+            ]);
+        }
+        if ($d['status'] == 1) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $id['UserAccess']->table_id,
+                    'user_access_type_id' => Department::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+
+            $userIds = AuthAssignment::find()->select('user_id')->where([
+                'in', 'auth_assignment.item_name',
+                AuthChild::find()->select('child')->where([
+                    'in', 'parent',
+                    AuthAssignment::find()->select("item_name")->where([
+                        'user_id' => Yii::$app->user->identity->getId()
+                    ])
+                ])
+            ]);
+
+            $query->orFilterWhere([
+                'in', 'users.id', $userIds
+            ]);
+        }
+        
+        elseif ($f['status'] == 2 && $k['status'] == 2 && $d['status'] == 2) {
             $query->andFilterWhere([
                 'users.id' => -1
             ]);

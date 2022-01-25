@@ -50,7 +50,7 @@ class Para extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //            [['name'], 'required'],
+            // [['start_time', 'end_time'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             //            [['name'], 'string', 'max' => 255],
         ];

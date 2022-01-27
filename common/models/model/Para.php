@@ -21,6 +21,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property TimeTable[] $timeTables
  */
+
 class Para extends \yii\db\ActiveRecord
 {
 

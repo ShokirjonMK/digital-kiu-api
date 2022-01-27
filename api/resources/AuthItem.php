@@ -5,6 +5,7 @@ namespace api\resources;
 use common\models\AuthAssignment;
 use common\models\AuthItem as CommonAuthItem;
 use common\models\AuthItemChild;
+use api\resources\AuthChild as AuthChildRes;
 use common\models\model\AuthChild;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -30,7 +31,7 @@ class AuthItem extends CommonAuthItem
      */
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'name',
             'category' => function ($model) {
                 return $model->getParsedDesc('category');
@@ -56,17 +57,28 @@ class AuthItem extends CommonAuthItem
      */
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'permissions',
+            'parent',
+            'child',
+
         ];
 
         return $extraFields;
     }
 
+    public function getParent()
+    {
+        return AuthChildRes::find()->where(['child' => $this->name])->all();
+    }
+
+    public function getChild()
+    {
+        return AuthChildRes::find()->where(['parent' => $this->name])->all();
+    }
 
     public static function createRole($body)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -99,7 +111,7 @@ class AuthItem extends CommonAuthItem
                     foreach ($obj->parents as $parent) {
                         $hasParent = AuthChild::findOne(['parent' => $parent, 'child' => $obj->role]);
                         $hasParentChild = AuthChild::findOne(['child' => $parent, 'parent' => $obj->role]);
-                        if (!$hasParent&& !$hasParentChild) {
+                        if (!$hasParent && !$hasParentChild) {
                             $authChildModel = new AuthChild();
                             $authChildModel->parent = $parent;
                             $authChildModel->child = $obj->role;
@@ -117,7 +129,6 @@ class AuthItem extends CommonAuthItem
                             $authChildModel->save();
                         }
                     }
-
 
 
                 }

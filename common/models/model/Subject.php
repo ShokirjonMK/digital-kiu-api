@@ -55,10 +55,12 @@ class Subject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kafedra_id'], 'required'],
-            [['kafedra_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            //            [['name'], 'string', 'max' => 255],
+            [['kafedra_id', 'semestr_id'], 'required'],
+            [['kafedra_id', 'semestr_id', 'parent_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+
             [['kafedra_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kafedra::className(), 'targetAttribute' => ['kafedra_id' => 'id']],
+            [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
+            [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['parent_id' => 'id']],
         ];
     }
 
@@ -71,6 +73,8 @@ class Subject extends \yii\db\ActiveRecord
             'id' => 'ID',
             //            'name' => 'Name',
             'kafedra_id' => 'Kafedra ID',
+            'semestr_id' => 'Semestr ID',
+            'parent_id' => 'Parent ID',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -83,19 +87,20 @@ class Subject extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
             'kafedra_id',
+            'semestr_id',
+            'parent_id',
             'order',
             'status',
             'created_at',
             'updated_at',
             'created_by',
             'updated_by',
-
         ];
 
         return $fields;
@@ -103,9 +108,11 @@ class Subject extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'subjectSillabus',
-
+            'semestr',
+            'child',
+            'parent',
             'timeTables',
             'teacherAccesses',
             'kafedra',
@@ -147,7 +154,6 @@ class Subject extends \yii\db\ActiveRecord
     }
 
 
-
     /**
      * Gets query for [[EduSemestrSubjects]].
      *
@@ -166,6 +172,36 @@ class Subject extends \yii\db\ActiveRecord
     public function getKafedra()
     {
         return $this->hasOne(Kafedra::className(), ['id' => 'kafedra_id']);
+    }
+
+    /**
+     * Gets query for [[Semestr]].
+     *semestr_id
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSemestr()
+    {
+        return $this->hasOne(Semestr::className(), ['id' => 'semestr_id']);
+    }
+
+    /**
+     * Gets query for [[Parent]].
+     *parent_id
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'parent_id']);
+    }
+
+    /**
+     * Gets query for [[Child]].
+     *child
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChild()
+    {
+        return $this->hasMany(Subject::className(), ['id' => 'parent_id']);
     }
 
     /**
@@ -198,12 +234,10 @@ class Subject extends \yii\db\ActiveRecord
         return $this->hasOne(SubjectSillabus::className(), ['subject_id' => 'id']);
     }
 
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
 
         $has_error = Translate::checkingAll($post);
 
@@ -260,7 +294,6 @@ class Subject extends \yii\db\ActiveRecord
             return double_errors($errors, $has_error['errors']);
         }
     }
-
 
 
     public function beforeSave($insert)

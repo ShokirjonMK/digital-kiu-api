@@ -10,7 +10,7 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "edu_type".
  *
  * @property int $id
- * 
+ *
  * @property int $subject_id
  * @property int $subject_type_id
  * @property string $edu_semestr_exams_types
@@ -18,7 +18,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $all_ball_yuklama
  * @property int $max_ball
  * @property double $credit
- 
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -66,17 +65,10 @@ class SubjectSillabus extends \yii\db\ActiveRecord
                 ],
                 'required'
             ],
-            [
-                [
-                    'all_ball_yuklama',
-                    'max_ball',
-                    'credit',
-                ],
-                'double'
-            ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [
                 [
+                    'topic_count',
                     'subject_id',
                     'subject_type_id',
                 ],
@@ -89,6 +81,8 @@ class SubjectSillabus extends \yii\db\ActiveRecord
                 ],
                 'string'
             ],
+            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+            [['subject_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectType::className(), 'targetAttribute' => ['subject_type_id' => 'id']],
 
 
         ];
@@ -102,6 +96,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'subject_id' => 'Subject Id',
+            'topic_count' => 'Count of topics',
             'subject_type_id' => 'Subject Type Id',
             'edu_semestr_exams_types' => 'Edu Semestr Exams Types',
             'edu_semestr_subject_category_times' => 'Edu Semestr Subject Category Times',
@@ -121,9 +116,10 @@ class SubjectSillabus extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'subject_id',
+            'topic_count',
             'subject_type_id',
             'edu_semestr_exams_types',
             'edu_semestr_subject_category_times',
@@ -145,7 +141,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
             'subject',
             'subjectType',
 
@@ -208,29 +204,29 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             $errors[] = $json_errors;
         }
 
-     /*    $edu_semestr_exams_typesMODEL = new EduSemestrExamsType();
-        //  [['edu_semestr_subject_id', 'exams_type_id', 'max_ball'], 'required']
-        foreach (json_decode($post['edu_semestr_exams_types']) as $examsTypeId => $examsTypeMaxBal) {
-            // $edu_semestr_exams_typesMODEL->edu_semestr_subject_id = $post['subject_id'];
-            $edu_semestr_exams_typesMODEL->exams_type_id = $examsTypeId;
-            $edu_semestr_exams_typesMODEL->max_ball = $examsTypeMaxBal;
+        /*    $edu_semestr_exams_typesMODEL = new EduSemestrExamsType();
+           //  [['edu_semestr_subject_id', 'exams_type_id', 'max_ball'], 'required']
+           foreach (json_decode($post['edu_semestr_exams_types']) as $examsTypeId => $examsTypeMaxBal) {
+               // $edu_semestr_exams_typesMODEL->edu_semestr_subject_id = $post['subject_id'];
+               $edu_semestr_exams_typesMODEL->exams_type_id = $examsTypeId;
+               $edu_semestr_exams_typesMODEL->max_ball = $examsTypeMaxBal;
 
-            if (!$edu_semestr_exams_typesMODEL->validate()) {
-              //  $errors[] = $edu_semestr_exams_typesMODEL->errors;
-            }
-        }
- */
-    /*     $edu_semestr_subject_category_timesMODEL = new EduSemestrSubjectCategoryTime();
-        //  [['edu_semestr_subject_id', 'subject_category_id', 'hours'], 'required'],
-        foreach (json_decode($post['edu_semestr_subject_category_times']) as $subjectCatId => $subjectCatValues) {
-            // $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $post['subject_id'];
-            $edu_semestr_subject_category_timesMODEL->subject_category_id = $subjectCatId;
-            $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;sss
+               if (!$edu_semestr_exams_typesMODEL->validate()) {
+                 //  $errors[] = $edu_semestr_exams_typesMODEL->errors;
+               }
+           }
+    */
+        /*     $edu_semestr_subject_category_timesMODEL = new EduSemestrSubjectCategoryTime();
+            //  [['edu_semestr_subject_id', 'subject_category_id', 'hours'], 'required'],
+            foreach (json_decode($post['edu_semestr_subject_category_times']) as $subjectCatId => $subjectCatValues) {
+                // $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $post['subject_id'];
+                $edu_semestr_subject_category_timesMODEL->subject_category_id = $subjectCatId;
+                $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;sss
 
-            if (!$edu_semestr_subject_category_timesMODEL->validate()) {
-               // $errors[] = $edu_semestr_subject_category_timesMODEL->errors;
-            }
-        } */
+                if (!$edu_semestr_subject_category_timesMODEL->validate()) {
+                   // $errors[] = $edu_semestr_subject_category_timesMODEL->errors;
+                }
+            } */
 
         $model->edu_semestr_subject_category_times = $post['edu_semestr_subject_category_times'];
         $model->edu_semestr_exams_types = $post['edu_semestr_exams_types'];
@@ -286,17 +282,17 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             if (!isJsonMK($post['edu_semestr_subject_category_times'])) {
                 $json_errors['edu_semestr_subject_category_times'] = [_e('Must be Json')];
             } else {
-               /*  $edu_semestr_subject_category_timesMODEL = new EduSemestrSubjectCategoryTime();
-                //  [['edu_semestr_subject_id', 'subject_category_id', 'hours'], 'required'],
-                foreach (json_decode($post['edu_semestr_subject_category_times']) as $subjectCatId => $subjectCatValues) {
-                    $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $model->subject_id;
-                    $edu_semestr_subject_category_timesMODEL->subject_category_id = $subjectCatId;
-                    $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;
+                /*  $edu_semestr_subject_category_timesMODEL = new EduSemestrSubjectCategoryTime();
+                 //  [['edu_semestr_subject_id', 'subject_category_id', 'hours'], 'required'],
+                 foreach (json_decode($post['edu_semestr_subject_category_times']) as $subjectCatId => $subjectCatValues) {
+                     $edu_semestr_subject_category_timesMODEL->edu_semestr_subject_id = $model->subject_id;
+                     $edu_semestr_subject_category_timesMODEL->subject_category_id = $subjectCatId;
+                     $edu_semestr_subject_category_timesMODEL->hours = $subjectCatValues;
 
-                    if (!$edu_semestr_subject_category_timesMODEL->validate()) {
-                        $errors[] = $edu_semestr_subject_category_timesMODEL->errors;
-                    }
-                } */
+                     if (!$edu_semestr_subject_category_timesMODEL->validate()) {
+                         $errors[] = $edu_semestr_subject_category_timesMODEL->errors;
+                     }
+                 } */
 
                 $model->edu_semestr_subject_category_times = $post['edu_semestr_subject_category_times'];
             }

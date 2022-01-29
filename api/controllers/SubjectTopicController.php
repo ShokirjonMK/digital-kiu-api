@@ -5,15 +5,13 @@ namespace api\controllers;
 
 use common\models\model\SubjectTopic;
 use Yii;
-use common\models\model\Direction;
-use common\models\model\Translate;
 use base\ResponseStatus;
-use common\models\model\Faculty;
+
 
 class SubjectTopicController extends ApiActiveController
 {
 
-    public $modelClass = 'api\resources\Direction';
+    public $modelClass = 'api\resources\SubjectTopic';
 
     public function actions()
     {
@@ -28,10 +26,7 @@ class SubjectTopicController extends ApiActiveController
         $model = new SubjectTopic();
 
         $query = $model->find()
-            ->with(['infoRelation'])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -46,12 +41,12 @@ class SubjectTopicController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Direction();
+        $model = new SubjectTopic();
         $post = Yii::$app->request->post();
 
         $this->load($model, $post);
 
-        $result = Direction::createItem($model, $post);
+        $result = SubjectTopic::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -61,14 +56,14 @@ class SubjectTopicController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Direction::findOne($id);
+        $model = SubjectTopic::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Direction::updateItem($model, $post);
+        $result = SubjectTopic::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -78,7 +73,7 @@ class SubjectTopicController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Direction::find()
+        $model = SubjectTopic::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -91,7 +86,7 @@ class SubjectTopicController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Direction::find()
+        $model = SubjectTopic::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
@@ -99,10 +94,8 @@ class SubjectTopicController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-
         // remove model
         if ($model) {
-            Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 

@@ -41,7 +41,7 @@ trait ApiActionTrait
 
     public function getPermission()
     {
-        return Yii::$app->controller->id  . '_' . Yii::$app->controller->action->id;
+        return Yii::$app->controller->id . '_' . Yii::$app->controller->action->id;
     }
 
     public function getAllowedRoles()
@@ -162,7 +162,7 @@ trait ApiActionTrait
 
     public function filterAll($query, $model)
     {
-       
+
         $filter = Yii::$app->request->get('filter');
         $queryfilter = Yii::$app->request->get('filter-like');
 
@@ -238,7 +238,7 @@ trait ApiActionTrait
     public function checkLead($model, $role)
     {
         $user_id = Yii::$app->user->identity->getId();
-        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+        $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $role)) {
             if ($model->user_id != $user_id) {
@@ -251,7 +251,7 @@ trait ApiActionTrait
     public function isRole($roleName)
     {
         $user_id = Yii::$app->user->identity->getId();
-        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+        $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $roleName)) {
             return true;
@@ -263,7 +263,7 @@ trait ApiActionTrait
     public function isSelf($userAccessTypeId)
     {
         $user_id = Yii::$app->user->identity->getId();
-        $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
+        $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         $userAccess = UserAccess::findOne([
             'user_id' => $user_id,

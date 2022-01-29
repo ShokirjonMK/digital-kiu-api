@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -12,7 +13,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  *
  * @property int $name
- * @property int $hours
+ * @property int $time
  * @property string $subject_id
  * @property string $lang_id
  * @property int $description
@@ -26,7 +27,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property EduPlan[] $eduPlans
  */
-class SubjectTopic extends \yii\db\ActiveRecord
+class SubjectAccess extends \yii\db\ActiveRecord
 {
     use ResourceTrait;
 
@@ -37,12 +38,13 @@ class SubjectTopic extends \yii\db\ActiveRecord
         ];
     }
 
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'subject_topic';
+        return 'subject_access';
     }
 
     /**
@@ -53,31 +55,20 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'name',
-                    'hours',
                     'subject_id',
-                    'lang_id',
+                    'user_id',
                 ],
                 'required'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [
                 [
-                    'hours',
-                    'subject_id',
-                    'lang_id',
-                ],
-                'integer'
-            ],
-            [
-                [
-                    'name',
                     'description',
                 ],
                 'string'
             ],
-            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
+            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_topic_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 
         ];
     }
@@ -89,11 +80,10 @@ class SubjectTopic extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'hours' => 'Hours',
-            'subject_id' => 'Subject Id',
-            'lang_id' => 'Lang Id',
-            'description' => 'Description',
+            'content' => 'Content',
+            'type' => 'Type',
+            'subject_topic_id' => 'subject_topic_id',
+            'description' => 'description',
 
             'order' => 'Order',
             'status' => 'Status',
@@ -109,10 +99,9 @@ class SubjectTopic extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
-            'name',
-            'hours',
-            'subject_id',
-            'lang_id',
+            'content',
+            'type',
+            'subject_topic_id',
             'description',
 
             'order',
@@ -131,7 +120,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
     {
         $extraFields = [
             'subject',
-            'lang',
+            'subjectTopic',
 
             'createdBy',
             'updatedBy',
@@ -147,7 +136,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        return Subject::find()->where(['id' => $this->subjectTopic->subject_id])->one();
     }
 
     /**
@@ -155,10 +144,11 @@ class SubjectTopic extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLang()
+    public function getSubjectTopic()
     {
-        return $this->hasOne(Languages::className(), ['id' => 'lang_id'])->select(['id', 'name']);
+        return $this->hasOne(SubjectTopic::className(), ['id' => 'subject_topic_id']);
     }
+
 
     public static function createItem($model, $post)
     {
@@ -170,6 +160,13 @@ class SubjectTopic extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
+            if (isset($post['order'])) {
+                $lastOrder = SubjectContent::find()->where(['subject_topic_id' => $model->subject_topic_id])->orderBy(['order' => SORT_DESC])->select('order')->one();
+                if ($lastOrder) {
+                    $model->order = $lastOrder->order + 1;
+                }
+                $model->update();
+            }
             $transaction->commit();
             return true;
         } else {
@@ -188,6 +185,8 @@ class SubjectTopic extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
+
+
             $transaction->commit();
             return true;
         } else {
@@ -195,7 +194,6 @@ class SubjectTopic extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
     }
-
 
     public function beforeSave($insert)
     {
@@ -205,5 +203,28 @@ class SubjectTopic extends \yii\db\ActiveRecord
             $this->updated_by = Yii::$app->user->identity->getId();
         }
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * Status array
+     *
+     * @param int $key
+     * @return array
+     */
+    public function typesArray($key = null)
+    {
+        $array = [
+            self::TYPE_TEXT => 'TYPE_TEXT',
+            self::TYPE_FILE => 'TYPE_FILE',
+            self::TYPE_IMAGE => 'TYPE_IMAGE',
+            self::TYPE_VIDEO => 'TYPE_VIDEO',
+            self::TYPE_AUDIO => 'TYPE_AUDIO',
+        ];
+
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
+
+        return $array;
     }
 }

@@ -204,6 +204,7 @@ class UserController extends ApiActiveController
 
         // data
         $data = $this->getData($query);
+        // $data = $query->all();
 
         return $this->response(1, _e('Success'), $data);
     }

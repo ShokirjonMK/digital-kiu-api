@@ -97,8 +97,8 @@ trait ApiOpen
         ]);
         $dataRes = [];
         $dataRes['items'] = $data;
-        $dataRes['_meta']['totalCount'] = $query->count();
-        $dataRes['_meta']['currentPage'] = Yii::$app->request->get('page') ?? 1;
+        $dataRes['_meta']['totalCount'] = (int) $query->count();
+        $dataRes['_meta']['currentPage'] = (int) Yii::$app->request->get('page') ?? 1;
         $dataRes['_meta']['pageCount'] =
             (($dataRes['_meta']['totalCount'] / (Yii::$app->request->get('per-page') ?? 20))
                 >
@@ -106,7 +106,7 @@ trait ApiOpen
             ?  (int) ($dataRes['_meta']['totalCount'] / (Yii::$app->request->get('per-page') ?? 20)) + 1 :
             (int) ($dataRes['_meta']['totalCount'] / (Yii::$app->request->get('per-page') ?? 20));
 
-        $dataRes['_meta']['perPage'] = Yii::$app->request->get('per-page') ?? 20;
+        $dataRes['_meta']['perPage'] = (int) Yii::$app->request->get('per-page') ?? 20;
 
         if ($data) return $dataRes;
     }

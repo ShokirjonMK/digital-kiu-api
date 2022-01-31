@@ -62,7 +62,10 @@ $controllers = [
     'exam-semeta',
 
     'user-access-type',
-    'user-access'
+    'user-access',
+
+    'subject-topic',
+    'subject-content'
 
 ];
 
@@ -82,15 +85,10 @@ foreach ($controllers as $controller) {
 
 $routes = [
 
-    'POST <lang:\w{2}>/employees/<employee_id:\d+>/bind-subject' => 'employee/bind-subject', // Bind subjects to teacher
-    'GET <lang:\w{2}>/employees/<employee_id:\d+>/subjects' => 'employee/subjects', // Get teacher subjects
-
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
-
     // Get me
     'GET <lang:\w{2}>/users/me' => 'user/me',
-
     // Log out
     'POST <lang:\w{2}>/auth/logout' => 'user/logout',
 
@@ -99,19 +97,24 @@ $routes = [
 
     // Exam Passwords
     'POST <lang:\w{2}>/exams/get-passwords' => 'exam/get-passwords',
-
     // Exam Passwords
     'POST <lang:\w{2}>/exams/generate-passwords' => 'exam/generate-passwords',
 
     // Department type list
     'GET <lang:\w{2}>/departments/types' => 'department/types',
 
-    // 'POST studentga savollarni random tushirish
+    // studentga savollarni random tushirish
     'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',
 
-    // 'POST teacherga studentlarni random tushirish
+    // teacherga studentlarni random tushirish
     'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',
 
+    // Subject Content Trash ( get Deleted Content)
+    'GET <lang:\w{2}>/subject-contents/trash' => 'subject-content/trash',
+    // Subject Content Delete from Trash ( get Deleted Content)  bazadan o'chirish
+    'DELETE <lang:\w{2}>/subject-contents/trash/<id>' => 'subject-content/trash-delete',
+    // Subject Content type list
+    'GET <lang:\w{2}>/subject-contents/types' => 'subject-content/types',
 
     // Faculty UserAccess fakultitetga user biriktirish
     'POST <lang:\w{2}>/faculties/user-access' => 'faculty/user-access',
@@ -121,11 +124,10 @@ $routes = [
     'POST <lang:\w{2}>/departments/user-access' => 'department/user-access',
 
 
-
     /** Free teachers for time tables */
     'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
     'POST <lang:\w{2}>/rooms/free' => 'room/free',
-    /** Free teachers for time tables */
+    /**  */
 
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list
@@ -133,7 +135,6 @@ $routes = [
     'POST <lang:\w{2}>/roles' => 'access-control/create-role', // Create new role
     'PUT <lang:\w{2}>/roles' => 'access-control/update-role', // Update role
     'DELETE <lang:\w{2}>/roles/<role>' => 'access-control/delete-role', // Delete role
-
     'GET <lang:\w{2}>/permissions' => 'access-control/permissions', // Get permissions list
     // ***
 
@@ -150,9 +151,6 @@ $routes = [
     'GET <lang:\w{2}>/topic-types' => 'enum/topic-types',
     'GET <lang:\w{2}>/yesno' => 'enum/yesno',
     /* Enums */
-
-
-
 ];
 
 return array_merge($controllerRoutes, $routes);

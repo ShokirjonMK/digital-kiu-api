@@ -19,7 +19,7 @@ class m220127_120228_create_subject_topic_table extends Migration
         $this->createTable('{{%subject_topic}}', [
             'id' => $this->primaryKey(),
             'name' => $this->text()->notNull(),
-            'time' => $this->integer()->defaultValue(0),
+            'hours' => $this->integer()->defaultValue(0),
             'subject_id' => $this->integer()->notNull(),
             'lang_id' => $this->integer()->notNull(),
             'description' => $this->text()->Null(),

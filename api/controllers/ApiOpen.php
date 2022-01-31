@@ -95,6 +95,7 @@ trait ApiOpen
                 'validatePage' => $validatePage
             ],
         ]);
+
         $dataRes = [];
         $dataRes['items'] = $data;
         $dataRes['_meta']['totalCount'] = (int) $query->count();

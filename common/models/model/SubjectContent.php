@@ -49,7 +49,7 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_video;
     public $file_audio;
 
-    const UPLOADS_FOLDER = 'uploads/content_files/';
+    const UPLOADS_FOLDER = 'uploads/content_files';
     public $file_fileFileMaxSize = 1024 * 1024 * 5; // 3 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 2; // 3 Mb
     public $file_videoFileMaxSize= 1024 * 1024 * 25; // 3 Mb
@@ -190,7 +190,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         if ($model->file_file) {
             $model->file_file = $model->file_file[0];
-            $fileUrl = $model->uploadFile("file_file");
+            $fileUrl = $model->uploadFile("file_file",$model->subject_topic_id);
             if ($fileUrl) {
                 $model->content = $fileUrl;
             } else {
@@ -203,7 +203,7 @@ class SubjectContent extends \yii\db\ActiveRecord
         $model->file_image = UploadedFile::getInstancesByName('file_image');
         if ($model->file_image) {
             $model->file_image = $model->file_image[0];
-            $fileUrl = $model->uploadFile("file_image");
+            $fileUrl = $model->uploadFile("file_image",$model->subject_topic_id);
             if ($fileUrl) {
                 $model->content = $fileUrl;
             } else {
@@ -216,7 +216,7 @@ class SubjectContent extends \yii\db\ActiveRecord
         $model->file_video = UploadedFile::getInstancesByName('file_video');
         if ($model->file_video) {
             $model->file_video = $model->file_video[0];
-            $fileUrl = $model->uploadFile("file_video");
+            $fileUrl = $model->uploadFile("file_video",$model->subject_topic_id);
             if ($fileUrl) {
                 $model->content = $fileUrl;
             } else {
@@ -229,7 +229,7 @@ class SubjectContent extends \yii\db\ActiveRecord
         $model->file_audio = UploadedFile::getInstancesByName('file_audio');
         if ($model->file_audio) {
             $model->file_audio = $model->file_audio[0];
-            $fileUrl = $model->uploadFile("file_audio");
+            $fileUrl = $model->uploadFile("file_audio",$model->subject_topic_id);
             if ($fileUrl) {
                 $model->content = $fileUrl;
             } else {
@@ -308,18 +308,19 @@ class SubjectContent extends \yii\db\ActiveRecord
         return $array;
     }
 
-    public function uploadFile($type)
+    public function uploadFile($type,$subject_topic_id)
     {
+        $folder =  self::UPLOADS_FOLDER."/topic_".$subject_topic_id."/";
         if ($this->validate()) {
-            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
-                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            if (!file_exists(STORAGE_PATH  . $folder)) {
+                mkdir(STORAGE_PATH  . $folder, 0777, true);
             }
             if ($this->isNewRecord) {
                 $fileName =  \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
             } else {
                 $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
             }
-            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $miniUrl = $folder . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->$type->saveAs($url, false);
             return "storage/" . $miniUrl;

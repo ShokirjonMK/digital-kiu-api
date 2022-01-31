@@ -134,7 +134,7 @@ class UserController extends ApiActiveController
         if ($d['status'] == 1) {
             $query->andFilterWhere([
                 'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                    'table_id' => $id['UserAccess']->table_id,
+                    'table_id' => $d['UserAccess']->table_id,
                     'user_access_type_id' => Department::USER_ACCESS_TYPE_ID,
                 ])
             ]);

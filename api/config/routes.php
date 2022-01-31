@@ -1,6 +1,8 @@
 <?php
 
 $controllers = [
+    'get-teacher',
+
     'student',
     'employee',
     'user',

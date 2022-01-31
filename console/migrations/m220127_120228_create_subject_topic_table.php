@@ -34,7 +34,7 @@ class m220127_120228_create_subject_topic_table extends Migration
         ]);
 
         $this->addForeignKey('sts_subject_topic_subject_id_mk', 'subject_topic', 'subject_id', 'subject', 'id');
-        $this->addForeignKey('stl_subject_topic_lang_id_mk', 'subject_topic', 'lang_id', 'landuages', 'id');
+        $this->addForeignKey('stl_subject_topic_lang_id_mk', 'subject_topic', 'lang_id', 'languages', 'id');
 
     }
 

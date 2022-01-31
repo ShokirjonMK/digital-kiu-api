@@ -55,6 +55,7 @@ class GetTeacher extends CommonUser
             'avatar' => function ($model) {
                 return $model->profile->image ?? '';
             },
+
         ];
 
         return $fields;
@@ -70,16 +71,16 @@ class GetTeacher extends CommonUser
     public function extraFields()
     {
         $extraFields = [
-            'profile',
+            // 'profile',
             'department',
-            'userAccess',
+            // 'userAccess',
 
         ];
 
         return $extraFields;
     }
 
-  
+
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'id']);
@@ -95,9 +96,8 @@ class GetTeacher extends CommonUser
     public function getDepartment()
     {
         // return $this->userAccess->user_access_type_id;
-        $user_access_type = UserAccessType::findOne($this->userAccess->user_access_type_id);
+        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess->user_access_type_id) : null;
 
-        return $user_access_type->table_name ? $user_access_type->table_name::findOne(['id'=> $this->userAccess->table_id]) : null; 
+        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess->table_id])->translate->name : '';
     }
-
 }

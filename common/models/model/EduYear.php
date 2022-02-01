@@ -215,15 +215,15 @@ class EduYear extends \yii\db\ActiveRecord
         if ($has_error['status']) {
             if ($model->save()) {
 
-                if ($model->status == 1) {
-                    $eduYearAll = EduYear::find()->andWhere(['not in', 'id', $model->id])->all();
-                    if (isset($eduYearAll)) {
-                        foreach ($eduYearAll as $eduYearOne) {
-                            $eduYearOne->status = 0;
-                            $eduYearOne->save();
-                        }
-                    }
-                }
+                // if ($model->status == 1) {
+                //     $eduYearAll = EduYear::find()->andWhere(['not in', 'id', $model->id])->all();
+                //     if (isset($eduYearAll)) {
+                //         foreach ($eduYearAll as $eduYearOne) {
+                //             $eduYearOne->status = 0;
+                //             $eduYearOne->save();
+                //         }
+                //     }
+                // }
 
                 if (isset($post['name'])) {
                     if (isset($post['description'])) {

@@ -16,7 +16,7 @@ class m211012_125050_edu_semestr_subject extends Migration
             'id' => $this->primaryKey(),
             'edu_semestr_id'=>$this->integer()->notNull(),
             'subject_id'=>$this->integer()->notNull(),
-            'subject_type_id'=>$this->integer()->defaultValue(0),
+            'subject_type_id'=>$this->integer()->Null(),
             'credit'=>$this->float()->defaultValue(0),
             'all_ball_yuklama'=>$this->integer()->defaultValue(0),
             'is_checked'=>$this->integer()->defaultValue(0),

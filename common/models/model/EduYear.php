@@ -216,7 +216,7 @@ class EduYear extends \yii\db\ActiveRecord
             if ($model->save()) {
 
                 if ($model->status == 1) {
-                    $eduYearAll = EduSemestr::find()->andWhere(['not in', 'id', $model->id])->all();
+                    $eduYearAll = EduYear::find()->andWhere(['not in', 'id', $model->id])->all();
                     if (isset($eduYearAll)) {
                         foreach ($eduYearAll as $eduYearOne) {
                             $eduYearOne->status = 0;

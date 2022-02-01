@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\rest\ActiveController;
 use yii\rest\Controller;
 
-class GetTeacherController extends resta
+class GetTeacherController extends ActiveController
 {
 
     use ApiOpen;

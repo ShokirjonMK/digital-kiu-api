@@ -22,7 +22,8 @@
         "kartik-v/yii2-widget-datepicker": "dev-master",
         "yiisoft/yii2-bootstrap4": "^2.0",
         "yiisoft/yii2-jui": "^2.0",
-        "symfony/finder": "^5.1"
+        "symfony/finder": "^5.1",
+        "phpoffice/phpspreadsheet": "^1.21"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

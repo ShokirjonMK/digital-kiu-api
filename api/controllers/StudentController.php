@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
 use api\resources\StudentUser;
 use api\resources\User;
@@ -10,6 +11,8 @@ use base\ResponseStatus;
 use common\models\model\Faculty;
 use common\models\model\Profile;
 use common\models\model\Student;
+use Exception;
+use yii\web\UploadedFile;
 
 class  StudentController extends ApiActiveController
 {
@@ -19,8 +22,48 @@ class  StudentController extends ApiActiveController
     {
         return [];
     }
+    public function actionImport($lang)
+    {
+
+        /*** */
+        $data = [];
+        $post = Yii::$app->request->post();
+        $file = UploadedFile::getInstancesByName('fff');
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $inputFileType = IOFactory::identify($file[0]->tempName);
+            $objReader = IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($file[0]->tempName);
+
+            $dataExcel = $objPHPExcel->getActiveSheet()->toArray();
+
+            $num = $objPHPExcel->getSheetCount(); //get number of sheets
+            $sheetnames = $objPHPExcel->getSheetNames(); //get sheet names
+
+
+            foreach ($dataExcel as $key => $row) {
+                for ($i = 0; $i < count($row); $i++) {
+                    $data['key'][] = $key;
+                    $data[$key][] = $row[$i];
+
+                    // models save
+                }
+            }
+            $transaction->commit();
+        } catch (Exception $e) {
+            $transaction->rollBack();
+        }
+        // unlink($file[]);
+        var_dump($data);
+        die();
+
+        /*** */
+    }
+
     public function actionIndex($lang)
     {
+        /*********/
         $model = new Student();
 
         $query = $model->find()

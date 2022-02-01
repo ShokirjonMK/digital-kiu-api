@@ -52,8 +52,9 @@ class SubjectContent extends \yii\db\ActiveRecord
     const UPLOADS_FOLDER = 'uploads/content_files';
     public $file_fileFileMaxSize = 1024 * 1024 * 5; // 3 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 2; // 3 Mb
-    public $file_videoFileMaxSize= 1024 * 1024 * 25; // 3 Mb
+    public $file_videoFileMaxSize = 1024 * 1024 * 25; // 3 Mb
     public $file_audioFileMaxSize = 1024 * 1024 * 15; // 3 Mb
+
     /**
      * {@inheritdoc}
      */
@@ -88,6 +89,7 @@ class SubjectContent extends \yii\db\ActiveRecord
                 [
                     'content',
                     'description',
+                    'file_url',
                 ],
                 'string'
             ],
@@ -111,7 +113,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'type' => 'Type',
             'subject_topic_id' => 'subject_topic_id',
             'description' => 'description',
-
+            'file_url' => "File Url",
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -130,6 +132,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'type',
             'subject_topic_id',
             'description',
+            'file_url',
 
             'order',
             'status',
@@ -187,12 +190,13 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
         /* Fayl Yuklash*/
         $model->file_file = UploadedFile::getInstancesByName('file_file');
-
+        $model->type = self::TYPE_TEXT;
         if ($model->file_file) {
             $model->file_file = $model->file_file[0];
-            $fileUrl = $model->uploadFile("file_file",$model->subject_topic_id);
+            $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
             if ($fileUrl) {
-                $model->content = $fileUrl;
+                $model->file_url = $fileUrl;
+                $model->type = self::TYPE_FILE;
             } else {
                 $errors[] = $model->errors;
             }
@@ -203,9 +207,10 @@ class SubjectContent extends \yii\db\ActiveRecord
         $model->file_image = UploadedFile::getInstancesByName('file_image');
         if ($model->file_image) {
             $model->file_image = $model->file_image[0];
-            $fileUrl = $model->uploadFile("file_image",$model->subject_topic_id);
+            $fileUrl = $model->uploadFile("file_image", $model->subject_topic_id);
             if ($fileUrl) {
-                $model->content = $fileUrl;
+                $model->type = self::TYPE_IMAGE;
+                $model->file_url = $fileUrl;
             } else {
                 $errors[] = $model->errors;
             }
@@ -216,9 +221,10 @@ class SubjectContent extends \yii\db\ActiveRecord
         $model->file_video = UploadedFile::getInstancesByName('file_video');
         if ($model->file_video) {
             $model->file_video = $model->file_video[0];
-            $fileUrl = $model->uploadFile("file_video",$model->subject_topic_id);
+            $fileUrl = $model->uploadFile("file_video", $model->subject_topic_id);
             if ($fileUrl) {
-                $model->content = $fileUrl;
+                $model->file_url = $fileUrl;
+                $model->type = self::TYPE_VIDEO;
             } else {
                 $errors[] = $model->errors;
             }
@@ -229,9 +235,10 @@ class SubjectContent extends \yii\db\ActiveRecord
         $model->file_audio = UploadedFile::getInstancesByName('file_audio');
         if ($model->file_audio) {
             $model->file_audio = $model->file_audio[0];
-            $fileUrl = $model->uploadFile("file_audio",$model->subject_topic_id);
+            $fileUrl = $model->uploadFile("file_audio", $model->subject_topic_id);
             if ($fileUrl) {
-                $model->content = $fileUrl;
+                $model->file_url = $fileUrl;
+                $model->type = self::TYPE_AUDIO;
             } else {
                 $errors[] = $model->errors;
             }
@@ -246,7 +253,6 @@ class SubjectContent extends \yii\db\ActiveRecord
                 }
                 $model->update();
             }
-
             $transaction->commit();
             return true;
         } else {
@@ -264,9 +270,69 @@ class SubjectContent extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
+        $model->type = self::TYPE_TEXT;
+
+        /* Fayl Yuklash*/
+        $model->file_file = UploadedFile::getInstancesByName('file_file');
+        if ($model->file_file) {
+            $model->file_file = $model->file_file[0];
+            $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
+            if ($fileUrl) {
+                self::deleteFile($model->content);
+                $model->file_url = $fileUrl;
+                $model->type = self::TYPE_FILE;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        /* Fayl Yuklash*/
+
+        /* Image Yuklash*/
+        $model->file_image = UploadedFile::getInstancesByName('file_image');
+        if ($model->file_image) {
+            $model->file_image = $model->file_image[0];
+            $fileUrl = $model->uploadFile("file_image", $model->subject_topic_id);
+            if ($fileUrl) {
+                self::deleteFile($model->content);
+                $model->type = self::TYPE_IMAGE;
+                $model->file_url = $fileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        /* Image Yuklash*/
+
+        /* Video Yuklash*/
+        $model->file_video = UploadedFile::getInstancesByName('file_video');
+        if ($model->file_video) {
+            $model->file_video = $model->file_video[0];
+            $fileUrl = $model->uploadFile("file_video", $model->subject_topic_id);
+            if ($fileUrl) {
+                self::deleteFile($model->content);
+                $model->file_url = $fileUrl;
+                $model->type = self::TYPE_VIDEO;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        /* Video Yuklash*/
+
+        /* Audio Yuklash*/
+        $model->file_audio = UploadedFile::getInstancesByName('file_audio');
+        if ($model->file_audio) {
+            $model->file_audio = $model->file_audio[0];
+            $fileUrl = $model->uploadFile("file_audio", $model->subject_topic_id);
+            if ($fileUrl) {
+                self::deleteFile($model->content);
+                $model->file_url = $fileUrl;
+                $model->type = self::TYPE_AUDIO;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        /* Audio Yuklash*/
+
         if ($model->save()) {
-
-
             $transaction->commit();
             return true;
         } else {
@@ -308,15 +374,17 @@ class SubjectContent extends \yii\db\ActiveRecord
         return $array;
     }
 
-    public function uploadFile($type,$subject_topic_id)
+    public function uploadFile($type, $subject_topic_id)
     {
-        $folder =  self::UPLOADS_FOLDER."/topic_".$subject_topic_id."/";
+        $subject = SubjectTopic::findOne($subject_topic_id);
+        $folder = self::UPLOADS_FOLDER . "/subject_" . $subject->subject_id . "/topic_" . $subject_topic_id . "/";
         if ($this->validate()) {
-            if (!file_exists(STORAGE_PATH  . $folder)) {
-                mkdir(STORAGE_PATH  . $folder, 0777, true);
+            if (!file_exists(STORAGE_PATH . $folder)) {
+                mkdir(STORAGE_PATH . $folder, 0777, true);
             }
             if ($this->isNewRecord) {
-                $fileName =  \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
+                $subjectContent = SubjectContent::find()->orderBy('id DESC')->one();
+                $fileName = ($subjectContent ? ($subjectContent->id + 1) : 1) . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
             } else {
                 $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
             }
@@ -329,11 +397,11 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
     }
 
-    public function deleteFile($oldFile = NULL)
+    public static function deleteFile($oldFile = NULL)
     {
         if (isset($oldFile)) {
             if (file_exists(HOME_PATH . $oldFile)) {
-                unlink(HOME_PATH  . $oldFile);
+                unlink(HOME_PATH . $oldFile);
             }
         }
         return true;

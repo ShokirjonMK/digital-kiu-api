@@ -214,6 +214,17 @@ class EduYear extends \yii\db\ActiveRecord
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
+
+                if ($model->status == 1) {
+                    $eduYearAll = EduSemestr::find()->andWhere(['not in', 'id', $model->id])->all();
+                    if (isset($eduYearAll)) {
+                        foreach ($eduYearAll as $eduYearOne) {
+                            $eduYearOne->status = 0;
+                            $eduYearOne->save();
+                        }
+                    }
+                }
+
                 if (isset($post['name'])) {
                     if (isset($post['description'])) {
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);

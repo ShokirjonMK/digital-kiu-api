@@ -113,7 +113,7 @@ class UserAccess extends \yii\db\ActiveRecord
         ];
     }
 
-    public function fields()
+  /*   public function fields()
     {
         $fields =  [
             'id',
@@ -133,7 +133,7 @@ class UserAccess extends \yii\db\ActiveRecord
 
         ];
         return $fields;
-    }
+    } */
 
     public function extraFields()
     {

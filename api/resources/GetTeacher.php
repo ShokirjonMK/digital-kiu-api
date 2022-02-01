@@ -87,7 +87,7 @@ class GetTeacher extends CommonUser
     }
 
     // UserAccess
-    public function getUserAccess()
+    public function getUserAccess() 
     {
         return $this->hasOne(UserAccess::className(), ['user_id' => 'id']);
     }

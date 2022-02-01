@@ -105,7 +105,8 @@ class User extends CommonUser
             'created_at',
             'updated_at',
             'profile',
-            'userAccess'
+            'userAccess',
+            'department'
         ];
 
         return $extraFields;
@@ -152,6 +153,16 @@ class User extends CommonUser
     {
         return $this->hasMany(UserAccess::className(), ['user_id' => 'id']);
     }
+
+    // UserAccess
+    public function getDepartment()
+    {
+        // return $this->userAccess->user_access_type_id;
+        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
+
+        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
+    }
+
 
     public static function createItem($model, $profile, $post)
     {

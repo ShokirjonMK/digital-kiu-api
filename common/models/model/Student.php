@@ -67,38 +67,43 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [[
-                'user_id',
-                'faculty_id',
-                'direction_id',
-                'course_id',
-                'edu_year_id',
-
-                'edu_type_id',
-                'is_contract',
-                'edu_lang_id'
-            ], 'required'],
-            [[
-                'tutor_id',
-                'user_id',
-                'faculty_id',
-                'direction_id',
-                'course_id',
-                'edu_plan_id',
-                'edu_year_id',
-                'edu_type_id',
-                'is_contract',
-                'order',
-                'status',
-                'created_at',
-                'updated_at',
-                'created_by',
-                'updated_by',
-                'is_deleted'
-            ], 'integer'],
+            [
+                [
+                    'user_id',
+                    'faculty_id',
+                    'direction_id',
+                    'course_id',
+                    'edu_year_id',
+                    'edu_type_id',
+                    'is_contract',
+                    'edu_lang_id'
+                ], 'required'
+            ],
+            [
+                [
+                    'edu_form_id',
+                    'tutor_id',
+                    'user_id',
+                    'faculty_id',
+                    'direction_id',
+                    'course_id',
+                    'edu_plan_id',
+                    'diplom_number',
+                    'edu_year_id',
+                    'edu_type_id',
+                    'is_contract',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
             [['diplom_date'], 'safe'],
             [['description'], 'string'],
-            [['diplom_number', 'diplom_seria'], 'string', 'max' => 255],
+            [['diplom_seria'], 'string', 'max' => 255],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
             [['edu_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduType::className(), 'targetAttribute' => ['edu_type_id' => 'id']],
@@ -108,6 +113,7 @@ class Student extends \yii\db\ActiveRecord
             [['tutor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['tutor_id' => 'id']],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['edu_lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['edu_lang_id' => 'id']],
+            [['edu_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduForm::className(), 'targetAttribute' => ['edu_form_id' => 'id']],
         ];
     }
 
@@ -124,6 +130,7 @@ class Student extends \yii\db\ActiveRecord
             'direction_id' => 'Direction ID',
             'course_id' => 'Course ID',
             'edu_year_id' => 'Edu Year ID',
+            'edu_form_id' => 'Edu Form ID',
             'edu_type_id' => 'Edu Type ID',
             'edu_lang_id' => 'Edu Lang',
             'edu_plan_id' => 'Edu Plan Id',
@@ -154,6 +161,7 @@ class Student extends \yii\db\ActiveRecord
             'direction_id',
             'course_id',
             'edu_year_id',
+            'edu_form_id',
             'edu_type_id',
             'edu_lang_id',
             'edu_plan_id',
@@ -179,6 +187,7 @@ class Student extends \yii\db\ActiveRecord
             'direction',
             'eduType',
             'eduYear',
+            'eduForm',
             'faculty',
             'user',
             'tutor',
@@ -227,6 +236,16 @@ class Student extends \yii\db\ActiveRecord
     public function getEduType()
     {
         return $this->hasOne(EduType::className(), ['id' => 'edu_type_id']);
+    }
+
+    /**
+     * Gets query for [[EduForm]].
+     *edu_form_id
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEduForm()
+    {
+        return $this->hasOne(EduForm::className(), ['id' => 'edu_form_id']);
     }
 
     /**

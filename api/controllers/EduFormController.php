@@ -2,26 +2,26 @@
 
 namespace api\controllers;
 
-use common\models\model\EduType;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduForm;
 
-class EduTypeController extends ApiActiveController
+class EduFormController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\EduType';
+    public $modelClass = 'api\resources\EduForm';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'edu_type';
-    public $controller_name = 'EduType';
+    public $table_name = 'edu_form';
+    public $controller_name = 'EduForm';
 
     public function actionIndex($lang)
     {
-        $model = new EduType();
+        $model = new EduForm();
 
         $query = $model->find()
             ->with(['infoRelation'])
@@ -42,11 +42,11 @@ class EduTypeController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new EduType();
+        $model = new EduForm();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = EduType::createItem($model, $post);
+        $result = EduForm::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -56,13 +56,13 @@ class EduTypeController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = EduType::findOne($id);
+        $model = EduForm::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = EduType::updateItem($model, $post);
+        $result = EduForm::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -72,7 +72,7 @@ class EduTypeController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = EduType::find()
+        $model = EduForm::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -83,7 +83,7 @@ class EduTypeController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = EduType::find()
+        $model = EduForm::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

@@ -48,78 +48,83 @@ class  StudentController extends ApiActiveController
     {
 
         $data = [];
-        $errorAll = [];
-
         $post = Yii::$app->request->post();
         $file = UploadedFile::getInstancesByName('fff');
-        if (!$file) {
-            return $this->response(0, _e('Excel file required'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        if(!$file){
+            return 0;
         }
-        // $transaction = Yii::$app->db->beginTransaction();
-        try {
-            $inputFileType = IOFactory::identify($file[0]->tempName);
-            $objReader = IOFactory::createReader($inputFileType);
+        $inputFileType = IOFactory::identify($file[0]->tempName);
+        $objReader = IOFactory::createReader($inputFileType);
+        $objPHPExcel = $objReader->load($file[0]->tempName);
 
-            $objectPhpExcel = $objReader->load($file[0]->tempName);;
+        $dataExcel = $objPHPExcel->getActiveSheet()->toArray();
 
-            $sheetDatas = [];
 
+        /*    if (!isset($this->format))
+            $this->format = \PhpOffice\PhpSpreadsheet\IOFactory::identify($fileName);
+        $objectreader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($this->format);
+        if ($this->format == "Csv") {
+            $objectreader->setDelimiter($this->CSVDelimiter);
+            $objectreader->setInputEncoding($this->CSVEncoding);
+        }
+ */
+        $objectPhpExcel = $objReader->load($file[0]->tempName);;
+
+        $sheetCount = $objectPhpExcel->getSheetCount();
+
+        $sheetDatas = [];
+
+        if ($sheetCount > 1) {
+            foreach ($objectPhpExcel->getSheetNames() as $sheetIndex => $sheetName) {
+               /*  if (isset($this->getOnlySheet) && $this->getOnlySheet != null) {
+                    if (!$objectPhpExcel->getSheetByName($this->getOnlySheet)) {
+                        return $sheetDatas;
+                    }
+                    $objectPhpExcel->setActiveSheetIndexByName($this->getOnlySheet);
+                    $indexed = $this->getOnlySheet;
+                    $sheetDatas[$indexed] = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
+                    if ($this->setFirstRecordAsKeys) {
+                        $sheetDatas[$indexed] = $this->executeArrayLabel($sheetDatas[$indexed]);
+                    }
+                    if (!empty($this->getOnlyRecordByIndex)) {
+                        $sheetDatas[$indexed] = $this->executeGetOnlyRecords($sheetDatas[$indexed], $this->getOnlyRecordByIndex);
+                    }
+                    if (!empty($this->leaveRecordByIndex)) {
+                        $sheetDatas[$indexed] = $this->executeLeaveRecords($sheetDatas[$indexed], $this->leaveRecordByIndex);
+                    }
+                    return $sheetDatas[$indexed];
+                } else { */
+
+                    $objectPhpExcel->setActiveSheetIndexByName($sheetName);
+                    $indexed = $this->setIndexSheetByName == true ? $sheetName : $sheetIndex;
+                    $sheetDatas[$indexed] = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
+                    if ($this->setFirstRecordAsKeys) {
+                        $sheetDatas[$indexed] = $this->executeArrayLabel($sheetDatas[$indexed]);
+                    }
+                    if (!empty($this->getOnlyRecordByIndex) && isset($this->getOnlyRecordByIndex[$indexed]) && is_array($this->getOnlyRecordByIndex[$indexed])) {
+                        $sheetDatas = $this->executeGetOnlyRecords($sheetDatas, $this->getOnlyRecordByIndex[$indexed]);
+                    }
+                    if (!empty($this->leaveRecordByIndex) && isset($this->leaveRecordByIndex[$indexed]) && is_array($this->leaveRecordByIndex[$indexed])) {
+                        $sheetDatas[$indexed] = $this->executeLeaveRecords($sheetDatas[$indexed], $this->leaveRecordByIndex[$indexed]);
+                    }
+                // }
+            }
+        } 
+        else {
+            var_dump("asdasdasda sd asd asd ");
             $sheetDatas = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
-
             if ($this->setFirstRecordAsKeys) {
                 $sheetDatas = $this->executeArrayLabel($sheetDatas);
             }
-
             if (!empty($this->getOnlyRecordByIndex)) {
                 $sheetDatas = $this->executeGetOnlyRecords($sheetDatas, $this->getOnlyRecordByIndex);
             }
             if (!empty($this->leaveRecordByIndex)) {
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
-          
-            foreach ($sheetDatas as $post) {
-                /** */
-                // $post = Yii::$app->request->post();
-                if ($this->isRole('tutor')) {
-                    $post['tutor_id'] = Yii::$app->user->identity->getId();
-                }
-                $post['role'] = 'student';
-                $post['status'] = 10;
-                $model = new User();
-                $profile = new Profile();
-                $student = new Student();
-
-                $users = Student::find()->count();
-                $count = $users + 10001;
-                $post['username'] = 'tsul-std-' . $count;
-                $post['email'] = 'tsul-std' . $count . '@tsul.uz';
-                $this->load($model, $post);
-                $this->load($profile, $post);
-                $this->load($student, $post);
-
-                $data[] = [$model, $student, $profile];
-                $result = StudentUser::createItemImport($model, $profile, $student, $post);
-                // $result = StudentUser::createItem($model, $profile, $student, $post);
-
-                /*if (!is_array($result)) {
-                    return $this->response(1, _e('Student successfully created.'), $data, null, ResponseStatus::CREATED);
-                } else {
-                    return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-                } */
-
-                if (is_array($result)) {
-                    $errorAll[$post['passport_number']] = $result;
-                }
-                /** */
-            }
-            if (count($errorAll) > 0) {
-                return $errorAll;
-            }
-            return $data;
-            return $sheetDatas;
-        } catch (Exception $e) {
-            // $transaction->rollBack();
         }
+
+        return $sheetDatas;
     }
 
     public function actionImport($lang)

@@ -97,9 +97,45 @@ class Profile extends \yii\db\ActiveRecord
             // ], 'required'],
 
 
-            [['user_id', 'is_foreign', 'country_id', 'region_id', 'area_id', 'gender', 'permanent_country_id', 'permanent_region_id', 'permanent_area_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [
+                [
+                    'user_id',
+                    'is_foreign',
+                    'country_id',
+                    'passport_number',
+                    'region_id',
+                    'area_id',
+                    'gender',
+                    'permanent_country_id',
+                    'permanent_region_id',
+                    'permanent_area_id',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ],
+                'integer'
+            ],
             [['passport_given_date', 'birthday',  'passport_issued_date'], 'safe'],
-            [['image', 'last_name', 'first_name', 'middle_name', 'passport_seria', 'passport_number', 'passport_pin', 'passport_file', 'address', 'passport_given_by', 'permanent_address'], 'string', 'max' => 255],
+            [
+                [
+                    'image',
+                    'last_name',
+                    'first_name',
+                    'middle_name',
+                    'passport_seria',
+                    
+                    'passport_pin',
+                    'passport_file',
+                    'address',
+                    'passport_given_by',
+                    'permanent_address'
+                ],
+                'string', 'max' => 255
+            ],
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
 
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],

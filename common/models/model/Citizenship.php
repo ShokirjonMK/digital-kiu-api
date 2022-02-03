@@ -3,7 +3,6 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
-use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -11,12 +10,7 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "edu_type".
  *
  * @property int $id
- *
- * @property int $name
- * @property int $time
- * @property string $subject_id
- * @property string $lang_id
- * @property int $description
+ * @property string $name
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -24,12 +18,14 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- * @property int $user_id
  *
  * @property EduPlan[] $eduPlans
  */
-class SubjectAccess extends \yii\db\ActiveRecord
+class Citizenship extends \yii\db\ActiveRecord
 {
+
+    public static $selected_language = 'uz';
+
     use ResourceTrait;
 
     public function behaviors()
@@ -39,13 +35,12 @@ class SubjectAccess extends \yii\db\ActiveRecord
         ];
     }
 
-
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'subject_access';
+        return 'citizenship';
     }
 
     /**
@@ -54,23 +49,9 @@ class SubjectAccess extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [
-                [
-                    'subject_id',
-                    'user_id',
-                ],
-                'required'
-            ],
+            //            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [
-                [
-                    'description',
-                ],
-                'string'
-            ],
-            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-
+            //            [['name'], 'string', 'max' => 255],
         ];
     }
 
@@ -81,11 +62,7 @@ class SubjectAccess extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'content' => 'Content',
-            'type' => 'Type',
-            'subject_topic_id' => 'subject_topic_id',
-            'description' => 'description',
-
+            //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -98,11 +75,11 @@ class SubjectAccess extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields = [
+        $fields =  [
             'id',
-            'subject_id',
-            'user_id',
-            'description',
+            'name' => function ($model) {
+                return $model->translate->name ?? '';
+            },
             'order',
             'status',
             'created_at',
@@ -117,10 +94,9 @@ class SubjectAccess extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields = [
-            'subject',
-            'subjectTopic',
+        $extraFields =  [
 
+            'description',
             'createdBy',
             'updatedBy',
         ];
@@ -128,37 +104,54 @@ class SubjectAccess extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    /**
-     * Gets query for [[subject]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSubject()
+    public function getTranslate()
     {
-        return Subject::find()->where(['id' => $this->subject_id])->one();
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
-    /**
-     * Gets query for [[Languages]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
+    public function getDescription()
     {
-        return User::find()->where(['id' => $this->user_id])->one();
+        return $this->translate->description ?? '';
     }
+
+    public function getInfoRelation()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+    }
+
+    public function getInfoRelationDefaultLanguage()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        $modelOne = SubjectAccess::findOne(['subject_id' => $model->subject, 'user_id' => $model->user_id]);
-        if (!$modelOne) {
+
+        $has_error = Translate::checkingAll($post);
+
+        if ($has_error['status']) {
             if ($model->save()) {
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                    }
+                }
                 $transaction->commit();
                 return true;
             } else {
@@ -166,30 +159,38 @@ class SubjectAccess extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-            $errors[] = _e('This Subject Access already exists!!!');
             $transaction->rollBack();
-            return simplify_errors($errors);
+            return double_errors($errors, $has_error['errors']);
         }
-
     }
 
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
+        $has_error = Translate::checkingUpdate($post);
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
-            return simplify_errors($errors);
+            return double_errors($errors, $has_error['errors']);
         }
     }
+
 
     public function beforeSave($insert)
     {
@@ -200,5 +201,4 @@ class SubjectAccess extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
 }

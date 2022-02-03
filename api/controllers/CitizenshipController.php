@@ -2,12 +2,12 @@
 
 namespace api\controllers;
 
-use common\models\model\EduType;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Citizenship;
 
-class EduTypeController extends ApiActiveController
+class CitizenshipController extends ApiActiveController
 {
     public $modelClass = 'api\resources\EduType';
 
@@ -16,17 +16,17 @@ class EduTypeController extends ApiActiveController
         return [];
     }
 
-    public $table_name = 'edu_type';
-    public $controller_name = 'EduType';
+    public $table_name = 'citizenship';
+    public $controller_name = 'Citizenship';
 
     public function actionIndex($lang)
     {
-        $model = new EduType();
+        $model = new Citizenship();
 
         $query = $model->find()
             ->with(['infoRelation'])
             ->andWhere([$this->table_name . '.is_deleted' => 0])->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            ->groupBy($this->table_name . '.id')
+            // ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // filter
@@ -42,11 +42,11 @@ class EduTypeController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new EduType();
+        $model = new Citizenship();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = EduType::createItem($model, $post);
+        $result = Citizenship::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -56,13 +56,13 @@ class EduTypeController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = EduType::findOne($id);
+        $model = Citizenship::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = EduType::updateItem($model, $post);
+        $result = Citizenship::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -72,9 +72,10 @@ class EduTypeController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = EduType::find()
+        $model = Citizenship::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -83,7 +84,7 @@ class EduTypeController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = EduType::find()
+        $model = Citizenship::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

@@ -360,11 +360,11 @@ class SubjectContent extends \yii\db\ActiveRecord
     public function typesArray($key = null)
     {
         $array = [
-            self::TYPE_TEXT => 'TYPE_TEXT',
-            self::TYPE_FILE => 'TYPE_FILE',
-            self::TYPE_IMAGE => 'TYPE_IMAGE',
-            self::TYPE_VIDEO => 'TYPE_VIDEO',
-            self::TYPE_AUDIO => 'TYPE_AUDIO',
+            self::TYPE_TEXT => _e('TEXT'),
+            self::TYPE_FILE => _e('FILE'),
+            self::TYPE_IMAGE => _e('IMAGE'),
+            self::TYPE_VIDEO => _e('VIDEO'),
+            self::TYPE_AUDIO => _e('AUDIO'),
         ];
 
         if (isset($array[$key])) {

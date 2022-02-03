@@ -7,11 +7,10 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "direction".
+ * This is the model class for table "edu_type".
  *
  * @property int $id
  * @property string $name
- * @property int $faculty_id
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -20,11 +19,9 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property Faculty $faculty
  * @property EduPlan[] $eduPlans
- * @property Kafedra[] $kafedras
  */
-class Direction extends \yii\db\ActiveRecord
+class EduForm extends \yii\db\ActiveRecord
 {
 
     public static $selected_language = 'uz';
@@ -43,7 +40,7 @@ class Direction extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'direction';
+        return 'edu_form';
     }
 
     /**
@@ -52,24 +49,20 @@ class Direction extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['faculty_id'], 'required'],
-            [['faculty_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['code'], 'string', 'max' => 255],
-            [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
+            //            [['name'], 'required'],
+            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            //            [['name'], 'string', 'max' => 255],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
             //            'name' => 'Name',
-            'faculty_id' => 'Faculty ID',
-            'code' => 'Code',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -87,8 +80,6 @@ class Direction extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'faculty_id',
-            'code',
             'order',
             'status',
             'created_at',
@@ -104,9 +95,7 @@ class Direction extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'faculty',
             'eduPlans',
-            'kafedras',
             'description',
             'createdBy',
             'updatedBy',
@@ -143,15 +132,6 @@ class Direction extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-    /**
-     * Gets query for [[Faculty]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFaculty()
-    {
-        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
-    }
 
     /**
      * Gets query for [[EduPlans]].
@@ -160,17 +140,7 @@ class Direction extends \yii\db\ActiveRecord
      */
     public function getEduPlans()
     {
-        return $this->hasMany(EduPlan::className(), ['direction_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Kafedras]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getKafedras()
-    {
-        return $this->hasMany(Kafedra::className(), ['direction_id' => 'id']);
+        return $this->hasMany(EduPlan::className(), ['edu_type_id' => 'id']);
     }
 
 
@@ -178,7 +148,6 @@ class Direction extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -187,10 +156,12 @@ class Direction extends \yii\db\ActiveRecord
 
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                    }
                 }
                 $transaction->commit();
                 return true;
@@ -208,20 +179,16 @@ class Direction extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['name'])) {
-                    if (isset($post['description'])) {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                    } else {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
-                    }
+                if (isset($post['description'])) {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                 }
                 $transaction->commit();
                 return true;

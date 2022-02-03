@@ -32,6 +32,7 @@ $controllers = [
     'subject-category',
     'exams-type',
     'edu-type',
+    'edu-form',
     'edu-plan',
     'edu-semestr',
     'edu-semestr-exams-type',
@@ -66,8 +67,11 @@ $controllers = [
     'user-access-type',
     'user-access',
 
+    'subject-access',
+
     'subject-topic',
-    'subject-content'
+    'subject-content',
+    'citizenship'
 
 ];
 
@@ -130,6 +134,10 @@ $routes = [
     'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
     'POST <lang:\w{2}>/rooms/free' => 'room/free',
     /**  */
+
+    // Student Import
+    'POST <lang:\w{2}>/students/import' => 'student/import',
+    'POST <lang:\w{2}>/students/read' => 'student/read',
 
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list

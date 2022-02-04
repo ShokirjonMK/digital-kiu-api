@@ -71,7 +71,9 @@ $controllers = [
 
     'subject-topic',
     'subject-content',
-    'citizenship'
+    'citizenship',
+    'notification',
+    'nationality'
 
 ];
 

@@ -3,7 +3,6 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
-use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -11,7 +10,7 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "edu_type".
  *
  * @property int $id
- * @property string $name
+ * @property string $name in translate with description
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -22,7 +21,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property EduPlan[] $eduPlans
  */
-class Citizenship extends \yii\db\ActiveRecord
+class NotificationUser extends \yii\db\ActiveRecord
 {
 
     public static $selected_language = 'uz';
@@ -41,7 +40,7 @@ class Citizenship extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'citizenship';
+        return ' ';
     }
 
     /**
@@ -50,7 +49,7 @@ class Citizenship extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //            [['name'], 'required'],
+            [['user_id'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             //            [['name'], 'string', 'max' => 255],
         ];
@@ -63,6 +62,7 @@ class Citizenship extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'user_id' => 'User',
             //            'name' => 'Name',
             'order' => 'Order',
             'status' => 'Status',
@@ -96,7 +96,8 @@ class Citizenship extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-
+            'user',
+            'profile',
             'description',
             'createdBy',
             'updatedBy',
@@ -133,25 +134,6 @@ class Citizenship extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
-    /**
-     * Gets query for [[user]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUser()
-    {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * Gets query for [[Profile]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProfile()
-    {
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
-    }
 
     public static function createItem($model, $post)
     {
@@ -210,7 +192,6 @@ class Citizenship extends \yii\db\ActiveRecord
             return double_errors($errors, $has_error['errors']);
         }
     }
-
 
     public function beforeSave($insert)
     {

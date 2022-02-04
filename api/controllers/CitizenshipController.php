@@ -9,7 +9,7 @@ use common\models\model\Citizenship;
 
 class CitizenshipController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\EduType';
+    public $modelClass = 'api\resources\Citizenship';
 
     public function actions()
     {

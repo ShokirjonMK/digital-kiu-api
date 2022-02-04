@@ -5,23 +5,23 @@ namespace api\controllers;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\Nationality;
+use common\models\model\Notification;
 
-class NationalityController extends ApiActiveController
+class NotificationController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Nationality';
+    public $modelClass = 'api\resources\Notification';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'nationality';
-    public $controller_name = 'Nationality';
+    public $table_name = 'notification';
+    public $controller_name = 'Notification';
 
     public function actionIndex($lang)
     {
-        $model = new Nationality();
+        $model = new Notification();
 
         $query = $model->find()
             ->with(['infoRelation'])
@@ -42,11 +42,11 @@ class NationalityController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Nationality();
+        $model = new Notification();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = Nationality::createItem($model, $post);
+        $result = Notification::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -56,13 +56,13 @@ class NationalityController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Nationality::findOne($id);
+        $model = Notification::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Nationality::updateItem($model, $post);
+        $result = Notification::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -72,7 +72,7 @@ class NationalityController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Nationality::find()
+        $model = Notification::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
@@ -84,7 +84,7 @@ class NationalityController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Nationality::find()
+        $model = Notification::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

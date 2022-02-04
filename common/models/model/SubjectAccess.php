@@ -8,14 +8,10 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "edu_type".
+ * This is the model class for table "subject_access".
  *
  * @property int $id
  *
- * @property int $name
- * @property int $time
- * @property string $subject_id
- * @property string $lang_id
  * @property int $description
  * @property int|null $order
  * @property int|null $status
@@ -58,6 +54,7 @@ class SubjectAccess extends \yii\db\ActiveRecord
                 [
                     'subject_id',
                     'user_id',
+                    'is_leader',
                 ],
                 'required'
             ],
@@ -81,9 +78,8 @@ class SubjectAccess extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'content' => 'Content',
-            'type' => 'Type',
-            'subject_topic_id' => 'subject_topic_id',
+            'is_leader' => 'Is Leader',
+            'subject_id' => 'subject_id',
             'description' => 'description',
 
             'order' => 'Order',
@@ -120,7 +116,6 @@ class SubjectAccess extends \yii\db\ActiveRecord
         $extraFields = [
             'subject',
             'subjectTopic',
-
             'createdBy',
             'updatedBy',
         ];
@@ -170,7 +165,6 @@ class SubjectAccess extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -200,5 +194,4 @@ class SubjectAccess extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
 }

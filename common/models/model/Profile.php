@@ -100,6 +100,7 @@ class Profile extends \yii\db\ActiveRecord
             [
                 [
                     'user_id',
+                    'nationality_id',
                     'is_foreign',
                     'country_id',
                     'passport_number',
@@ -127,7 +128,7 @@ class Profile extends \yii\db\ActiveRecord
                     'first_name',
                     'middle_name',
                     'passport_seria',
-                    
+
                     'passport_pin',
                     'passport_file',
                     'address',
@@ -147,6 +148,7 @@ class Profile extends \yii\db\ActiveRecord
             [['permanent_region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['permanent_region_id' => 'id']],
             [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['nationality_id'], 'exist', 'skipOnError' => true, 'targetClass' => Nationality::className(), 'targetAttribute' => ['nationality_id' => 'id']],
         ];
     }
 
@@ -158,6 +160,7 @@ class Profile extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'nationality_id' => 'Nationality ID',
             'image' => 'Image',
             'phone' => 'Phone',
             'phone_secondary' => 'Phone Secondary',
@@ -303,6 +306,16 @@ class Profile extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[Nationality]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNationality()
+    {
+        return $this->hasOne(Nationality::className(), ['id' => 'nationality_id']);
     }
 
     /**

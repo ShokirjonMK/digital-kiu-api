@@ -92,8 +92,6 @@ class User extends CommonUser
         return $fields;
     }
 
-
-
     /**
      * Fields
      *

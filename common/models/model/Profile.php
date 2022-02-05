@@ -319,6 +319,16 @@ class Profile extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Citizenship]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCitizenship()
+    {
+        return $this->hasOne(Citizenship::className(), ['id' => 'citizenship_id']);
+    }
+
+    /**
      * Get user fullname
      *
      * @param object $profile

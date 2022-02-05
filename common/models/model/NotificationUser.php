@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -49,9 +50,14 @@ class NotificationUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id'], 'required'],
+            [['user_id', 'notification_role_id'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['user_id', 'notification_role_id', 'notification_id'], 'integer'],
             //            [['name'], 'string', 'max' => 255],
+            [['notification_id'], 'exist', 'skipOnError' => true, 'targetClass' => Notification::className(), 'targetAttribute' => ['notification_id' => 'id']],
+            [['notification_role_id'], 'exist', 'skipOnError' => true, 'targetClass' => NotificationRole::className(), 'targetAttribute' => ['notification_role_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+
         ];
     }
 
@@ -64,6 +70,8 @@ class NotificationUser extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User',
             //            'name' => 'Name',
+            'notification_role_id' => 'Notification Role Id',
+            'notification_id' => 'Notification Id',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -81,6 +89,8 @@ class NotificationUser extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            'notification_role_id',
+            'notification_id',
             'order',
             'status',
             'created_at',
@@ -97,7 +107,8 @@ class NotificationUser extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'user',
-            'profile',
+            'notification',
+            'notificationRole',
             'description',
             'createdBy',
             'updatedBy',
@@ -132,6 +143,26 @@ class NotificationUser extends \yii\db\ActiveRecord
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
+    /**
+     * Gets query for [[Notification]].
+     * notification
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotification()
+    {
+        return $this->hasOne(Notification::className(), ['id' => 'notification_id']);
+    }
+
+    /**
+     * Gets query for [[NotificationRole]].
+     * notification
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotificationRole()
+    {
+        return $this->hasOne(NotificationRole::className(), ['id' => 'notification_role_id']);
     }
 
 

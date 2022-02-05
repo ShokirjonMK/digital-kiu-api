@@ -3,22 +3,24 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%notification}}`.
+ * Handles the creation of table `{{%notification_role}}`.
  */
-class m220204_041608_create_notification_table extends Migration
+class m220205_063827_create_notification_role_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        if (Yii::$app->db->getTableSchema('{{%notification}}', true) != null) {
-            $this->dropTable('{{%notification}}');
+        if (Yii::$app->db->getTableSchema('{{%notification_role}}', true) != null) {
+            $this->dropTable('{{%notification_role}}');
         }
 
-        $this->createTable('{{%notification}}', [
+        $this->createTable('{{%notification_role}}', [
             'id' => $this->primaryKey(),
-            // 'role' => $this->string(33),
+            'notification_id' => $this->integer()->notNull(),
+
+            'role' => $this->string(33),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
@@ -28,6 +30,8 @@ class m220204_041608_create_notification_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+
+        $this->addForeignKey('nrn_notificarion_role_notification_id_mk', 'notification_role', 'notification_id', 'notification', 'id');
     }
 
     /**
@@ -35,6 +39,7 @@ class m220204_041608_create_notification_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%notification}}');
+        $this->dropForeignKey('nrn_notificarion_role_notification_id_mk', 'notification_role');
+        $this->dropTable('{{%notification_role}}');
     }
 }

@@ -137,30 +137,70 @@ class Notification extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
 
-        $has_error = Translate::checkingAll($post);
+        $auth = Yii::$app->authManager;
+        $roles = json_decode(str_replace("'", "", $post['roles'] ?? null));
+        if (is_array($roles)) {
 
-        if ($has_error['status']) {
-            if ($model->save()) {
-                if (isset($post['name'])) {
-                    if (isset($post['description'])) {
-                        Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                    } else {
-                        Translate::createTranslate($post['name'], $model->tableName(), $model->id);
-                    }
+            foreach ($roles as $role) {
+                $authorRole = $auth->getRole($role);
+                if (!$authorRole) {
+                    $errors[] = ['role' => [_e('Role not found.(' . $role . ')')]];
                 }
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
             }
         } else {
+            $errors[] = ['role' => [_e('Role is invalid')]];
+        }
+
+        if (count($errors) == 0) {
+            $has_error = Translate::checkingAll($post);
+
+            if ($has_error['status']) {
+                if ($model->save()) {
+                    if (isset($post['name'])) {
+                        if (isset($post['description'])) {
+                            Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                        } else {
+                            Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                        }
+                    }
+                    foreach ($roles as $role) {
+                        $authorRole = $auth->getRole($role);
+                        if ($authorRole) {
+                            ////code
+                            $notificcationRole = new NotificationRole();
+                            $notificcationRole->notification_id = $model->id;
+                            $notificcationRole->role = $authorRole->name;
+                            if (!($notificcationRole->validate())) {
+                                $errors[] = $notificcationRole->errors;
+                            }
+                            $notificcationRole->save();
+
+                            ////code
+                        } else {
+                            $errors[] = ['role' => [_e('Role not found.(' . $role . ')')]];
+                        }
+                    }
+
+
+
+                    if (count($errors) == 0) {
+                        $transaction->commit();
+                        return true;
+                    }
+                } else {
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            } else {
+                $transaction->rollBack();
+                return double_errors($errors, $has_error['errors']);
+            }
+        }
+
+        if (count($errors) > 0) {
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 
@@ -188,6 +228,24 @@ class Notification extends \yii\db\ActiveRecord
         } else {
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
+        }
+    }
+
+    public static function deleteItem($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        NotificationRole::deleteAll(['notification_id' => $model->id]);
+        NotificationUser::deleteAll(['notification_id' => $model->id]);
+
+        if ($model->delete()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $errors[] = _e('Error occurred on deleting');
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
     }
 

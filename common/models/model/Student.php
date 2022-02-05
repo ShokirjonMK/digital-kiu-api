@@ -193,12 +193,7 @@ class Student extends \yii\db\ActiveRecord
             'tutor',
             'profile',
             'eduPlan',
-            'createdBy',
-            'updatedBy',
-
-            //
             'citizenship',
-
             'country',
             'region',
             'area',
@@ -206,6 +201,9 @@ class Student extends \yii\db\ActiveRecord
             'permanentRegion',
             'permanentArea',
             'nationality',
+            
+            'createdBy',
+            'updatedBy',
         ];
 
         return $extraFields;

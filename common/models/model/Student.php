@@ -195,10 +195,82 @@ class Student extends \yii\db\ActiveRecord
             'eduPlan',
             'createdBy',
             'updatedBy',
+
+            //
+            'citizenship',
+
+            'country',
+            'region',
+            'area',
+            'permanentCountry',
+            'permanentRegion',
+            'permanentArea',
+            'nationality',
         ];
 
         return $extraFields;
     }
+
+    /**
+     * Gets query for [[profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
+    }
+
+    // Profile Citizenship
+    public function getCitizenship()
+    {
+        return Citizenship::findOne($this->profile->citizenship_id) ?? null;
+    }
+
+    // getCountry
+    public function getCountry()
+    {
+        return Countries::findOne($this->profile->country_id) ?? null;
+    }
+
+    // getRegion
+    public function getRegion()
+    {
+        return Region::findOne($this->profile->region_id) ?? null;
+    }
+
+    // getArea
+    public function getArea()
+    {
+        return Area::findOne($this->profile->area_id) ?? null;
+    }
+
+    // getPermanentCountry
+    public function getPermanentCountry()
+    {
+        return Countries::findOne($this->profile->permanent_country_id) ?? null;
+    }
+
+    // getPermanentRegion
+    public function getPermanentRegion()
+    {
+        return Region::findOne($this->profile->permanent_region_id) ?? null;
+    }
+
+    // getPermanentArea
+    public function getPermanentArea()
+    {
+        return Area::findOne($this->profile->permanent_area_id) ?? null;
+    }
+
+
+    // getNationality
+    public function getNationality()
+    {
+        return Area::findOne($this->profile->nationality_id) ?? null;
+    }
+
+
     /**
      * Gets query for [[Course]].
      *
@@ -288,15 +360,7 @@ class Student extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'tutor_id']);
     }
 
-    /**
-     * Gets query for [[profile]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProfile()
-    {
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
-    }
+
 
     public function beforeSave($insert)
     {

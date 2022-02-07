@@ -12,7 +12,7 @@ class m211109_160302_alter_add_student_table extends Migration
      */
     public function safeUp()
     {
-        $this->execute("ALTER TABLE `student` add  `edu_plan_id` INT(11) NOT NULL;");
+        $this->execute("ALTER TABLE `student` add  `edu_plan_id` INT(11)  NULL;");
         $this->addForeignKey('wk_student_edu_plan_id', 'student', 'edu_plan_id', 'edu_plan', 'id');
     }
 

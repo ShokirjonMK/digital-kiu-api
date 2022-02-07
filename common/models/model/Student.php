@@ -261,11 +261,10 @@ class Student extends \yii\db\ActiveRecord
         return Area::findOne($this->profile->permanent_area_id) ?? null;
     }
 
-
     // getNationality
     public function getNationality()
     {
-        return Area::findOne($this->profile->nationality_id) ?? null;
+        return Nationality::findOne($this->profile->nationality_id) ?? null;
     }
 
 

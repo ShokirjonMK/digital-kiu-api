@@ -62,7 +62,7 @@ class Profile extends \yii\db\ActiveRecord
         return [
             [['user_id', 'gender', 'is_stateless', 'is_foreign', 'country_id', 'nationality_id', 'birth_place_id', 'permanent_place_id', 'temporary_place_id', 'residence_permit'], 'integer'],
             [['region_id', 'birth_country_id', 'birth_region_id', 'temporary_country_id', 'temporary_region_id'], 'integer'],
-            [['dob', 'passport_given_date', 'passport_validity_date', 'residence_permit_date', 'residence_permit_expire'], 'safe'],
+            [['birthday', 'passport_given_date', 'passport_validity_date', 'residence_permit_date', 'residence_permit_expire'], 'safe'],
             [['first_name', 'last_name', 'middle_name', 'image', 'permanent_address', 'temporary_address', 'passport_serial', 'passport_number', 'passport_given_place', 'residence_permit_no'], 'string', 'max' => 255],
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
             [['passport_pinip'], 'string', 'max' => 14],
@@ -81,7 +81,7 @@ class Profile extends \yii\db\ActiveRecord
             'last_name' => _e('Last name'),
             'middle_name' => _e('Middle name'),
             'image' => _e('Photo'),
-            'dob' => _e('Date of birth'),
+            'birthday' => _e('Date of birth'),
             'gender' => _e('Gender'),
             'phone' => _e('Phone'),
             'phone_secondary' => _e('Secondary phone'),

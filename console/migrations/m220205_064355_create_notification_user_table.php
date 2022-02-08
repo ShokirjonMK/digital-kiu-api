@@ -31,7 +31,9 @@ class m220205_064355_create_notification_user_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('nuu_notification_user_user_id', 'notification_user', 'notification_role_id', 'notification_role', 'id');
+        $this->addForeignKey('nuu_notification_user_notification_role_id', 'notification_user', 'notification_role_id', 'notification_role', 'id');
+        $this->addForeignKey('nuu_notification_user_notification_id', 'notification_user', 'notification_id', 'notification', 'id');
+        $this->addForeignKey('nuu_notification_user_user_id', 'notification_user', 'user_id', 'users', 'id');
     }
 
     /**
@@ -39,6 +41,8 @@ class m220205_064355_create_notification_user_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropForeignKey('nuu_notification_user_notification_role_id', 'notification_user');
+        $this->dropForeignKey('nuu_notification_user_notification_id', 'notification_user');
         $this->dropForeignKey('nuu_notification_user_user_id', 'notification_user');
         $this->dropTable('{{%notification_user}}');
     }

@@ -2,12 +2,11 @@
 
 namespace api\controllers;
 
-use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\Notification;
+use common\models\model\NotificationRole;
 
-class NotificationController extends ApiActiveController
+class NotificationRoleController extends ApiActiveController
 {
     public $modelClass = 'api\resources\Notification';
 
@@ -16,12 +15,12 @@ class NotificationController extends ApiActiveController
         return [];
     }
 
-    public $table_name = 'notification';
-    public $controller_name = 'Notification';
+    public $table_name = 'notification_role';
+    public $controller_name = 'NotificationRole';
 
-    public function actionIndex($lang)
+    /* public function actionIndex($lang)
     {
-        $model = new Notification();
+        $model = new NotificationRole();
 
         $query = $model->find()
             ->with(['infoRelation'])
@@ -40,15 +39,15 @@ class NotificationController extends ApiActiveController
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
-    }
+    } */
 
     public function actionCreate($lang)
     {
-        $model = new Notification();
+        $model = new NotificationRole();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = Notification::createItem($model, $post);
+        $result = NotificationRole::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -56,26 +55,9 @@ class NotificationController extends ApiActiveController
         }
     }
 
-    public function actionUpdate($lang, $id)
+    /*  public function actionView($lang, $id)
     {
-        $model = Notification::findOne(['id' => $id, 'created_by' => Current_user_id()]);
-        if (!$model) {
-            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
-        }
-
-        $post = Yii::$app->request->post();
-        $this->load($model, $post);
-        $result = Notification::updateItem($model, $post);
-        if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
-        } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
-    }
-
-    public function actionView($lang, $id)
-    {
-        $model = Notification::find()
+        $model = NotificationRole::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->andWhere(['created_by' => Current_user_id()])
             ->one();
@@ -84,11 +66,11 @@ class NotificationController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
-    }
+    } */
 
     public function actionDelete($lang, $id)
     {
-        $model = Notification::find()
+        $model = NotificationRole::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->andWhere(['created_by' => Current_user_id()])
             ->one();
@@ -99,17 +81,7 @@ class NotificationController extends ApiActiveController
 
         // remove model
         if ($model) {
-            $result = Notification::deleteItem($model);
-            if (!is_array($result)) {
-                return $this->response(1, _e($this->controller_name . ' successfully deleted.'));
-            } else {
-                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-            }
-
-            /* 
-            // Translate::deleteTranslate($this->table_name, $model->id);
-            $model->is_deleted = 1;
-            $model->update(); */
+            $model->delete();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

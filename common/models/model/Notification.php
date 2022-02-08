@@ -95,6 +95,7 @@ class Notification extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+            'roles',
 
             'description',
             'createdBy',
@@ -130,6 +131,12 @@ class Notification extends \yii\db\ActiveRecord
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
+    /** notification roles */
+    public function getRoles()
+    {
+        return $this->hasMany(NotificationRole::className(), ['notification_id' => 'id'])->select('role');
     }
 
 
@@ -212,6 +219,7 @@ class Notification extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
         $has_error = Translate::checkingUpdate($post);
+
         if ($has_error['status']) {
             if ($model->save()) {
                 if (isset($post['description'])) {
@@ -238,6 +246,7 @@ class Notification extends \yii\db\ActiveRecord
 
         NotificationRole::deleteAll(['notification_id' => $model->id]);
         NotificationUser::deleteAll(['notification_id' => $model->id]);
+        Translate::deleteAll(['model_id' => $model->id, 'table_name' => 'notification']);
 
         if ($model->delete()) {
             $transaction->commit();
@@ -252,9 +261,9 @@ class Notification extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

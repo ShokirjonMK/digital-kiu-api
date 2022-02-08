@@ -124,9 +124,9 @@ class Translate extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }
@@ -318,6 +318,10 @@ class Translate extends \yii\db\ActiveRecord
                 }
                 $errors[] = $nameErrors;
             }
+        } else {
+            $errors[]['name'] = [_e('Please send Name attribute as array.')];
+            // $data['errors'][] = $errors;
+            $data['status'] = 0;
         }
         if (isset($post['description'])) {
             if (!is_array($post['description'])) {

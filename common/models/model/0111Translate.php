@@ -116,9 +116,9 @@ class Translate11 extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }

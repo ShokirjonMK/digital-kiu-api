@@ -97,7 +97,7 @@ trait ApiActionTrait
             // return _eduRoles();
 
             /* $action_logos = new Action();
-            $action_logos->user_id = Yii::$app->user->identity->id();
+            $action_logos->user_id = current_user_id();
             $action_logos->controller = Yii::$app->controller->id;
             $action_logos->action = Yii::$app->controller->action->id;
             $action_logos->method = $_SERVER['REQUEST_METHOD']; */
@@ -237,7 +237,7 @@ trait ApiActionTrait
 
     public function checkLead($model, $role)
     {
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $role)) {
@@ -250,7 +250,7 @@ trait ApiActionTrait
 
     public function isRole($roleName)
     {
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $roleName)) {
@@ -260,9 +260,10 @@ trait ApiActionTrait
         }
     }
 
+
     public function isSelf($userAccessTypeId)
     {
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         $userAccess = UserAccess::findOne([

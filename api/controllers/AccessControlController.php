@@ -22,7 +22,7 @@ class AccessControlController extends ApiActiveController
     {
         $model = new AuthChild();
 
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
 
         $getMyRoles = AuthAssignment::find()->select("item_name")->where([
             'user_id' => $user_id

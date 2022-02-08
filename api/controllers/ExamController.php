@@ -59,7 +59,7 @@ class ExamController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new Exam();
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         // return $student;
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 

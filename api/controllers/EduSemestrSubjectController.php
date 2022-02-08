@@ -22,7 +22,7 @@ class EduSemestrSubjectController extends ApiActiveController
     {
         $model = new EduSemestrSubject();
 
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         if (isset($student)) {
             $eduSemesterIds = EduSemestr::find()
                 ->select('id')

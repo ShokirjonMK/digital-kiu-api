@@ -131,7 +131,11 @@ class NotificationRole extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        _checkRole($model->role);
+        if (!(_checkRole($model->role))) {
+            $errors[] = _e('Role is invalid');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         $has = NotificationRole::findAll(['notification_id' => $model->notification_id, 'role' => $model->role]);
 

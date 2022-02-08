@@ -79,26 +79,25 @@ class NotificationRole extends \yii\db\ActiveRecord
         ];
     }
 
-    // public function fields()
-    // {
-    //     $fields =  [
-    //         'id',
-    //         'name' => function ($model) {
-    //             return $model->notification->translate->name ?? '';
-    //         },
-    //         'notification_id',
-    //         'role',
-    //         'order',
-    //         'status',
-    //         'created_at',
-    //         'updated_at',
-    //         'created_by',
-    //         'updated_by',
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'name' => function ($model) {
+                return $model->notification->translate->name ?? '';
+            },
+            'role',
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
 
-    //     ];
+        ];
 
-    //     return $fields;
-    // }
+        return $fields;
+    }
 
     public function extraFields()
     {
@@ -122,6 +121,11 @@ class NotificationRole extends \yii\db\ActiveRecord
         return $this->hasOne(Notification::className(), ['id' => 'notification_id']);
     }
 
+    public function getDescription()
+    {
+        return $this->notification->translate->description ?? '';
+    }
+
 
     public static function createItem($model, $post)
     {
@@ -141,9 +145,7 @@ class NotificationRole extends \yii\db\ActiveRecord
         $has = NotificationRole::findAll(['notification_id' => $model->notification_id, 'role' => $model->role]);
 
         if ($has) {
-            // $model->role =
-            $errors[] = $model->role;
-            $errors[] = _e('This role is already exists for this notification');
+            $errors[] = _e('This role (' . $model->role . ') is already exists for this notification');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

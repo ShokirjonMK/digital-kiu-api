@@ -237,7 +237,7 @@ trait ApiActionTrait
 
     public function checkLead($model, $role)
     {
-        $user_id = Current_user_id();
+        $user_id = current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $role)) {
@@ -250,7 +250,7 @@ trait ApiActionTrait
 
     public function isRole($roleName)
     {
-        $user_id = Current_user_id();
+        $user_id = current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $roleName)) {
@@ -263,7 +263,7 @@ trait ApiActionTrait
 
     public function isSelf($userAccessTypeId)
     {
-        $user_id = Current_user_id();
+        $user_id = current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         $userAccess = UserAccess::findOne([

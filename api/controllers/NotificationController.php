@@ -6,6 +6,7 @@ use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Notification;
+use common\models\model\NotificationRole;
 
 class NotificationController extends ApiActiveController
 {
@@ -28,7 +29,7 @@ class NotificationController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             //faqat o'zi yaratgan notiflarni berish
-            ->andWhere([$this->table_name . '.created_by' => Current_user_id()])
+            ->andWhere([$this->table_name . '.created_by' => current_user_id()])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // filter
@@ -40,6 +41,22 @@ class NotificationController extends ApiActiveController
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionMy($lang)
+    {
+        $model = new NotificationRole();
+        $table = 'notification_role';
+        $tableUser = 'notification_user';
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin($this->table_name, "$table.notification_id = $this->table_name.id ")
+            ->andWhere(['in', $table . '.role', current_user_roles_array()])
+            ->all();
+
+
+        return $this->response(1, _e('Success'), $query);
     }
 
     public function actionCreate($lang)
@@ -58,7 +75,7 @@ class NotificationController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Notification::findOne(['id' => $id, 'created_by' => Current_user_id()]);
+        $model = Notification::findOne(['id' => $id, 'created_by' => current_user_id()]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -105,11 +122,6 @@ class NotificationController extends ApiActiveController
             } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
             }
-
-            /* 
-            // Translate::deleteTranslate($this->table_name, $model->id);
-            $model->is_deleted = 1;
-            $model->update(); */
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

@@ -79,25 +79,26 @@ class NotificationRole extends \yii\db\ActiveRecord
         ];
     }
 
-    public function fields()
-    {
-        $fields =  [
-            'id',
-            'name' => function ($model) {
-                return $model->notification->translate->name ?? '';
-            },
-            'notification_id',
-            'order',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+    // public function fields()
+    // {
+    //     $fields =  [
+    //         'id',
+    //         'name' => function ($model) {
+    //             return $model->notification->translate->name ?? '';
+    //         },
+    //         'notification_id',
+    //         'role',
+    //         'order',
+    //         'status',
+    //         'created_at',
+    //         'updated_at',
+    //         'created_by',
+    //         'updated_by',
 
-        ];
+    //     ];
 
-        return $fields;
-    }
+    //     return $fields;
+    // }
 
     public function extraFields()
     {
@@ -122,12 +123,40 @@ class NotificationRole extends \yii\db\ActiveRecord
     }
 
 
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+
+        _checkRole($model->role);
+
+        $has = NotificationRole::findAll(['notification_id' => $model->notification_id, 'role' => $model->role]);
+
+        if ($has) {
+            $errors[] = _e('This role is already exists');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

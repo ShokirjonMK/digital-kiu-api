@@ -23,3 +23,4 @@ require dirname(dirname(__DIR__)) . '/base/helpers/security.php';
 require dirname(dirname(__DIR__)) . '/base/helpers/theme.php';
 require dirname(dirname(__DIR__)) . '/base/helpers/tools.php';
 require dirname(dirname(__DIR__)) . '/base/helpers/user.php';
+require dirname(dirname(__DIR__)) . '/base/helpers/role.php';

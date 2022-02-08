@@ -229,7 +229,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          *  Faqat  Student user
          */
 
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
             $transaction->rollBack();
@@ -294,7 +294,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          *  Faqat  Student user
          */
 
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
             $transaction->rollBack();
@@ -363,9 +363,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

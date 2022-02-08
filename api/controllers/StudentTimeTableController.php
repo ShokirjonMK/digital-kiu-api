@@ -25,7 +25,7 @@ class  StudentTimeTableController extends ApiActiveController
     {
         $model = new StudentTimeTable();
 
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         if (isset($student)) {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0])

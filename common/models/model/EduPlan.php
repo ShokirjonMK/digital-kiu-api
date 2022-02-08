@@ -241,7 +241,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 'edu_type_id' => $model->edu_type_id,
                 'edu_year_id' => $model->edu_year_id
             ]);
-            if (isset($eduPlan)) {
+            if ($eduPlan) {
                 $errors[] = _e('This Edu Plan already exists');
                 $transaction->rollBack();
                 return simplify_errors($errors);
@@ -351,9 +351,9 @@ class EduPlan extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

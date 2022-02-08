@@ -25,7 +25,7 @@ class ExamTeacherCheckController extends ApiActiveController
     {
         $model = new ExamTeacherCheck();
 
-        $user_id = Yii::$app->user->identity->getId() ?? null;
+        $user_id = Current_user_id() ?? null;
 
         $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
         if (property_exists($roles, 'teacher')) {

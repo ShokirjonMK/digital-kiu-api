@@ -213,7 +213,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $data = [];
         $exam_id = $post["exam_id"];
         $password = isset($post["password"]) ? $post["password"] : "";
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         $exam_times = [];
         $student_id = $student->id;
         // $student_id = 15;
@@ -363,7 +363,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         // studentni answer file ni saqlaymiz
 
-        $student = Student::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $student = Student::findOne(['user_id' => Current_user_id()]);
         // $student_id = $student->id;
         $student_id = 14;
         $exam_id = $model->exam_id;
@@ -453,9 +453,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

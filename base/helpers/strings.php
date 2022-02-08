@@ -1,18 +1,5 @@
 <?php
 // Generate random string
-
-function _eduRoles()
-{
-    $rolesPermissions = include '../../api/config/roles-permissions.php';
-    $data = [];
-    foreach ($rolesPermissions as $role => $permissions) {
-        $roleExplode = explode('_', $role);
-        if ($roleExplode[0] == 'edu')
-            $data[] = $role;
-    }
-    return $data;
-}
-
 function _random_string($type = 'alnum', $len = 8)
 {
     switch ($type) {

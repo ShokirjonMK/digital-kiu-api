@@ -201,7 +201,7 @@ class  StudentController extends ApiActiveController
         /*  is Role check  */
         if ($this->isRole('tutor')) {
             $query = $query->andWhere([
-                'tutor_id' => Current_user_id()
+                'tutor_id' => current_user_id()
             ]);
         }
 
@@ -241,7 +241,7 @@ class  StudentController extends ApiActiveController
     {
         $post = Yii::$app->request->post();
         if ($this->isRole('tutor')) {
-            $post['tutor_id'] = Current_user_id();
+            $post['tutor_id'] = current_user_id();
         }
         $post['role'] = 'student';
         $model = new User();

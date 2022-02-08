@@ -81,7 +81,7 @@ class  StudentController extends ApiActiveController
                 /** */
                 // $post = Yii::$app->request->post();
                 if ($this->isRole('tutor')) {
-                    $post['tutor_id'] = Yii::$app->user->identity->getId();
+                    $post['tutor_id'] = Current_user_id();
                 }
                 $post['role'] = 'student';
                 $post['status'] = 10;
@@ -196,7 +196,7 @@ class  StudentController extends ApiActiveController
         /*  is Role check  */
         if ($this->isRole('tutor')) {
             $query = $query->andWhere([
-                'tutor_id' => Yii::$app->user->identity->getId()
+                'tutor_id' => Current_user_id()
             ]);
         }
 
@@ -236,7 +236,7 @@ class  StudentController extends ApiActiveController
     {
         $post = Yii::$app->request->post();
         if ($this->isRole('tutor')) {
-            $post['tutor_id'] = Yii::$app->user->identity->getId();
+            $post['tutor_id'] = Current_user_id();
         }
         $post['role'] = 'student';
         $model = new User();

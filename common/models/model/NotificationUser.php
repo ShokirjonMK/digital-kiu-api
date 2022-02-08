@@ -41,7 +41,7 @@ class NotificationUser extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return ' ';
+        return 'notification_user';
     }
 
     /**
@@ -227,9 +227,9 @@ class NotificationUser extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Yii::$app->user->identity->getId();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = Yii::$app->user->identity->getId();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

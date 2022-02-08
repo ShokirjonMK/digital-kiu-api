@@ -73,6 +73,7 @@ $controllers = [
     'subject-content',
     'citizenship',
     'notification',
+    'notification-role',
     'nationality'
 
 ];

@@ -131,7 +131,7 @@ trait ApiOpen
 
     public function checkLead($model, $role)
     {
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $role)) {
@@ -144,7 +144,7 @@ trait ApiOpen
 
     public function isRole($roleName)
     {
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         if (property_exists($roles, $roleName)) {
@@ -156,7 +156,7 @@ trait ApiOpen
 
     public function isSelf($userAccessTypeId)
     {
-        $user_id = Yii::$app->user->identity->getId();
+        $user_id = Current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
         $userAccess = UserAccess::findOne([

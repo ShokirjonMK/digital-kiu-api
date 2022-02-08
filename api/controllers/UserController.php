@@ -26,7 +26,7 @@ class UserController extends ApiActiveController
     {
         $data = null;
         $errors = [];
-        $user = User::findOne(Yii::$app->user->identity->id);
+        $user = User::findOne(Current_user_id());
         if (isset($user)) {
             if ($user->status === User::STATUS_ACTIVE) {
                 $profile = $user->profile;
@@ -56,7 +56,7 @@ class UserController extends ApiActiveController
 
     public function actionLogout()
     {
-        $user = User::findOne(Yii::$app->user->identity->id);
+        $user = User::findOne(Current_user_id());
         if (isset($user)) {
             Yii::$app->user->logout();
             $user->access_token = NULL;
@@ -99,7 +99,7 @@ class UserController extends ApiActiveController
                 AuthChild::find()->select('child')->where([
                     'in', 'parent',
                     AuthAssignment::find()->select("item_name")->where([
-                        'user_id' => Yii::$app->user->identity->getId()
+                        'user_id' => Current_user_id()
                     ])
                 ])
              ]);
@@ -122,7 +122,7 @@ class UserController extends ApiActiveController
                 AuthChild::find()->select('child')->where([
                     'in', 'parent',
                     AuthAssignment::find()->select("item_name")->where([
-                        'user_id' => Yii::$app->user->identity->getId()
+                        'user_id' => Current_user_id()
                     ])
                 ])
             ]);
@@ -144,7 +144,7 @@ class UserController extends ApiActiveController
                 AuthChild::find()->select('child')->where([
                     'in', 'parent',
                     AuthAssignment::find()->select("item_name")->where([
-                        'user_id' => Yii::$app->user->identity->getId()
+                        'user_id' => Current_user_id()
                     ])
                 ])
             ]);

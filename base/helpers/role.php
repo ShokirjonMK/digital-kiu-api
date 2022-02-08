@@ -2,7 +2,7 @@
 
 function _checkRole($roleName)
 {
-    $user_id = Current_user_id();
+    $user_id = current_user_id();
     $roles = (object)\Yii::$app->authManager->getRoles();
 
     if (property_exists($roles, $roleName)) {

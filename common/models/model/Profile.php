@@ -104,6 +104,7 @@ class Profile extends \yii\db\ActiveRecord
                     'is_foreign',
                     'country_id',
                     'passport_number',
+                    'passport_pin',
                     'region_id',
                     'area_id',
                     'gender',
@@ -129,7 +130,7 @@ class Profile extends \yii\db\ActiveRecord
                     'middle_name',
                     'passport_seria',
 
-                    'passport_pin',
+
                     'passport_file',
                     'address',
                     'passport_given_by',
@@ -138,6 +139,8 @@ class Profile extends \yii\db\ActiveRecord
                 'string', 'max' => 255
             ],
             [['phone', 'phone_secondary'], 'string', 'max' => 50],
+
+            [['passport_pin'], 'unique'],
 
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
             [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf, png, jpg', 'maxSize' => $this->passportFileMaxSize],

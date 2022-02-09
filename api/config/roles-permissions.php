@@ -339,6 +339,7 @@ return [
 
         'faculty_index',
         'kafedra_index',
+        'kafedra_view',
         'languages_index',
 
         'user-access-type_index',
@@ -361,8 +362,7 @@ return [
         'user_view',
         'user_delete',
 
-        'kafedra_index',
-        'kafedra_view',
+
 
         'subject_index',
         'subject_create',

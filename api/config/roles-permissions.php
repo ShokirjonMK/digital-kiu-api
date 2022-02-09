@@ -257,6 +257,14 @@ return [
         'exam_view',
         'exam_delete',
 
+
+        'user-access_index',
+        'user-access_create',
+        'user-access_update',
+        'user-access_view',
+        'user-access_delete',
+
+
         'kafedra_index',
         'kafedra_create',
         'kafedra_update',
@@ -300,6 +308,12 @@ return [
         'user_update',
         'user_view',
         'user_delete',
+
+        'user-access_index',
+        'user-access_create',
+        'user-access_update',
+        'user-access_view',
+        'user-access_delete',
 
 
     ],

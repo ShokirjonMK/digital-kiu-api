@@ -42,6 +42,8 @@ class EduPlanController extends ApiActiveController
                 'faculty_id' => -1
             ]);
         }
+        // dd('ss');
+
         /*  is Self  */
 
         // filter

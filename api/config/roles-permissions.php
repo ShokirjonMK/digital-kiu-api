@@ -361,6 +361,8 @@ return [
         'user_view',
         'user_delete',
 
+        'kafedra_index',
+        'kafedra_view',
 
         'subject_index',
         'subject_create',

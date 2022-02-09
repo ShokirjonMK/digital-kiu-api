@@ -142,6 +142,9 @@ $routes = [
     'POST <lang:\w{2}>/students/import' => 'student/import',
     'POST <lang:\w{2}>/students/read' => 'student/read',
 
+    // My Notifications
+    'GET <lang:\w{2}>/notifications/my' => 'notification/my',
+
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list
     'GET <lang:\w{2}>/roles/<role>/permissions' => 'access-control/role-permissions', // Get role permissions

@@ -59,12 +59,13 @@ class EduPlan extends \yii\db\ActiveRecord
     {
         return [
             [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'fall_start', 'fall_end', 'spring_start', 'spring_end'], 'required'],
-            [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['edu_form_id', 'course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['fall_start', 'fall_end', 'spring_start', 'spring_end'], 'safe'],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['edu_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduType::className(), 'targetAttribute' => ['edu_type_id' => 'id']],
+            [['edu_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduForm::className(), 'targetAttribute' => ['edu_form_id' => 'id']],
         ];
     }
 
@@ -81,6 +82,7 @@ class EduPlan extends \yii\db\ActiveRecord
             'faculty_id' => 'Faculty ID',
             'direction_id' => 'Direction ID',
             'edu_type_id' => 'Edu Type ID',
+            'edu_form_id' => 'Edu Form ID',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -107,6 +109,7 @@ class EduPlan extends \yii\db\ActiveRecord
             'edu_year_id',
             'direction_id',
             'edu_type_id',
+            'edu_form_id',
             'course',
             'semestr',
             'fall_start',
@@ -132,6 +135,7 @@ class EduPlan extends \yii\db\ActiveRecord
             'direction',
             'eduYear',
             'faculty',
+            'eduForm',
             'eduType',
             'eduSemestrs',
             'description',
@@ -211,6 +215,16 @@ class EduPlan extends \yii\db\ActiveRecord
     public function getEduType()
     {
         return $this->hasOne(EduType::className(), ['id' => 'edu_type_id']);
+    }
+
+    /**
+     * Gets query for [[eduForm]].
+     *edu_form_id
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEduForm()
+    {
+        return $this->hasOne(EduForm::className(), ['id' => 'edu_form_id']);
     }
 
     /**

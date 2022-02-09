@@ -42,8 +42,6 @@ class  StudentController extends ApiActiveController
         return $new_data;
     }
 
-
-
     public function actionRead($lang)
     {
 

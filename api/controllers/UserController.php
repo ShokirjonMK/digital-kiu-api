@@ -83,6 +83,9 @@ class UserController extends ApiActiveController
             ->groupBy('users.id')
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
 
+
+        $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
+
         /*  is Self  */
         $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
@@ -94,15 +97,16 @@ class UserController extends ApiActiveController
                     'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
                 ])
             ]);
-            
-            $userIds = AuthAssignment::find()->select('user_id')->where(['in', 'auth_assignment.item_name',
+
+            $userIds = AuthAssignment::find()->select('user_id')->where([
+                'in', 'auth_assignment.item_name',
                 AuthChild::find()->select('child')->where([
                     'in', 'parent',
                     AuthAssignment::find()->select("item_name")->where([
                         'user_id' => Current_user_id()
                     ])
                 ])
-             ]);
+            ]);
 
             $query->orFilterWhere([
                 'in', 'users.id', $userIds
@@ -122,7 +126,7 @@ class UserController extends ApiActiveController
                 AuthChild::find()->select('child')->where([
                     'in', 'parent',
                     AuthAssignment::find()->select("item_name")->where([
-                        'user_id' => Current_user_id()
+                        'user_id' => current_user_id()
                     ])
                 ])
             ]);
@@ -152,9 +156,7 @@ class UserController extends ApiActiveController
             $query->orFilterWhere([
                 'in', 'users.id', $userIds
             ]);
-        }
-        
-        elseif ($f['status'] == 2 && $k['status'] == 2 && $d['status'] == 2) {
+        } elseif ($f['status'] == 2 && $k['status'] == 2 && $d['status'] == 2) {
             $query->andFilterWhere([
                 'users.id' => -1
             ]);

@@ -115,6 +115,110 @@ return [
         'enum_yesno',
         ////
 
+        /**1 */
+
+
+        'user_logout',
+        'user_me',
+
+        'user_status-list',
+        'user_index',
+        'user_create',
+        'user_update',
+        'user_view',
+        'user_delete',
+        /**
+         * 
+         */
+        'languages_index',
+        'teacher-access_index',
+        'citizenship_index',
+        'course_index',
+        'area_index',
+        'region_index',
+        'country_index',
+        'area_view',
+        'region_view',
+        'country_view',
+
+        'user-access-type_index',
+
+
+        'building_index',
+        'building_create',
+        'building_update',
+        'building_view',
+
+        'room_index',
+        'room_create',
+        'room_update',
+        'room_view',
+
+        'edu-form_index',
+        'edu-form_create',
+        'edu-form_update',
+        'edu-form_view',
+
+        'para_index',
+        'para_create',
+        'para_update',
+        'para_view',
+
+        'exam_index',
+        'exam_create',
+        'exam_update',
+        'exam_view',
+
+        'exams-type_index',
+        'exams-type_create',
+        'exams-type_update',
+        'exams-type_view',
+
+        'subject-type_index',
+        'subject-type_create',
+        'subject-type_update',
+        'subject-type_view',
+
+        'subject-category_index',
+        'subject-category_create',
+        'subject-category_update',
+        'subject-category_view',
+
+        'edu-year_index',
+        'edu-year_create',
+        'edu-year_update',
+        'edu-year_view',
+
+        'edu-semestr_index',
+        'edu-semestr_create',
+        'edu-semestr_update',
+        'edu-semestr_view',
+
+        'question-type_index',
+        'question-type_create',
+        'question-type_update',
+        'question-type_view',
+
+        'direction_index',
+        'direction_create',
+        'direction_update',
+        'direction_view',
+
+        'faculty_index',
+        'faculty_create',
+        'faculty_update',
+        'faculty_view',
+
+        'kafedra_index',
+        'kafedra_create',
+        'kafedra_update',
+        'kafedra_view',
+
+        'student_index',
+        'student_create',
+        'student_update',
+        'student_view',
+
 
         'time-table_index',
         'time-table_create',

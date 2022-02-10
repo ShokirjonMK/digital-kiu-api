@@ -85,13 +85,12 @@ class UserController extends ApiActiveController
 
         $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
 
-
         $userIds = AuthAssignment::find()->select('user_id')->where([
             'in', 'auth_assignment.item_name',
             AuthChild::find()->select('child')->where([
                 'in', 'parent',
                 AuthAssignment::find()->select("item_name")->where([
-                    'user_id' => Current_user_id()
+                    'user_id' => current_user_id()
                 ])
             ])
         ]);
@@ -99,8 +98,6 @@ class UserController extends ApiActiveController
         $query->orFilterWhere([
             'in', 'users.id', $userIds
         ]);
-
-
 
         /*  is Self  */
         $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);

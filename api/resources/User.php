@@ -493,7 +493,7 @@ class User extends CommonUser
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model = User::findOne($id);
+        $model = User::findOne(['id' => $id, 'deleted' => 0]);
         if (!$model) {
             $errors[] = [_e('Data not found.')];
         }
@@ -516,7 +516,7 @@ class User extends CommonUser
             $model->status = self::STATUS_BANNED;
 
 
-            if (!$model->update()) {
+            if (!$model->save()) {
                 $errors[] = [_e('Error in user deleting process.')];
             }
         }

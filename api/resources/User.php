@@ -505,14 +505,18 @@ class User extends CommonUser
                 unlink($filePath);
             } */
             // remove profile
-            $profileDeleted = Profile::deleteAll(['user_id' => $id]);
-            if (!$profileDeleted) {
+            $profileDeleted = Profile::findOne(['user_id' => $id]);
+            $profileDeleted->is_deleted = 1;
+
+            if (!$profileDeleted->save()) {
                 $errors[] = [_e('Error in profile deleting process.')];
             }
 
-            // remove model
-            $userDeleted = User::findOne($id)->delete();
-            if (!$userDeleted) {
+            $model->deleted = 1;
+            $model->status = self::STATUS_BANNED;
+
+
+            if (!$model->update()) {
                 $errors[] = [_e('Error in user deleting process.')];
             }
         }

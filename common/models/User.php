@@ -28,6 +28,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 10;
     const STATUS_BANNED = 5;
     const STATUS_PENDING = 0;
+    const STATUS_DELETE = 1;
+
 
     public static $url_prefix = 'U29';
     public $roleName;
@@ -54,6 +56,8 @@ class User extends ActiveRecord implements IdentityInterface
             ['layout', 'default', 'value' => ''],
             ['view', 'default', 'value' => ''],
             [['roleName', 'access_token_time'], 'safe'],
+            [['status', 'deleted', 'created_by', 'updated_by'], 'integer'],
+
         ];
     }
 
@@ -73,6 +77,7 @@ class User extends ActiveRecord implements IdentityInterface
             'roleName' => _e('Role'),
             'meta' => _e('Meta'),
             'status' => _e('Status'),
+            'deleted' => _e('Deleted'),
             'created_at' => _e('Created on'),
             'updated_at' => _e('Updated on'),
             'verification_token' => _e('Verification token'),
@@ -88,6 +93,7 @@ class User extends ActiveRecord implements IdentityInterface
             'email',
             'roleName',
             'status',
+            'deleted',
             'created_at',
             'updated_at',
 

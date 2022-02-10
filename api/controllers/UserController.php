@@ -75,9 +75,10 @@ class UserController extends ApiActiveController
         $model = new User();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
+
         $query = $model->find()
             ->with(['profile'])
-            ->andWhere(['users.deleted' => 0])
+            ->andWhere(['users.deleted' => 1])
             ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->join('INNER JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')

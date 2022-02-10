@@ -85,7 +85,8 @@ class User extends CommonUser
             //     return $model->profile->passport_file ?? '';
             // },
             'email',
-            'status'
+            'status',
+            'deleted'
 
         ];
 

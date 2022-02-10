@@ -725,6 +725,9 @@ return [
         'student_update',
         'student_view',
         'student_delete',
+
+
+        'student_read',
     ],
 
 

@@ -44,7 +44,6 @@ class  StudentController extends ApiActiveController
 
     public function actionRead($lang)
     {
-
         $data = [];
         $errorAll = [];
 
@@ -74,7 +73,7 @@ class  StudentController extends ApiActiveController
             if (!empty($this->leaveRecordByIndex)) {
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
-          
+
             foreach ($sheetDatas as $post) {
                 /** */
                 // $post = Yii::$app->request->post();
@@ -83,32 +82,45 @@ class  StudentController extends ApiActiveController
                 }
                 $post['role'] = 'student';
                 $post['status'] = 10;
-                $model = new User();
-                $profile = new Profile();
-                $student = new Student();
+                $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
+                // dd("asd");
+                if ($hasProfile) {
+                    $model = User::findOne(['id' => $hasProfile->user_id]);
+                    $student = Student::findOne(['user_id' => $hasProfile->user_id]);
 
-                $users = Student::find()->count();
-                $count = $users + 10001;
-                $post['username'] = 'tsul-std-' . $count;
-                $post['email'] = 'tsul-std' . $count . '@tsul.uz';
-                $this->load($model, $post);
-                $this->load($profile, $post);
-                $this->load($student, $post);
-
-                $data[] = [$model, $student, $profile];
-                $result = StudentUser::createItemImport($model, $profile, $student, $post);
-                // $result = StudentUser::createItem($model, $profile, $student, $post);
-
-                /*if (!is_array($result)) {
-                    return $this->response(1, _e('Student successfully created.'), $data, null, ResponseStatus::CREATED);
+                    // $this->load($model, $post);
+                    $this->load($hasProfile, $post);
+                    if ($student) {
+                        $this->load($student, $post);
+                    }
+                    $data[] = [$model, $student, $hasProfile];
+                    $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
                 } else {
-                    return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-                } */
 
+                    $model = new User();
+                    $profile = new Profile();
+                    $student = new Student();
+
+                    $users = Student::find()->count();
+                    $count = $users + 10001;
+                    $std = Student::find()->orderBy(['id' => SORT_DESC])->one();
+                    $count = $users + 10001;
+                    if ($std) {
+                        $count = $std->id + 10001;
+                    }
+
+                    $post['username'] = 'tsul-std-' . $count;
+                    $post['email'] = 'tsul-std' . $count . '@tsul.uz';
+                    $this->load($model, $post);
+                    $this->load($profile, $post);
+                    $this->load($student, $post);
+
+                    $data[] = [$model, $student, $profile];
+                    $result = StudentUser::createItemImport($model, $profile, $student, $post);
+                }
                 if (is_array($result)) {
                     $errorAll[$post['passport_number']] = $result;
                 }
-                /** */
             }
             if (count($errorAll) > 0) {
                 return $errorAll;
@@ -120,10 +132,8 @@ class  StudentController extends ApiActiveController
         }
     }
 
-    public function actionImport($lang)
+    /*  public function actionImport($lang)
     {
-
-        /*** */
         $data = [];
         $post = Yii::$app->request->post();
         $file = UploadedFile::getInstancesByName('fff');
@@ -139,33 +149,26 @@ class  StudentController extends ApiActiveController
             $t = true;
             foreach ($dataExcel as $key => $row) {
 
-                //                $dd['key'][] = $key;
-                //                $dd['count($row)'][] = count($row);
+                               $dd['key'][] = $key;
+                               $dd['count($row)'][] = count($row);
                 for ($i = 0; $i < count($row); $i++) {
                     if ($k == 0) {
                         $dd['header'][] = $row[$i];
-                        //                        if($row[$i] = "s")
+                        
                     } else {
                         $dd['body'][] = $row[$i];
                     }
 
-                    // models save
                 }
                 $k++;
             }
-
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
-        }
-
-        //        return $dd;
-        // unlink($file[]);
+        }    
         var_dump($dd, $data);
         die();
-
-        /*** */
-    }
+    } */
 
     public function actionIndex($lang)
     {
@@ -242,7 +245,13 @@ class  StudentController extends ApiActiveController
         $student = new Student();
 
         $users = Student::find()->count();
+        $std = Student::find()->orderBy(['id' => SORT_DESC])->one();
         $count = $users + 10001;
+        if ($std) {
+            $count = $std->id + 10001;
+        }
+
+        // return $count;
         $post['username'] = 'tsul-std-' . $count;
         $post['email'] = 'tsul-std' . $count . '@tsul.uz';
 
@@ -297,6 +306,8 @@ class  StudentController extends ApiActiveController
         $profile = Profile::findOne(['user_id' => $student->user_id]);
 
 
+        $this->load($model, $post);
+        $this->load($profile, $post);
         $this->load($student, $post);
         $result = StudentUser::updateItem($model, $profile, $student, $post);
 

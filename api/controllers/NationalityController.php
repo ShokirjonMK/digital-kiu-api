@@ -6,9 +6,12 @@ use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Nationality;
+use yii\rest\ActiveController;
 
-class NationalityController extends ApiActiveController
+class NationalityController extends ActiveController
 {
+    use ApiOpen;
+
     public $modelClass = 'api\resources\Nationality';
 
     public function actions()

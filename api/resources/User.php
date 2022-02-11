@@ -377,10 +377,9 @@ class User extends CommonUser
                 if (isset($post['user_access'])) {
                     $post['user_access'] = str_replace("'", "", $post['user_access']);
                     $user_access = json_decode(str_replace("'", "", $post['user_access']));
-
+// dd($user_access);
                     UserAccess::deleteAll(['user_id' => $model->id]);
                     foreach ($user_access as $user_access_type_id => $tableIds) {
-
                         $userAccessType = UserAccessType::findOne($user_access_type_id);
                         if (isset($userAccessType)) {
                             foreach ($tableIds as $tableIdandIsLeader) {

@@ -50,7 +50,7 @@ class  StudentController extends ApiActiveController
         $data = [];
         $post = Yii::$app->request->post();
         $file = UploadedFile::getInstancesByName('fff');
-        if(!$file){
+        if (!$file) {
             return 0;
         }
         $inputFileType = IOFactory::identify($file[0]->tempName);
@@ -76,7 +76,7 @@ class  StudentController extends ApiActiveController
 
         if ($sheetCount > 1) {
             foreach ($objectPhpExcel->getSheetNames() as $sheetIndex => $sheetName) {
-               /*  if (isset($this->getOnlySheet) && $this->getOnlySheet != null) {
+                /*  if (isset($this->getOnlySheet) && $this->getOnlySheet != null) {
                     if (!$objectPhpExcel->getSheetByName($this->getOnlySheet)) {
                         return $sheetDatas;
                     }
@@ -95,22 +95,21 @@ class  StudentController extends ApiActiveController
                     return $sheetDatas[$indexed];
                 } else { */
 
-                    $objectPhpExcel->setActiveSheetIndexByName($sheetName);
-                    $indexed = $this->setIndexSheetByName == true ? $sheetName : $sheetIndex;
-                    $sheetDatas[$indexed] = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
-                    if ($this->setFirstRecordAsKeys) {
-                        $sheetDatas[$indexed] = $this->executeArrayLabel($sheetDatas[$indexed]);
-                    }
-                    if (!empty($this->getOnlyRecordByIndex) && isset($this->getOnlyRecordByIndex[$indexed]) && is_array($this->getOnlyRecordByIndex[$indexed])) {
-                        $sheetDatas = $this->executeGetOnlyRecords($sheetDatas, $this->getOnlyRecordByIndex[$indexed]);
-                    }
-                    if (!empty($this->leaveRecordByIndex) && isset($this->leaveRecordByIndex[$indexed]) && is_array($this->leaveRecordByIndex[$indexed])) {
-                        $sheetDatas[$indexed] = $this->executeLeaveRecords($sheetDatas[$indexed], $this->leaveRecordByIndex[$indexed]);
-                    }
+                $objectPhpExcel->setActiveSheetIndexByName($sheetName);
+                $indexed = $this->setIndexSheetByName == true ? $sheetName : $sheetIndex;
+                $sheetDatas[$indexed] = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
+                if ($this->setFirstRecordAsKeys) {
+                    $sheetDatas[$indexed] = $this->executeArrayLabel($sheetDatas[$indexed]);
+                }
+                if (!empty($this->getOnlyRecordByIndex) && isset($this->getOnlyRecordByIndex[$indexed]) && is_array($this->getOnlyRecordByIndex[$indexed])) {
+                    $sheetDatas = $this->executeGetOnlyRecords($sheetDatas, $this->getOnlyRecordByIndex[$indexed]);
+                }
+                if (!empty($this->leaveRecordByIndex) && isset($this->leaveRecordByIndex[$indexed]) && is_array($this->leaveRecordByIndex[$indexed])) {
+                    $sheetDatas[$indexed] = $this->executeLeaveRecords($sheetDatas[$indexed], $this->leaveRecordByIndex[$indexed]);
+                }
                 // }
             }
-        } 
-        else {
+        } else {
             var_dump("asdasdasda sd asd asd ");
             $sheetDatas = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
             if ($this->setFirstRecordAsKeys) {
@@ -199,7 +198,7 @@ class  StudentController extends ApiActiveController
         }
 
         /*  is Role check  */
-        if ($this->isRole('tutor')) {
+        if (isRole('tutor')) {
             $query = $query->andWhere([
                 'tutor_id' => Current_user_id()
             ]);
@@ -240,7 +239,7 @@ class  StudentController extends ApiActiveController
     public function actionCreate($lang)
     {
         $post = Yii::$app->request->post();
-        if ($this->isRole('tutor')) {
+        if (isRole('tutor')) {
             $post['tutor_id'] = Current_user_id();
         }
         $post['role'] = 'student';

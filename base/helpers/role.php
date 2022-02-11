@@ -23,3 +23,15 @@ function _eduRoles()
     }
     return $data;
 }
+
+function isRole($roleName)
+{
+    $user_id = current_user_id();
+    $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
+
+    if (property_exists($roles, $roleName)) {
+        return true;
+    } else {
+        return false;
+    }
+}

@@ -156,6 +156,7 @@ return [
         'direction_view',
 
         'faculty_index',
+        'department_index',
         'faculty_create',
         'faculty_update',
         'faculty_view',
@@ -308,6 +309,7 @@ return [
         'direction_view',
 
         'faculty_index',
+        'department_index',
         'faculty_create',
         'faculty_update',
         'faculty_view',
@@ -434,6 +436,7 @@ return [
         'direction_view',
 
         'faculty_index',
+        'department_index',
         'faculty_create',
         'faculty_update',
         'faculty_view',
@@ -490,6 +493,7 @@ return [
         'nationality_index',
         'course_index',
         'faculty_index',
+        'department_index',
         //'faculty_update',
         'faculty_view',
         'area_index',
@@ -645,6 +649,7 @@ return [
 
 
         'faculty_index',
+        'department_index',
         'kafedra_index',
         'kafedra_view',
         'languages_index',
@@ -701,6 +706,7 @@ return [
         'enum_yesno',
         ////
         'faculty_index',
+        'department_index',
 
         'user_logout',
         'user_me',

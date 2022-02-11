@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=website_db',
-            'username' => 'api-intalim',
-            'password' => '1nTal!m-api',
+            'dsn' => 'mysql:host=localhost;dbname=website_db_server',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
         ],
         'mailer' => [

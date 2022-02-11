@@ -86,61 +86,68 @@ class UserController extends ApiActiveController
 
         $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
 
-        // $userIds = AuthAssignment::find()->select('user_id')->where([
-        //     'in', 'auth_assignment.item_name',
-        //     AuthChild::find()->select('child')->where([
-        //         'in', 'parent',
-        //         AuthAssignment::find()->select("item_name")->where([
-        //             'user_id' => current_user_id()
-        //         ])
-        //     ])
-        // ]);
+        $userIds = AuthAssignment::find()->select('user_id')->where([
+            'in', 'auth_assignment.item_name',
+            AuthChild::find()->select('child')->where([
+                'in', 'parent',
+                AuthAssignment::find()->select("item_name")->where([
+                    'user_id' => current_user_id()
+                ])
+            ])
+        ]);
 
-        // $query->orFilterWhere([
-        //     'in', 'users.id', $userIds
-        // ]);
+        $query->orFilterWhere([
+            'in', 'users.id', $userIds
+        ]);
 
         /*  is Self  */
         // if(isRole('dean')){
 
         // }
-        $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-        $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
 
-        // faculty
-        if ($f['status'] == 1) {
-            $query->orFilterWhere([
-                'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                    'table_id' => $f['UserAccess']->table_id,
-                    'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
-                ])
-            ]);
-        }
+        
+        if (!(isRole('admin'))) {
+            // dd(123);
 
-        // kafedra
-        if ($k['status'] == 1) {
-            $query->andFilterWhere([
-                'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                    'table_id' => $k['UserAccess']->table_id,
-                    'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
-                ])
-            ]);
-        }
 
-        // department
-        if ($d['status'] == 1) {
-            $query->orFilterWhere([
-                'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                    'table_id' => $d['UserAccess']->table_id,
-                    'user_access_type_id' => Department::USER_ACCESS_TYPE_ID,
-                ])
-            ]);
-        }
-        if ($f['status'] == 2 && $k['status'] == 2 && $d['status'] == 2) {
-            $query->orFilterWhere([
-                'users.id' => -1
-            ]);
+            $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
+
+            // faculty
+            if ($f['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                        'table_id' => $f['UserAccess']->table_id,
+                        'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                    ])
+                ]);
+            }
+
+            // kafedra
+            if ($k['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                        'table_id' => $k['UserAccess']->table_id,
+                        'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                    ])
+                ]);
+            }
+
+            // department
+            if ($d['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                        'table_id' => $d['UserAccess']->table_id,
+                        'user_access_type_id' => Department::USER_ACCESS_TYPE_ID,
+                    ])
+                ]);
+            }
+            if ($f['status'] == 2 && $k['status'] == 2 && $d['status'] == 2) {
+                $query->andFilterWhere([
+                    'users.id' => -1
+                ]);
+            }
         }
         /*  is Self  */
 

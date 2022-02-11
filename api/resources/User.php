@@ -339,16 +339,18 @@ class User extends CommonUser
         }
 
         // role to'gri jo'natilganligini tekshirish
-        $roles = $post['role'];
-        if (is_array($roles)) {
-            foreach ($roles as $role) {
-                if (!(isset($role) && !empty($role) && is_string($role))) {
+        if (isset($post['role'])) {
+            $roles = $post['role'];
+            if (is_array($roles)) {
+                foreach ($roles as $role) {
+                    if (!(isset($role) && !empty($role) && is_string($role))) {
+                        $errors[] = ['role' => [_e('Role is not valid.')]];
+                    }
+                }
+            } else {
+                if (!(isset($roles) && !empty($roles) && is_string($roles))) {
                     $errors[] = ['role' => [_e('Role is not valid.')]];
                 }
-            }
-        } else {
-            if (!(isset($roles) && !empty($roles) && is_string($roles))) {
-                $errors[] = ['role' => [_e('Role is not valid.')]];
             }
         }
 
@@ -375,10 +377,9 @@ class User extends CommonUser
                 if (isset($post['user_access'])) {
                     $post['user_access'] = str_replace("'", "", $post['user_access']);
                     $user_access = json_decode(str_replace("'", "", $post['user_access']));
-
+// dd($user_access);
                     UserAccess::deleteAll(['user_id' => $model->id]);
                     foreach ($user_access as $user_access_type_id => $tableIds) {
-
                         $userAccessType = UserAccessType::findOne($user_access_type_id);
                         if (isset($userAccessType)) {
                             foreach ($tableIds as $tableIdandIsLeader) {
@@ -442,37 +443,39 @@ class User extends CommonUser
                 if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {
-                    $auth = Yii::$app->authManager;
-                    $roles = json_decode(str_replace("'", "", $post['role']));
+                    if (isset($post['role'])) {
+                        $auth = Yii::$app->authManager;
+                        $roles = json_decode(str_replace("'", "", $post['role']));
 
-                    if (is_array($roles)) {
-                        $auth->revokeAll($model->id);
-                        foreach ($roles as $role) {
-                            $authorRole = $auth->getRole($role);
-                            if ($authorRole) {
-                                $auth->assign($authorRole, $model->id);
-                                if ($role == 'teacher' && isset($post['teacherAccess'])) {
-                                    $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-                                    TeacherAccess::deleteAll(['user_id' => $model->id]);
-                                    foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
-                                        if (is_array($subjectIdsValues)) {
-                                            foreach ($subjectIdsValues as $langId) {
-                                                $teacherAccessNew = new TeacherAccess();
-                                                $teacherAccessNew->user_id = $model->id;
-                                                $teacherAccessNew->subject_id = $subjectIds;
-                                                $teacherAccessNew->language_id = $langId;
-                                                $teacherAccessNew->save();
+                        if (is_array($roles)) {
+                            $auth->revokeAll($model->id);
+                            foreach ($roles as $role) {
+                                $authorRole = $auth->getRole($role);
+                                if ($authorRole) {
+                                    $auth->assign($authorRole, $model->id);
+                                    if ($role == 'teacher' && isset($post['teacherAccess'])) {
+                                        $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
+                                        TeacherAccess::deleteAll(['user_id' => $model->id]);
+                                        foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
+                                            if (is_array($subjectIdsValues)) {
+                                                foreach ($subjectIdsValues as $langId) {
+                                                    $teacherAccessNew = new TeacherAccess();
+                                                    $teacherAccessNew->user_id = $model->id;
+                                                    $teacherAccessNew->subject_id = $subjectIds;
+                                                    $teacherAccessNew->language_id = $langId;
+                                                    $teacherAccessNew->save();
+                                                }
                                             }
                                         }
                                     }
+                                    //                                }
+                                } else {
+                                    $errors[] = ['role' => [_e('Role not found.')]];
                                 }
-                                //                                }
-                            } else {
-                                $errors[] = ['role' => [_e('Role not found.')]];
                             }
+                        } else {
+                            $errors[] = ['role' => [_e('Role is invalid')]];
                         }
-                    } else {
-                        $errors[] = ['role' => [_e('Role is invalid')]];
                     }
                 }
             } else {

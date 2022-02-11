@@ -195,6 +195,112 @@ class StudentUser extends ParentUser
     }
 
     
+    public static function updateItemImport($model, $profile, $student, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (!$post) {
+            $errors[] = ['all' => [_e('Please send data.')]];
+        }
+
+        // if (!($model->validate())) {
+        //     $errors[] = $model->errors;
+        // }
+        // if (!($profile->validate())) {
+        //     $errors[] = $profile->errors;
+        // }
+        // if (!($student->validate())) {
+        //     $errors[] = $student->errors;
+        // }
+
+
+        if (isset($post['role'])) {
+
+            // role to'gri jo'natilganligini tekshirish
+            if (empty($post['role']) || !is_string($post['role'])) {
+                $errors[] = ['role' => [_e('Role is not valid.')]];
+            }
+
+            // Role mavjudligini tekshirish
+            $auth = Yii::$app->authManager;
+            $authorRole = $auth->getRole($post['role']);
+            if (!$authorRole) {
+                $errors[] = ['role' => [_e('Role not found.')]];
+            }
+
+            // rolening student toifasidagi rollar tarkibidaligini tekshirish
+            if (!in_array($post['role'], self::$roleList)) {
+                $errors[] = ['role' => [_e('Role does not fit the type of staff.')]];
+            }
+        }
+
+        if (count($errors) == 0) {
+
+            if (isset($post['password']) && !empty($post['password'])) {
+                $password = $post['password'];
+                $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
+                //**parolni shifrlab saqlaymiz */
+                $model->savePassword($password, $model->id);
+                //**** */
+            }
+
+            if ($model->save()) {
+
+                // avatarni saqlaymiz
+                $model->avatar = UploadedFile::getInstancesByName('avatar');
+                if ($model->avatar) {
+                    $model->avatar = $model->avatar[0];
+                    $avatarUrl = $model->upload();
+                    if ($avatarUrl) {
+                        $profile->image = $avatarUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                // Passport file ni saqlaymiz
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                if (!$profile->save(false)) {
+                    $errors[] = $profile->errors;
+                } else {
+                    if ($student->save()) {
+                        if (isset($post['role'])) {
+                            // user ning eski rolini o'chirish
+                            $auth->revokeAll($model->id);
+                            // role ni userga assign qilish
+                            $auth->assign($authorRole, $model->id);
+                        }
+                    } else {
+                        $errors[] = $student->errors;
+                    }
+                }
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+    
     public static function updateItem($model, $profile, $student, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();

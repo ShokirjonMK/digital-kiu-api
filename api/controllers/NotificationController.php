@@ -2,7 +2,7 @@
 
 namespace api\controllers;
 
-use common\models\model\Translate;
+
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Notification;

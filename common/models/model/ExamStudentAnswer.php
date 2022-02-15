@@ -211,12 +211,18 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $data = [];
-        $exam_id = $post["exam_id"];
+        $exam_id = $post["exam_id"] ?? null;
+
         $password = isset($post["password"]) ? $post["password"] : "";
-        $student = Student::findOne(['user_id' => Current_user_id()]);
-        $exam_times = [];
+        $student = Student::findOne(['user_id' => current_user_id()]);
+        if (!$student) {
+            $errors[] = _e("Student not found");
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
         $student_id = $student->id;
         // $student_id = 15;
+        $exam_times = [];
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             $checkPassword = $exam->id . $exam->edu_semestr_subject_id . $student_id;
@@ -254,10 +260,18 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 if ($t) {
                     // $now_date = date('Y-m-d H:i:s');
                     $now_second = time();
-                    if (strtotime($exam->start) < $now_second && strtotime($exam->finish) >= $now_second) {
+                    if (
+                        strtotime($exam->start) < $now_second
+                        && strtotime($exam->finish) >= $now_second
+                    ) {
 
                         $question_count_by_type = json_decode($exam->question_count_by_type);
-                        $edu_semestr_subject_id = $exam->eduSemestrSubject->id;
+                        if (!(isJsonMK($exam->question_count_by_type) && $question_count_by_type)) {
+                            $errors[] = _e("The question is not specified");
+                            $transaction->rollBack();
+                            return simplify_errors($errors);
+                        }
+                        $subject_id = $exam->eduSemestrSubject->subject_id;
                         $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
 
                         /* BU yerga bolani imtixonga a`zo qilamiz*/
@@ -279,11 +293,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $ExamStudent->save(false);
 
                         /* *****************************/
-
+                        // isJsonMK($question_count_by_type);
                         foreach ($question_count_by_type as $type => $question_count) {
                             $questionAll = Question::find()
                                 ->where([
-                                    'subject_id' => $edu_semestr_subject_id,
+                                    'subject_id' => $subject_id,
                                     'semestr_id' => $semestr_id,
                                     'lang_id' => $student_lang_id,
                                     'question_type_id' => $type
@@ -291,6 +305,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 ->orderBy(new Expression('rand()'))
                                 ->limit($question_count)
                                 ->all();
+
                             if (count($questionAll) == $question_count) {
                                 // if (count($questionAll) > 0) {
                                 foreach ($questionAll as $question) {
@@ -301,12 +316,18 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $ExamStudentAnswer->type = $type;
                                     $ExamStudentAnswer->attempt = 1;
                                     $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
-                                    $ExamStudentAnswer->save(false);
+                                    /* $errors['model'] = $ExamStudentAnswer;
+                                    $errors['ques'] = $questionAll;
+                                    $transaction->rollBack();
+                                    return simplify_errors($errors); */
+                                    $ExamStudentAnswer->save();
                                 }
                             } else {
+
                                 ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                                $errors[] = _e("Questions not found for this exam");
+                                $errors[] = _e("Questions are not found for this exam");
+                                $errors[] = $questionAll;
                                 $transaction->rollBack();
                                 return simplify_errors($errors);
                             }
@@ -320,6 +341,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $data['times'] = $exam_times;
                         return $data;
                     } else {
+                        $errors[] = $exam;
                         $errors[] = _e("This exam`s time expired");
                     }
                 } else {
@@ -328,6 +350,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             } else {
                 $errors[] = _e("This exam not found");
             }
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        } else {
+            $errors[] = _e("Exam id required");
             $transaction->rollBack();
             return simplify_errors($errors);
         }

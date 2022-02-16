@@ -246,7 +246,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     return $data;
                 }
 
-
                 // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                 $t = true;
                 if ($exam->is_protected == 1) {

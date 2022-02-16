@@ -212,7 +212,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         $data = [];
         $exam_id = $post["exam_id"] ?? null;
-        
+
         $password = isset($post["password"]) ? $post["password"] : "";
         $student = Student::findOne(['user_id' => current_user_id()]);
         /*  if(!$student){
@@ -227,7 +227,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             $exam = Exam::findOne($exam_id);
             $checkPassword = $exam->id . $exam->edu_semestr_subject_id . $student_id;
 
-            if (isset($exam)) {
+            if ($exam) {
                 $ExamStudentHas = ExamStudent::find()->where([
                     'exam_id' => $exam_id,
                     'student_id' => $student_id,
@@ -236,7 +236,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->one();
 
                 $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                if (isset($hasExamStudentAnswer)) {
+                if ($hasExamStudentAnswer) {
                     $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
                     $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                     $exam_times['duration'] = $exam->duration;
@@ -319,7 +319,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     /* $errors['model'] = $ExamStudentAnswer;
                                     $errors['ques'] = $questionAll;
                                     $transaction->rollBack();
-                                    return simplify_errors($errors); */ 
+                                    return simplify_errors($errors); */
                                     $ExamStudentAnswer->save(false);
                                     $data['ExamStudentAnswer'][] = $ExamStudentAnswer;
                                 }

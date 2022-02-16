@@ -278,7 +278,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                         $student = Student::findOne(['id' => $student_id]);
                         $student_lang_id = $student->edu_lang_id;
-                        if (isset($ExamStudentHas)) {
+                        if ($ExamStudentHas) {
                             $ExamStudent = $ExamStudentHas;
                         } else {
                             $ExamStudent = new ExamStudent();
@@ -292,6 +292,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
                         $ExamStudent->save(false);
 
+
+                        $data['ExamStudent'] = $ExamStudent;
+                        
+                        
                         /* *****************************/
                         // isJsonMK($question_count_by_type);
                         foreach ($question_count_by_type as $type => $question_count) {

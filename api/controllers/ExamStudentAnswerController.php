@@ -38,6 +38,7 @@ class ExamStudentAnswerController extends ApiActiveController
         $ExamStudentAnswer->save();
 
         return $ExamStudentAnswer;
+        
         $result = ExamStudentAnswer::randomQuestions($post);
 
         if (isset($result['questions'])) {

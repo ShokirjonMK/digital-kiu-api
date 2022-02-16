@@ -12,7 +12,7 @@ class m211217_161312_alter_exam_stu_answer_table extends Migration
      */
     public function safeUp()
     {
-        $this->execute("ALTER TABLE `exam_student_answer` CHANGE `exam_question_id` `question_id` INT(11) NOT NULL;");
+      //  $this->execute("ALTER TABLE `exam_student_answer` CHANGE `exam_question_id` `question_id` INT(11) NOT NULL;");
     }
 
     /**

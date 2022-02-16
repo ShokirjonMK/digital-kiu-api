@@ -320,28 +320,30 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $errors['ques'] = $questionAll;
                                     $transaction->rollBack();
                                     return simplify_errors($errors); */ 
-                                    $ExamStudentAnswer->save();
+                                    $ExamStudentAnswer->save(false);
+                                    // $data['ExamStudentAnswer'][] = $ExamStudentAnswer;
                                 }
                             } else {
 
                                 ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 $errors[] = _e("Questions are not found for this exam");
-                                $errors[] = $questionAll;
+                                // $errors[] = $questionAll;
                                 $transaction->rollBack();
                                 return simplify_errors($errors);
                             }
                         }
-                        $data = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                        $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
 
-                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudent->start);
                         $exam_times['duration'] = $exam->duration;
-                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->start + $exam->duration);
 
                         $data['times'] = $exam_times;
+                        $data['status'] = true;
                         return $data;
                     } else {
-                        $errors[] = $exam;
+                        // $errors[] = $exam;
                         $errors[] = _e("This exam`s time expired");
                     }
                 } else {

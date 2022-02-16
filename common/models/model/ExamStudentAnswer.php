@@ -321,7 +321,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $transaction->rollBack();
                                     return simplify_errors($errors); */ 
                                     $ExamStudentAnswer->save(false);
-                                    // $data['ExamStudentAnswer'][] = $ExamStudentAnswer;
+                                    $data['ExamStudentAnswer'][] = $ExamStudentAnswer;
                                 }
                             } else {
 

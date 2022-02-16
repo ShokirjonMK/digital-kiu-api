@@ -324,7 +324,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $errors['ques'] = $questionAll;
                                     $transaction->rollBack();
                                     return simplify_errors($errors); */
-                                    $ExamStudentAnswer->save(false);
+                                    $ExamStudentAnswer->save();
                                     $data['ExamStudentAnswer'][] = $ExamStudentAnswer;
                                 }
                             } else {

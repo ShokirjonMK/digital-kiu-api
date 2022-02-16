@@ -274,7 +274,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $subject_id = $exam->eduSemestrSubject->subject_id;
                         $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
 
-                        /* BU yerga bolani imtixonga a`zo qilamiz*/
+                        /* Bu yerga bolani imtixonga a`zo qilamiz*/
 
                         $student = Student::findOne(['id' => $student_id]);
                         $student_lang_id = $student->edu_lang_id;
@@ -292,10 +292,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
                         $ExamStudent->save(false);
 
-
-                        $data['ExamStudent'] = $ExamStudent;
-                        
-                        
                         /* *****************************/
                         // isJsonMK($question_count_by_type);
                         foreach ($question_count_by_type as $type => $question_count) {
@@ -314,25 +310,20 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 // if (count($questionAll) > 0) {
                                 foreach ($questionAll as $question) {
                                     $ExamStudentAnswer = new ExamStudentAnswer();
-                                    $ExamStudentAnswer->exam_id = 1;
-                                    $ExamStudentAnswer->question_id = 1;
-                                    $ExamStudentAnswer->student_id = 15;
-                                    $ExamStudentAnswer->type = 1;
+                                    $ExamStudentAnswer->exam_id = $exam_id;
+                                    $ExamStudentAnswer->question_id = $question->id;
+                                    $ExamStudentAnswer->student_id = $student_id;
+                                    $ExamStudentAnswer->type = $type;
                                     $ExamStudentAnswer->attempt = 1;
                                     $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
-                                    /* $errors['model'] = $ExamStudentAnswer;
-                                    $errors['ques'] = $questionAll;
-                                    $transaction->rollBack();
-                                    return simplify_errors($errors); */
                                     $ExamStudentAnswer->save();
-                                    $data['ExamStudentAnswer'][] = $ExamStudentAnswer;
                                 }
                             } else {
 
                                 ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                 $errors[] = _e("Questions are not found for this exam");
-                                // $errors[] = $questionAll;
+
                                 $transaction->rollBack();
                                 return simplify_errors($errors);
                             }
@@ -345,6 +336,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                         $data['times'] = $exam_times;
                         $data['status'] = true;
+                        $transaction->commit();
                         return $data;
                     } else {
                         // $errors[] = $exam;

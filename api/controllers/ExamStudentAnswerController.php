@@ -24,21 +24,6 @@ class ExamStudentAnswerController extends ApiActiveController
         $model = new ExamStudentAnswer();
         $post = Yii::$app->request->post();
 
-        $ExamStudentAnswer = new ExamStudentAnswer();
-        $ExamStudentAnswer->exam_id = 1;
-        $ExamStudentAnswer->question_id = 1;
-        $ExamStudentAnswer->student_id = 15;
-        $ExamStudentAnswer->type = 1;
-        $ExamStudentAnswer->attempt = 1;
-        $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
-        /* $errors['model'] = $ExamStudentAnswer;
-                                    $errors['ques'] = $questionAll;
-                                    $transaction->rollBack();
-                                    return simplify_errors($errors); */
-        $ExamStudentAnswer->save();
-
-        return $ExamStudentAnswer;
-        
         $result = ExamStudentAnswer::randomQuestions($post);
 
         if (isset($result['questions'])) {

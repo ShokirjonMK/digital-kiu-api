@@ -314,10 +314,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 // if (count($questionAll) > 0) {
                                 foreach ($questionAll as $question) {
                                     $ExamStudentAnswer = new ExamStudentAnswer();
-                                    $ExamStudentAnswer->exam_id = $exam_id;
-                                    $ExamStudentAnswer->question_id = $question->id;
-                                    $ExamStudentAnswer->student_id = $student_id;
-                                    $ExamStudentAnswer->type = $type;
+                                    $ExamStudentAnswer->exam_id = 1;
+                                    $ExamStudentAnswer->question_id = 1;
+                                    $ExamStudentAnswer->student_id = 15;
+                                    $ExamStudentAnswer->type = 1;
                                     $ExamStudentAnswer->attempt = 1;
                                     $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
                                     /* $errors['model'] = $ExamStudentAnswer;

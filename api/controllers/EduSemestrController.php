@@ -27,7 +27,7 @@ class EduSemestrController extends ApiActiveController
 
         $student = Student::findOne(['user_id' => Current_user_id()]);
 
-        if (isset($student)) {
+        if ($student) {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0])
                 ->andWhere(['edu_plan_id' => $student->edu_plan_id])

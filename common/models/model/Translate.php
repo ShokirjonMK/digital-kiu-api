@@ -318,11 +318,7 @@ class Translate extends \yii\db\ActiveRecord
                 }
                 $errors[] = $nameErrors;
             }
-        } else {
-            $errors[]['name'] = [_e('Please send Name attribute as array.')];
-            // $data['errors'][] = $errors;
-            $data['status'] = 0;
-        }
+        } 
         if (isset($post['description'])) {
             if (!is_array($post['description'])) {
                 $errors[]['description'] = [_e('Description must be array.')];

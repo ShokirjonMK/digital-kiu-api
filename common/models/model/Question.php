@@ -143,6 +143,9 @@ class Question extends \yii\db\ActiveRecord
             'question_file' => function ($model) {
                 return $model->file ?? '';
             },
+            'options' => function ($model) {
+                return $model->options ?? [];
+            },
             'file',
             'ball',
             'question',
@@ -150,12 +153,12 @@ class Question extends \yii\db\ActiveRecord
             'level',
             'question_type_id',
 
-            'order',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+            // 'order',
+            // 'status',
+            // 'created_at',
+            // 'updated_at',
+            // 'created_by',
+            // 'updated_by',
 
         ];
 
@@ -167,6 +170,7 @@ class Question extends \yii\db\ActiveRecord
         $extraFields = [
             'course',
             'semestr',
+            'options',
             'subject',
             'lang',
             'questionType',
@@ -196,6 +200,12 @@ class Question extends \yii\db\ActiveRecord
     public function getSemestr()
     {
         return $this->hasOne(Semestr::className(), ['id' => 'semestr_id']);
+    }
+
+
+    public function getOptions()
+    {
+        return $this->hasMany(QuestionOption::className(), ['question_id' => 'id']);
     }
 
     /**

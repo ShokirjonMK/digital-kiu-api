@@ -122,6 +122,14 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'parent_id',
             'file',
             'exam_id',
+
+            'question' => function ($model) {
+                return $model->questionForExamStudentAnswer ?? [];
+            },
+            'question_type' => function ($model) {
+                return $model->questionType->name ?? '';
+            },
+
             'question_id',
             'student_id',
             'option_id',
@@ -177,6 +185,16 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[ExamQuestion]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getQuestionForExamStudentAnswer()
+    {
+        return $this->hasOne(Question::className(), ['id' => 'question_id']);
+    }
+
+    /**
      * Gets query for [[Option]].
      *
      * @return \yii\db\ActiveQuery
@@ -184,6 +202,12 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function getOption()
     {
         return $this->hasOne(ExamQuestionOption::className(), ['id' => 'option_id']);
+    }
+
+
+    public function getQuestionType()
+    {
+        return $this->hasOne(QuestionType::className(), ['id' => 'type']);
     }
 
     /**
@@ -206,6 +230,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
+
     public static function randomQuestions($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -215,13 +240,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
         $password = isset($post["password"]) ? $post["password"] : "";
         $student = Student::findOne(['user_id' => current_user_id()]);
-        /*  if(!$student){
+        if (!$student) {
             $errors[] = _e("Student not found");
             $transaction->rollBack();
             return simplify_errors($errors);
-        } */
-        // $student_id = $student->id;
-        $student_id = 15;
+        }
+        $student_id = $student->id;
+        // $student_id = 15;
         $exam_times = [];
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
@@ -237,12 +262,19 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                 $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
                 if ($hasExamStudentAnswer) {
-                    $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                    $getQuestionModel = new ExamStudentAnswer();
+                    $getQuestion = $getQuestionModel->find()
+                        ->with(['question'])
+                        ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
+                        ->all();
+
+                    $data['questions'] = $getQuestion;
                     $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                     $exam_times['duration'] = $exam->duration;
                     $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
 
                     $data['times'] = $exam_times;
+                    $data['status'] = true;
                     return $data;
                 }
 
@@ -327,7 +359,15 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 return simplify_errors($errors);
                             }
                         }
-                        $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+                        $getQuestionModel = new ExamStudentAnswer();
+                        $getQuestion = $getQuestionModel->find()
+                            ->with(['question'])
+                            ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
+                            ->all();
+
+                        $data['questions'] = $getQuestion;
+
+                        // $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
 
                         $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudent->start);
                         $exam_times['duration'] = $exam->duration;
@@ -386,15 +426,19 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         // studentni answer file ni saqlaymiz
 
-        $student = Student::findOne(['user_id' => Current_user_id()]);
-        // $student_id = $student->id;
-        $student_id = 14;
+        $student = Student::findOne(['user_id' => current_user_id()]);
+        if (!$student) {
+            $errors[] = _e("Student not found");
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        $student_id = $student->id;
         $exam_id = $model->exam_id;
         $old_file = $model->file;
 
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
-            if (isset($exam)) {
+            if ($exam) {
                 $examStudent = ExamStudent::find()->where([
                     'exam_id' => $exam_id,
                     'student_id' => $student_id,
@@ -402,7 +446,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->orderBy('id desc')
                     ->one();
                 $now_second = time();
-                if (isset($examStudent)) {
+                if ($examStudent) {
                     $finishExamStudent = strtotime($examStudent->start) + $exam->duration + $examStudent->duration;
 
                     if (
@@ -415,7 +459,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         if ($model->answer_file) {
 
                             $model->answer_file = $model->answer_file[0];
-                            $answer_fileFileUrl = $model->uploadFile();
+                            $answer_fileFileUrl = $model->uploadFile($exam->id, $student_id);
                             if ($answer_fileFileUrl) {
                                 $model->file = $answer_fileFileUrl;
                             } else {
@@ -453,24 +497,37 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         }
     }
 
-    public function uploadFile()
+    public function uploadFile($exam_id, $student_id)
     {
+        $folder = self::UPLOADS_FOLDER . "/exam_" . $exam_id . "/";
+
         if ($this->validate()) {
-            if (!file_exists(STORAGE_PATH . self::UPLOADS_FOLDER)) {
-                mkdir(STORAGE_PATH . self::UPLOADS_FOLDER, 0777, true);
+            if (!file_exists(STORAGE_PATH . $folder)) {
+                mkdir(STORAGE_PATH . $folder, 0777, true);
             }
             if ($this->isNewRecord) {
-                $fileName = ExamStudentAnswer::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
+                $fileName = ExamStudentAnswer::find()->orderBy(['id' => SORT_DESC])->one()->id
+                    + 1 . "_" . $student_id . "_"  . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
             } else {
-                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
+                $fileName = $this->id . "_" . $student_id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
             }
-            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $miniUrl = $folder . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->answer_file->saveAs($url, false);
             return "storage/" . $miniUrl;
         } else {
             return false;
         }
+    }
+
+    public function deleteFile($oldFile = NULL)
+    {
+        if (isset($oldFile)) {
+            if (file_exists(HOME_PATH . $oldFile)) {
+                unlink(HOME_PATH  . $oldFile);
+            }
+        }
+        return true;
     }
 
     public function beforeSave($insert)

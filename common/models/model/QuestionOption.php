@@ -117,15 +117,15 @@ class QuestionOption extends \yii\db\ActiveRecord
 
             'question_id',
             'file',
-            'is_correct',
+            // 'is_correct',
             'option',
 
-            'order',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+            // 'order',
+            // 'status',
+            // 'created_at',
+            // 'updated_at',
+            // 'created_by',
+            // 'updated_by',
 
         ];
 

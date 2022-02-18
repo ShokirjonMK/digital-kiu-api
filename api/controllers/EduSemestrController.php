@@ -25,7 +25,7 @@ class EduSemestrController extends ApiActiveController
     {
         $model = new EduSemestr();
 
-        $student = Student::findOne(['user_id' => Current_user_id()]);
+        $student = Student::findOne(['user_id' => current_user_id()]);
 
         if ($student) {
             $query = $model->find()

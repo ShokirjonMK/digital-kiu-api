@@ -11,15 +11,10 @@ use yii\web\UploadedFile;
  * This is the model class for table "Exam".
  *
  * @property int $id
- * @property int $course_id
- * @property int $semestr_id
- * @property int $subject_id
- * @property int $file
- * @property int $ball
  * @property int $question
- * @property int $lang_id
- * @property int $level
- * @property int $question_type_id
+ * @property int $question_id
+ * @property int $percent
+ * @property int $ball
  *
  * @property int|null $order
  * @property int|null $status
@@ -123,7 +118,7 @@ class SubQuestion extends \yii\db\ActiveRecord
             'question_id',
             'percent',
             'ball',
-            
+
 
             // 'order',
             // 'status',
@@ -181,7 +176,7 @@ class SubQuestion extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [['Subject ']].
+     * Gets query for [['Subject']].
      * Subject
      * @return \yii\db\ActiveQuery
      */
@@ -214,20 +209,6 @@ class SubQuestion extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-
-        // question file saqlaymiz
-        $model->question_file = UploadedFile::getInstancesByName('question_file');
-        if ($model->question_file) {
-            $model->question_file = $model->question_file[0];
-            $questionFileUrl = $model->uploadFile();
-            if ($questionFileUrl) {
-                $model->file = $questionFileUrl;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        // ***
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -248,22 +229,7 @@ class SubQuestion extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        $oldFile = $model->file;
-        // question file saqlaymiz
-        $model->question_file = UploadedFile::getInstancesByName('question_file');
-        if ($model->question_file) {
-            $model->question_file = $model->question_file[0];
-            $questionFileUrl = $model->uploadFile();
-            if ($questionFileUrl) {
-                $model->file = $questionFileUrl;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        // ***
-
-        if ($model->save()) {
-            $model->deleteFile($oldFile);
+        if ($model->save()) { 
             $transaction->commit();
             return true;
         } else {
@@ -277,6 +243,7 @@ class SubQuestion extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = Current_user_id();
+            
         } else {
             $this->updated_by = Current_user_id();
         }
@@ -303,34 +270,4 @@ class SubQuestion extends \yii\db\ActiveRecord
         return $array;
     }
 
-
-    public function uploadFile()
-    {
-        if ($this->validate()) {
-            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
-                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
-            }
-            if ($this->isNewRecord) {
-                $fileName = Question::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
-            } else {
-                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
-            }
-            $miniUrl = self::UPLOADS_FOLDER . $fileName;
-            $url = STORAGE_PATH . $miniUrl;
-            $this->question_file->saveAs($url, false);
-            return "storage/" . $miniUrl;
-        } else {
-            return false;
-        }
-    }
-
-    public function deleteFile($oldFile = NULL)
-    {
-        if (isset($oldFile)) {
-            if (file_exists(HOME_PATH . $oldFile)) {
-                unlink(HOME_PATH  . $oldFile);
-            }
-        }
-        return true;
-    }
 }

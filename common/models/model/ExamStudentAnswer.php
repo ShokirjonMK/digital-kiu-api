@@ -191,7 +191,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
      */
     public function getQuestionForExamStudentAnswer()
     {
-        return $this->hasOne(Question::className(), ['id' => 'question_id']);
+        return $this->hasOne(Question::className(), ['id' => 'question_id'])->with(['subQuestions']);
     }
 
     /**
@@ -250,7 +250,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $exam_times = [];
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
-            $checkPassword = $exam->id . $exam->edu_semestr_subject_id . $student_id;
 
             if ($exam) {
                 $ExamStudentHas = ExamStudent::find()->where([
@@ -330,7 +329,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     'subject_id' => $subject_id,
                                     'semestr_id' => $semestr_id,
                                     'lang_id' => $student_lang_id,
-                                    'question_type_id' => $type
+                                    'question_type_id' => $type,
+                                    'status' => 1,
+                                    'is_deleted' => 0
                                 ])
                                 ->orderBy(new Expression('rand()'))
                                 ->limit($question_count)

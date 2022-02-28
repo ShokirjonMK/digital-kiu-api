@@ -8,21 +8,17 @@ use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "Exam".
+ * This is the model class for table "Question".
  *
  * @property int $id
- * @property int $course_id
- * @property int $semestr_id
- * @property int $subject_id
- * @property int $file
+ * @property int $student_id
+ * @property int $exam_id
+ * @property int $teacher_id
  * @property int $ball
- * @property int $question
- * @property int $lang_id
- * @property int $level
- * @property int $question_type_id
- *
- * @property int|null $order
- * @property int|null $status
+ * @property int $attempt
+ * @property int $order
+ * @property int $status
+ * 
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
@@ -116,13 +112,11 @@ class Question extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-
             'student_id' => 'Student Id',
             'exam_id' => 'Exam Id',
             'teacher_id' => 'Teacher Id',
             'ball' => 'Ball',
             'attempt' => 'Attempt',
-
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -141,6 +135,9 @@ class Question extends \yii\db\ActiveRecord
             'course_id',
             'semestr_id',
             'subject_id',
+            'subQuestion' => function ($model) {
+                return $model->subQuestions ?? [];
+            },
             'question_file' => function ($model) {
                 return $model->file ?? '';
             },
@@ -175,6 +172,7 @@ class Question extends \yii\db\ActiveRecord
             'subject',
             'lang',
             'questionType',
+            'subQuestions',
 
             'createdBy',
             'updatedBy',
@@ -229,13 +227,23 @@ class Question extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [['Languages ']].
+     * Gets query for [['Languages']].
      * Languages
      * @return \yii\db\ActiveQuery
      */
     public function getLang()
     {
         return $this->hasOne(Languages::className(), ['id' => 'lang_id']);
+    }
+
+    /**
+     * Gets query for [['SubQuestions']].
+     * SubQuestions
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubQuestions()
+    {
+        return $this->hasMany(SubQuestion::className(), ['question_id' => 'id']);
     }
 
     public static function createItem($model, $post)
@@ -260,7 +268,33 @@ class Question extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
+        $subQuestionPescent = 0;
+
         if ($model->save()) {
+
+            if (isset($post['sub_question'])) {
+                if ($post['sub_question'] != null && $post['sub_question'] != "") {
+                    $post['sub_question'] = str_replace("'", "", $post['sub_question']);
+                    $sub_question = json_decode(str_replace("'", "", $post['sub_question']));
+
+                    foreach ($sub_question as $percent => $question) {
+                        $subQuestionNew = new SubQuestion();
+                        $subQuestionNew->question = $question;
+                        $subQuestionNew->percent = $percent;
+                        $subQuestionNew->ball = $model->ball ? $model->ball * $percent / 100 : null;
+                        $subQuestionNew->question_id = $model->id;
+                        $subQuestionNew->save();
+                        $subQuestionPescent += $percent;
+                    }
+                    if ($subQuestionPescent != 100) {
+                        $errors[] = _e('Sum of percent(' . $subQuestionPescent . ') of SubQuestion\'s is must be 100%');
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
+                }
+            }
+
             $transaction->commit();
             return true;
         } else {
@@ -292,6 +326,29 @@ class Question extends \yii\db\ActiveRecord
         // ***
 
         if ($model->save()) {
+            $subQuestionPescent = 0;
+            if (isset($post['sub_question'])) {
+                if ($post['sub_question'] != null && $post['sub_question'] != "") {
+                    $post['sub_question'] = str_replace("'", "", $post['sub_question']);
+                    $sub_question = json_decode(str_replace("'", "", $post['sub_question']));
+                    SubQuestion::deleteAll(['question_id' => $model->id]);
+                    foreach ($sub_question as $percent => $question) {
+                        $subQuestionNew = new SubQuestion();
+                        $subQuestionNew->question = $question;
+                        $subQuestionNew->percent = $percent;
+                        $subQuestionNew->ball = $model->ball ? $model->ball * $percent / 100 : null;
+                        $subQuestionNew->question_id = $model->id;
+                        $subQuestionNew->save();
+                        $subQuestionPescent += $percent;
+                    }
+                    if ($subQuestionPescent != 100) {
+                        $errors[] = _e('Sum of percent(' . $subQuestionPescent . ') of SubQuestion\'s is must be 100%');
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
+                }
+            }
+
             $model->deleteFile($oldFile);
             $transaction->commit();
             return true;

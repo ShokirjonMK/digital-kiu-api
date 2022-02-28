@@ -14,7 +14,7 @@ class m220127_130811_create_subject_content_table extends Migration
     {
         $this->createTable('{{%subject_content}}', [
             'id' => $this->primaryKey(),
-            'content' => $this->text()->notNull(),
+            'content' => $this->text()->Null(),
             'type' => $this->integer()->notNull(),
             'subject_topic_id' => $this->integer()->notNull(),
             'description' => $this->string()->Null(),

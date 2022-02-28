@@ -74,7 +74,8 @@ $controllers = [
     'citizenship',
     'notification',
     'notification-role',
-    'nationality'
+    'nationality',
+    'test-get-data'
 
 ];
 

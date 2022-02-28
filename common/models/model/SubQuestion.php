@@ -30,7 +30,7 @@ use yii\web\UploadedFile;
  * @property int $is_deleted
  *
  */
-class Question extends \yii\db\ActiveRecord
+class SubQuestion extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -44,17 +44,12 @@ class Question extends \yii\db\ActiveRecord
     }
 
 
-    const UPLOADS_FOLDER = 'uploads/question_files/';
-    public $question_file;
-    public $questionFileMaxSize = 1024 * 1024 * 3; // 3 Mb
-
-
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'question';
+        return 'sub_question';
     }
 
     /**
@@ -67,25 +62,18 @@ class Question extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    // 'course_id',
-                    'semestr_id',
-                    'subject_id',
-                    'ball',
                     'question',
-                    'lang_id',
-                    'question_type_id'
+                    'question_id',
+                    'percent',
+                    'ball',
                 ],
                 'required'
             ],
-
             [
                 [
-                    'course_id',
-                    'semestr_id',
-                    'subject_id',
-                    'lang_id',
-                    'level',
-                    'question_type_id',
+                    'question_id',
+                    'percent',
+
                     'order',
                     'status',
                     'created_at',
@@ -96,16 +84,10 @@ class Question extends \yii\db\ActiveRecord
                 ],
                 'integer'
             ],
-
-            [['file'], 'string', 'max' => 255],
             [['ball'], 'double'],
 
-            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
-            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
-            [['question_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => QuestionType::className(), 'targetAttribute' => ['question_type_id' => 'id']],
-            [['question_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->questionFileMaxSize],
+            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
+
         ];
     }
 
@@ -117,11 +99,10 @@ class Question extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
 
-            'student_id' => 'Student Id',
-            'exam_id' => 'Exam Id',
-            'teacher_id' => 'Teacher Id',
+            'question' => 'Question',
+            'question_id' => 'Question Id',
+            'percent' => 'Percent',
             'ball' => 'Ball',
-            'attempt' => 'Attempt',
 
             'order' => 'Order',
             'status' => 'Status',
@@ -138,21 +119,11 @@ class Question extends \yii\db\ActiveRecord
         $fields = [
             'id',
 
-            'course_id',
-            'semestr_id',
-            'subject_id',
-            'question_file' => function ($model) {
-                return $model->file ?? '';
-            },
-            'options' => function ($model) {
-                return $model->options ?? [];
-            },
-            'file',
-            'ball',
             'question',
-            'lang_id',
-            'level',
-            'question_type_id',
+            'question_id',
+            'percent',
+            'ball',
+            
 
             // 'order',
             // 'status',

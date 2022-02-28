@@ -287,7 +287,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $t = false;
                     }
                 }
-
                 if ($t) {
                     // $now_date = date('Y-m-d H:i:s');
                     $now_second = time();

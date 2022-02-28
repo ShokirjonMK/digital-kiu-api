@@ -71,8 +71,8 @@ class SubjectContent extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'content',
-                    'type',
+//                    'content',
+//                    'type',
                     'subject_topic_id',
                 ],
                 'required'

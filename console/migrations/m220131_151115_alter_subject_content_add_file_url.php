@@ -25,18 +25,5 @@ class m220131_151115_alter_subject_content_add_file_url extends Migration
         return false;
     }
 
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
 
-    }
-
-    public function down()
-    {
-        echo "m220131_151115_alter_subject_content_add_file_url cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

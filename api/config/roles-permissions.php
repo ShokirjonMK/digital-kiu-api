@@ -6,6 +6,9 @@ return [
     'rector' => [
         'password_index',
         'password_update',
+        'user_logout',
+        'user_me',
+
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -31,6 +34,8 @@ return [
     'prorector' => [
         'password_index',
         'password_update',
+        'user_logout',
+        'user_me',
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',

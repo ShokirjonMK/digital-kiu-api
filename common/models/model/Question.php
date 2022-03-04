@@ -279,15 +279,19 @@ class Question extends \yii\db\ActiveRecord
                     $sub_question = json_decode(str_replace("'", "", $post['sub_question']));
 
                     foreach ($sub_question as $sub_question_one) {
-                        $subQuestionNew = new SubQuestion();
-                        $subQuestionNew->question = $sub_question_one->question;
-                        $subQuestionNew->percent = $sub_question_one->percent;
-                        $subQuestionNew->ball = isset($model->ball) ? ($model->ball * $sub_question_one->percent / 100) : 0;
-                        $subQuestionNew->question_id = $model->id;
-                        if (!$subQuestionNew->save()) {
-                            $errors['subQuestion'][] =  $subQuestionNew->errors;
+                        if (isset($sub_question_one->question) && isset($sub_question_one->percent)) {
+                            $subQuestionNew = new SubQuestion();
+                            $subQuestionNew->question = $sub_question_one->question;
+                            $subQuestionNew->percent = $sub_question_one->percent;
+                            $subQuestionNew->ball = isset($model->ball) ? ($model->ball * $sub_question_one->percent / 100) : 0;
+                            $subQuestionNew->question_id = $model->id;
+                            if (!$subQuestionNew->save()) {
+                                $errors['subQuestion'][] =  $subQuestionNew->errors;
+                            }
+                            $subQuestionPescent += $sub_question_one->percent;
+                        } else {
+                            $errors['subQuestion'] = _e('question and percent are required');
                         }
-                        $subQuestionPescent += $sub_question_one->percent;
                     }
                     if ($subQuestionPescent != 100) {
                         $errors[] = _e('Sum of percent(' . $subQuestionPescent . ') of SubQuestion\'s is must be 100%');
@@ -337,15 +341,19 @@ class Question extends \yii\db\ActiveRecord
                     SubQuestion::deleteAll(['question_id' => $model->id]);
 
                     foreach ($sub_question as $sub_question_one) {
-                        $subQuestionNew = new SubQuestion();
-                        $subQuestionNew->question = $sub_question_one->question;
-                        $subQuestionNew->percent = $sub_question_one->percent;
-                        $subQuestionNew->ball = isset($model->ball) ? ($model->ball * $sub_question_one->percent / 100) : 0;
-                        $subQuestionNew->question_id = $model->id;
-                        if (!$subQuestionNew->save()) {
-                            $errors['subQuestion'][] =  $subQuestionNew->errors;
+                        if (isset($sub_question_one->question) && isset($sub_question_one->percent)) {
+                            $subQuestionNew = new SubQuestion();
+                            $subQuestionNew->question = $sub_question_one->question;
+                            $subQuestionNew->percent = $sub_question_one->percent;
+                            $subQuestionNew->ball = isset($model->ball) ? ($model->ball * $sub_question_one->percent / 100) : 0;
+                            $subQuestionNew->question_id = $model->id;
+                            if (!$subQuestionNew->save()) {
+                                $errors['subQuestion'][] =  $subQuestionNew->errors;
+                            }
+                            $subQuestionPescent += $sub_question_one->percent;
+                        } else {
+                            $errors['subQuestion'] = _e('question and percent are required');
                         }
-                        $subQuestionPescent += $sub_question_one->percent;
                     }
                     if ($subQuestionPescent != 100) {
                         $errors[] = _e('Sum of percent(' . $subQuestionPescent . ') of SubQuestion\'s is must be 100%');

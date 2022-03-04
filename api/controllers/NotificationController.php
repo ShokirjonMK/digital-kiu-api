@@ -70,26 +70,28 @@ class NotificationController extends ApiActiveController
         }
 
         if (Yii::$app->request->get('all') == 1) {
-            $data = NotificationUser::find()
+            $query = NotificationUser::find()
                 // ->andWhere(['status' => 1])
                 ->andWhere(['user_id' => current_user_id()])
-                ->all();
+                // ->all()
+            ;
         } else {
-            $data = NotificationUser::find()
+            $query = NotificationUser::find()
                 ->andWhere(['status' => 1])
                 ->andWhere(['user_id' => current_user_id()])
-                ->all();
+                // ->all()
+            ;
         }
 
 
-        // // filter
-        // $query = $this->filterAll($query, $model);
+        // filter
+        $query = $this->filterAll($query, $model);
 
-        // // sort
-        // $query = $this->sort($query);
+        // sort
+        $query = $this->sort($query);
 
-        // // data
-        // $data =  $this->getData($query);
+        // data
+        $data =  $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);
     }

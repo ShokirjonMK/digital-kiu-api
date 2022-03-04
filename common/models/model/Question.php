@@ -145,7 +145,7 @@ class Question extends \yii\db\ActiveRecord
                 return $model->options ?? [];
             },
             'file',
-            'ball',
+            // 'ball',
             'question',
             'lang_id',
             'level',
@@ -278,14 +278,16 @@ class Question extends \yii\db\ActiveRecord
                     $post['sub_question'] = str_replace("'", "", $post['sub_question']);
                     $sub_question = json_decode(str_replace("'", "", $post['sub_question']));
 
-                    foreach ($sub_question as $percent => $question) {
+                    foreach ($sub_question as $sub_question_one) {
                         $subQuestionNew = new SubQuestion();
-                        $subQuestionNew->question = $question;
-                        $subQuestionNew->percent = $percent;
-                        $subQuestionNew->ball = $model->ball ? $model->ball * $percent / 100 : null;
+                        $subQuestionNew->question = $sub_question_one->question;
+                        $subQuestionNew->percent = $sub_question_one->percent;
+                        $subQuestionNew->ball = isset($model->ball) ? ($model->ball * $sub_question_one->percent / 100) : 0;
                         $subQuestionNew->question_id = $model->id;
-                        $subQuestionNew->save();
-                        $subQuestionPescent += $percent;
+                        if (!$subQuestionNew->save()) {
+                            $errors['subQuestion'][] =  $subQuestionNew->errors;
+                        }
+                        $subQuestionPescent += $sub_question_one->percent;
                     }
                     if ($subQuestionPescent != 100) {
                         $errors[] = _e('Sum of percent(' . $subQuestionPescent . ') of SubQuestion\'s is must be 100%');
@@ -294,13 +296,14 @@ class Question extends \yii\db\ActiveRecord
                     }
                 }
             }
-
-            $transaction->commit();
-            return true;
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
+            if (count($errors) == 0) {
+                $transaction->commit();
+                return true;
+            }
         }
+
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
     public static function updateItem($model, $post)
@@ -332,14 +335,17 @@ class Question extends \yii\db\ActiveRecord
                     $post['sub_question'] = str_replace("'", "", $post['sub_question']);
                     $sub_question = json_decode(str_replace("'", "", $post['sub_question']));
                     SubQuestion::deleteAll(['question_id' => $model->id]);
-                    foreach ($sub_question as $percent => $question) {
+
+                    foreach ($sub_question as $sub_question_one) {
                         $subQuestionNew = new SubQuestion();
-                        $subQuestionNew->question = $question;
-                        $subQuestionNew->percent = $percent;
-                        $subQuestionNew->ball = $model->ball ? $model->ball * $percent / 100 : null;
+                        $subQuestionNew->question = $sub_question_one->question;
+                        $subQuestionNew->percent = $sub_question_one->percent;
+                        $subQuestionNew->ball = isset($model->ball) ? ($model->ball * $sub_question_one->percent / 100) : 0;
                         $subQuestionNew->question_id = $model->id;
-                        $subQuestionNew->save();
-                        $subQuestionPescent += $percent;
+                        if (!$subQuestionNew->save()) {
+                            $errors['subQuestion'][] =  $subQuestionNew->errors;
+                        }
+                        $subQuestionPescent += $sub_question_one->percent;
                     }
                     if ($subQuestionPescent != 100) {
                         $errors[] = _e('Sum of percent(' . $subQuestionPescent . ') of SubQuestion\'s is must be 100%');
@@ -348,14 +354,16 @@ class Question extends \yii\db\ActiveRecord
                     }
                 }
             }
+            if (count($errors) == 0) {
 
-            $model->deleteFile($oldFile);
-            $transaction->commit();
-            return true;
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
+                $model->deleteFile($oldFile);
+                $transaction->commit();
+                return true;
+            }
         }
+
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
 

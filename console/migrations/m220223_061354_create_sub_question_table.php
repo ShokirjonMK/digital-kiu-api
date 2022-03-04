@@ -19,7 +19,7 @@ class m220223_061354_create_sub_question_table extends Migration
             'question_id' => $this->integer()->notNull()->comment('Tirkama savol ushbu salovga choshimcha  yozilati'),
 
             'percent' => $this->integer()->notNull(),
-            'ball' => $this->double()->notNull(),
+            'ball' => $this->double()->Null(),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

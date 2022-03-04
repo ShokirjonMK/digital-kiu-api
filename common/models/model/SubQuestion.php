@@ -60,7 +60,7 @@ class SubQuestion extends \yii\db\ActiveRecord
                     'question',
                     'question_id',
                     'percent',
-                    'ball',
+                    // 'ball',
                 ],
                 'required'
             ],
@@ -117,7 +117,7 @@ class SubQuestion extends \yii\db\ActiveRecord
             'question',
             'question_id',
             'percent',
-            'ball',
+            // 'ball',
 
 
             // 'order',
@@ -229,7 +229,7 @@ class SubQuestion extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        if ($model->save()) { 
+        if ($model->save()) {
             $transaction->commit();
             return true;
         } else {
@@ -243,7 +243,6 @@ class SubQuestion extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = Current_user_id();
-            
         } else {
             $this->updated_by = Current_user_id();
         }
@@ -269,5 +268,4 @@ class SubQuestion extends \yii\db\ActiveRecord
 
         return $array;
     }
-
 }

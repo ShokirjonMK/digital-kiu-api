@@ -66,7 +66,7 @@ class Question extends \yii\db\ActiveRecord
                     // 'course_id',
                     'semestr_id',
                     'subject_id',
-                    'ball',
+                    // 'ball',
                     'question',
                     'lang_id',
                     'question_type_id'

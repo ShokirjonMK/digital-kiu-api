@@ -83,7 +83,6 @@ class NotificationController extends ApiActiveController
             ;
         }
 
-
         // filter
         $query = $this->filterAll($query, $model);
 

@@ -19,7 +19,7 @@ class m211204_055037_create_question_table extends Migration
             'semestr_id' => $this->integer()->notNull(),
             'subject_id' => $this->integer()->notNull(),
             'file' => $this->string(255)->Null(),
-            'ball' => $this->double()->notNull(),
+            'ball' => $this->double()->Null(),
             'question' => $this->text()->notNull()->comment('Savol matni yozilati'),
             'lang_id' => $this->integer()->notNull(),
             'level' => $this->tinyInteger(1)->defaultValue(1)->comment("Qiyinlilik darajasi 1-oson, 2-o\'rta, 3-murakkab"),

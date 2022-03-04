@@ -108,6 +108,7 @@ class AuthItem extends CommonAuthItem
                             }
                         }
                     }
+
                     foreach ($obj->parents as $parent) {
                         $hasParent = AuthChild::findOne(['parent' => $parent, 'child' => $obj->role]);
                         $hasParentChild = AuthChild::findOne(['child' => $parent, 'parent' => $obj->role]);
@@ -118,15 +119,16 @@ class AuthItem extends CommonAuthItem
                             $authChildModel->save();
                         }
                     }
-
-                    foreach ($obj->childs as $child) {
-                        $hasChild = AuthChild::findOne(['parent' => $obj->role, 'child' => $child]);
-                        $hasChildParent = AuthChild::findOne(['child' => $obj->role, 'parent' => $child]);
-                        if (!$hasChild && !$hasChildParent) {
-                            $authChildModel = new AuthChild();
-                            $authChildModel->parent = $obj->role;
-                            $authChildModel->child = $child;
-                            $authChildModel->save();
+                    if (isset($obj->childs)) {
+                        foreach ($obj->childs as $child) {
+                            $hasChild = AuthChild::findOne(['parent' => $obj->role, 'child' => $child]);
+                            $hasChildParent = AuthChild::findOne(['child' => $obj->role, 'parent' => $child]);
+                            if (!$hasChild && !$hasChildParent) {
+                                $authChildModel = new AuthChild();
+                                $authChildModel->parent = $obj->role;
+                                $authChildModel->child = $child;
+                                $authChildModel->save();
+                            }
                         }
                     }
                 }
@@ -161,6 +163,7 @@ class AuthItem extends CommonAuthItem
                 if (!$role) {
                     $errors[] = [_e('Role \'{role}\' not found.', ['role' => $obj->role])];
                 } else {
+                    $role->description = $obj->description;
                     AuthItemChild::deleteAll(['parent' => $obj->role]);
                     foreach ($obj->permissions as $permission) {
                         // check permission
@@ -186,15 +189,16 @@ class AuthItem extends CommonAuthItem
                             $authChildModel->save();
                         }
                     }
-
-                    foreach ($obj->childs as $child) {
-                        $hasChild = AuthChild::findOne(['parent' => $obj->role, 'child' => $child]);
-                        $hasChildParent = AuthChild::findOne(['child' => $obj->role, 'parent' => $child]);
-                        if (!$hasChild && !$hasChildParent) {
-                            $authChildModel = new AuthChild();
-                            $authChildModel->parent = $obj->role;
-                            $authChildModel->child = $child;
-                            $authChildModel->save();
+                    if (isset($obj->childs)) {
+                        foreach ($obj->childs as $child) {
+                            $hasChild = AuthChild::findOne(['parent' => $obj->role, 'child' => $child]);
+                            $hasChildParent = AuthChild::findOne(['child' => $obj->role, 'parent' => $child]);
+                            if (!$hasChild && !$hasChildParent) {
+                                $authChildModel = new AuthChild();
+                                $authChildModel->parent = $obj->role;
+                                $authChildModel->child = $child;
+                                $authChildModel->save();
+                            }
                         }
                     }
                 }
@@ -202,13 +206,14 @@ class AuthItem extends CommonAuthItem
         }
 
         if (count($errors) == 0) {
-            $transaction->commit();
-            Yii::$app->authManager->invalidateCache();
-            return true;
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
+            if ($role->save()) {
+                $transaction->commit();
+                Yii::$app->authManager->invalidateCache();
+                return true;
+            }
         }
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
     public static function deleteRole($role)

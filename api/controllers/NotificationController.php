@@ -2,11 +2,12 @@
 
 namespace api\controllers;
 
-
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Notification;
 use common\models\model\NotificationRole;
+use common\models\model\NotificationRoleName;
+use common\models\model\NotificationUser;
 
 class NotificationController extends ApiActiveController
 {
@@ -20,7 +21,7 @@ class NotificationController extends ApiActiveController
     public $table_name = 'notification';
     public $controller_name = 'Notification';
 
-    public function actionIndex($lang)
+    public function actionMy($lang)
     {
         $model = new Notification();
 
@@ -31,6 +32,7 @@ class NotificationController extends ApiActiveController
             //faqat o'zi yaratgan notiflarni berish
             ->andWhere([$this->table_name . '.created_by' => current_user_id()])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -43,20 +45,53 @@ class NotificationController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-    public function actionMy($lang)
+    public function actionIndex($lang)
     {
         $model = new NotificationRole();
         $table = 'notification_role';
         $tableUser = 'notification_user';
 
-        $query = $model->find()
+        $notification_user = NotificationUser::find()->select('notification_id')->where(['user_id' => current_user_id()]);
+
+        $notification_role_user = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin($this->table_name, "$table.notification_id = $this->table_name.id ")
             ->andWhere(['in', $table . '.role', current_user_roles_array()])
+            ->andWhere(['not in', $table . '.notification_id', $notification_user])
             ->all();
 
+        foreach ($notification_role_user as $nruOne) {
+            $notificationUserNew = new NotificationUser();
+            $notificationUserNew->notification_id = $nruOne->notification_id;
+            $notificationUserNew->notification_role_id = $nruOne->id;
+            $notificationUserNew->user_id = current_user_id();
+            $notificationUserNew->status = NotificationUser::STATUS_ACTIVE;
+            $notificationUserNew->save();
+        }
 
-        return $this->response(1, _e('Success'), $query);
+        if (Yii::$app->request->get('all') == 1) {
+            $data = NotificationUser::find()
+                // ->andWhere(['status' => 1])
+                ->andWhere(['user_id' => current_user_id()])
+                ->all();
+        } else {
+            $data = NotificationUser::find()
+                ->andWhere(['status' => 1])
+                ->andWhere(['user_id' => current_user_id()])
+                ->all();
+        }
+
+
+        // // filter
+        // $query = $this->filterAll($query, $model);
+
+        // // sort
+        // $query = $this->sort($query);
+
+        // // data
+        // $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
     }
 
     public function actionCreate($lang)
@@ -71,6 +106,25 @@ class NotificationController extends ApiActiveController
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+    }
+
+    public function actionApproved($lang, $id)
+    {
+        $model = NotificationUser::findOne(['id' => $id, 'user_id' => current_user_id()]);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        $post = Yii::$app->request->post();
+
+        if (isset($post['status'])) {
+            if ((array_key_exists($post['status'], NotificationUser::statusList()))) {
+                $model->status = (int)$post['status'];
+                if ($model->save()) {
+                    return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+                }
+            }
+        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
     }
 
     public function actionUpdate($lang, $id)
@@ -126,5 +180,10 @@ class NotificationController extends ApiActiveController
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+    }
+
+    public function actionStatusList()
+    {
+        return $this->response(1, _e('Success.'), NotificationUser::statusList(), null, ResponseStatus::OK);
     }
 }

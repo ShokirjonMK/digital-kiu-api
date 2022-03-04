@@ -79,25 +79,26 @@ class NotificationRole extends \yii\db\ActiveRecord
         ];
     }
 
+    /*
     public function fields()
     {
         $fields =  [
-            'id',
-            'name' => function ($model) {
-                return $model->notification->translate->name ?? '';
-            },
+            // 'id',
+            // 'name' => function ($model) {
+            //     return $model->notification->translate->name ?? '';
+            // },
             'role',
-            'order',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+            // 'order',
+            // 'status',
+            // 'created_at',
+            // 'updated_at',
+            // 'created_by',
+            // 'updated_by',
 
         ];
 
         return $fields;
-    }
+    } */
 
     public function extraFields()
     {

@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\resources\AuthItem;
 use api\resources\ResourceTrait;
 use api\resources\User;
 use Yii;
@@ -50,9 +51,9 @@ class AuthChild extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-             [['parent','child'], 'required'],
+            [['parent', 'child'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['parent','child'], 'string', 'max' => 255],
+            [['parent', 'child'], 'string', 'max' => 255],
         ];
     }
 
@@ -63,8 +64,8 @@ class AuthChild extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-             'parent' => 'Parent',
-             'child' => 'Child',
+            'parent' => 'Parent',
+            'child' => 'Child',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -82,6 +83,10 @@ class AuthChild extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->child ?? '';
             },
+
+            'pretty_name' => function ($model) {
+                return $model->prettyName->description ?? '';
+            },
             'parent',
             'order',
             'status',
@@ -93,6 +98,11 @@ class AuthChild extends \yii\db\ActiveRecord
         ];
 
         return $fields;
+    }
+
+    public function getPrettyName()
+    {
+        return $this->hasOne(AuthItem::className(), ['name' => 'child']);
     }
 
 

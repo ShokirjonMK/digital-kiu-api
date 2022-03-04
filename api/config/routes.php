@@ -145,6 +145,10 @@ $routes = [
 
     // My Notifications
     'GET <lang:\w{2}>/notifications/my' => 'notification/my',
+    // Notifications Status list
+    'GET <lang:\w{2}>/notifications/status-list' => 'notification/status-list',
+    // Notifications Approved (tasdiqlavoring)
+    'PUT <lang:\w{2}>/notifications/approved/<id>' => 'notification/approved',
 
     // Roles and permissions endpoint
     'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list

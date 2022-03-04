@@ -90,7 +90,7 @@ class AuthItem extends CommonAuthItem
                 $role = new AuthItem();
                 $role->type = AuthItem::TYPE_ROLE;
                 $role->name = $obj->role;
-                $role->description = $obj->role;
+                $role->description = $obj->description;
                 if (!$role->save()) {
                     $errors[] = $role->getErrorSummary(true);
                 } else {
@@ -129,8 +129,6 @@ class AuthItem extends CommonAuthItem
                             $authChildModel->save();
                         }
                     }
-
-
                 }
             }
         }
@@ -176,6 +174,27 @@ class AuthItem extends CommonAuthItem
                             if (!$authItemChild->save()) {
                                 $errors[] = $authItemChild->getErrorSummary(true);
                             }
+                        }
+                    }
+                    foreach ($obj->parents as $parent) {
+                        $hasParent = AuthChild::findOne(['parent' => $parent, 'child' => $obj->role]);
+                        $hasParentChild = AuthChild::findOne(['child' => $parent, 'parent' => $obj->role]);
+                        if (!$hasParent && !$hasParentChild) {
+                            $authChildModel = new AuthChild();
+                            $authChildModel->parent = $parent;
+                            $authChildModel->child = $obj->role;
+                            $authChildModel->save();
+                        }
+                    }
+
+                    foreach ($obj->childs as $child) {
+                        $hasChild = AuthChild::findOne(['parent' => $obj->role, 'child' => $child]);
+                        $hasChildParent = AuthChild::findOne(['child' => $obj->role, 'parent' => $child]);
+                        if (!$hasChild && !$hasChildParent) {
+                            $authChildModel = new AuthChild();
+                            $authChildModel->parent = $obj->role;
+                            $authChildModel->child = $child;
+                            $authChildModel->save();
                         }
                     }
                 }

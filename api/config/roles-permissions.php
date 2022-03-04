@@ -8,6 +8,9 @@ return [
         'password_update',
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'access-control_roles',
         'access-control_permissions',
@@ -36,6 +39,9 @@ return [
         'password_update',
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -75,6 +81,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'user_status-list',
         'user_index',
@@ -228,6 +237,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'user_status-list',
         'user_index',
@@ -355,6 +367,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'user_status-list',
         'user_index',
@@ -478,6 +493,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'user_status-list',
         'user_index',
@@ -617,6 +635,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'user_status-list',
         'user_index',
@@ -650,6 +671,9 @@ return [
         'enum_yesno',
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
         ////
 
 
@@ -715,6 +739,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'user_status-list',
         'languages_index',
@@ -761,6 +788,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'department_update',
         'department_view',
@@ -836,6 +866,9 @@ return [
 
         'user_logout',
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
 
         'exam-teacher-check_index',
         'exam-teacher-check_update',
@@ -852,6 +885,9 @@ return [
     /* Student  */
     'student' => [
         'user_me',
+        'notification_approved',
+        'notification_status-list',
+
         'user_logout',
 
         'password_index',
@@ -927,7 +963,8 @@ return [
 
         'exam-student-answer_get-question',
 
-
+        'subject-topic_index',
+        'subject-content_index',
     ],
 
 ];

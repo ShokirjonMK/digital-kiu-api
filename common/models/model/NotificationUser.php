@@ -36,6 +36,10 @@ class NotificationUser extends \yii\db\ActiveRecord
         ];
     }
 
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_APPROVED = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -86,10 +90,11 @@ class NotificationUser extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'name' => function ($model) {
-                return $model->translate->name ?? '';
+            'notification' => function ($model) {
+                return $model->notification->translate->name ?? '';
             },
-            'notification_role_id',
+            // 'user_id',
+            // 'notification_role_id',
             'notification_id',
             'order',
             'status',
@@ -106,8 +111,9 @@ class NotificationUser extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+            'statusName',
             'user',
-            'notification',
+            // 'notification',
             'notificationRole',
             'description',
             'createdBy',
@@ -115,34 +121,6 @@ class NotificationUser extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
-    }
-
-    public function getTranslate()
-    {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
-
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
-
-    public function getDescription()
-    {
-        return $this->translate->description ?? '';
-    }
-
-    public function getInfoRelation()
-    {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(Translate::class, ['model_id' => 'id'])
-            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
-    }
-
-    public function getInfoRelationDefaultLanguage()
-    {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(Translate::class, ['model_id' => 'id'])
-            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
     /**
@@ -155,6 +133,11 @@ class NotificationUser extends \yii\db\ActiveRecord
         return $this->hasOne(Notification::className(), ['id' => 'notification_id']);
     }
 
+    public function getDescription()
+    {
+        return $this->notification->translate->description ?? "";
+    }
+
     /**
      * Gets query for [[NotificationRole]].
      * notification
@@ -165,36 +148,9 @@ class NotificationUser extends \yii\db\ActiveRecord
         return $this->hasOne(NotificationRole::className(), ['id' => 'notification_role_id']);
     }
 
-
-    public static function createItem($model, $post)
+    public function getStatusName()
     {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-
-        $has_error = Translate::checkingAll($post);
-
-        if ($has_error['status']) {
-            if ($model->save()) {
-                if (isset($post['name'])) {
-                    if (isset($post['description'])) {
-                        Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                    } else {
-                        Translate::createTranslate($post['name'], $model->tableName(), $model->id);
-                    }
-                }
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-        } else {
-            $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
-        }
+        return   $this->statusList()[$this->status];
     }
 
     public static function updateItem($model, $post)
@@ -204,33 +160,32 @@ class NotificationUser extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        $has_error = Translate::checkingUpdate($post);
-        if ($has_error['status']) {
-            if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
-                }
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
         } else {
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_INACTIVE => 'STATUS_INACTIVE',
+            self::STATUS_ACTIVE => 'STATUS_ACTIVE',
+            self::STATUS_APPROVED => 'STATUS_APPROVED',
+        ];
     }
 }

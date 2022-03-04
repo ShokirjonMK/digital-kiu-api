@@ -222,9 +222,9 @@ class Notification extends \yii\db\ActiveRecord
 
         if ($has_error['status']) {
             if ($model->save()) {
-                if (isset($post['description'])) {
+                if (isset($post['description']) && isset($post['name'])) {
                     Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
+                } elseif (isset($post['name'])) {
                     Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                 }
                 $transaction->commit();

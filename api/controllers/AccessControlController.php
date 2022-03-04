@@ -40,7 +40,7 @@ class AccessControlController extends ApiActiveController
 
         return $this->response(1, _e('Success'), $data);
     }
-    
+
     public function actionRolePermissions($role)
     {
         $model = new AuthItem();
@@ -48,16 +48,14 @@ class AccessControlController extends ApiActiveController
         $data = $model->find()
             ->where(['name' => $role])
             ->one();
-        
-        if($data){
+
+        if ($data) {
             return $this->response(1, _e('Success'), $data);
-        }else{
+        } else {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        
-        
     }
-    
+
     public function actionPermissions()
     {
         $model = new AuthItem();
@@ -65,21 +63,20 @@ class AccessControlController extends ApiActiveController
         $query = $model->find()
             ->where(['type' => AuthItem::TYPE_PERMISSION])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
-        
+
         // sort
         $query = $this->sort($query);
 
         // data
         $data =  AuthItem::getData($query);
 
-        if($data){
+        if ($data) {
             return $this->response(1, _e('Success'), $data);
-        }else{
-            return $this->response(0, _e('Data not found'), null,null);
+        } else {
+            return $this->response(0, _e('Data not found'), null, null);
         }
-        
     }
-    
+
     public function actionCreateRole()
     {
         $body = Yii::$app->request->rawBody;
@@ -91,7 +88,7 @@ class AccessControlController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
-    
+
     public function actionUpdateRole()
     {
         $body = Yii::$app->request->rawBody;
@@ -103,7 +100,7 @@ class AccessControlController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
-    
+
     public function actionDeleteRole($role)
     {
         $result = AuthItem::deleteRole($role);
@@ -113,5 +110,4 @@ class AccessControlController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
-    
 }

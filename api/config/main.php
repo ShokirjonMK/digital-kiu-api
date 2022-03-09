@@ -24,6 +24,10 @@ $main_config = array(
         'response' => [
             'format' =>  \yii\web\Response::FORMAT_JSON
         ],
+        'telegram' => [
+            'class' => 'aki\telegram\Telegram',
+            'botToken' => '5268005235:AAHo7-xdDMnGcfGL2vdMrzXMWhRfGa88_yk',
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableSession' => false,

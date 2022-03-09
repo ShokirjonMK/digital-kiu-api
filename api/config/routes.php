@@ -75,7 +75,10 @@ $controllers = [
     'notification',
     'notification-role',
     'nationality',
-    'test-get-data'
+    
+    'test-get-data',
+
+    'telegram'
 
 ];
 

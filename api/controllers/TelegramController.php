@@ -7,12 +7,11 @@ use Yii;
 use yii\db\Expression;
 use yii\rest\ActiveController;
 
-class GetTeacherController extends ActiveController
+class TelegramController extends ActiveController
 {
-
     use ApiOpen;
 
-    public $modelClass = 'api\resources\Country';
+    public $modelClass = '';
 
     public function actions()
     {

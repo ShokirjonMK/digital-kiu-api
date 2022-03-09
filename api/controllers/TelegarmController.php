@@ -2,14 +2,17 @@
 
 namespace api\controllers;
 
-use Yii;
-use api\resources\User;
 use common\models\model\Profile;
+use Yii;
 use yii\db\Expression;
+use yii\rest\ActiveController;
 
-class  StudentController extends ApiActiveController
+class GetTeacherController extends ActiveController
 {
-    public $modelClass = 'api\resources\Student';
+
+    use ApiOpen;
+
+    public $modelClass = 'api\resources\Country';
 
     public function actions()
     {

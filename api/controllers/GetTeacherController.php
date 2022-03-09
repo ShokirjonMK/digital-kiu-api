@@ -4,9 +4,7 @@ namespace api\controllers;
 
 use api\resources\GetTeacher;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\rest\ActiveController;
-use yii\rest\Controller;
 
 class GetTeacherController extends ActiveController
 {

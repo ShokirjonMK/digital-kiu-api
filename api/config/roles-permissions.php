@@ -793,8 +793,7 @@ return [
 
         'user_logout',
         'user_me',
-        'notification_approved',
-        'notification_status-list',
+     
 
 
         'department_update',

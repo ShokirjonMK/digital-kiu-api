@@ -42,7 +42,7 @@ class  StudentController extends ApiActiveController
         return $new_data;
     }
 
-    public function actionRead($lang)
+    public function actionImport($lang)
     {
         $data = [];
         $errorAll = [];
@@ -132,7 +132,7 @@ class  StudentController extends ApiActiveController
         }
     }
 
-    /*  public function actionImport($lang)
+    /*  public function actionRead($lang)
     {
         $data = [];
         $post = Yii::$app->request->post();

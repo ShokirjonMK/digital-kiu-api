@@ -659,6 +659,9 @@ return [
     'mudir' => [
         'password_index',
         'password_update',
+        'notification_approved',
+        'notification_status-list',
+
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -671,8 +674,6 @@ return [
         'enum_yesno',
         'user_logout',
         'user_me',
-        'notification_approved',
-        'notification_status-list',
 
         ////
 
@@ -725,6 +726,9 @@ return [
     'tutor' => [
         'password_index',
         'password_update',
+        'notification_approved',
+        'notification_status-list',
+
         'enum_education-degrees',
         'enum_education-types',
         'enum_educations',
@@ -739,8 +743,7 @@ return [
 
         'user_logout',
         'user_me',
-        'notification_approved',
-        'notification_status-list',
+      
 
 
         'user_status-list',
@@ -765,7 +768,7 @@ return [
         'student_delete',
 
 
-        'student_read',
+        'student_import',
     ],
 
 
@@ -773,6 +776,8 @@ return [
     'dep_lead' => [
         'password_index',
         'password_update',
+        'notification_approved',
+        'notification_status-list',
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -804,6 +809,8 @@ return [
     'hr' => [
         'password_index',
         'password_update',
+        'notification_approved',
+        'notification_status-list',
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -829,6 +836,8 @@ return [
     'hr_viewer' => [
         'password_index',
         'password_update',
+        'notification_approved',
+        'notification_status-list',
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -851,6 +860,9 @@ return [
     'teacher' => [
         'password_index',
         'password_update',
+        'notification_approved',
+        'notification_status-list',
+
         // 'access-control_roles',
         // 'access-control_permissions',
         'enum_education-degrees',
@@ -874,6 +886,10 @@ return [
         'exam-teacher-check_update',
 
         'exam-teacher-check_random-students',
+
+        'subject_index',
+        'subject_view',
+
 
         'subject-topic_index',
         'subject-topic_create',

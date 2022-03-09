@@ -1,5 +1,5 @@
-<?php
 
+<?php
 namespace backend\controllers\education;
 
 use backend\controllers\ListActionsTrait;

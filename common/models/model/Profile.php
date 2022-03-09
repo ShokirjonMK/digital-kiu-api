@@ -43,6 +43,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
+ * @property int $telegram_chat_id
  *
  * @property Area $area
  * @property Countries $country
@@ -117,7 +118,8 @@ class Profile extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
-                    'is_deleted'
+                    'is_deleted',
+                    'telegram_chat_id'
                 ],
                 'integer'
             ],
@@ -163,6 +165,7 @@ class Profile extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'telegram_chat_id' => 'Telegram Chat ID',
             'nationality_id' => 'Nationality ID',
             'image' => 'Image',
             'phone' => 'Phone',

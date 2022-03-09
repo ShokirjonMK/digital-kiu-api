@@ -16,6 +16,7 @@ class m211021_142749_profile_table extends Migration
         $this->createTable('profile', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
+            'telegram_chat_id' => $this->integer()->Null(),
             'image' => $this->string(255)->Null(),
             'phone' => $this->string(50)->Null(),
             'phone_secondary' => $this->string(50)->Null(),

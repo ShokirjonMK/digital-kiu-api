@@ -778,6 +778,7 @@ return [
         'password_update',
         'notification_approved',
         'notification_status-list',
+
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -877,8 +878,7 @@ return [
 
         'user_logout',
         'user_me',
-        'notification_approved',
-        'notification_status-list',
+        
 
 
         'exam-teacher-check_index',

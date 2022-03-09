@@ -16,7 +16,7 @@ class  StudentController extends ApiActiveController
         return [];
     }
 
-    public function actionBot()
+    public function actionIndex()
     {
         $telegram = Yii::$app->telegram;
         $text = $telegram->input->message->text;
@@ -105,14 +105,5 @@ class  StudentController extends ApiActiveController
                 ]);
             }
         }
-    }
-
-
-    public function actionIndex($lang)
-    {
-    }
-
-    public function actionCreate($lang)
-    {
     }
 }

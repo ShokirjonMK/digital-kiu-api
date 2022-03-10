@@ -254,13 +254,13 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          *  Student Edu Plan bo'yicah tekshirish
          */
 
-        // if (isset($timeTableCheck)) {
-        //     if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
-        //         $errors[] = _e('This Time Table is not for this Student');
-        // $transaction->rollBack();
-        //         return simplify_errors($errors);
-        //     }
-        // }
+        if (isset($timeTableCheck)) {
+            if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+                $errors[] = _e('This Time Table is not for you');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
 
         if (isset($hasModel)) {
             $errors[] = _e('This Student Time Table already exists ');
@@ -269,6 +269,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
+            /*
+            // Student child larini yozish
             $timeTables = TimeTable::findAll(['parent_id' => $model->time_table_id]);
             if (isset($timeTables)) {
                 foreach ($timeTables as $timeTable) {
@@ -277,7 +279,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     $newModel->time_table_id = $timeTable->id;
                     $newModel->save();
                 }
-            }
+            } */
             $transaction->commit();
             return true;
         } else {

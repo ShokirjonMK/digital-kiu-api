@@ -66,6 +66,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
                     'hours',
                     'subject_id',
                     'lang_id',
+                    'subject_category_id',
                 ],
                 'integer'
             ],
@@ -77,6 +78,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
                 'string'
             ],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+            [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
 
         ];
@@ -92,6 +94,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             'name' => 'Name',
             'hours' => 'Hours',
             'subject_id' => 'Subject Id',
+            'subject_category_id' => 'Subject Category Id',
             'lang_id' => 'Lang Id',
             'description' => 'Description',
 
@@ -112,6 +115,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             'name',
             'hours',
             'subject_id',
+            'subject_category_id',
             'lang_id',
             'description',
 
@@ -131,6 +135,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
     {
         $extraFields = [
             'subject',
+            'subjectCategory',
             'lang',
 
             'createdBy',
@@ -140,21 +145,16 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    /**
-     * Gets query for [[subject]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getSubject()
     {
         return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
     }
 
-    /**
-     * Gets query for [[Languages]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+    public function getSubjectCategory()
+    {
+        return $this->hasOne(SubjectCategory::className(), ['id' => 'subject_category_id']);
+    }
+
     public function getLang()
     {
         return $this->hasOne(Languages::className(), ['id' => 'lang_id'])->select(['id', 'name']);

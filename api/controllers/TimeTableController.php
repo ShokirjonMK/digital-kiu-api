@@ -5,6 +5,8 @@ namespace api\controllers;
 use common\models\model\TimeTable;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduSemestr;
+use common\models\model\Student;
 
 class TimeTableController extends ApiActiveController
 {
@@ -19,10 +21,20 @@ class TimeTableController extends ApiActiveController
     {
         $model = new TimeTable();
 
-        $query = $model->find()
-            ->andWhere(['is_deleted' => 0])
-            // ->andWhere(['parent_id' => null])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+        $student = Student::findOne(['user_id' => current_user_id()]);
+
+        if ($student) {
+
+            $eduSmesterIds = EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id');
+
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0]);
+
+            $query->andWhere(['in', 'edu_semester_id', $eduSmesterIds]);
+        } else {
+            $query = $model->find()
+                ->andWhere(['is_deleted' => 0]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);

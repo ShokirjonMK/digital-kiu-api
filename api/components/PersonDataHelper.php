@@ -50,8 +50,8 @@ class PersonDataHelper
 //                http://10.190.2.36
 //                http://10.0.42.3:9444
 //                http://10.0.42.3:8243
-                'host' => '10.0.42.3',
-                'port' => '9444',
+                // 'host' => '10.0.42.3',
+                // 'port' => '9444',
                 'stream_context' => stream_context_create([
                     'ssl' => [
                         'verify_peer' => false,

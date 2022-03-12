@@ -55,6 +55,12 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_videoFileMaxSize = 1024 * 1024 * 25; // 3 Mb
     public $file_audioFileMaxSize = 1024 * 1024 * 15; // 3 Mb
 
+
+    public $file_fileFileExtentions = 'pdf,doc,docx,ppt,pptx,zip';
+    public $file_imageFileExtentions = 'png,jpg,gimp,bmp,jpeg';
+    public $file_videoFileExtentions = 'mp4,avi';
+    public $file_audioFileExtentions = 'mp3,ogg';
+
     /**
      * {@inheritdoc}
      */
@@ -71,8 +77,8 @@ class SubjectContent extends \yii\db\ActiveRecord
         return [
             [
                 [
-//                    'content',
-//                    'type',
+                    //                    'content',
+                    //                    'type',
                     'subject_topic_id',
                 ],
                 'required'
@@ -151,6 +157,7 @@ class SubjectContent extends \yii\db\ActiveRecord
         $extraFields = [
             'subject',
             'subjectTopic',
+            'subjectCategory',
 
             'createdBy',
             'updatedBy',
@@ -159,26 +166,20 @@ class SubjectContent extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    /**
-     * Gets query for [[subject]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getSubject()
     {
-        return Subject::find()->where(['id' => $this->subjectTopic->subject_id])->one();
+        return $this->subjectTopic->subject;
     }
 
-    /**
-     * Gets query for [[Languages]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getSubjectTopic()
     {
         return $this->hasOne(SubjectTopic::className(), ['id' => 'subject_topic_id']);
     }
 
+    public function getSubjectCategory()
+    {
+        return $this->subjectTopic->subjectCategory;
+    }
 
     public static function createItem($model, $post)
     {
@@ -344,9 +345,9 @@ class SubjectContent extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }
@@ -360,11 +361,11 @@ class SubjectContent extends \yii\db\ActiveRecord
     public function typesArray($key = null)
     {
         $array = [
-            self::TYPE_TEXT => _e('TEXT'),
-            self::TYPE_FILE => _e('FILE'),
-            self::TYPE_IMAGE => _e('IMAGE'),
-            self::TYPE_VIDEO => _e('VIDEO'),
-            self::TYPE_AUDIO => _e('AUDIO'),
+            self::TYPE_TEXT => [_e('TEXT'), ''],
+            self::TYPE_FILE => [_e('FILE'), $this->file_fileFileMaxSize, $this->file_fileFileExtentions],
+            self::TYPE_IMAGE => [_e('IMAGE'), $this->file_imageFileMaxSize, $this->file_imageFileExtentions],
+            self::TYPE_VIDEO => [_e('VIDEO'), $this->file_videoFileMaxSize, $this->file_videoFileExtentions],
+            self::TYPE_AUDIO => [_e('AUDIO'), $this->file_audioFileMaxSize, $this->file_audioFileExtentions],
         ];
 
         if (isset($array[$key])) {
@@ -406,5 +407,4 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
         return true;
     }
-
 }

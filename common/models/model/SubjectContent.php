@@ -50,12 +50,14 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_audio;
 
     const UPLOADS_FOLDER = 'uploads/content_files';
+    public $file_textFileMaxSize = "";
     public $file_fileFileMaxSize = 1024 * 1024 * 5; // 3 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 2; // 3 Mb
     public $file_videoFileMaxSize = 1024 * 1024 * 25; // 3 Mb
     public $file_audioFileMaxSize = 1024 * 1024 * 15; // 3 Mb
 
 
+    public $file_textFileExtentions = 'text';
     public $file_fileFileExtentions = 'pdf,doc,docx,ppt,pptx,zip';
     public $file_imageFileExtentions = 'png,jpg,gimp,bmp,jpeg';
     public $file_videoFileExtentions = 'mp4,avi';
@@ -189,9 +191,12 @@ class SubjectContent extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
+        $model->type = self::TYPE_TEXT;
+
         /* Fayl Yuklash*/
         $model->file_file = UploadedFile::getInstancesByName('file_file');
-        $model->type = self::TYPE_TEXT;
+
         if ($model->file_file) {
             $model->file_file = $model->file_file[0];
             $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
@@ -248,7 +253,12 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         if ($model->save()) {
             if (isset($post['order'])) {
-                $lastOrder = SubjectContent::find()->where(['subject_topic_id' => $model->subject_topic_id])->orderBy(['order' => SORT_DESC])->select('order')->one();
+                $lastOrder = SubjectContent::find()
+                    ->where(['subject_topic_id' => $model->subject_topic_id])
+                    ->orderBy(['order' => SORT_DESC])
+                    ->select('order')
+                    ->one();
+
                 if ($lastOrder) {
                     $model->order = $lastOrder->order + 1;
                 }
@@ -361,7 +371,7 @@ class SubjectContent extends \yii\db\ActiveRecord
     public function typesArray($key = null)
     {
         $array = [
-            self::TYPE_TEXT => [_e('TEXT'), ''],
+            self::TYPE_TEXT => [_e('TEXT'), $this->file_textFileMaxSize, $this->file_textFileExtentions],
             self::TYPE_FILE => [_e('FILE'), $this->file_fileFileMaxSize, $this->file_fileFileExtentions],
             self::TYPE_IMAGE => [_e('IMAGE'), $this->file_imageFileMaxSize, $this->file_imageFileExtentions],
             self::TYPE_VIDEO => [_e('VIDEO'), $this->file_videoFileMaxSize, $this->file_videoFileExtentions],

@@ -65,7 +65,7 @@ class TimeTable extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['teacher_access_id', 'room_id', 'para_id',  'subject_id', 'language_id'], 'required'],
+            [['teacher_access_id', 'room_id', 'para_id',  'subject_id', 'language_id', 'subject_category_id'], 'required'],
             [['teacher_access_id', 'room_id', 'parent_id', 'para_id', 'course_id', 'semester_id', 'edu_year_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['edu_semester_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semester_id' => 'id']],

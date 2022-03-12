@@ -108,7 +108,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'para',
             'subjectCategory',
 
-
             'student',
             'timeTable',
         ];

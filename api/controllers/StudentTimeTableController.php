@@ -5,6 +5,8 @@ namespace api\controllers;
 use Yii;
 
 use base\ResponseStatus;
+use common\models\model\EduSemestr;
+use common\models\model\Semestr;
 use common\models\model\Student;
 use common\models\model\StudentTimeTable;
 use common\models\model\TimeTable;
@@ -24,15 +26,33 @@ class  StudentTimeTableController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new StudentTimeTable();
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0]);
 
         $student = Student::findOne(['user_id' => Current_user_id()]);
-        if (isset($student)) {
-            $query = $model->find()
-                ->andWhere(['is_deleted' => 0])
-                ->andWhere(['student_id' => $student->id]);
+
+        $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
+
+        if ($semester) {
+            $eduSemestr = EduSemestr::findOne($semester->id);
+            $timeTablesIds = TimeTable::find()
+                ->select('id')
+                ->where(['edu_semester_id' => $eduSemestr->id])
+                ->all();
+            $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
         } else {
-            $query = $model->find()
-                ->andWhere(['is_deleted' => 0]);
+            $eduSemestr = EduSemestr::find()->where(['status' => 1])->one();
+            $timeTablesIds = TimeTable::find()
+                ->select('id')
+                ->where(['edu_semester_id' => $eduSemestr->id])
+                ->all();
+            $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
+        }
+
+        if (isset($student)) {
+            $query->andWhere(['student_id' => $student->id]);
+        } else {
+            $query;
         }
 
         // filter
@@ -103,6 +123,5 @@ class  StudentTimeTableController extends ApiActiveController
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
-
     }
 }

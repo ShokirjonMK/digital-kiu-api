@@ -35,25 +35,22 @@ class  StudentTimeTableController extends ApiActiveController
 
         if ($semester) {
             $eduSemestr = EduSemestr::findOne($semester->id);
-            $timeTablesIds = TimeTable::find()
-                ->select('id')
-                ->where(['edu_semester_id' => $eduSemestr->id])
-                ->all();
-            $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
         } else {
             $eduSemestr = EduSemestr::find()->where(['status' => 1])->one();
+        }
+        if ($eduSemestr) {
             $timeTablesIds = TimeTable::find()
                 ->select('id')
                 ->where(['edu_semester_id' => $eduSemestr->id])
                 ->all();
-            $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
+            if ($timeTablesIds) {
+                $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
+            }
         }
 
         if (isset($student)) {
             $query->andWhere(['student_id' => $student->id]);
-        } else {
-            $query;
-        }
+        } 
 
         // filter
         $query = $this->filterAll($query, $model);

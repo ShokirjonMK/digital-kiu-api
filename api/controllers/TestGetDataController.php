@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\components\MipService;
 use api\components\PersonDataHelper;
 use common\models\model\TeacherAccess;
 use Yii;
@@ -9,7 +10,7 @@ use base\ResponseStatus;
 
 class TestGetDataController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\TeacherAccess';
+    public $modelClass = 'api\resources\TestGetData';
 
     public function actions()
     {
@@ -18,7 +19,12 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-        //        return 0;
+
+        $mk = new MipService();
+
+        return  MipService::getToken();
+        return json_decode($mk->getToken());
+
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = new PersonDataHelper();
         //  $data = $model->services($jshir, $passport);
@@ -31,6 +37,10 @@ class TestGetDataController extends ApiActiveController
     }
 
     public function actionView()
+    {
+    }
+
+    public function actionJavacode()
     {
         /*
         OkHttpClient client = Utils.getUnsafeOkHttpClient();

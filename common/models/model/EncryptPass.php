@@ -1,11 +1,7 @@
 <?php
 
-
 namespace common\models\model;
 
-use api\resources\ResourceTrait;
-
-use Yii;
 use yii\base\Model;
 
 class EncryptPass extends Model
@@ -19,11 +15,9 @@ class EncryptPass extends Model
         return $encryption;
     }
 
-
     public function decrypt($string, $encryption_key)
     {
         $decryption = openssl_decrypt($string, $this->ciphering, $encryption_key, $this->options, $this->encryption_iv);
         return $decryption;
     }
-
 }

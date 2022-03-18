@@ -146,6 +146,7 @@ class Exam extends \yii\db\ActiveRecord
             'examType',
             'faculty',
             'direction',
+            'subject',
 
             'examQuestions',
             'examStudentAnswers',
@@ -185,61 +186,41 @@ class Exam extends \yii\db\ActiveRecord
         return $this->translate->description ?? '';
     }
 
-    /**
-     * Gets query for [[EduSemestrSubject]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
     public function getEduSemestrSubject()
     {
         return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
     }
 
-    /**
-     * Gets query for [[ExamType]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
+    public function getSubject()
+    {
+        return $this->eduSemestrSubject->subject->name;
+    }
+
     public function getExamType()
     {
         return $this->hasOne(ExamsType::className(), ['id' => 'exam_type_id']);
     }
 
-    /**
-     * Gets query for [[ExamQuestions]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
     public function getExamQuestions()
     {
         return $this->hasMany(ExamQuestion::className(), ['exam_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[ExamStudentAnswers]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getExamStudentAnswers()
     {
         return $this->hasMany(ExamStudentAnswer::className(), ['exam_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[faculty_id]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
     public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['faculty_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[direction_id]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
     public function getDirection()
     {
         return $this->hasOne(Direction::className(), ['direction_id' => 'id']);

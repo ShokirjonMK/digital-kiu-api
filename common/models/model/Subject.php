@@ -234,6 +234,11 @@ class Subject extends \yii\db\ActiveRecord
         return $this->hasOne(SubjectSillabus::className(), ['subject_id' => 'id']);
     }
 
+    public function getName()
+    {
+        return $this->translate->name ?? '';
+    }
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();

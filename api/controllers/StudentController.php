@@ -106,7 +106,6 @@ class  StudentController extends ApiActiveController
                     $model = new User();
                     $profile = new Profile();
                     $student = new Student();
-return 12;
                     $users = Student::find()->count();
                     $count = $users + 10001;
                     $std = Student::find()->orderBy(['id' => SORT_DESC])->one();
@@ -114,7 +113,8 @@ return 12;
                     if ($std) {
                         $count = $std->id + 10001;
                     }
-
+                    
+                    return 12;
                     $post['username'] = 'tsul_std_' . $count;
                     $post['email'] = 'tsul_std_' . $count . '@tsul.uz';
                     $this->load($model, $post);

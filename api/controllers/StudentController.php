@@ -121,12 +121,14 @@ class  StudentController extends ApiActiveController
                     $this->load($profile, $post);
                     $this->load($student, $post);
 
-                    $data[] = [$model, $student, $profile];
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
+                    $data[] = [$model, $student, $profile];
+
+                    return 132;
                 }
 
                 return $data;
-                
+
                 if (is_array($result)) {
                     $errorAll[$post['passport_pin']] = $result;
                 } else {

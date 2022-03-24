@@ -114,13 +114,13 @@ class  StudentController extends ApiActiveController
                         $count = $std->id + 10001;
                     }
                     
-                    return 12;
                     $post['username'] = 'tsul_std_' . $count;
                     $post['email'] = 'tsul_std_' . $count . '@tsul.uz';
                     $this->load($model, $post);
                     $this->load($profile, $post);
                     $this->load($student, $post);
-
+                    
+                    return 112;
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
                     $data[] = [$model, $student, $profile];
                 }

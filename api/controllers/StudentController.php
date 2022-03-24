@@ -120,8 +120,8 @@ class  StudentController extends ApiActiveController
                     $this->load($profile, $post);
                     $this->load($student, $post);
                     
-                    return 112;
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
+                    return 1112;
                     $data[] = [$model, $student, $profile];
                 }
 

@@ -74,6 +74,7 @@ class  StudentController extends ApiActiveController
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
 
+            return $sheetDatas;
             foreach ($sheetDatas as $post) {
                 /** */
                 // $post = Yii::$app->request->post();

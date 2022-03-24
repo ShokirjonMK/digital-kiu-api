@@ -98,7 +98,7 @@ class  StudentController extends ApiActiveController
                     if ($model) {
                         $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
                     } else {
-                        $errorAll[$post['passport_number']] = _e('There is a Profile but User not found!');
+                        $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
                     }
                 } else {
 
@@ -124,7 +124,7 @@ class  StudentController extends ApiActiveController
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
                 }
                 if (is_array($result)) {
-                    $errorAll[$post['passport_number']] = $result;
+                    $errorAll[$post['passport_pin']] = $result;
                 }
             }
             if (count($errorAll) > 0) {

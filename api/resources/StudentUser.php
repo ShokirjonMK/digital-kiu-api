@@ -19,7 +19,7 @@ class StudentUser extends ParentUser
         $errors = [];
 
         // Validatin input data
-       
+
         if (!$post) {
             $errors[] = ['all' => [_e('Please send data.')]];
         }
@@ -58,7 +58,7 @@ class StudentUser extends ParentUser
             $model->access_token = \Yii::$app->security->generateRandomString();
             $model->access_token_time = time();
             // $model->save();
-           
+
             if ($model->save()) {
                 //**parolni shifrlab saqlaymiz */
                 $model->savePassword($password, $model->id);
@@ -75,16 +75,15 @@ class StudentUser extends ParentUser
                         $auth->assign($authorRole, $model->id);
                     }
                 }
-                
             } else {
                 $errors[] = $model->errors;
             }
         }
         if (count($errors) == 0) {
-           $transaction->commit();
+            $transaction->commit();
             return true;
         } else {
-           $transaction->rollBack();
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
@@ -127,7 +126,7 @@ class StudentUser extends ParentUser
             } else {
                 $password = _random_string();
             }
-            
+
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
 
             $model->auth_key = \Yii::$app->security->generateRandomString(20);
@@ -194,7 +193,7 @@ class StudentUser extends ParentUser
         }
     }
 
-    
+
     public static function updateItemImport($model, $profile, $student, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -300,7 +299,7 @@ class StudentUser extends ParentUser
             return simplify_errors($errors);
         }
     }
-    
+
     public static function updateItem($model, $profile, $student, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -469,5 +468,4 @@ class StudentUser extends ParentUser
             ->where(['and', ['id' => $id], ['in', 'auth_assignment.item_name', self::$roleList]])
             ->one();
     }
-
 }

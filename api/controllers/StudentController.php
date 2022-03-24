@@ -130,6 +130,9 @@ class  StudentController extends ApiActiveController
                     $errorAll[$post['passport_pin']] = $data;
                 }
             }
+
+            return $errorAll;
+
             if (count($errorAll) > 0) {
                 return $errorAll;
             }

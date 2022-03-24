@@ -90,11 +90,16 @@ class  StudentController extends ApiActiveController
 
                     // $this->load($model, $post);
                     $this->load($hasProfile, $post);
-                    if ($student) {
-                        $this->load($student, $post);
+                    if (!$student) {
+                        $student = new Student();
                     }
+                    $this->load($student, $post);
                     $data[] = [$model, $student, $hasProfile];
-                    $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
+                    if ($model) {
+                        $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
+                    } else {
+                        $errorAll[$post['passport_number']] = _e('There is a Profile but User not found!');
+                    }
                 } else {
 
                     $model = new User();

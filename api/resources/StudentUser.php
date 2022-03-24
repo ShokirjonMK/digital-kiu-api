@@ -15,7 +15,7 @@ class StudentUser extends ParentUser
 
     public static function createItemImport($model, $profile, $student, $post)
     {
-        // $transaction = Yii::$app->db->beginTransaction();
+        $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
         // Validatin input data
@@ -81,10 +81,10 @@ class StudentUser extends ParentUser
             }
         }
         if (count($errors) == 0) {
-          //  $transaction->commit();
+           $transaction->commit();
             return true;
         } else {
-        //    $transaction->rollBack();
+           $transaction->rollBack();
             return simplify_errors($errors);
         }
     }

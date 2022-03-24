@@ -378,6 +378,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $transaction->commit();
                         return $data;
                     } else {
+                        if (strtotime($exam->start) > $now_second) {
+                            $errors[] = _e("This exam`s time is not starts");
+                        } elseif (strtotime($exam->finish) < $now_second) {
+                            $errors[] = _e("This exam`s time expired");
+                        }
                         // $errors[] = $exam;
                         $errors[] = _e("This exam`s time expired");
                     }

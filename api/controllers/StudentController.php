@@ -106,7 +106,7 @@ class  StudentController extends ApiActiveController
                     $model = new User();
                     $profile = new Profile();
                     $student = new Student();
-
+return 12;
                     $users = Student::find()->count();
                     $count = $users + 10001;
                     $std = Student::find()->orderBy(['id' => SORT_DESC])->one();
@@ -123,12 +123,10 @@ class  StudentController extends ApiActiveController
 
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
                     $data[] = [$model, $student, $profile];
-
-                    return 132;
                 }
 
-                return $data;
-
+                
+                
                 if (is_array($result)) {
                     $errorAll[$post['passport_pin']] = $result;
                 } else {

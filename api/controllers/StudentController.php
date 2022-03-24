@@ -74,7 +74,6 @@ class  StudentController extends ApiActiveController
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
 
-            // return $sheetDatas;
             foreach ($sheetDatas as $post) {
                 /** */
                 // $post = Yii::$app->request->post();
@@ -102,10 +101,8 @@ class  StudentController extends ApiActiveController
                     } else {
                         $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
                     }
-
-                    return $errorAll;
                 } else {
-
+return  0;
                     $model = new User();
                     $profile = new Profile();
                     $student = new Student();

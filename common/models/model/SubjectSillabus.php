@@ -200,7 +200,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             $json_errors['edu_semestr_subject_category_times'] = [_e('Must be Json')];
         }
 
-        if (count($json_errors)) {
+        if (count($json_errors) > 0) {
             $errors[] = $json_errors;
         }
 
@@ -298,7 +298,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             }
         }
 
-        if (count($json_errors)) {
+        if (count($json_errors) > 0) {
             $errors[] = $json_errors;
         }
 

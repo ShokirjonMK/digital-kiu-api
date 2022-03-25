@@ -364,10 +364,13 @@ class Exam extends \yii\db\ActiveRecord
         if (isset($post['question_count_by_type_with_ball'])) {
             $post['question_count_by_type_with_ball'] = str_replace("'", "", $post['question_count_by_type_with_ball']);
             if (!isJsonMK($post['question_count_by_type_with_ball'])) {
-                $json_errors['question_count_by_type_with_ball'] = [_e('Must be Json')];
+                $errors['question_count_by_type_with_ball'] = [_e('Must be Json')];
             }
 
+            $all_max_ball = 0;
             foreach (((array)json_decode($post['question_count_by_type_with_ball'])) as $questionTypeId => $questionTypeCountWithBall) {
+
+                $all_max_ball += ($questionTypeCountWithBall->count ?? 0) * ($questionTypeCountWithBall->ball ?? 0);
 
                 $q = QuestionType::findOne($questionTypeId);
                 if (!($q)) {
@@ -375,6 +378,9 @@ class Exam extends \yii\db\ActiveRecord
                 }
             }
 
+            if ($all_max_ball != $model->max_ball) {
+                $errors[] = _e("Max ball(" . $model->max_ball . ") can not be smaller than sum(" . $all_max_ball . ") of each question");
+            }
             if (count($errors) > 0) {
                 $transaction->rollBack();
                 return simplify_errors($errors);
@@ -384,10 +390,10 @@ class Exam extends \yii\db\ActiveRecord
         }
         /** question_count_by_type_with_ball */
 
-        if (isset($post['question_count_by_type'])) {
+        /*  if (isset($post['question_count_by_type'])) {
             $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
             if (!isJsonMK($post['question_count_by_type'])) {
-                $json_errors['question_count_by_type'] = [_e('Must be Json')];
+                $errors['question_count_by_type'] = [_e('Must be Json')];
             }
 
             foreach (array_unique((array)json_decode($post['question_count_by_type'])) as $questionTypeId => $questionTypeCount) {
@@ -404,7 +410,7 @@ class Exam extends \yii\db\ActiveRecord
             }
 
             $model->question_count_by_type = json_encode(array_unique((array)json_decode($post['question_count_by_type'])));
-        }
+        } */
 
         $has_error = Translate::checkingAll($post);
 
@@ -452,13 +458,13 @@ class Exam extends \yii\db\ActiveRecord
         if (isset($post['question_count_by_type_with_ball'])) {
             $post['question_count_by_type_with_ball'] = str_replace("'", "", $post['question_count_by_type_with_ball']);
             if (!isJsonMK($post['question_count_by_type_with_ball'])) {
-                $json_errors['question_count_by_type_with_ball'] = [_e('Must be Json')];
+                $errors['question_count_by_type_with_ball'] = [_e('Must be Json')];
             }
 
             $all_max_ball = 0;
             foreach (((array)json_decode($post['question_count_by_type_with_ball'])) as $questionTypeId => $questionTypeCountWithBall) {
 
-                $all_max_ball += $questionTypeCountWithBall->count * $questionTypeCountWithBall->ball;
+                $all_max_ball += ($questionTypeCountWithBall->count ?? 0) * ($questionTypeCountWithBall->ball ?? 0);
 
                 $q = QuestionType::findOne($questionTypeId);
                 if (!($q)) {
@@ -466,7 +472,7 @@ class Exam extends \yii\db\ActiveRecord
                 }
             }
 
-            if ($all_max_ball > $model->max_ball) {
+            if ($all_max_ball != $model->max_ball) {
                 $errors[] = _e("Max ball(" . $model->max_ball . ") can not be smaller than sum(" . $all_max_ball . ") of each question");
             }
             if (count($errors) > 0) {
@@ -482,7 +488,7 @@ class Exam extends \yii\db\ActiveRecord
         /* if (isset($post['question_count_by_type'])) {
             $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
             if (!isJsonMK($post['question_count_by_type'])) {
-                $json_errors['question_count_by_type'] = [_e('Must be Json')];
+                $errors['question_count_by_type'] = [_e('Must be Json')];
             }
 
             foreach (array_unique((array)json_decode($post['question_count_by_type'])) as $questionTypeId => $questionTypeCount) {

@@ -20,6 +20,7 @@ use yii\web\UploadedFile;
  * @property string|null $answer
  * @property int|null $ball
  * @property int|null $teacher_access_id
+ * @property int|null $exam_student_id
  * @property int|null $attempt Nechinchi marta topshirayotgani
  * @property int $type 1-savol, 2-test, 3-another
  * @property int|null $order
@@ -50,7 +51,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         ];
     }
 
-
     const STATUS_NEW = 2;
     const STATUS_COMPLETE = 1;
     const STATUS_IN_CHECKING = 3;
@@ -74,11 +74,31 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     {
         return [
             [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
-            [['exam_id', 'question_id', 'parent_id', 'student_id', 'option_id', 'ball', 'teacher_access_id', 'attempt', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [
+                [
+                    'exam_id',
+                    'question_id',
+                    'parent_id',
+                    'student_id',
+                    'option_id',
+                    'teacher_access_id',
+                    'exam_student_id',
+                    'attempt',
+                    'type',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
             [['answer'], 'string'],
-            [['max_ball'], 'double'],
+            [['max_ball', 'ball'], 'double'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
+            [['exam_student_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudent::className(), 'targetAttribute' => ['exam_student_id' => 'id']],
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
             [['option_id'], 'exist', 'skipOnError' => true, 'targetClass' => QuestionOption::className(), 'targetAttribute' => ['option_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
@@ -104,6 +124,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'ball' => 'Ball',
             'max_ball' => 'Max Ball',
             'teacher_access_id' => 'Teacher Access ID',
+            'exam_student_id' => 'Teacher Access ID',
             'attempt' => 'Attempt',
             'type' => 'Type',
             'order' => 'Order',
@@ -133,6 +154,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             },
 
             'question_id',
+            'exam_student_id',
             'student_id',
             'option_id',
             'answer',
@@ -156,6 +178,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     {
         $extraFields = [
             'exam',
+            'examStudent',
             'question',
             'option',
             'student',
@@ -167,41 +190,26 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    /**
-     * Gets query for [[Exam]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getExam()
     {
         return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
     }
 
-    /**
-     * Gets query for [[ExamQuestion]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+    public function getExamStudent()
+    {
+        return $this->hasOne(ExamStudent::className(), ['id' => 'exam_student_id']);
+    }
+
     public function getQuestion()
     {
         return $this->hasOne(Question::className(), ['id' => 'question_id']);
     }
 
-    /**
-     * Gets query for [[ExamQuestion]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getQuestionForExamStudentAnswer()
     {
         return $this->hasOne(Question::className(), ['id' => 'question_id'])->with(['subQuestions']);
     }
 
-    /**
-     * Gets query for [[Option]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getOption()
     {
         return $this->hasOne(ExamQuestionOption::className(), ['id' => 'option_id']);
@@ -213,21 +221,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasOne(QuestionType::className(), ['id' => 'type']);
     }
 
-    /**
-     * Gets query for [[Student]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getStudent()
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
     }
 
-    /**
-     * Gets query for [[TeacherAccess]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
@@ -345,6 +343,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 // if (count($questionAll) > 0) {
                                 foreach ($questionAll as $question) {
                                     $ExamStudentAnswer = new ExamStudentAnswer();
+                                    $ExamStudentAnswer->exam_student_id = $ExamStudent->id;
                                     $ExamStudentAnswer->exam_id = $exam_id;
                                     $ExamStudentAnswer->question_id = $question->id;
                                     $ExamStudentAnswer->student_id = $student_id;
@@ -389,7 +388,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $errors[] = _e("This exam`s time expired");
                         }
                         // $errors[] = $exam;
-                    } 
+                    }
                 } else {
                     $errors[] = _e("Exam password incorrect");
                 }
@@ -434,13 +433,15 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         // studentni answer file ni saqlaymiz
 
-        $student = Student::findOne(['user_id' => current_user_id()]);
+        /*  $student = Student::findOne(['user_id' => current_user_id()]);
         if (!$student) {
             $errors[] = _e("Student not found");
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        $student_id = $student->id;
+        $student_id = $student->id; */
+        $student_id = 15;
+
         $exam_id = $model->exam_id;
         $old_file = $model->file;
 
@@ -465,7 +466,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $model->attempt = $examStudent->attempt;
                         $model->answer_file = UploadedFile::getInstancesByName('answer_file');
                         if ($model->answer_file) {
-
                             $model->answer_file = $model->answer_file[0];
                             $answer_fileFileUrl = $model->uploadFile($exam->id, $student_id);
                             if ($answer_fileFileUrl) {
@@ -474,11 +474,46 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 $errors[] = $model->errors;
                             }
                         }
+
+                        /** subQuestionAnswers */
+                        if (isset($post['subQuestionAnswers'])) {
+                            $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
+                            if (!isJsonMK($post['subQuestionAnswers'])) {
+                                $errors['subQuestionAnswers'] = [_e('Must be Json')];
+                            }
+
+                            foreach (((array)json_decode($post['subQuestionAnswers'])) as  $subQuestionOneAnswer) {
+
+                                $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
+                                if ($subQuestion) {
+                                    if ($model->question->id == $subQuestion->question_id) {
+                                        $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
+
+                                        if (!$examStudentAnswerSubQuestion) {
+                                            $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
+                                            $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
+                                            $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
+                                        }
+
+                                        $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
+                                        $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
+
+                                        $examStudentAnswerSubQuestion->save();
+                                    } else {
+                                        $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
+                                    }
+                                } else {
+                                    $errors[] = _e("This subQuestion is not found");
+                                }
+                            }
+                        }
+                        /** subQuestionAnswers */
+
                         if (!($model->validate())) {
                             $errors[] = $model->errors;
                         }
                     } else {
-                        $errors[] = _e("This exam`s time expired or ");
+                        $errors[] = _e("This exam`s time expired or finished");
                     }
                 } else {
                     $errors[] = _e("Student not found for this exam");
@@ -499,7 +534,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-            $errors[] = count($errors);
+            // $errors[] = count($errors);
             $transaction->rollBack();
             return simplify_errors($errors);
         }

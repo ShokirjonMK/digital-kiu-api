@@ -433,14 +433,14 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         // studentni answer file ni saqlaymiz
 
-        /*  $student = Student::findOne(['user_id' => current_user_id()]);
+        $student = Student::findOne(['user_id' => current_user_id()]);
         if (!$student) {
             $errors[] = _e("Student not found");
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        $student_id = $student->id; */
-        $student_id = 15;
+        $student_id = $student->id;
+        // $student_id = 15;
 
         $exam_id = $model->exam_id;
         $old_file = $model->file;

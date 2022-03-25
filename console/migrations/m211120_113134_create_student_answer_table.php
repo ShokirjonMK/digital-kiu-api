@@ -20,7 +20,7 @@ class m211120_113134_create_student_answer_table extends Migration
             'student_id' => $this->integer()->notNull(),
             'option_id' => $this->integer()->Null(),
             'answer' => $this->text()->Null(),
-            'ball' => $this->integer()->Null(),
+            'ball' => $this->double()->Null(),
             'teacher_access_id' => $this->integer()->Null(),
             'attempt' => $this->integer()->defaultValue(1)->comment("Nechinchi marta topshirayotgani"),
             'type' => $this->tinyInteger(1)->notNull()->comment("1-savol, 2-test, 3-another"),
@@ -39,7 +39,6 @@ class m211120_113134_create_student_answer_table extends Migration
         $this->addForeignKey('ses_exam_student_answer_student', 'exam_student_answer', 'student_id', 'student', 'id');
         $this->addForeignKey('ses_exam_student_answer_option', 'exam_student_answer', 'option_id', 'question_option', 'id');
         $this->addForeignKey('ses_exam_student_answer_teacher_access', 'exam_student_answer', 'teacher_access_id', 'teacher_access', 'id');
-
     }
 
     /**

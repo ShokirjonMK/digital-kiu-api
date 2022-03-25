@@ -69,8 +69,9 @@ class Exam extends \yii\db\ActiveRecord
             [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [['exam_type_id', 'faculty_id', 'is_protected', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
-            [['max_ball', 'min_ball'], 'number'],
+            [['max_ball', 'min_ball'], 'double'],
             [['question_count_by_type'], 'safe'],
+            [['question_count_by_type_with_ball'], 'safe'],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
@@ -118,6 +119,7 @@ class Exam extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'question_count_by_type',
+            'question_count_by_type_with_ball',
             'exam_type_id',
             'edu_semestr_subject_id',
             'start',
@@ -358,6 +360,30 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = _e("Start of exam can not be greater than finish");
         }
 
+        /** question_count_by_type_with_ball */
+        if (isset($post['question_count_by_type_with_ball'])) {
+            $post['question_count_by_type_with_ball'] = str_replace("'", "", $post['question_count_by_type_with_ball']);
+            if (!isJsonMK($post['question_count_by_type_with_ball'])) {
+                $json_errors['question_count_by_type_with_ball'] = [_e('Must be Json')];
+            }
+
+            foreach (((array)json_decode($post['question_count_by_type_with_ball'])) as $questionTypeId => $questionTypeCountWithBall) {
+
+                $q = QuestionType::findOne($questionTypeId);
+                if (!($q)) {
+                    $errors[] = _e("Question Type Id (" . $questionTypeId . ") not found");
+                }
+            }
+
+            if (count($errors) > 0) {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            $model->question_count_by_type_with_ball = json_encode(((array)json_decode($post['question_count_by_type_with_ball'])));
+        }
+        /** question_count_by_type_with_ball */
+
         if (isset($post['question_count_by_type'])) {
             $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
             if (!isJsonMK($post['question_count_by_type'])) {
@@ -421,6 +447,38 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
+
+        /** question_count_by_type_with_ball */
+        if (isset($post['question_count_by_type_with_ball'])) {
+            $post['question_count_by_type_with_ball'] = str_replace("'", "", $post['question_count_by_type_with_ball']);
+            if (!isJsonMK($post['question_count_by_type_with_ball'])) {
+                $json_errors['question_count_by_type_with_ball'] = [_e('Must be Json')];
+            }
+
+            $all_max_ball = 0;
+            foreach (((array)json_decode($post['question_count_by_type_with_ball'])) as $questionTypeId => $questionTypeCountWithBall) {
+
+                $all_max_ball += $questionTypeCountWithBall->count * $questionTypeCountWithBall->ball;
+
+                $q = QuestionType::findOne($questionTypeId);
+                if (!($q)) {
+                    $errors[] = _e("Question Type Id (" . $questionTypeId . ") not found");
+                }
+            }
+
+            if ($all_max_ball > $model->max_ball) {
+                $errors[] = _e("Max ball(" . $model->max_ball . ") can not be smaller than sum(" . $all_max_ball . ") of each question");
+            }
+            if (count($errors) > 0) {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            $model->question_count_by_type_with_ball = json_encode(((array)json_decode($post['question_count_by_type_with_ball'])));
+        }
+        /** question_count_by_type_with_ball */
+
+
         if (isset($post['question_count_by_type'])) {
             $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
             if (!isJsonMK($post['question_count_by_type'])) {
@@ -430,7 +488,7 @@ class Exam extends \yii\db\ActiveRecord
             foreach (array_unique((array)json_decode($post['question_count_by_type'])) as $questionTypeId => $questionTypeCount) {
 
                 $q = QuestionType::findOne($questionTypeId);
-                if (!(isset($q))) {
+                if (!($q)) {
                     $errors[] = _e("Question Type Id (" . $questionTypeId . ") not found");
                 }
             }

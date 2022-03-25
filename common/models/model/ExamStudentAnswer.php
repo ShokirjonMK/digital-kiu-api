@@ -76,6 +76,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
             [['exam_id', 'question_id', 'parent_id', 'student_id', 'option_id', 'ball', 'teacher_access_id', 'attempt', 'type', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['answer'], 'string'],
+            [['max_ball'], 'double'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
@@ -101,6 +102,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'option_id' => 'Option ID',
             'answer' => 'Answer',
             'ball' => 'Ball',
+            'max_ball' => 'Max Ball',
             'teacher_access_id' => 'Teacher Access ID',
             'attempt' => 'Attempt',
             'type' => 'Type',
@@ -135,6 +137,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'option_id',
             'answer',
             'ball',
+            'max_ball',
             'teacher_access_id',
             'attempt',
             'type',
@@ -294,8 +297,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         && strtotime($exam->finish) >= $now_second
                     ) {
 
-                        $question_count_by_type = json_decode($exam->question_count_by_type);
-                        if (!(isJsonMK($exam->question_count_by_type) && $question_count_by_type)) {
+                        $question_count_by_type_with_ball = json_decode($exam->question_count_by_type_with_ball);
+                        if (!(isJsonMK($exam->question_count_by_type_with_ball) && $question_count_by_type_with_ball)) {
                             $errors[] = _e("The question is not specified");
                             $transaction->rollBack();
                             return simplify_errors($errors);
@@ -323,7 +326,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                         /* *****************************/
                         // isJsonMK($question_count_by_type);
-                        foreach ($question_count_by_type as $type => $question_count) {
+                        // isJsonMK($question_count_by_type_with_ball);
+                        foreach ($question_count_by_type_with_ball as $type => $question_count_with_ball) {
                             $questionAll = Question::find()
                                 ->where([
                                     'subject_id' => $subject_id,
@@ -334,10 +338,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     'is_deleted' => 0
                                 ])
                                 ->orderBy(new Expression('rand()'))
-                                ->limit($question_count)
+                                ->limit($question_count_with_ball->count)
                                 ->all();
 
-                            if (count($questionAll) == $question_count) {
+                            if (count($questionAll) == $question_count_with_ball->count) {
                                 // if (count($questionAll) > 0) {
                                 foreach ($questionAll as $question) {
                                     $ExamStudentAnswer = new ExamStudentAnswer();
@@ -345,6 +349,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $ExamStudentAnswer->question_id = $question->id;
                                     $ExamStudentAnswer->student_id = $student_id;
                                     $ExamStudentAnswer->type = $type;
+                                    $ExamStudentAnswer->max_ball = $question_count_with_ball->ball;
                                     $ExamStudentAnswer->attempt = 1;
                                     $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
                                     $ExamStudentAnswer->save();
@@ -384,8 +389,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $errors[] = _e("This exam`s time expired");
                         }
                         // $errors[] = $exam;
-                        $errors[] = _e("This exam`s time expired");
-                    }
+                    } 
                 } else {
                     $errors[] = _e("Exam password incorrect");
                 }

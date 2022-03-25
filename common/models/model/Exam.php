@@ -479,7 +479,7 @@ class Exam extends \yii\db\ActiveRecord
         /** question_count_by_type_with_ball */
 
 
-        if (isset($post['question_count_by_type'])) {
+        /* if (isset($post['question_count_by_type'])) {
             $post['question_count_by_type'] = str_replace("'", "", $post['question_count_by_type']);
             if (!isJsonMK($post['question_count_by_type'])) {
                 $json_errors['question_count_by_type'] = [_e('Must be Json')];
@@ -499,7 +499,7 @@ class Exam extends \yii\db\ActiveRecord
             }
 
             $model->question_count_by_type = json_encode(array_unique((array)json_decode($post['question_count_by_type'])));
-        }
+        } */
 
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {

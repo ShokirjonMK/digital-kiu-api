@@ -60,7 +60,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             [['edu_semestr_id', 'subject_id'], 'required'],
             //    [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
             [['edu_semestr_id', 'faculty_id', 'direction_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['credit'], 'number'],
+            [['credit'], 'double'],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['subject_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectType::className(), 'targetAttribute' => ['subject_type_id' => 'id']],

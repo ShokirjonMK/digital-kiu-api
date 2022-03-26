@@ -14,30 +14,29 @@ class m211012_123350_edu_semestr extends Migration
     {
         $this->createTable('edu_semestr', [
             'id' => $this->primaryKey(),
-            'edu_plan_id'=>$this->integer()->notNull(),
-            'course_id'=>$this->integer()->notNull(),
-            'semestr_id'=>$this->integer()->notNull(),
-            'edu_year_id'=>$this->integer()->notNull(),
-            'start_date'=>$this->dateTime(),
-            'end_date'=>$this->dateTime(),
+            'edu_plan_id' => $this->integer()->notNull(),
+            'course_id' => $this->integer()->notNull(),
+            'semestr_id' => $this->integer()->notNull(),
+            'edu_year_id' => $this->integer()->notNull(),
+            'start_date' => $this->dateTime(),
+            'end_date' => $this->dateTime(),
             'is_checked' => $this->tinyInteger(1)->defaultValue(0),
 
 
-            'order'=>$this->tinyInteger(1)->defaultValue(1),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
-            'created_at'=>$this->integer()->notNull(),
-            'updated_at'=>$this->integer()->notNull(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
 
-        $this->addForeignKey('pe_edu_semestr_edu_plan_id','edu_semestr','edu_plan_id','edu_plan','id');
-        $this->addForeignKey('ce_edu_semestr_course_id','edu_semestr','course_id','course','id');
-        $this->addForeignKey('se_edu_semestr_semestr_id','edu_semestr','semestr_id','semestr','id');
-        $this->addForeignKey('se_edu_semestr_edu_year_id','edu_semestr','edu_year_id','edu_year','id');
-
+        $this->addForeignKey('pe_edu_semestr_edu_plan_id', 'edu_semestr', 'edu_plan_id', 'edu_plan', 'id');
+        $this->addForeignKey('ce_edu_semestr_course_id', 'edu_semestr', 'course_id', 'course', 'id');
+        $this->addForeignKey('se_edu_semestr_semestr_id', 'edu_semestr', 'semestr_id', 'semestr', 'id');
+        $this->addForeignKey('se_edu_semestr_edu_year_id', 'edu_semestr', 'edu_year_id', 'edu_year', 'id');
     }
 
     /**
@@ -45,10 +44,10 @@ class m211012_123350_edu_semestr extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('pe_edu_semestr_edu_plan_id','edu_semestr');
-        $this->dropForeignKey('ce_edu_semestr_course_id','edu_semestr');
-        $this->dropForeignKey('se_edu_semestr_semestr_id','edu_semestr');
-        $this->dropForeignKey('se_edu_semestr_edu_year_id','edu_semestr');
+        $this->dropForeignKey('pe_edu_semestr_edu_plan_id', 'edu_semestr');
+        $this->dropForeignKey('ce_edu_semestr_course_id', 'edu_semestr');
+        $this->dropForeignKey('se_edu_semestr_semestr_id', 'edu_semestr');
+        $this->dropForeignKey('se_edu_semestr_edu_year_id', 'edu_semestr');
         $this->dropTable('edu_semestr');
     }
 

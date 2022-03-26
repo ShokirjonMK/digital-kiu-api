@@ -55,13 +55,13 @@ class EduSemestr extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
 
-
     public function rules()
     {
         return [
             [['edu_plan_id', 'course_id', 'semestr_id', 'edu_year_id'], 'required'],
             [['edu_plan_id', 'course_id', 'optional_subject_count', 'required_subject_count', 'semestr_id', 'edu_year_id', 'is_checked', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
+            [['credit'], 'double'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
@@ -81,6 +81,7 @@ class EduSemestr extends \yii\db\ActiveRecord
             'semestr_id' => 'Semestr ID',
             'edu_year_id' => 'Edu Year ID',
             'start_date' => 'Start Date',
+            'credit' => 'Credit',
             'end_date' => 'End Date',
             'is_checked' => 'Is Checked',
             'order' => 'Order',
@@ -108,6 +109,7 @@ class EduSemestr extends \yii\db\ActiveRecord
             'optional_subject_count',
             'required_subject_count',
             'semestr_id',
+            'credit',
             'edu_year_id',
             'start_date',
             'end_date',
@@ -207,9 +209,11 @@ class EduSemestr extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
+        dd('a');
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if ($model->save()) {
@@ -228,6 +232,8 @@ class EduSemestr extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if ($model->save()) {

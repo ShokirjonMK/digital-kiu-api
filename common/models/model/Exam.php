@@ -149,9 +149,18 @@ class Exam extends \yii\db\ActiveRecord
             'faculty',
             'direction',
             'subject',
+            'subjectName',
+
+
 
             'examQuestions',
             'examStudentAnswers',
+
+
+            'examStudent',
+            'examStudentByLang',
+
+
             'description',
             'createdBy',
             'updatedBy',
@@ -197,14 +206,33 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getSubject()
     {
-        return $this->eduSemestrSubject->subject->name;
+        return $this->eduSemestrSubject->subject ?? [];
+    }
+
+    public function getSubjectName()
+    {
+        return $this->eduSemestrSubject->subject->name ?? '';
+    }
+
+    public function getExamStudent()
+    {
+        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+    }
+
+    public function getExamStudentByLang()
+    {
+        return (new yii\db\Query())
+            ->from('exam_student')
+            ->select(['COUNT(*) AS count', 'lang_id'])
+            ->where(['exam_id' => $this->id])
+            ->groupBy(['lang_id'])
+            ->all();
     }
 
     public function getExamType()
     {
         return $this->hasOne(ExamsType::className(), ['id' => 'exam_type_id']);
     }
-
 
     public function getExamQuestions()
     {

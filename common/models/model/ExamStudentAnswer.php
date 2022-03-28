@@ -260,24 +260,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->orderBy('id desc')
                     ->one();
 
-                $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                if ($hasExamStudentAnswer) {
-                    $getQuestionModel = new ExamStudentAnswer();
-                    $getQuestion = $getQuestionModel->find()
-                        ->with(['question'])
-                        ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
-                        ->all();
-
-                    $data['questions'] = $getQuestion;
-                    $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
-                    $exam_times['duration'] = $exam->duration;
-                    $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
-
-                    $data['times'] = $exam_times;
-                    $data['status'] = true;
-                    return $data;
-                }
-
                 // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                 $t = true;
                 if ($exam->is_protected == 1) {
@@ -288,6 +270,26 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     }
                 }
                 if ($t) {
+
+                    $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                    if ($hasExamStudentAnswer) {
+                        $getQuestionModel = new ExamStudentAnswer();
+                        $getQuestion = $getQuestionModel->find()
+                            ->with(['question'])
+                            ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
+                            ->all();
+
+                        $data['questions'] = $getQuestion;
+                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                        $exam_times['duration'] = $exam->duration;
+                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+
+                        $data['times'] = $exam_times;
+                        $data['status'] = true;
+                        return $data;
+                    }
+
+
                     // $now_date = date('Y-m-d H:i:s');
                     $now_second = time();
                     if (

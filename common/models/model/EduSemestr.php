@@ -209,7 +209,7 @@ class EduSemestr extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        dd('a');
+        // dd('a');
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

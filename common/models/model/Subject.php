@@ -118,12 +118,40 @@ class Subject extends \yii\db\ActiveRecord
             'kafedra',
             'semestrSubjects',
             'description',
+
+            'exam',
+            'examCount',
+
+
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
     }
+
+
+    public function getExam()
+    {
+        return Exam::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id])->all();
+    }
+
+    public function getExamCount()
+    {
+        return count($this->exam);
+    }
+
+
+    public function getEduSemestrSubject()
+    {
+        return $this->hasOne(EduSemestrSubject::className(), ['subject_id' => 'id']);
+    }
+
+    public function getSubject()
+    {
+        return $this->eduSemestrSubject->subject->name;
+    }
+
 
     public function getTranslate()
     {

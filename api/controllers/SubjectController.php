@@ -33,10 +33,24 @@ class SubjectController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+
+        $k = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($k['status'] == 1) {
+            $kafedraIds = Kafedra::find()->where(['faculty_id' => $k['UserAccess']->table_id])->select('id');
+            $query->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
+            // $query->andFilterWhere([
+            //     'kafedra_id' => $k['UserAccess']->table_id
+            // ]);
+        } elseif ($k['status'] == 2) {
+            $query->andFilterWhere([
+                'kafedra_id' => -1
+            ]);
+        }
+
+        $t = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            $kafedraIds = Kafedra::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
-            $query->andWhere(['in', 'kafedra_id', $kafedraIds]);
+            // $kafedraIds = Kafedra::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
+            // $query->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
             $query->andFilterWhere([
                 'kafedra_id' => $t['UserAccess']->table_id
             ]);
@@ -45,6 +59,7 @@ class SubjectController extends ApiActiveController
                 'kafedra_id' => -1
             ]);
         }
+
         /*  is Self  */
 
 

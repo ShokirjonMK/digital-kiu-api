@@ -463,7 +463,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     if (
                         (strtotime($exam->start) <= $now_second)
                         && (strtotime($exam->finish) >= $now_second)
-                        && ($now_second <= $finishExamStudent)
+                        && ($now_second <= strtotime($finishExamStudent))
                     ) {
                         $model->attempt = $examStudent->attempt;
                         $model->answer_file = UploadedFile::getInstancesByName('answer_file');

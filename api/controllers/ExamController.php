@@ -63,6 +63,18 @@ class ExamController extends ApiActiveController
         // return $student;
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
+        $query = $model->find()->with(['infoRelation']);
+
+        $subjectId = Yii::$app->request->get('subject_id');
+        if ($subjectId) {
+            $forSubjectIdeduSmesterSubjectIds = EduSemestrSubject::find()
+                ->where(['subject_id' => $subjectId])
+                ->select('id');
+
+            if ($forSubjectIdeduSmesterSubjectIds) {
+                $query = $query->andWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
+            }
+        }
 
         if ($student) {
             if (isset($eduSmesterId)) {
@@ -77,9 +89,7 @@ class ExamController extends ApiActiveController
                     ->select('edu_semestr_subject.id');
             }
             if (isset($eduSmesterSubjectIds)) {
-                $query = $model->find()
-                    ->with(['infoRelation'])
-                    ->andWhere([$this->table_name . '.is_deleted' => 0])
+                $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
                     ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
                     ->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
@@ -87,14 +97,13 @@ class ExamController extends ApiActiveController
                     ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE_FOR_ALL])
                     ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
             } else {
-                $query = $model->find()->andWhere([
+                $query = $query->andWhere([
                     'edu_semestr_subject_id' => -1
                 ]);
             }
         } else {
 
-            $query = $model->find()
-                ->with(['infoRelation'])
+            $query = $query->with(['infoRelation'])
                 ->andWhere([$this->table_name . '.is_deleted' => 0])
                 ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
                 ->groupBy($this->table_name . '.id')
@@ -110,7 +119,6 @@ class ExamController extends ApiActiveController
                 $query->andFilterWhere([
                     'faculty_id' => -1
                 ]);
-                
             }
             /*  is Self  */
         }

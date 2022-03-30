@@ -122,6 +122,7 @@ class Subject extends \yii\db\ActiveRecord
             'exam',
             'examCount',
 
+            'examStudentByLang',
 
             'createdBy',
             'updatedBy',
@@ -135,6 +136,12 @@ class Subject extends \yii\db\ActiveRecord
     {
         return Exam::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id])->all();
     }
+
+    public function getExamStudentByLang()
+    {
+        return ExamForSubject::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id])->all();
+    }
+
 
     public function getExamCount()
     {

@@ -20,10 +20,10 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-        $mk = new MipService();
+       /*  $mk = new MipService();
 
-        return  MipService::getToken();
-        return json_decode($mk->getToken());
+        return  $mk->getToken();
+        return json_decode($mk->getToken()); */
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = new PersonDataHelper();

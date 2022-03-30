@@ -15,11 +15,12 @@ class MipService
 {
     public $user_number = '';
     public $numbers_array = [];
-    protected $username = 'M_fM1f5fxdS0XXjBBLBH79cJ8kIa';
-    protected $password = 'VhOOBPrpPiPI_G00cls0ENP5frUa';
 
-    public function getToken($type = null)
+
+    public static function getToken($type = null)
     {
+        $username = 'M_fM1f5fxdS0XXjBBLBH79cJ8kIa';
+        $password = 'VhOOBPrpPiPI_G00cls0ENP5frUa';
         $url = 'https://iskm.egov.uz:9444/oauth2/token?grant_type=password&username=justice-user2&password=KN8akqXsEg';
         $mk_curl = curl_init();
         curl_setopt($mk_curl, CURLOPT_URL, $url);
@@ -40,7 +41,7 @@ class MipService
         // Authorization set basic auth
         curl_setopt($mk_curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         // Basic Auth username and password
-        curl_setopt($mk_curl, CURLOPT_USERPWD, $this->username . ":" . $this->password);
+        curl_setopt($mk_curl, CURLOPT_USERPWD, $username . ":" . $password);
         // curl_setopt($mk_curl, CURLOPT_TIMEOUT, 30);
 
         // POST 
@@ -74,100 +75,50 @@ class MipService
         }
     }
 
-    function CallAPI($method, $url, $data = false)
+    public static function getPhotoService()
     {
-        $curl = curl_init();
 
-        switch ($method) {
-            case "POST":
-                curl_setopt($curl, CURLOPT_POST, 1);
+        $pinpp = "30111975890051";
+        $doc_give_date = "2014-12-09";
 
-                if ($data)
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                break;
-            case "PUT":
-                curl_setopt($curl, CURLOPT_PUT, 1);
-                break;
-            default:
-                if ($data) {
-                    $url = sprintf("%s?%s", $url, http_build_query($data));
-                }
-        }
 
-        // Optional Authentication:
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, "username:password");
+        $xml = "<?xml version='1.0' encoding=\"utf-8\"?>
+                        <DataCEPRequest>
+                             <pinpp>$pinpp</pinpp>
+                             <document>$doc_give_date</document>
+                             <langId>3</langId>
+                        </DataCEPRequest>";
+        $array = [
+            'AuthInfo' => [
+                'WS_ID' => '',
+                'LE_ID' => '',
+            ],
+            'Data' => $xml,
+            'Signature' => '',
+            'PublicCert' => '',
+            'SignDate' => '',
+        ];
 
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $xmlMK = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:idm="http://fido.com/IdmsEGMICServices">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <idm:GetDataByPinppRequest>
+         <idm:Data><![CDATA[<?xml version="1.0"?>
+         <DataByPinppRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///d:/STS/workspaceEASU/IdmsEGMICServices/src/main/resources/xsdData/GetDatabyDoc.xsd">
+         <pinpp>' . $pinpp . '</pinpp>
+         <doc_give_date>' . $doc_give_date . '</doc_give_date>
+         <langId>1</langId>
+         <is_consent_pers_data>Y</is_consent_pers_data>
+         </DataByPinppRequest>]]></idm:Data>
+         <idm:Signature></idm:Signature>
+         <idm:PublicCert></idm:PublicCert>
+         <idm:SignDate></idm:SignDate>
+      </idm:GetDataByPinppRequest>
+   </soapenv:Body>
+</soapenv:Envelope>';
 
-        $result = curl_exec($curl);
 
-        curl_close($curl);
 
-        return $result;
+
     }
-
-
-    protected function errors($response)
-    {
-        if (property_exists($response, 'Result')) {
-            if ($response->Result != 1) {
-                return false;
-            }
-        }
-        if (property_exists($response, 'PinppAddressResult')) {
-            if (property_exists($response->PinppAddressResult, 'AnswereId')) {
-                if ($response->PinppAddressResult->AnswereId != 1) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
-    /*
-        OkHttpClient client = Utils.getUnsafeOkHttpClient();
-        MediaType JSON = MediaType.parse("application/json;charset=utf-8");
-        JSONObject actual = new JSONObject();
-        actual.put("pinfl", pinfl);
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, actual.toString());
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + employeeInfoService.token())
-                .url("https://apimgw.egov.uz:8243/minvuz/services/diploma/v1")
-                .post(body)
-                .build();
-        JSONObject jsonObject;
-        String s = "Ma'lumot topilmapti...";
-        try {
-            Response response = client.newCall(request).execute();
-            s = response.body().string();
-            jsonObject = new JSONObject(s);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity(s, OK);
-        }
-
-        public String token() {
-        OkHttpClient client = Utils.getUnsafeOkHttpClient();
-        MediaType JSON = MediaType.parse("application/json;charset=utf-8");
-        RequestBody body = RequestBody.create(JSON, "");
-        Request request = new Request.Builder()
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Basic TV9mTTFmNWZ4ZFMwWFhqQkJMQkg3OWNKOGtJYTpWaE9PQlBycFBpUElfRzAwY2xzMEVOUDVmclVh")
-                .url("https://iskm.egov.uz:9444/oauth2/token?grant_type=password&username=justice-user2&password=KN8akqXsEg")
-                .method("POST", body)
-                .build();
-        String object = null;
-        try {
-            Response responseInn = client.newCall(request).execute();
-            JSONObject json = new JSONObject(responseInn.body().string());
-            object = json.getString("access_token");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return object;
-    }
-    */
 }

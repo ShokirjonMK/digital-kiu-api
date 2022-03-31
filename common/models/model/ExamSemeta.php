@@ -5,7 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "exam_question".
@@ -152,6 +151,91 @@ class ExamSemeta extends \yii\db\ActiveRecord
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
+    public static function createItems($post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $examId = isset($post['exam_id']) ?  $post['exam_id'] : null;
+        $data = [];
+        $data['status'] = true;
+        if (isset($examId)) {
+            $exam = Exam::findOne($examId);
+            if (isset($exam)) {
+                /** smetas */
+                if (isset($post['smetas'])) {
+                    $post['smetas'] = str_replace("'", "", $post['smetas']);
+                    if (!isJsonMK($post['smetas'])) {
+                        $errors['smetas'] = [_e('Must be Json')];
+                    }
+
+                    foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
+                        // [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
+
+                        $subjectId = $exam->eduSemestrSubject->subject_id;
+
+                        $hasTeacherAccess = TeacherAccess::findOne([
+                            'subject_id' => $subjectId,
+                            'language_id' => $smetaAttribute->lang_id,
+                            'id' =>  $teacherAccessId
+                        ]);
+
+                        if ($hasTeacherAccess) {
+
+                            $oldExamSmeta = ExamSemeta::findOne([
+                                'exam_id' => $examId,
+                                'lang_id' => $smetaAttribute->lang_id,
+                                'teacher_access_id' => $teacherAccessId
+                            ]);
+
+                            if ($oldExamSmeta) {
+                                $newExamSmeta = $oldExamSmeta;
+                            } else {
+                                $newExamSmeta = new ExamSemeta();
+                            }
+                            $newExamSmeta->exam_id = (int)$examId;
+                            $newExamSmeta->lang_id = $smetaAttribute->lang_id;
+                            $newExamSmeta->count = $smetaAttribute->count;
+                            $newExamSmeta->teacher_access_id = $teacherAccessId;
+
+                            $newExamSmeta->status = self::STATUS_NEW;
+
+
+                            if (!($newExamSmeta->validate())) {
+                                $errors[] = [$teacherAccessId => $newExamSmeta->errors];
+                            }
+
+                            $newExamSmeta->save();
+                            $data['data'][] = $newExamSmeta;
+                        } else {
+                            $errors[] = [$teacherAccessId  => _e(' Teacher Access Id is not vailed (' . $teacherAccessId . ')')];
+                        }
+                        // ***
+                    }
+                } else {
+                    $errors['smetas'] = [_e('Required')];
+                }
+            } else {
+                $errors['exam'] = [_e('Exam not found')];
+            }
+        } else {
+            $errors['exam_id'] = [_e('Exam ID is required')];
+        }
+
+
+        if (count($errors) == 0) {
+            $data['status'] = true;
+            $transaction->commit();
+            return $data;
+        } else {
+            $data['status'] = false;
+            $transaction->rollBack();
+            $data['errors'] = $errors;
+            return $data;
+            return simplify_errors($errors);
+        }
+        /** smetas */
     }
 
     public static function createItem($model, $post)

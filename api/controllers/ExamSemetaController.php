@@ -60,7 +60,7 @@ class ExamSemetaController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            $exam = Exam::findOne($post('exam_id') ?? null);
+            $exam = Exam::findOne($post['exam_id'] ?? null);
             if ($exam) {
                 if ($exam->faculty_id != $t['UserAccess']->table_id) {
                     return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
@@ -74,9 +74,20 @@ class ExamSemetaController extends ApiActiveController
         }
         /*  is Self  */
 
-        $this->load($model, $post);
 
-        $result = ExamSemeta::createItem($model, $post);
+        if ($post['smetas']) {
+            $result = ExamSemeta::createItems($post);
+
+            if ($result['status']) {
+                return $this->response(1, _e($this->controller_name . ' successfully created.'), $result['data'], null, ResponseStatus::CREATED);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        } else {
+            $this->load($model, $post);
+            $result = ExamSemeta::createItem($model, $post);
+        }
+
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {

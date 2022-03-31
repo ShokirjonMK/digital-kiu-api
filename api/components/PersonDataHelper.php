@@ -31,7 +31,7 @@ class PersonDataHelper
             $this->function = $service->function;
             $this->url = $service->url;
             $array[] = $this->getData($pinfl, $passport);
-//            $result = call_user_func_array("array_merge", $array);
+            //            $result = call_user_func_array("array_merge", $array);
         }
         return $array;
     }
@@ -47,9 +47,9 @@ class PersonDataHelper
             $params = [
                 'verifypeer' => false,
                 'verifyhost' => false,
-//                http://10.190.2.36
-//                http://10.0.42.3:9444
-//                http://10.0.42.3:8243
+                //  http://10.190.2.36
+                //  http://10.0.42.3:9444
+                //  http://10.0.42.3:8243
                 // 'host' => '10.0.42.3',
                 // 'port' => '9444',
                 'stream_context' => stream_context_create([
@@ -108,8 +108,8 @@ class PersonDataHelper
     protected function serviceForm($service_name, $pinfl, $passport)
     {
         $array = [];
-//        $pass_ser = substr($applicant->passport, 0, 2);
-//        $pass_num = substr($applicant->passport, 2, 7);
+        //        $pass_ser = substr($applicant->passport, 0, 2);
+        //        $pass_num = substr($applicant->passport, 2, 7);
         if ($service_name == 'passport_info') {
             $xml = "<?xml version='1.0' encoding=\"utf-8\"?>
                         <DataCEPRequest>
@@ -159,5 +159,4 @@ class PersonDataHelper
         }
         return true;
     }
-
 }

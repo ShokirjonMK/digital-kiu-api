@@ -160,6 +160,9 @@ class Exam extends \yii\db\ActiveRecord
             'examStudent',
             'examStudentByLang',
 
+            'teacherAccess',
+            'examSmeta',
+
 
             'description',
             'createdBy',
@@ -217,6 +220,16 @@ class Exam extends \yii\db\ActiveRecord
     public function getExamStudent()
     {
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+    }
+
+    public function getTeacherAccess()
+    {
+        return TeacherAccess::find()->where(['subject_id' => $this->eduSemestrSubject->subject->id, 'status' => 1])->all();
+    }
+
+    public function getExamSmeta()
+    {
+        return $this->hasMany(ExamSemeta::className(), ['exam_id' => 'id']);
     }
 
     public function getExamStudentByLang()

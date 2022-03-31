@@ -85,6 +85,9 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
+            'teacher' => function ($model) {
+                return $model->teacher ?? [];
+            },
             'user_id',
             'subject_id',
             'language_id',
@@ -174,14 +177,13 @@ class TeacherAccess extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
     public static function updateItem($model, $post)
@@ -191,24 +193,23 @@ class TeacherAccess extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if($model->save()){
+        if ($model->save()) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
     }
 
 
-    public function beforeSave($insert) {
+    public function beforeSave($insert)
+    {
         if ($insert) {
             $this->created_by = Current_user_id();
-        }else{
+        } else {
             $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }
-
-
 }

@@ -79,7 +79,7 @@ class ExamSemetaController extends ApiActiveController
             $result = ExamSemeta::createItems($post);
 
             if ($result['status']) {
-                return $this->response(1, _e($this->controller_name . ' successfully created.'), $result['data'], null, ResponseStatus::CREATED);
+                return $this->response(1, _e($this->controller_name . 's successfully created.'), $result['data'], null, ResponseStatus::CREATED);
             } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UPROCESSABLE_ENTITY);
             }

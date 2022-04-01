@@ -42,9 +42,11 @@ class Exam extends \yii\db\ActiveRecord
         ];
     }
 
-    const STATUS_ACTIVE_FOR_ALL = 1;
     const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
     const STATUS_FINISHED = 2;
+    const STATUS_DISTRIBUTED = 3;
+
 
     const PROTECTED_TURE = 1;
     const PROTECTED_FALSE = 0;
@@ -151,6 +153,7 @@ class Exam extends \yii\db\ActiveRecord
             'subject',
             'subjectName',
 
+            'statusName',
 
 
             'examQuestions',
@@ -267,6 +270,11 @@ class Exam extends \yii\db\ActiveRecord
     public function getDirection()
     {
         return $this->hasOne(Direction::className(), ['direction_id' => 'id']);
+    }
+
+    public function getStatusName()
+    {
+        return   $this->statusList()[$this->status];
     }
 
 
@@ -587,5 +595,16 @@ class Exam extends \yii\db\ActiveRecord
             $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_FINISHED => _e('STATUS_FINISHED'),
+            self::STATUS_DISTRIBUTED => _e('STATUS_DISTRIBUTED')
+
+        ];
     }
 }

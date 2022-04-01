@@ -225,6 +225,9 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
 
         if (count($errors) == 0) {
+            $exam->status = $exam::STATUS_DISTRIBUTED;
+            $exam->update();
+
             $data['status'] = true;
             $transaction->commit();
             return $data;

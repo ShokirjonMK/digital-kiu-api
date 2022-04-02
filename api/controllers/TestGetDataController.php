@@ -20,9 +20,16 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-        $mk = new MipService();
+        // $str     = "Line 1\nLine 2\rLine 3\r\nLine 4\n";
+        // $order   = array("\r\n", "\n", "\r");
+        // $replace = '<br />';
 
-        return $mk->getPhotoService();
+        // return str_replace($order, $replace, $str);
+
+        $mk = new MipService();
+        $pinpp = "30111975890051";
+        $doc_give_date = "2014-12-09";
+        return $mk->getPhotoService($pinpp, $doc_give_date);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = new PersonDataHelper();

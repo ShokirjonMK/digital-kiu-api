@@ -253,146 +253,152 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             $exam = Exam::findOne($exam_id);
 
             if ($exam) {
-                $ExamStudentHas = ExamStudent::find()->where([
-                    'exam_id' => $exam_id,
-                    'student_id' => $student_id,
-                ])
-                    ->orderBy('id desc')
-                    ->one();
-
-                // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
-                $t = true;
-                if ($exam->is_protected == 1) {
-                    if ($password == $ExamStudentHas->password) {
-                        $t = true;
-                    } else {
-                        $t = false;
-                    }
-                }
-                if ($t) {
-
-                    $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                    if ($hasExamStudentAnswer) {
-                        $getQuestionModel = new ExamStudentAnswer();
-                        $getQuestion = $getQuestionModel->find()
-                            ->with(['question'])
-                            ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
-                            ->all();
-
-                        $data['questions'] = $getQuestion;
-                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
-                        $exam_times['duration'] = $exam->duration;
-                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
-
-                        $data['times'] = $exam_times;
-                        $data['status'] = true;
-                        return $data;
-                    }
+                if ($exam->status == 1) {
 
 
-                    // $now_date = date('Y-m-d H:i:s');
-                    $now_second = time();
-                    if (
-                        strtotime($exam->start) < $now_second
-                        && strtotime($exam->finish) >= $now_second
-                    ) {
+                    $ExamStudentHas = ExamStudent::find()->where([
+                        'exam_id' => $exam_id,
+                        'student_id' => $student_id,
+                    ])
+                        ->orderBy('id desc')
+                        ->one();
 
-                        $question_count_by_type_with_ball = json_decode($exam->question_count_by_type_with_ball);
-                        if (!(isJsonMK($exam->question_count_by_type_with_ball) && $question_count_by_type_with_ball)) {
-                            $errors[] = _e("The question is not specified");
-                            $transaction->rollBack();
-                            return simplify_errors($errors);
-                        }
-                        $subject_id = $exam->eduSemestrSubject->subject_id;
-                        $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
-
-                        /* Bu yerga bolani imtixonga a`zo qilamiz*/
-
-                        $student = Student::findOne(['id' => $student_id]);
-                        $student_lang_id = $student->edu_lang_id;
-                        if ($ExamStudentHas) {
-                            $ExamStudent = $ExamStudentHas;
+                    // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
+                    $t = true;
+                    if ($exam->is_protected == 1) {
+                        if ($password == $ExamStudentHas->password) {
+                            $t = true;
                         } else {
-                            $ExamStudent = new ExamStudent();
+                            $t = false;
                         }
+                    }
+                    if ($t) {
 
-                        $ExamStudent->exam_id = $exam_id;
-                        $ExamStudent->student_id = $student_id;
-                        $ExamStudent->start = time();
-                        $ExamStudent->lang_id = $student_lang_id;
-                        // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
-                        $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
-                        $ExamStudent->save(false);
-
-                        /* *****************************/
-                        // isJsonMK($question_count_by_type);
-                        // isJsonMK($question_count_by_type_with_ball);
-                        foreach ($question_count_by_type_with_ball as $type => $question_count_with_ball) {
-                            $questionAll = Question::find()
-                                ->where([
-                                    'subject_id' => $subject_id,
-                                    'semestr_id' => $semestr_id,
-                                    'lang_id' => $student_lang_id,
-                                    'question_type_id' => $type,
-                                    'status' => 1,
-                                    'is_deleted' => 0
-                                ])
-                                ->orderBy(new Expression('rand()'))
-                                ->limit($question_count_with_ball->count)
+                        $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                        if ($hasExamStudentAnswer) {
+                            $getQuestionModel = new ExamStudentAnswer();
+                            $getQuestion = $getQuestionModel->find()
+                                ->with(['question'])
+                                ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
                                 ->all();
 
-                            if (count($questionAll) == $question_count_with_ball->count) {
-                                // if (count($questionAll) > 0) {
-                                foreach ($questionAll as $question) {
-                                    $ExamStudentAnswer = new ExamStudentAnswer();
-                                    $ExamStudentAnswer->exam_student_id = $ExamStudent->id;
-                                    $ExamStudentAnswer->exam_id = $exam_id;
-                                    $ExamStudentAnswer->question_id = $question->id;
-                                    $ExamStudentAnswer->student_id = $student_id;
-                                    $ExamStudentAnswer->type = $type;
-                                    $ExamStudentAnswer->max_ball = $question_count_with_ball->ball;
-                                    $ExamStudentAnswer->attempt = 1;
-                                    $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
-                                    $ExamStudentAnswer->save();
-                                }
-                            } else {
+                            $data['questions'] = $getQuestion;
+                            $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
+                            $exam_times['duration'] = $exam->duration;
+                            $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
 
-                                ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                                ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                                $errors[] = _e("Questions are not found for this exam");
+                            $data['times'] = $exam_times;
+                            $data['status'] = true;
+                            return $data;
+                        }
 
+
+                        // $now_date = date('Y-m-d H:i:s');
+                        $now_second = time();
+                        if (
+                            strtotime($exam->start) < $now_second
+                            && strtotime($exam->finish) >= $now_second
+                        ) {
+
+                            $question_count_by_type_with_ball = json_decode($exam->question_count_by_type_with_ball);
+                            if (!(isJsonMK($exam->question_count_by_type_with_ball) && $question_count_by_type_with_ball)) {
+                                $errors[] = _e("The question is not specified");
                                 $transaction->rollBack();
                                 return simplify_errors($errors);
                             }
+                            $subject_id = $exam->eduSemestrSubject->subject_id;
+                            $semestr_id = $exam->eduSemestrSubject->eduSemestr->semestr_id;
+
+                            /* Bu yerga bolani imtixonga a`zo qilamiz*/
+
+                            $student = Student::findOne(['id' => $student_id]);
+                            $student_lang_id = $student->edu_lang_id;
+                            if ($ExamStudentHas) {
+                                $ExamStudent = $ExamStudentHas;
+                            } else {
+                                $ExamStudent = new ExamStudent();
+                            }
+
+                            $ExamStudent->exam_id = $exam_id;
+                            $ExamStudent->student_id = $student_id;
+                            $ExamStudent->start = time();
+                            $ExamStudent->lang_id = $student_lang_id;
+                            // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                            $ExamStudent->status = ExamStudent::STATUS_TAKED;
+                            $ExamStudent->save(false);
+
+                            /* *****************************/
+                            // isJsonMK($question_count_by_type);
+                            // isJsonMK($question_count_by_type_with_ball);
+                            foreach ($question_count_by_type_with_ball as $type => $question_count_with_ball) {
+                                $questionAll = Question::find()
+                                    ->where([
+                                        'subject_id' => $subject_id,
+                                        'semestr_id' => $semestr_id,
+                                        'lang_id' => $student_lang_id,
+                                        'question_type_id' => $type,
+                                        'status' => 1,
+                                        'is_deleted' => 0
+                                    ])
+                                    ->orderBy(new Expression('rand()'))
+                                    ->limit($question_count_with_ball->count)
+                                    ->all();
+
+                                if (count($questionAll) == $question_count_with_ball->count) {
+                                    // if (count($questionAll) > 0) {
+                                    foreach ($questionAll as $question) {
+                                        $ExamStudentAnswer = new ExamStudentAnswer();
+                                        $ExamStudentAnswer->exam_student_id = $ExamStudent->id;
+                                        $ExamStudentAnswer->exam_id = $exam_id;
+                                        $ExamStudentAnswer->question_id = $question->id;
+                                        $ExamStudentAnswer->student_id = $student_id;
+                                        $ExamStudentAnswer->type = $type;
+                                        $ExamStudentAnswer->max_ball = $question_count_with_ball->ball;
+                                        $ExamStudentAnswer->attempt = 1;
+                                        $ExamStudentAnswer->status = ExamStudentAnswer::STATUS_NEW;
+                                        $ExamStudentAnswer->save();
+                                    }
+                                } else {
+
+                                    ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                                    ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                                    $errors[] = _e("Questions are not found for this exam");
+
+                                    $transaction->rollBack();
+                                    return simplify_errors($errors);
+                                }
+                            }
+                            $getQuestionModel = new ExamStudentAnswer();
+                            $getQuestion = $getQuestionModel->find()
+                                ->with(['question'])
+                                ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
+                                ->all();
+
+                            $data['questions'] = $getQuestion;
+
+                            // $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
+
+                            $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudent->start);
+                            $exam_times['duration'] = $exam->duration;
+                            $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->start + $exam->duration);
+
+                            $data['times'] = $exam_times;
+                            $data['status'] = true;
+                            $transaction->commit();
+                            return $data;
+                        } else {
+                            if (strtotime($exam->start) > $now_second) {
+                                $errors[] = _e("This exam`s time is not starts");
+                            } elseif (strtotime($exam->finish) < $now_second) {
+                                $errors[] = _e("This exam`s time expired");
+                            }
+                            // $errors[] = $exam;
                         }
-                        $getQuestionModel = new ExamStudentAnswer();
-                        $getQuestion = $getQuestionModel->find()
-                            ->with(['question'])
-                            ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
-                            ->all();
-
-                        $data['questions'] = $getQuestion;
-
-                        // $data['questions'] = ExamStudentAnswer::findAll(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null]);
-
-                        $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudent->start);
-                        $exam_times['duration'] = $exam->duration;
-                        $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->start + $exam->duration);
-
-                        $data['times'] = $exam_times;
-                        $data['status'] = true;
-                        $transaction->commit();
-                        return $data;
                     } else {
-                        if (strtotime($exam->start) > $now_second) {
-                            $errors[] = _e("This exam`s time is not starts");
-                        } elseif (strtotime($exam->finish) < $now_second) {
-                            $errors[] = _e("This exam`s time expired");
-                        }
-                        // $errors[] = $exam;
+                        $errors[] = _e("Exam password incorrect");
                     }
                 } else {
-                    $errors[] = _e("Exam password incorrect");
+                    $errors[] = _e("This exam is " . $exam->getStatusName());
                 }
             } else {
                 $errors[] = _e("This exam not found");

@@ -40,13 +40,14 @@ class MipTokenGen
         // curl_setopt($mk_curl, CURLOPT_SSL_VERIFYPEER, 0);
 
         // curl execute (get response)
-        $response = curl_exec($mk_curl);
+
 
         if (curl_errno($mk_curl)) {
             $error_msg = curl_error($mk_curl);
             curl_close($mk_curl);
             return $error_msg;
         } else {
+            $response = curl_exec($mk_curl);
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
             $getContentJson = json_decode($getContent);

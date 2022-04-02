@@ -3,7 +3,7 @@
 namespace api\components;
 
 use SoapClient;
-
+use SoapFault;
 
 class MipService
 {
@@ -13,98 +13,55 @@ class MipService
 
     public static function getPhotoService1()
     {
-
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";
 
 
-        $data = null;
-        $url = 'https://apimgw.egov.uz:8243/gcp/photoservice/v1';
+        $xmlMK = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:idm="http://fido.com/IdmsEGMICServices">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <idm:GetDataByPinppRequest>
+         <idm:Data><![CDATA[<?xml version="1.0"?>
+         <DataByPinppRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///d:/STS/workspaceEASU/IdmsEGMICServices/src/main/resources/xsdData/GetDatabyDoc.xsd">
+         <pinpp>' . $pinpp . '</pinpp>
+         <doc_give_date>' . $doc_give_date . '</doc_give_date>
+         <langId>1</langId>
+         <is_consent_pers_data>Y</is_consent_pers_data>
+         </DataByPinppRequest>]]></idm:Data>
+         <idm:Signature></idm:Signature>
+         <idm:PublicCert></idm:PublicCert>
+         <idm:SignDate></idm:SignDate>
+      </idm:GetDataByPinppRequest>
+   </soapenv:Body>
+</soapenv:Envelope>';
 
-        $form = $this->serviceForm($this->service_name, $pinfl, $passport);
+        $url = "http://59.162.33.102:9301/Avalability";
 
-        try {
-            $params = [
-                'verifypeer' => false,
-                'verifyhost' => false,
-                //                http://10.190.2.36
-                //                http://10.0.42.3:9444
-                //                http://10.0.42.3:8243
-                // 'host' => '10.0.42.3',
-                // 'port' => '9444',
-                'stream_context' => stream_context_create([
-                    'ssl' => [
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                        'allow_self_signed' => true
-                    ]
-                ])
-            ];
+        //setting the curl parameters.
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // Following line is compulsary to add as it is:
+        curl_setopt(
+            $ch,
+            CURLOPT_POSTFIELDS,
+            "xmlRequest=" . $xmlMK
+        );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
+        $data = curl_exec($ch);
+        curl_close($ch);
 
-            $soap = new SoapClient($url, $params);
-            $response = $soap->__soapCall($function, $form);
-            $array = [];
-            if (!$this->errors($response)) {
-                return $array;
-            } else {
-                if ($this->service_name == 'passport_info') {
-                    $data = simplexml_load_string($response->Data);
-                } else {
-                    $data = $response;
-                }
-                if ($this->service_name == 'passport_info') {
-                    $data = (array)$data;
-                    $row = (array)$data['row'];
-                    $array['document'] = $row['document'];
-                    $array['surname_latin'] = $row['surname_latin'];
-                    $array['name_latin'] = $row['name_latin'];
-                    $array['patronym_latin'] = $row['patronym_latin'];
-                    // $array['surname_engl'] = $row['surname_engl'];
-                    //    $array['name_engl'] = $row['name_engl'];
-                    $array['birth_date'] = $row['birth_date'];
-                    $array['birth_place'] = $row['birth_place'];
-                    //    $array['birth_country'] = $row['birth_country'];
-                    $array['nationality'] = $row['nationality'];
-                }
-                if ($this->service_name == "address_by_prop") {
-                    $array['propiska_region'] = $data->PinppAddressResult->Data->PermanentRegistration->Region->Value;
-                    $array['propiska_tuman'] = $data->PinppAddressResult->Data->PermanentRegistration->District->Value;
-                    //    $array['propis_country'] = $data->PinppAddressResult->Data->PermanentRegistration->Country->Value;
-                    $array['Cadastre'] = $data->PinppAddressResult->Data->PermanentRegistration->Cadastre;
-                    $array['Address'] = $data->PinppAddressResult->Data->PermanentRegistration->Address;
-                    $array['RegistrationDate'] = $data->PinppAddressResult->Data->PermanentRegistration->RegistrationDate;
-                }
-            }
-            return $array;
-        } catch (SoapFault $soapFault) {
-            $service = IpsService::find()->where(['like', 'service_name', $this->service_name])->one();
-            if ($service) {
-                //  $service->is_working = 0;
-                $service->save(false);
-            }
-        }
+        //convert the XML result into array
+        $array_data = json_decode(json_encode(simplexml_load_string($data)), true);
 
-
-
-
-        $xml = "<?xml version='1.0' encoding=\"utf-8\"?>
-                        <DataCEPRequest>
-                             <pinpp>$pinpp</pinpp>
-                             <document>$doc_give_date</document>
-                             <langId>3</langId>
-                        </DataCEPRequest>";
-        $array = [
-            'AuthInfo' => [
-                'WS_ID' => '',
-                'LE_ID' => '',
-            ],
-            'Data' => $xml,
-            'Signature' => '',
-            'PublicCert' => '',
-            'SignDate' => '',
-        ];
+        return $array_data;
+        print_r('<pre>');
+        print_r($array_data);
+        print_r('</pre>');
     }
-    public static function getPhotoService()
+
+
+    public static function getPhotoService($pinpp, $doc_give_date)
     {
 
         $pinpp = "30111975890051";
@@ -138,9 +95,7 @@ class MipService
         // headers
         $headers = array(
             "Authorization: Bearer $token",
-            'Content-Type: text/json',
-            'Content-Length: 0',
-            'Accept: */*'
+            'Content-Type: text/xml'
         );
 
         // set headers
@@ -148,10 +103,6 @@ class MipService
         curl_setopt($mk_curl, CURLOPT_HEADER, 1);
 
 
-        // Authorization set basic auth
-        // curl_setopt($mk_curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        // Basic Auth username and password
-        // curl_setopt($mk_curl, CURLOPT_USERPWD, $username . ":" . $password);
         // curl_setopt($mk_curl, CURLOPT_TIMEOUT, 30);
 
         // POST 
@@ -166,14 +117,24 @@ class MipService
 
 
         if (curl_errno($mk_curl)) {
+
             // moving to display page to display curl errors
             echo curl_errno($mk_curl);
             echo curl_error($mk_curl);
         } else {
+            // return "res";
+
             //getting response from server
             $response = curl_exec($mk_curl);
+            list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
-            return $response;
+
+            $getContent = str_replace('&lt;', '<', $getContent);
+            $getContent = str_replace('&gt;', '>', $getContent);
+            return $getContent;
+            // \r\n\r\n 
+            $array_data = json_decode(json_encode(simplexml_load_string($getContent)), true);
+            return $array_data;
         }
 
 
@@ -197,32 +158,22 @@ class MipService
         }
     }
 
-    protected function serviceForm($pinfl, $passport)
+
+
+    protected function errors($response)
     {
-        $array = [];
-
-        $xml = "<?xml version='1.0' encoding=\"utf-8\"?>
-                        <DataCEPRequest>
-                             <pinpp>$pinfl</pinpp>
-                             <document>$passport</document>
-                             <langId>3</langId>
-                        </DataCEPRequest>";
-        $array = [
-            'AuthInfo' => [
-                'WS_ID' => '',
-                'LE_ID' => '',
-            ],
-            'Data' => $xml,
-            'Signature' => '',
-            'PublicCert' => '',
-            'SignDate' => '',
-        ];
-
-
-        $result = [
-            'DataCEPRequest' => $array
-        ];
-
-        return $result;
+        if (property_exists($response, 'Result')) {
+            if ($response->Result != 1) {
+                return false;
+            }
+        }
+        if (property_exists($response, 'PinppAddressResult')) {
+            if (property_exists($response->PinppAddressResult, 'AnswereId')) {
+                if ($response->PinppAddressResult->AnswereId != 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -241,6 +241,7 @@ class Exam extends \yii\db\ActiveRecord
             ->from('exam_student')
             ->select(['COUNT(*) AS count', 'lang_id'])
             ->where(['exam_id' => $this->id])
+            ->andWhere(['status' => ExamStudent::STATUS_TAKED])
             ->groupBy(['lang_id'])
             ->all();
     }
@@ -320,7 +321,7 @@ class Exam extends \yii\db\ActiveRecord
                         $ExamStudent->lang_id = $langId;
                         $ExamStudent->password = _random_string('numeric', 4);
                         // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
-                        $ExamStudent->status = ExamStudentAnswer::STATUS_NEW;
+                        $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
                         $ExamStudent->save(false);
                     }
                     ////

@@ -41,6 +41,13 @@ class ExamStudent extends \yii\db\ActiveRecord
         ];
     }
 
+    const STATUS_INACTIVE = 0;
+    const STATUS_TAKED = 1;
+    const STATUS_COMPLETE = 2;
+    const STATUS_IN_CHECKING = 3;
+    const STATUS_MARKED = 4;
+    const STATUS_SHARED = 4;
+
 
     /**
      * {@inheritdoc}
@@ -128,6 +135,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examQuestions',
             'examStudentAnswers',
 
+            'statusName',
+
             'createdBy',
             'updatedBy',
         ];
@@ -164,6 +173,11 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
+    public function getStatusName()
+    {
+        return   $this->statusList()[$this->status];
     }
 
     public static function createItem($model, $post)
@@ -210,5 +224,17 @@ class ExamStudent extends \yii\db\ActiveRecord
             $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            self::STATUS_TAKED => _e('STATUS_TAKED'),
+            self::STATUS_COMPLETE => _e('STATUS_COMPLETE'),
+            self::STATUS_IN_CHECKING => _e('STATUS_IN_CHECKING'),
+            self::STATUS_MARKED => _e('STATUS_MARKED'),
+            self::STATUS_SHARED => _e('STATUS_SHARED'),
+        ];
     }
 }

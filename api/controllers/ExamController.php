@@ -94,7 +94,7 @@ class ExamController extends ApiActiveController
                     ->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     ->groupBy($this->table_name . '.id')
-                    ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE_FOR_ALL])
+                    ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE])
                     ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
             } else {
                 $query = $query->andWhere([

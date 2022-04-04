@@ -129,12 +129,12 @@ class MipService
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
 
-            $getContent = str_replace('&lt;', '<', $getContent);
-            $getContent = str_replace('&gt;', '>', $getContent);
+            // $getContent = str_replace('&lt;', '<', $getContent);
+            // $getContent = str_replace('&gt;', '>', $getContent);
+           
             return $getContent;
             // \r\n\r\n 
-            $array_data = json_decode(json_encode(simplexml_load_string($getContent)), true);
-            return $array_data;
+
         }
 
 

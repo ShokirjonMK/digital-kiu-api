@@ -20,16 +20,35 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-        // $str     = "Line 1\nLine 2\rLine 3\r\nLine 4\n";
-        // $order   = array("\r\n", "\n", "\r");
-        // $replace = '<br />';
-
-        // return str_replace($order, $replace, $str);
-
         $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";
-        return $mk->getPhotoService($pinpp, $doc_give_date);
+
+        // $xml = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date)); // where $xml_string is the XML data you'd like to use (a well-formatted XML string). If retrieving from an external source, you can use file_get_contents to retrieve the data and populate this variable.
+        // $json = json_encode($xml); // convert the XML string to JSON
+        // $array = json_decode($json, TRUE);
+
+
+       /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
+
+        //Encode the SimpleXMLElement object into a JSON string.
+        $jsonString = json_encode($xmlObject);
+
+        //Convert it back into an associative array for
+        //the purposes of testing.
+        $jsonArray = json_decode($jsonString, true);
+
+        //var_dump out the $jsonArray, just so we can
+        //see what the end result looks like
+        return $jsonArray;
+
+
+        return $array ; */
+
+        $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
+
+        return $rrrr ;
+        return simplexml_load_file($rrrr);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $model = new PersonDataHelper();

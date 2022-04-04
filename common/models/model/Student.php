@@ -70,13 +70,13 @@ class Student extends \yii\db\ActiveRecord
             [
                 [
                     'user_id',
-                    'faculty_id',
-                    'direction_id',
-                    'course_id',
-                    'edu_year_id',
-                    'edu_type_id',
-                    'is_contract',
-                    'edu_lang_id'
+                    // 'faculty_id',
+                    // 'direction_id',
+                    // 'course_id',
+                    // 'edu_year_id',
+                    // 'edu_type_id',
+                    // 'is_contract',
+                    // 'edu_lang_id'
                 ], 'required'
             ],
             [

@@ -26,6 +26,7 @@ class m211022_134710_student_new extends Migration
             'course_id' => $this->integer()->notNull(),
             'edu_year_id' => $this->integer()->notNull(),
             'edu_type_id' => $this->integer()->notNull(),
+            'gender' => $this->tinyInteger(1)->defaultValue(1),
             'is_contract' => $this->integer()->notNull(),
             'diplom_number' => $this->string(255)->Null(),
             'diplom_seria' => $this->string(255)->Null(),
@@ -48,7 +49,6 @@ class m211022_134710_student_new extends Migration
         $this->addForeignKey('cs_student_course_id', 'student', 'course_id', 'course', 'id');
         $this->addForeignKey('es_student_edu_year_id', 'student', 'edu_year_id', 'edu_year', 'id');
         $this->addForeignKey('es_student_edu_type_id', 'student', 'edu_type_id', 'edu_type', 'id');
-
     }
 
     /**

@@ -75,10 +75,12 @@ $controllers = [
     'notification',
     'notification-role',
     'nationality',
-    
+
     'test-get-data',
 
-    'telegram'
+    'telegram',
+
+    'statistic'
 
 ];
 
@@ -97,6 +99,11 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
+
+    // statistic
+    'GET <lang:\w{2}>/statistics/student-count-by-faculty' => 'statistic/student-count-by-faculty',
+
+
 
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',

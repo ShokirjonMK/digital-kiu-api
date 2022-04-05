@@ -36,7 +36,7 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'department_id', 'education_direction_id', 'basis_of_learning', 'education_type', 'type_of_residence'], 'integer'],
+            [['user_id', 'department_id', 'gender', 'education_direction_id', 'basis_of_learning', 'education_type', 'type_of_residence'], 'integer'],
             [['diploma_date'], 'safe'],
             [['landlord_info', 'student_live_with', 'other_info'], 'string'],
             [['diploma_number'], 'string', 'max' => 255],
@@ -63,12 +63,10 @@ class Student extends \yii\db\ActiveRecord
             'student_live_with' => Yii::t('app', 'Student live with'),
             'other_info' => Yii::t('app', 'Other informations (student)'),
         ];
-
     }
 
     public function getDepartment()
     {
         return $this->hasOne(Department::class, ['id' => 'department_id']);
     }
-
 }

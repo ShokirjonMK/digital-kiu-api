@@ -31,7 +31,7 @@ class m220127_130811_create_subject_content_table extends Migration
         $this->addForeignKey('scst_subject_content_subject_topic_mk', 'subject_content', 'subject_topic_id', 'subject_topic', 'id');
 
     }
-\   
+
     /**
      * {@inheritdoc}
      */

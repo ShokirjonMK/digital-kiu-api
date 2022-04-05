@@ -40,8 +40,6 @@ use yii\behaviors\TimestampBehavior;
  */
 class Student extends \yii\db\ActiveRecord
 {
-
-
     use ResourceTrait;
 
     public function behaviors()
@@ -50,8 +48,6 @@ class Student extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
-
-
 
     /**
      * {@inheritdoc}
@@ -94,6 +90,7 @@ class Student extends \yii\db\ActiveRecord
                     'is_contract',
                     'order',
                     'status',
+                    'gender',
                     'created_at',
                     'updated_at',
                     'created_by',
@@ -201,7 +198,7 @@ class Student extends \yii\db\ActiveRecord
             'permanentRegion',
             'permanentArea',
             'nationality',
-            
+
             'createdBy',
             'updatedBy',
         ];

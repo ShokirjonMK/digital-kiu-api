@@ -95,7 +95,7 @@ class MipService
         // headers
         $headers = array(
             "Authorization: Bearer $token",
-            'Content-Type: text/xml'
+            'Content-Type: text/xml; charset=UTF-8'
         );
 
         // set headers
@@ -126,13 +126,16 @@ class MipService
 
             //getting response from server
             $response = curl_exec($mk_curl);
+
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
+            // $getContent = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $getContent);
+            // $getContent = utf8_encode($getContent);
 
             // $getContent = str_replace('&lt;', '<', $getContent);
             // $getContent = str_replace('&gt;', '>', $getContent);
-           
-            return $getContent;
+            dd($getContent);
+            return simplexml_load_file($getContent);
             // \r\n\r\n 
 
         }

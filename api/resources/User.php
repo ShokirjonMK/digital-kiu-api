@@ -86,7 +86,7 @@ class User extends CommonUser
             // },
             'email',
             'status',
-            'deleted'
+            // 'deleted'
 
         ];
 

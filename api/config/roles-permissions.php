@@ -24,6 +24,8 @@ return [
         'enum_yesno',
         ////
 
+        // statistic
+        'statistic_student-count-by-faculty',
 
 
         'job_index',

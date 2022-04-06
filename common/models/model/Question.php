@@ -204,7 +204,7 @@ class Question extends \yii\db\ActiveRecord
 
     public function getOptions()
     {
-        return $this->hasMany(QuestionOption::className(), ['question_id' => 'id']);
+        return $this->hasMany(QuestionOption::className(), ['question_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**

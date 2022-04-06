@@ -120,8 +120,10 @@ class QuestionOption extends \yii\db\ActiveRecord
             // 'is_correct',
             'option',
 
-            // 'order',
-            // 'status',
+            'order',
+            'status',
+            // 'is_deleted',
+            
             // 'created_at',
             // 'updated_at',
             // 'created_by',

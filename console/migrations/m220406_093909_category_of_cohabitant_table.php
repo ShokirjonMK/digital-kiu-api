@@ -12,6 +12,11 @@ class m220406_093909_category_of_cohabitant_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'category_of_cohabitant';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('category_of_cohabitant');
+        }
+
         $this->createTable('{{%category_of_cohabitant}}', [
             'id' => $this->primaryKey(),
 //            'name'=>$this->string(255)->notNull(),

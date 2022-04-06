@@ -12,6 +12,11 @@ class m220406_102954_social_category_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'social_category';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('social_category');
+        }
+
         $this->createTable('{{%social_category}}', [
             'id' => $this->primaryKey(),
 //            'name' => $this->string(255)->notNull(),

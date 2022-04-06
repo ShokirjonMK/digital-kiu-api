@@ -12,6 +12,12 @@ class m220406_101515_residence_status_table extends Migration
      */
     public function safeUp()
     {
+
+        $tableName = Yii::$app->db->tablePrefix . 'residence_status';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('residence_status');
+        }
+
         $this->createTable('{{%residence_status}}', [
             'id' => $this->primaryKey(),
 //            'name'=>$this->string(255)->notNull(),

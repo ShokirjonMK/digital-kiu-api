@@ -135,15 +135,6 @@ class CategoryOfCohabitant extends \yii\db\ActiveRecord
         return $this->translate->description ?? '';
     }
 
-    /**
-     * Gets query for [[Rooms]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-//    public function getRooms()
-//    {
-//        return $this->hasMany(Room::className(), ['building_id' => 'id']);
-//    }
 
     public static function createItem($model, $post)
     {

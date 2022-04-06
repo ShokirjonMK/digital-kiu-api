@@ -14,7 +14,7 @@ class m220406_102954_social_category_table extends Migration
     {
         $this->createTable('{{%social_category}}', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(255)->notNull(),
+//            'name' => $this->string(255)->notNull(),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->notNull(),

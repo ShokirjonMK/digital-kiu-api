@@ -14,7 +14,7 @@ class m220406_101515_residence_status_table extends Migration
     {
         $this->createTable('{{%residence_status}}', [
             'id' => $this->primaryKey(),
-            'name'=>$this->string(255)->notNull(),
+//            'name'=>$this->string(255)->notNull(),
             'order'=>$this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at'=>$this->integer()->notNull(),

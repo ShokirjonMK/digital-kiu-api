@@ -82,6 +82,14 @@ class  StudentController extends ApiActiveController
                 }
                 $post['role'] = 'student';
                 $post['status'] = 10;
+
+                $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+                $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
+
+                // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+                // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+
+
                 $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
                 // dd("asd");
                 if ($hasProfile) {
@@ -113,21 +121,21 @@ class  StudentController extends ApiActiveController
                     if ($std) {
                         $count = $std->id + 10001;
                     }
-                    
+
                     $post['username'] = 'tsul_std_' . $count;
                     $post['email'] = 'tsul_std_' . $count . '@tsul.uz';
                     $this->load($model, $post);
                     $this->load($profile, $post);
                     $this->load($student, $post);
-                    
+
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
                     // return 1112;
 
                     $data[] = [$model, $student, $profile];
                 }
 
-                
-                
+
+
                 if (is_array($result)) {
                     $errorAll[$post['passport_pin']] = $result;
                 } else {

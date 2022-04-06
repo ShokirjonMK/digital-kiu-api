@@ -90,7 +90,7 @@ class CategoryOfCohabitantController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = tant::find()
+        $model = CategoryOfCohabitant::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

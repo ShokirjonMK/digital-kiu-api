@@ -79,7 +79,7 @@ class ResidenceStatusController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Building::find()
+        $model = ResidenceStatus::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {

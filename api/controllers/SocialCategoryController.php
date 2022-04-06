@@ -80,7 +80,7 @@ class SocialCategoryController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Building::find()
+        $model = SocialCategory::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {

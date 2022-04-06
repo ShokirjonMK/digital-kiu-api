@@ -3,22 +3,22 @@
 use yii\db\Migration;
 
 /**
- * Class m211012_134519_building
+ * Class m220406_102954_social_category_table
  */
-class m211012_134519_building extends Migration
+class m220406_102954_social_category_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('building', [
+        $this->createTable('{{%social_category}}', [
             'id' => $this->primaryKey(),
-            'name'=>$this->string(255)->notNull(),
-            'order'=>$this->tinyInteger(1)->defaultValue(1),
+            'name' => $this->string(255)->notNull(),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
-            'created_at'=>$this->integer()->notNull(),
-            'updated_at'=>$this->integer()->notNull(),
+            'created_at' => $this->integer()->notNull(),
+            'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
@@ -30,7 +30,7 @@ class m211012_134519_building extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('building');
+        $this->dropTable('social_category');
     }
 
     /*
@@ -42,7 +42,7 @@ class m211012_134519_building extends Migration
 
     public function down()
     {
-        echo "m211012_134519_building cannot be reverted.\n";
+        echo "m220406_102954_social_category_table cannot be reverted.\n";
 
         return false;
     }

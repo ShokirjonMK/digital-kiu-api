@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Class m211012_134519_building
+ * Class m220406_101515_residence_status_table
  */
-class m211012_134519_building extends Migration
+class m220406_101515_residence_status_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('building', [
+        $this->createTable('{{%residence_status}}', [
             'id' => $this->primaryKey(),
             'name'=>$this->string(255)->notNull(),
             'order'=>$this->tinyInteger(1)->defaultValue(1),
@@ -30,7 +30,7 @@ class m211012_134519_building extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('building');
+        $this->dropTable('residence_status');
     }
 
     /*
@@ -42,7 +42,7 @@ class m211012_134519_building extends Migration
 
     public function down()
     {
-        echo "m211012_134519_building cannot be reverted.\n";
+        echo "m220406_101515_residence_status_table cannot be reverted.\n";
 
         return false;
     }

@@ -75,6 +75,9 @@ $controllers = [
     'notification',
     'notification-role',
     'nationality',
+    'category-of-cohabitant',
+    'residence-status',
+    'social-category',
 
     'test-get-data',
 

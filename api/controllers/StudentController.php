@@ -261,6 +261,15 @@ class  StudentController extends ApiActiveController
     public function actionCreate($lang)
     {
         $post = Yii::$app->request->post();
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $post['faculty_id'] = $t['UserAccess']->table_id;
+        } elseif ($t['status'] == 2) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+        /*  is Self  */
+
         if (isRole('tutor')) {
             $post['tutor_id'] = Current_user_id();
         }
@@ -276,18 +285,10 @@ class  StudentController extends ApiActiveController
             $count = $std->id + 10001;
         }
 
-        // return $count;
         $post['username'] = 'tsul-std-' . $count;
-        $post['email'] = 'tsul-std' . $count . '@tsul.uz';
-
-        /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $post['faculty_id'] = $t['UserAccess']->table_id;
-        } elseif ($t['status'] == 2) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        if (!(isset($post['email']))) {
+            $post['email'] = 'tsul-std' . $count . '@tsul.uz';
         }
-        /*  is Self  */
 
         $this->load($model, $post);
         $this->load($profile, $post);

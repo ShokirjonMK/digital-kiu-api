@@ -97,6 +97,9 @@ class Student extends \yii\db\ActiveRecord
                     'category_of_cohabitant_id',
                     'student_category_id',
                     //
+                    'partners_count',
+                    //
+
                     'is_contract',
                     'order',
                     'status',
@@ -109,8 +112,20 @@ class Student extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['diplom_date'], 'safe'],
-            [['description'], 'string'],
+            [
+                [
+                    'description',
+                    'live_location',
+                    'last_education'
+                ], 'string'
+            ],
             [['diplom_seria'], 'string', 'max' => 255],
+            [
+                [
+                    'parent_phone',
+                    'res_person_phone'
+                ], 'string', 'max' => 55
+            ],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
             [['edu_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduType::className(), 'targetAttribute' => ['edu_type_id' => 'id']],
@@ -154,7 +169,14 @@ class Student extends \yii\db\ActiveRecord
             'residence_status_id' => _e('Residence Status Id'),
             'category_of_cohabitant_id' => _e('Category Of Cohabitant Id'),
             'student_category_id' => _e('Student Category Id'),
+            //
 
+            'partners_count' => _e('partners_count'),
+            'live_location' => _e('live_location'),
+            'parent_phone' => _e('parent_phone'),
+            'res_person_phone' => _e('res_person_phone'),
+            'last_education' => _e('last_education'),
+            //
 
             'is_contract' => _e('Is Contract'),
             'diplom_number' => _e('Diplom Number'),
@@ -192,6 +214,13 @@ class Student extends \yii\db\ActiveRecord
             'residence_status_id',
             'category_of_cohabitant_id',
             'student_category_id',
+            //
+            'partners_count',
+            'live_location',
+            'parent_phone',
+            'res_person_phone',
+            'last_education',
+            //
             'is_contract',
             'diplom_number',
             'diplom_seria',
@@ -268,7 +297,7 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getResidenceStatus()
     {
-        return $this->hasOne(ResidenceStatus::className(), ['id' => 'residence_status_id']);
+        return $this->hasOne(ResidenceStatus::className(), ['id' => 'residence_status_id']); 
     }
 
     /**

@@ -205,7 +205,7 @@ class  StudentController extends ApiActiveController
             // ->groupBy('student.id')
         ;
 
-
+        // return $model->tableName();
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {

@@ -170,7 +170,7 @@ trait ApiActionTrait
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $model->attributes())) {
-                    $query = $query->andFilterWhere([$attribute => $id]);
+                    $query = $query->andFilterWhere([$model->tableName() . '.' . $attribute => $id]);
                 }
             }
         }
@@ -179,7 +179,7 @@ trait ApiActionTrait
         if (isset($queryfilter)) {
             foreach ($queryfilter as $attributeq => $word) {
                 if (in_array($attributeq, $model->attributes())) {
-                    $query = $query->andFilterWhere(['like', $attributeq, '%' . $word . '%', false]);
+                    $query = $query->andFilterWhere(['like', $model->tableName() . '.' . $attributeq, '%' . $word . '%', false]);
                 }
             }
         }

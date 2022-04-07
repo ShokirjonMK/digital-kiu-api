@@ -189,8 +189,6 @@ class Notification extends \yii\db\ActiveRecord
                         }
                     }
 
-
-
                     if (count($errors) == 0) {
                         $transaction->commit();
                         return true;

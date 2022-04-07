@@ -25,33 +25,6 @@ function current_user_profile($user_id = null)
     }
 }
 
-// Get current user roles
-function current_user_roles($user_id = null)
-{
-    if (is_null($user_id)) {
-        $user_id = current_user_id();
-    }
-
-    if (is_numeric($user_id) && $user_id > 0) {
-        return \Yii::$app->authManager->getRolesByUser($user_id);
-    }
-}
-
-// Get current user roles array
-function current_user_roles_array($user_id = null)
-{
-    if (is_null($user_id)) {
-        $user_id = current_user_id();
-    }
-
-    $mk = [];
-    if (is_numeric($user_id) && $user_id > 0) {
-        foreach (\Yii::$app->authManager->getRolesByUser($user_id) as $role => $params){
-            $mk[] = $role;
-        }
-        return $mk;
-    }
-}
 
 // Check user logged in
 function is_user_logged_in()

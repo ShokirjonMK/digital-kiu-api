@@ -105,7 +105,7 @@ class UserController extends ApiActiveController
 
         // }
 
-        
+
         if (!(isRole('admin'))) {
             // dd(123);
 
@@ -128,7 +128,7 @@ class UserController extends ApiActiveController
             if ($k['status'] == 1) {
                 $query->andFilterWhere([
                     'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                        'table_id' => $k['UserAccess']->table_id, 
+                        'table_id' => $k['UserAccess']->table_id,
                         'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
                     ])
                 ]);

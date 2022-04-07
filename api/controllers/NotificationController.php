@@ -8,6 +8,7 @@ use common\models\model\Notification;
 use common\models\model\NotificationRole;
 use common\models\model\NotificationRoleName;
 use common\models\model\NotificationUser;
+use common\models\model\Student;
 
 class NotificationController extends ApiActiveController
 {
@@ -61,12 +62,28 @@ class NotificationController extends ApiActiveController
             ->all();
 
         foreach ($notification_role_user as $nruOne) {
-            $notificationUserNew = new NotificationUser();
-            $notificationUserNew->notification_id = $nruOne->notification_id;
-            $notificationUserNew->notification_role_id = $nruOne->id;
-            $notificationUserNew->user_id = current_user_id();
-            $notificationUserNew->status = NotificationUser::STATUS_ACTIVE;
-            $notificationUserNew->save();
+
+            if (_checkRole('student') && current_user_is_this_role($nruOne->created_by, 'tutor')) {
+
+                $nowStudent = Student::findOne(current_user_id());
+                if ($nowStudent) {
+                    if ($nowStudent->tutor_id == $nruOne->created_by) {
+                        $notificationUserNew = new NotificationUser();
+                        $notificationUserNew->notification_id = $nruOne->notification_id;
+                        $notificationUserNew->notification_role_id = $nruOne->id;
+                        $notificationUserNew->user_id = current_user_id();
+                        $notificationUserNew->status = NotificationUser::STATUS_ACTIVE;
+                        $notificationUserNew->save();
+                    }
+                }
+            } else {
+                $notificationUserNew = new NotificationUser();
+                $notificationUserNew->notification_id = $nruOne->notification_id;
+                $notificationUserNew->notification_role_id = $nruOne->id;
+                $notificationUserNew->user_id = current_user_id();
+                $notificationUserNew->status = NotificationUser::STATUS_ACTIVE;
+                $notificationUserNew->save();
+            }
         }
 
         if (Yii::$app->request->get('all') == 1) {

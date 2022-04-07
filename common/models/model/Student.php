@@ -18,6 +18,10 @@ use yii\behaviors\TimestampBehavior;
  * @property int $course_id
  * @property int $edu_year_id
  * @property int $edu_type_id
+ * @property int $social_category_id
+ * @property int $residence_status_id
+ * @property int $category_of_cohabitant_id
+ * @property int $student_category_id
  * @property int $is_contract
  * @property string $diplom_number
  * @property string $diplom_seria
@@ -87,6 +91,12 @@ class Student extends \yii\db\ActiveRecord
                     'diplom_number',
                     'edu_year_id',
                     'edu_type_id',
+                    //
+                    'social_category_id',
+                    'residence_status_id',
+                    'category_of_cohabitant_id',
+                    'student_category_id',
+                    //
                     'is_contract',
                     'order',
                     'status',
@@ -111,6 +121,14 @@ class Student extends \yii\db\ActiveRecord
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['edu_lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['edu_lang_id' => 'id']],
             [['edu_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduForm::className(), 'targetAttribute' => ['edu_form_id' => 'id']],
+            //
+
+            [['social_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SocialCategory::className(), 'targetAttribute' => ['social_category_id' => 'id']],
+            [['residence_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => ResidenceStatus::className(), 'targetAttribute' => ['residence_status_id' => 'id']],
+            [['category_of_cohabitant_id'], 'exist', 'skipOnError' => true, 'targetClass' => CategoryOfCohabitant::className(), 'targetAttribute' => ['category_of_cohabitant_id' => 'id']],
+            [['student_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => StudentCategory::className(), 'targetAttribute' => ['student_category_id' => 'id']],
+
+
         ];
     }
 
@@ -120,29 +138,36 @@ class Student extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'user_id' => 'User ID',
-            'tutor_id' => 'Tutor ID',
-            'faculty_id' => 'Faculty ID',
-            'direction_id' => 'Direction ID',
-            'course_id' => 'Course ID',
-            'edu_year_id' => 'Edu Year ID',
-            'edu_form_id' => 'Edu Form ID',
-            'edu_type_id' => 'Edu Type ID',
-            'edu_lang_id' => 'Edu Lang',
-            'edu_plan_id' => 'Edu Plan Id',
-            'is_contract' => 'Is Contract',
-            'diplom_number' => 'Diplom Number',
-            'diplom_seria' => 'Diplom Seria',
-            'diplom_date' => 'Diplom Date',
-            'description' => 'Description',
-            'order' => 'Order',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'id' => _e('ID'),
+            'user_id' => _e('User ID'),
+            'tutor_id' => _e('Tutor ID'),
+            'faculty_id' => _e('Faculty ID'),
+            'direction_id' => _e('Direction ID'),
+            'course_id' => _e('Course ID'),
+            'edu_year_id' => _e('Edu Year ID'),
+            'edu_form_id' => _e('Edu Form ID'),
+            'edu_type_id' => _e('Edu Type ID'),
+            'edu_lang_id' => _e('Edu Lang'),
+            'edu_plan_id' => _e('Edu Plan Id'),
+            //
+            'social_category_id' => _e('Social Category Id'),
+            'residence_status_id' => _e('Residence Status Id'),
+            'category_of_cohabitant_id' => _e('Category Of Cohabitant Id'),
+            'student_category_id' => _e('Student Category Id'),
+
+
+            'is_contract' => _e('Is Contract'),
+            'diplom_number' => _e('Diplom Number'),
+            'diplom_seria' => _e('Diplom Seria'),
+            'diplom_date' => _e('Diplom Date'),
+            'description' => _e('Description'),
+            'order' => _e('Order'),
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 
@@ -162,6 +187,11 @@ class Student extends \yii\db\ActiveRecord
             'edu_type_id',
             'edu_lang_id',
             'edu_plan_id',
+            //
+            'social_category_id',
+            'residence_status_id',
+            'category_of_cohabitant_id',
+            'student_category_id',
             'is_contract',
             'diplom_number',
             'diplom_seria',
@@ -199,6 +229,11 @@ class Student extends \yii\db\ActiveRecord
             'permanentArea',
             'nationality',
 
+            'socialCategory',
+            'residenceStatus',
+            'categoryOfCohabitant',
+            'studentCategory',
+
             'createdBy',
             'updatedBy',
         ];
@@ -214,6 +249,46 @@ class Student extends \yii\db\ActiveRecord
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[socialCategory]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSocialCategory()
+    {
+        return $this->hasOne(SocialCategory::className(), ['id' => 'social_category_id']);
+    }
+
+    /**
+     * Gets query for [[residenceStatus]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResidenceStatus()
+    {
+        return $this->hasOne(ResidenceStatus::className(), ['id' => 'residence_status_id']);
+    }
+
+    /**
+     * Gets query for [[CategoryOfCohabitant]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategoryOfCohabitant()
+    {
+        return $this->hasOne(CategoryOfCohabitant::className(), ['id' => 'category_of_cohabitant_id']);
+    }
+
+    /**
+     * Gets query for [[studentCategory]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getStudentCategory()
+    {
+        return $this->hasOne(StudentCategory::className(), ['id' => 'student_category_id']);
     }
 
     // Profile Citizenship

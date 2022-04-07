@@ -78,6 +78,7 @@ $controllers = [
     'category-of-cohabitant',
     'residence-status',
     'social-category',
+    'student-category',
 
     'test-get-data',
 

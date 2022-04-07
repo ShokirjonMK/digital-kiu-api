@@ -202,7 +202,8 @@ class  StudentController extends ApiActiveController
             ->with(['profile'])
             ->where(['student.is_deleted' => 0])
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
-            ->groupBy('student.id');
+            // ->groupBy('student.id')
+        ;
 
 
         /*  is Self  */
@@ -220,7 +221,7 @@ class  StudentController extends ApiActiveController
         /*  is Role check  */
         if (isRole('tutor')) {
             $query = $query->andWhere([
-                'tutor_id' => Current_user_id()
+                'tutor_id' => current_user_id()
             ]);
         }
 
@@ -233,6 +234,7 @@ class  StudentController extends ApiActiveController
                 }
             }
         }
+
         $queryfilter = Yii::$app->request->get('filter-like');
         $queryfilter = json_decode(str_replace("'", "", $queryfilter));
         if (isset($queryfilter)) {

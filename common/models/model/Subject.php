@@ -139,7 +139,7 @@ class Subject extends \yii\db\ActiveRecord
 
     public function getExamStudentByLang()
     {
-        return ExamForSubject::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id])->all();
+        return ExamForSubject::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id ?? 0])->all();
     }
 
 
@@ -156,7 +156,7 @@ class Subject extends \yii\db\ActiveRecord
 
     public function getSubject()
     {
-        return $this->eduSemestrSubject->subject->name;
+        return $this->eduSemestrSubject->subject->name ?? "";
     }
 
 

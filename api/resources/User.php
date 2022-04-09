@@ -105,7 +105,8 @@ class User extends CommonUser
             'updated_at',
             'profile',
             'userAccess',
-            'department'
+            'department',
+            'here'
         ];
 
         return $extraFields;
@@ -156,11 +157,40 @@ class User extends CommonUser
     // UserAccess
     public function getDepartment()
     {
+        $data = [];
+
+        foreach ($this->userAccess as $userAccessOne) {
+            $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
+            $data[] =
+                $user_access_type ? $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]) : [];
+        }
+        return $data;
         // return $this->userAccess->user_access_type_id;
         $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
 
         return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
     }
+
+    // Dep Kaf Fac
+    public function getHere()
+    {
+        // return $this->userAccess->user_access_type_id;
+        $data = [];
+
+        foreach ($this->userAccess as $userAccessOne) {
+            $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
+            $data[] =
+                $user_access_type ? $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]) : [];
+        }
+
+        return $data;
+        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
+
+        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
+    }
+
+
+
 
 
     public static function createItem($model, $profile, $post)
@@ -377,7 +407,7 @@ class User extends CommonUser
                 if (isset($post['user_access'])) {
                     $post['user_access'] = str_replace("'", "", $post['user_access']);
                     $user_access = json_decode(str_replace("'", "", $post['user_access']));
-// dd($user_access);
+                    // dd($user_access);
                     UserAccess::deleteAll(['user_id' => $model->id]);
                     foreach ($user_access as $user_access_type_id => $tableIds) {
                         $userAccessType = UserAccessType::findOne($user_access_type_id);

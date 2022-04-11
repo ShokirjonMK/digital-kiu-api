@@ -48,11 +48,12 @@ class NotificationController extends ApiActiveController
 
     public function actionIndex($lang)
     {
+        $current_user_id = current_user_id();
         $model = new NotificationRole();
         $table = 'notification_role';
         $tableUser = 'notification_user';
 
-        $notification_user = NotificationUser::find()->select('notification_id')->where(['user_id' => current_user_id()]);
+        $notification_user = NotificationUser::find()->select('notification_id')->where(['user_id' => $current_user_id]);
 
         $notification_role_user = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
@@ -65,13 +66,13 @@ class NotificationController extends ApiActiveController
 
             if (_checkRole('student') && current_user_is_this_role($nruOne->created_by, 'tutor')) {
 
-                $nowStudent = Student::findOne(current_user_id());
+                $nowStudent = Student::findOne($current_user_id);
                 if ($nowStudent) {
                     if ($nowStudent->tutor_id == $nruOne->created_by) {
                         $notificationUserNew = new NotificationUser();
                         $notificationUserNew->notification_id = $nruOne->notification_id;
                         $notificationUserNew->notification_role_id = $nruOne->id;
-                        $notificationUserNew->user_id = current_user_id();
+                        $notificationUserNew->user_id = $current_user_id;
                         $notificationUserNew->status = NotificationUser::STATUS_ACTIVE;
                         $notificationUserNew->save();
                     }
@@ -80,7 +81,7 @@ class NotificationController extends ApiActiveController
                 $notificationUserNew = new NotificationUser();
                 $notificationUserNew->notification_id = $nruOne->notification_id;
                 $notificationUserNew->notification_role_id = $nruOne->id;
-                $notificationUserNew->user_id = current_user_id();
+                $notificationUserNew->user_id = $current_user_id;
                 $notificationUserNew->status = NotificationUser::STATUS_ACTIVE;
                 $notificationUserNew->save();
             }
@@ -89,13 +90,13 @@ class NotificationController extends ApiActiveController
         if (Yii::$app->request->get('all') == 1) {
             $query = NotificationUser::find()
                 // ->andWhere(['status' => 1])
-                ->andWhere(['user_id' => current_user_id()])
+                ->andWhere(['user_id' => $current_user_id])
                 // ->all()
             ;
         } else {
             $query = NotificationUser::find()
                 ->andWhere(['status' => 1])
-                ->andWhere(['user_id' => current_user_id()])
+                ->andWhere(['user_id' => $current_user_id])
                 // ->all()
             ;
         }

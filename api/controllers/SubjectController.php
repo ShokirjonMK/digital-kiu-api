@@ -37,11 +37,10 @@ class SubjectController extends ApiActiveController
             $teacherAccessSubjectIds = TeacherAccess::find()
                 ->select('subject_id')
                 ->where(['user_id' => current_user_id()])
-                ->groupBy('subject_id')
-                ->all();
+                ->groupBy('subject_id');
 
             if ($teacherAccessSubjectIds) {
-                $query->andFilterWhere(['in', 'id', $teacherAccessSubjectIds]);
+                $query->andFilterWhere(['in', $this->table_name . '.id', $teacherAccessSubjectIds]);
             } else {
                 $query->andFilterWhere(['kafedra_id' => -1]);
             }

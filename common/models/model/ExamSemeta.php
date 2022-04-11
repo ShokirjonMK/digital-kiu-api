@@ -17,6 +17,8 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int|null $order
  * @property int|null $status
+ * @property int|null $start
+ * @property int|null $finish
  * @property int|null $created_at
  * @property int|null $updated_at
  * @property int $created_by
@@ -60,7 +62,23 @@ class ExamSemeta extends \yii\db\ActiveRecord
     {
         return [
             [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
-            [['exam_id', 'teacher_access_id', 'lang_id', 'count', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [
+                [
+                    'exam_id',
+                    'teacher_access_id',
+                    'lang_id',
+                    'count',
+                    'order',
+                    'start',
+                    'finish',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
@@ -76,6 +94,8 @@ class ExamSemeta extends \yii\db\ActiveRecord
             'id' => 'ID',
             'exam_id',
             'lang_id',
+            'start',
+            'finish',
             'teacher_access_id',
             'count',
             'order' => 'Order',
@@ -96,6 +116,8 @@ class ExamSemeta extends \yii\db\ActiveRecord
             'lang_id',
             'teacher_access_id',
             'count',
+            'start',
+            'finish',
             'order',
             'status',
             'created_at',

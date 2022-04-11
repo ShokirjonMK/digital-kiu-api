@@ -161,6 +161,7 @@ class Exam extends \yii\db\ActiveRecord
 
 
             'examStudent',
+            'examStudentCount',
             'examStudentByLang',
 
             'teacherAccess',
@@ -223,6 +224,11 @@ class Exam extends \yii\db\ActiveRecord
     public function getExamStudent()
     {
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+    }
+
+    public function getExamStudentCount()
+    {
+        return count($this->examStudent);
     }
 
     public function getTeacherAccess()

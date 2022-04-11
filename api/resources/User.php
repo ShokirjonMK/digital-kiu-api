@@ -485,15 +485,29 @@ class User extends CommonUser
                                     $auth->assign($authorRole, $model->id);
                                     if ($role == 'teacher' && isset($post['teacherAccess'])) {
                                         $teacherAccess = json_decode(str_replace("'", "", $post['teacherAccess']));
-                                        TeacherAccess::deleteAll(['user_id' => $model->id]);
+                                        foreach (TeacherAccess::findAll(['user_id' => $model->id]) as $teacherAccessOne) {
+                                            $teacherAccessOne->is_deleted = 1;
+                                            $teacherAccessOne->save();
+                                        }
+
                                         foreach ($teacherAccess as $subjectIds => $subjectIdsValues) {
                                             if (is_array($subjectIdsValues)) {
                                                 foreach ($subjectIdsValues as $langId) {
-                                                    $teacherAccessNew = new TeacherAccess();
-                                                    $teacherAccessNew->user_id = $model->id;
-                                                    $teacherAccessNew->subject_id = $subjectIds;
-                                                    $teacherAccessNew->language_id = $langId;
-                                                    $teacherAccessNew->save();
+                                                    $teacherAccessHas = TeacherAccess::findOne([
+                                                        'user_id' => $model->id,
+                                                        'subject_id' => $subjectIds,
+                                                        'language_id' => $langId,
+                                                    ]);
+                                                    if ($teacherAccessHas) {
+                                                        $teacherAccessHas->is_deleted = 0;
+                                                        $teacherAccessHas->save();
+                                                    } else {
+                                                        $teacherAccessNew = new TeacherAccess();
+                                                        $teacherAccessNew->user_id = $model->id;
+                                                        $teacherAccessNew->subject_id = $subjectIds;
+                                                        $teacherAccessNew->language_id = $langId;
+                                                        $teacherAccessNew->save();
+                                                    }
                                                 }
                                             }
                                         }

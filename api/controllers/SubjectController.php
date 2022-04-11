@@ -36,7 +36,7 @@ class SubjectController extends ApiActiveController
         if (_checkRole('teacher')) {
             $teacherAccessSubjectIds = TeacherAccess::find()
                 ->select('subject_id')
-                ->where(['user_id' => current_user_id(), 'status' => 1])
+                ->where(['user_id' => current_user_id(), 'is_deleted' => 0])
                 ->groupBy('subject_id');
 
             if ($teacherAccessSubjectIds) {

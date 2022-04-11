@@ -168,8 +168,13 @@ class ExamSemeta extends \yii\db\ActiveRecord
                     $post['smetas'] = str_replace("'", "", $post['smetas']);
                     if (!isJsonMK($post['smetas'])) {
                         $errors['smetas'] = [_e('Must be Json')];
+                        $data['status'] = false;
+                        $transaction->rollBack();
+                        $data['errors'] = $errors;
                     }
 
+                    $countOfExamStudent = $exam->examStudentCount;
+                    $countOfSmetas = 0;
                     foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
                         // [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
 
@@ -211,7 +216,12 @@ class ExamSemeta extends \yii\db\ActiveRecord
                         } else {
                             $errors[] = [$teacherAccessId  => _e(' Teacher Access Id is not vailed (' . $teacherAccessId . ')')];
                         }
+
+                        $countOfSmetas += $smetaAttribute->count;
                         // ***
+                    }
+                    if ($countOfSmetas != $countOfExamStudent) {
+                        $errors['smetas'] = [_e('Incorrectly distributed')];
                     }
                 } else {
                     $errors['smetas'] = [_e('Required')];
@@ -222,7 +232,6 @@ class ExamSemeta extends \yii\db\ActiveRecord
         } else {
             $errors['exam_id'] = [_e('Exam ID is required')];
         }
-
 
         if (count($errors) == 0) {
             $exam->status = $exam::STATUS_DISTRIBUTED;

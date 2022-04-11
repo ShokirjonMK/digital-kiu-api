@@ -33,7 +33,7 @@ class SubjectController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-        if (_checkRole('teacher')) {
+        if (isRole('teacher')) {
             $teacherAccessSubjectIds = TeacherAccess::find()
                 ->select('subject_id')
                 ->where(['user_id' => current_user_id(), 'is_deleted' => 0])

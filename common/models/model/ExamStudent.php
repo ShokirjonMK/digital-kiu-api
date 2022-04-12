@@ -45,8 +45,8 @@ class ExamStudent extends \yii\db\ActiveRecord
     const STATUS_TAKED = 1;
     const STATUS_COMPLETE = 2;
     const STATUS_IN_CHECKING = 3;
-    const STATUS_MARKED = 4;
-    const STATUS_SHARED = 4;
+    const STATUS_CHECKED = 4;
+    const STATUS_SHARED = 5;
 
 
     /**
@@ -233,7 +233,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             self::STATUS_TAKED => _e('STATUS_TAKED'),
             self::STATUS_COMPLETE => _e('STATUS_COMPLETE'),
             self::STATUS_IN_CHECKING => _e('STATUS_IN_CHECKING'),
-            self::STATUS_MARKED => _e('STATUS_MARKED'),
+            self::STATUS_CHECKED => _e('STATUS_MARKED'),
             self::STATUS_SHARED => _e('STATUS_SHARED'),
         ];
     }

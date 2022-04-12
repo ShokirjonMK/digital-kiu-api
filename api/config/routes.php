@@ -80,12 +80,16 @@ $controllers = [
     'social-category',
     'student-category',
 
-    'test-get-data',
+
+
+    'teacher-checking-type',
+    'statistic',
+
+
+
 
     'telegram',
-
-    'statistic'
-
+    'test-get-data',
 ];
 
 $controllerRoutes = [];

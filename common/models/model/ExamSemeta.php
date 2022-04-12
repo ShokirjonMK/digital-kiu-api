@@ -37,7 +37,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
     public function behaviors()
     {
-        return [
+        return [    
             TimestampBehavior::class,
         ];
     }

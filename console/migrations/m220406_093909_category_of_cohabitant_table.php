@@ -38,18 +38,5 @@ class m220406_093909_category_of_cohabitant_table extends Migration
         $this->dropTable('category_of_cohabitants');
     }
 
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220406_093909_category_of_cohabitants_table cannot be reverted.\n";
-
-        return false;
-    }
-    */
+   
 }

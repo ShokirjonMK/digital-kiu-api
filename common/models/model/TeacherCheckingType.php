@@ -182,7 +182,7 @@ class TeacherCheckingType extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public static function statusList()
+    public static function typeList()
     {
         return [
             self::TYPE_RANDOM => _e('TYPE_RANDOM'),

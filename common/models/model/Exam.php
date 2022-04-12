@@ -16,6 +16,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $finish
  * @property float|null $max_ball
  * @property float|null $min_ball
+ * @property int|null $type
  * @property int|null $order
  * @property int|null $status
  * @property int|null $created_at
@@ -68,7 +69,7 @@ class Exam extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['exam_type_id', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
+            [['exam_type_id', 'type', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [['exam_type_id', 'faculty_id', 'is_protected', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'double'],
@@ -102,6 +103,7 @@ class Exam extends \yii\db\ActiveRecord
             'duration' => 'Duration',
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
+            'type' => 'Type',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -166,6 +168,7 @@ class Exam extends \yii\db\ActiveRecord
 
             'teacherAccess',
             'examSmeta',
+            'typeName',
 
 
             'description',
@@ -175,6 +178,12 @@ class Exam extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getTypeName()
+    {
+        return TeacherCheckingType::typeList()[$this->status];
+    }
+
 
     public function getTranslate()
     {
@@ -488,6 +497,8 @@ class Exam extends \yii\db\ActiveRecord
                 }
                 $model->faculty_id = $model->eduSemestrSubject->eduSemestr->eduPlan->faculty_id;
                 $model->direction_id = $model->eduSemestrSubject->eduSemestr->eduPlan->direction_id;
+                $model->type = $model->eduSemestrSubject->eduSemestr->type ?? 1;
+
                 $model->update();
                 $transaction->commit();
                 return true;
@@ -573,6 +584,8 @@ class Exam extends \yii\db\ActiveRecord
                 $min = isset($duration[1]) ? $duration[1] : 0;
                 $model->duration = (int)$hours * 3600 + (int)$min * 60;
             }
+
+            $model->type = $model->eduSemestrSubject->eduSemestr->type ?? 1;
 
             if ($model->save()) {
                 if (isset($post['name'])) {

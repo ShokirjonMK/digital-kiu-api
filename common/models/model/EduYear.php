@@ -103,6 +103,8 @@ class EduYear extends \yii\db\ActiveRecord
             'eduSemestrs',
             'timeTables',
             'description',
+            'teacherCheckingType',
+
             'createdBy',
             'updatedBy',
         ];
@@ -172,6 +174,16 @@ class EduYear extends \yii\db\ActiveRecord
     public function getTimeTables()
     {
         return $this->hasMany(TimeTable::className(), ['edu_year_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[TeacherCheckingType]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTeacherCheckingType()
+    {
+        return $this->hasMany(TeacherCheckingType::className(), ['edu_year_id' => 'id']);
     }
 
     public static function createItem($model, $post)

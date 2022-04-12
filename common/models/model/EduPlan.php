@@ -271,6 +271,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 for ($i = 0; $i < $post['course']; $i++) {
                     /* Kuzgi semestrni qo`shish */
                     $newEduSmester = new EduSemestr();
+
                     $newEduSmester->start_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_start'])));
                     $newEduSmester->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_end'])));
                     $newEduSmester->edu_plan_id = $model->id;
@@ -291,6 +292,12 @@ class EduPlan extends \yii\db\ActiveRecord
                     }
 
                     $newEduSmester->edu_year_id = $eduYear[$i]->id;
+
+                    $teacherCheckingType = TeacherCheckingType::findOne(['edu_year_id' => $newEduSmester->edu_year_id, 'semestr_id' => 1]);
+                    if ($teacherCheckingType) {
+                        $newEduSmester->type = $teacherCheckingType->type;
+                    }
+
                     if (!$newEduSmester->validate()) {
                         $errors[] = $newEduSmester->errors;
                     }
@@ -307,6 +314,12 @@ class EduPlan extends \yii\db\ActiveRecord
                     $newEduSmester1->semestr_id = ($i + 1) * 2;
 
                     $newEduSmester1->edu_year_id = $eduYear[$i]->id;
+
+                    $teacherCheckingType = TeacherCheckingType::findOne(['edu_year_id' => $newEduSmester1->edu_year_id, 'semestr_id' => 1]);
+                    if ($teacherCheckingType) {
+                        $newEduSmester1->type = $teacherCheckingType->type;
+                    }
+
                     if (!$newEduSmester1->validate()) {
                         $errors[] = $newEduSmester1->errors;
                     }

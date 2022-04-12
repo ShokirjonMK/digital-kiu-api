@@ -117,7 +117,7 @@ class TeacherCheckingType extends \yii\db\ActiveRecord
         $extraFields =  [
 
             'eduYear',
-            'edu_year_id',
+            'semestr',
 
             'createdBy',
             'updatedBy',

@@ -11,6 +11,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id
  * @property int $exam_type_id
+ * @property int $faculty_id
  * @property int $edu_semestr_subject_id
  * @property string $start
  * @property string $finish
@@ -47,6 +48,7 @@ class Exam extends \yii\db\ActiveRecord
     const STATUS_ACTIVE = 1;
     const STATUS_FINISHED = 2;
     const STATUS_DISTRIBUTED = 3;
+    const STATUS_ANNOUNCED = 4;
 
 
     const PROTECTED_TURE = 1;
@@ -291,6 +293,14 @@ class Exam extends \yii\db\ActiveRecord
     public function getStatusName()
     {
         return   $this->statusList()[$this->status];
+    }
+
+    public function getSemeta()
+    {
+        // if (isRole('teacher')) {
+
+        // }
+        return $this->hasMany(ExamSemeta::className(), ['exam_id' => 'id']);
     }
 
 
@@ -623,7 +633,8 @@ class Exam extends \yii\db\ActiveRecord
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
             self::STATUS_FINISHED => _e('STATUS_FINISHED'),
-            self::STATUS_DISTRIBUTED => _e('STATUS_DISTRIBUTED')
+            self::STATUS_DISTRIBUTED => _e('STATUS_DISTRIBUTED'),
+            self::STATUS_ANNOUNCED => _e('STATUS_ANNOUNCED'),
 
         ];
     }

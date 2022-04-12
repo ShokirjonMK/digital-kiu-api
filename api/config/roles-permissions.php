@@ -858,9 +858,12 @@ return [
         'subject-sillabus_index',
         'subject_index',
         'user_logout',
-        'user_me'
+        'user_me',
 
-        
+        'exam-semeta_index',
+        'exam_index',
+
+
 
         // "access-control_roles",
         // "area_view",

@@ -37,14 +37,14 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
     public function behaviors()
     {
-        return [    
+        return [
             TimestampBehavior::class,
         ];
     }
 
 
     const STATUS_NEW = 1;
-    const STATUS_IN_CHECKING = 2;
+    const STATUS_IN_CHECKING = 2;  // tasdiqlangan
     const STATUS_COMPLETED = 3;
 
     /**
@@ -221,6 +221,12 @@ class ExamSemeta extends \yii\db\ActiveRecord
                             } else {
                                 $newExamSmeta = new ExamSemeta();
                             }
+                            if (isset($post['start'])) {
+                                $newExamSmeta->start = strtotime($post['start']);
+                            }
+                            if (isset($post['finish'])) {
+                                $newExamSmeta->finish = strtotime($post['finish']);
+                            }
                             $newExamSmeta->exam_id = (int)$examId;
                             $newExamSmeta->lang_id = $smetaAttribute->lang_id;
                             $newExamSmeta->count = $smetaAttribute->count;
@@ -309,9 +315,9 @@ class ExamSemeta extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }

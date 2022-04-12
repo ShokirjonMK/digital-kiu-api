@@ -17,6 +17,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string|null $start_date
  * @property string|null $end_date
  * @property int|null $is_checked
+ * @property int|null $type
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -58,7 +59,7 @@ class EduSemestr extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_plan_id', 'course_id', 'semestr_id', 'edu_year_id'], 'required'],
+            [['edu_plan_id', 'type', 'course_id', 'semestr_id', 'edu_year_id'], 'required'],
             [['edu_plan_id', 'course_id', 'optional_subject_count', 'required_subject_count', 'semestr_id', 'edu_year_id', 'is_checked', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
             [['credit'], 'double'],
@@ -84,6 +85,7 @@ class EduSemestr extends \yii\db\ActiveRecord
             'credit' => 'Credit',
             'end_date' => 'End Date',
             'is_checked' => 'Is Checked',
+            'type' => 'Type',
             'order' => 'Order',
             'optional_subject_count' => 'Optional Subject Count',
             'required_subject_count' => 'Required Subject Count',
@@ -139,8 +141,6 @@ class EduSemestr extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
-
-
 
     public function getGenerateName()
     {

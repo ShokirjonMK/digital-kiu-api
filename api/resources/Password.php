@@ -40,7 +40,7 @@ class Password extends Model
                 return $data;
             }
         } else {
-            $user = Yii::$app->user->identity;
+            $user = current_user_id();
         }
 
         $pass = PasswordEncrypts::find()

@@ -26,6 +26,10 @@ class QuestionController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
+        if (isRole("teacher")) {
+            $query = $query->andWhere(["created_by" => current_user_id()]);
+
+        }
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -33,7 +37,7 @@ class QuestionController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data =  $this->getData($query);
+        $data = $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
 

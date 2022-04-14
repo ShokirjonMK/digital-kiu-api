@@ -41,7 +41,15 @@ class Question extends \yii\db\ActiveRecord
 
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
-    const STATUS_REFUSED = 2;
+    const STATUS_MUDIR_ACTIVE = 2;
+    const STATUS_DEAN_ACTIVE = 3;
+
+
+    // // 0- hali tekshirilmagan, 1- tasdiqlangan, 2- bekor qilingan 
+
+    // const EDU_CHECK_NOTSEEN = 0;
+    // const EDU_CHECK_ACTIVE = 1;
+    // const EDU_CHECK_REFUSED = 2;
 
 
     const UPLOADS_FOLDER = 'uploads/question_files/';
@@ -86,6 +94,7 @@ class Question extends \yii\db\ActiveRecord
                     'lang_id',
                     'level',
                     'question_type_id',
+                    'edu_check',
                     'order',
                     'status',
                     'created_at',
@@ -120,6 +129,7 @@ class Question extends \yii\db\ActiveRecord
             'exam_id' => 'Exam Id',
             'teacher_id' => 'Teacher Id',
             'ball' => 'Ball',
+            'edu_check' => 'Edu Check',
             'attempt' => 'Attempt',
             'order' => 'Order',
             'status' => 'Status',
@@ -156,7 +166,7 @@ class Question extends \yii\db\ActiveRecord
             'question_type_id',
 
             // 'order',
-            // 'status',
+            'status',
             // 'created_at',
             // 'updated_at',
             // 'created_by',
@@ -179,6 +189,7 @@ class Question extends \yii\db\ActiveRecord
             'subQuestions',
 
             'statusName',
+
             'createdBy',
             'updatedBy',
         ];
@@ -190,6 +201,7 @@ class Question extends \yii\db\ActiveRecord
     {
         return   $this->statusList()[$this->status];
     }
+
     /**
      * Gets query for [['Course ']].
      * Course
@@ -342,6 +354,18 @@ class Question extends \yii\db\ActiveRecord
         }
         // ***
 
+        if ($model->status == 1) {
+            if (isRole('mudir')) {
+                $model->status = self::STATUS_MUDIR_ACTIVE;
+            }
+            if (isRole('dean')) {
+                $model->status = self::STATUS_DEAN_ACTIVE;
+            }
+            if (isRole('edu_admin')) {
+                $model->status = self::STATUS_ACTIVE;
+            }
+        }
+
         if ($model->save()) {
             $subQuestionPescent = 0;
             if (isset($post['sub_question'])) {
@@ -451,7 +475,8 @@ class Question extends \yii\db\ActiveRecord
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
-            self::STATUS_REFUSED => _e('STATUS_REFUSED'),
+            self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
+            self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
         ];
     }
 }

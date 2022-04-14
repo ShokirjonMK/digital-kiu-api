@@ -159,9 +159,10 @@ class User extends CommonUser
     {
         $data = [];
 
+        // return $this->userAccess;
         foreach ($this->userAccess as $userAccessOne) {
             $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
-            $data[] =
+            $data[$userAccessOne->user_access_type_id][] =
                 $user_access_type ? $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]) : [];
         }
         return $data;

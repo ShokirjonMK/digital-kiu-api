@@ -261,15 +261,28 @@ trait ApiActionTrait
     // }
 
 
-    public function isSelf($userAccessTypeId)
+    public function isSelf($userAccessTypeId, $type = null)
     {
+        if (is_null($type)) {
+            $type = 1;
+        }
+
         $user_id = current_user_id();
         $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
 
-        $userAccess = UserAccess::findOne([
-            'user_id' => $user_id,
-            'user_access_type_id' => $userAccessTypeId,
-        ]);
+        if ($type == 2) {
+            $userAccess = UserAccess::findOne([
+                'user_id' => $user_id,
+                'user_access_type_id' => $userAccessTypeId,
+                'is_leader' => UserAccess::IS_LEADER_TRUE,
+            ]);
+        } else {
+            $userAccess = UserAccess::findOne([
+                'user_id' => $user_id,
+                'user_access_type_id' => $userAccessTypeId,
+            ]);
+        }
+
 
         $t['status'] = 3;
 

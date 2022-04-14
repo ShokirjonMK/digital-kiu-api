@@ -699,7 +699,10 @@ return [
         "user_me",
         "user_status-list",
         "user_update",
-        "user_view"
+        "question_view",
+        "question_index",
+        "question_update",
+        "question_delete",
 
     ],
 
@@ -864,6 +867,7 @@ return [
         'exam_index',
 
 
+        
 
         // "access-control_roles",
         // "area_view",

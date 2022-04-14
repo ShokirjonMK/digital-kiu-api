@@ -28,6 +28,7 @@ class QuestionController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
         if (isRole('mudir')) {
+
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
             if ($k['status'] == 1) {
 

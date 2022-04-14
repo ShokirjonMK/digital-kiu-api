@@ -4,7 +4,9 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Kafedra;
 use common\models\model\Question;
+use common\models\model\Subject;
 
 class QuestionController extends ApiActiveController
 {
@@ -25,8 +27,19 @@ class QuestionController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
+        if (isRole('mudir')) {
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
+            if ($k['status'] == 1) {
 
-        if (isRole("teacher")) {
+                $subjectIds = Subject::find()
+                    ->where(['kafedra_id' => $k['UserAccess']->table_id])
+                    ->select('id');
+
+                $query->andFilterWhere([
+                    'in', 'subject_id', $subjectIds
+                ]);
+            }
+        } elseif (isRole("teacher")) {
             $query = $query->andWhere(["created_by" => current_user_id()]);
         }
 

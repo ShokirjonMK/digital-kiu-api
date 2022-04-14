@@ -39,6 +39,10 @@ class Question extends \yii\db\ActiveRecord
         ];
     }
 
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUS_REFUSED = 2;
+
 
     const UPLOADS_FOLDER = 'uploads/question_files/';
     public $question_file;
@@ -271,6 +275,7 @@ class Question extends \yii\db\ActiveRecord
 
         $subQuestionPescent = 0;
 
+        $model->status = 0;
         if ($model->save()) {
 
             if (isset($post['sub_question'])) {

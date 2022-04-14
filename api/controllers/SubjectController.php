@@ -33,7 +33,20 @@ class SubjectController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-        if (isRole('teacher')) {
+        if (isRole('mudir')) {
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            if ($k['status'] == 1) {
+                // $kafedraIds = Kafedra::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
+                // $query->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
+                $query->andFilterWhere([
+                    'kafedra_id' => $k['UserAccess']->table_id
+                ]);
+            } elseif ($k['status'] == 2) {
+                $query->andFilterWhere([
+                    'kafedra_id' => -1
+                ]);
+            }
+        } elseif (isRole("teacher")) {
             $teacherAccessSubjectIds = TeacherAccess::find()
                 ->select('subject_id')
                 ->where(['user_id' => current_user_id(), 'is_deleted' => 0])
@@ -53,19 +66,6 @@ class SubjectController extends ApiActiveController
                 // $query->andFilterWhere([
                 //     'kafedra_id' => $k['UserAccess']->table_id
                 // ]);
-            } elseif ($k['status'] == 2) {
-                $query->andFilterWhere([
-                    'kafedra_id' => -1
-                ]);
-            }
-
-            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-            if ($k['status'] == 1) {
-                // $kafedraIds = Kafedra::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
-                // $query->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
-                $query->andFilterWhere([
-                    'kafedra_id' => $k['UserAccess']->table_id
-                ]);
             } elseif ($k['status'] == 2) {
                 $query->andFilterWhere([
                     'kafedra_id' => -1

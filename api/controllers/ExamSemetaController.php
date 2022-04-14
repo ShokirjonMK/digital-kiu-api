@@ -4,9 +4,12 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
 use common\models\model\ExamSemeta;
 use common\models\model\Faculty;
+use common\models\model\Kafedra;
+use common\models\model\Subject;
 
 class ExamSemetaController extends ApiActiveController
 {
@@ -40,6 +43,26 @@ class ExamSemetaController extends ApiActiveController
             ]);
         }
         /*  is Self  */
+
+        // /*  is Self  */
+        // $t = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+
+        //     $query = $query->leftJoin('exam', 'exam.id = exam_semeta.exam_id',)
+        //         ->andWhere(['in', 'exam.edu_semestr_subject_id', EduSemestrSubject::find()
+        //             ->select('id')
+        //             ->where(['in', 'subject_id', Subject::find()
+        //                 ->select('id')
+        //                 ->where(['kafedra_id' => $t['UserAccess']->table_id])])]);
+        // } elseif ($t['status'] == 2) {
+        //     $query->andFilterWhere([
+        //         'exam_id' => -1
+        //     ]);
+        // }
+        // /*  is Self  */
+
+
+
         // filter
         $query = $this->filterAll($query, $model);
 

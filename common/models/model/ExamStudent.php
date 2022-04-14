@@ -136,6 +136,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examStudentAnswers',
 
             'statusName',
+            'teacherAccess',
 
             'createdBy',
             'updatedBy',

@@ -11,6 +11,7 @@ use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
 use common\models\model\Faculty;
 use common\models\model\Student;
+use common\models\model\TeacherAccess;
 use DateTime;
 
 class ExamController extends ApiActiveController
@@ -101,6 +102,19 @@ class ExamController extends ApiActiveController
                     'edu_semestr_subject_id' => -1
                 ]);
             }
+        } elseif (isRole('teacher')) {
+
+            $forSubjectIdeduSmesterSubjectIds = EduSemestrSubject::find()
+                ->where(['subject_id' => TeacherAccess::find()
+                    ->select('subject_id')
+                    ->where(['user_id' => current_user_id()])])
+                ->select('id');
+
+            if ($forSubjectIdeduSmesterSubjectIds) {
+                $query = $query->andWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
+            }
+
+            //
         } else {
 
             $query = $query->with(['infoRelation'])

@@ -33,6 +33,14 @@ class SubjectController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
+
+        $facultyId = Yii::$app->request->get('faculty_id');
+        if ($facultyId) {
+            $query = $query->andWhere(['in', 'kafedra_id', Kafedra::find()
+                ->where(['faculty_id' => $facultyId])
+                ->select('id')]);
+        }
+
         if (isRole('mudir')) {
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
             if ($k['status'] == 1) {

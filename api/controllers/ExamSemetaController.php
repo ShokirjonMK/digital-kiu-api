@@ -61,8 +61,6 @@ class ExamSemetaController extends ApiActiveController
         // }
         // /*  is Self  */
 
-
-
         // filter
         $query = $this->filterAll($query, $model);
 

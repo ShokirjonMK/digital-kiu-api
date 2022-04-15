@@ -94,7 +94,7 @@ class Question extends \yii\db\ActiveRecord
                     'lang_id',
                     'level',
                     'question_type_id',
-                    'edu_check',
+
                     'order',
                     'status',
                     'created_at',
@@ -129,7 +129,7 @@ class Question extends \yii\db\ActiveRecord
             'exam_id' => 'Exam Id',
             'teacher_id' => 'Teacher Id',
             'ball' => 'Ball',
-            'edu_check' => 'Edu Check',
+
             'attempt' => 'Attempt',
             'order' => 'Order',
             'status' => 'Status',

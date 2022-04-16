@@ -102,6 +102,11 @@ return [
         'enum_yesno',
         ////
 
+        "notification_approved",
+        "notification_index",
+        "notification_my",
+        "notification_status-list",
+        "notification_view",
 
         'user_logout',
         'user_me',

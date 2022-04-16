@@ -494,6 +494,8 @@ return [
 
     /* Dekan huquqlari */
     'dean' => [
+        'question_update',
+
         "access-control_permissions",
         "access-control_roles",
         "area_index",
@@ -867,7 +869,7 @@ return [
         'exam_index',
 
 
-        
+
 
         // "access-control_roles",
         // "area_view",

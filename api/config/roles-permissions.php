@@ -83,6 +83,11 @@ return [
 
     /* O'quv bo'limi Admin */
     'edu_admin' => [
+        'question_update',
+        'question_index',
+        'question_view',
+        'question_status-update',
+
         'password_index',
         'password_update',
         'access-control_roles',
@@ -497,6 +502,7 @@ return [
         'question_update',
         'question_index',
         'question_view',
+        'question_status-update',
 
         "access-control_permissions",
         "access-control_roles",
@@ -650,6 +656,8 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
+        'question_status-update',
+
         "access-control_permissions",
         "access-control_roles",
         "area_index",
@@ -850,7 +858,7 @@ return [
 
     /* Teacher */
     'teacher' => [
-
+        'question_status-update',
         'course_index',
         'languages_index',
         'notification_index',

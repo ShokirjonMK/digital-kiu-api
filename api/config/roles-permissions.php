@@ -495,6 +495,8 @@ return [
     /* Dekan huquqlari */
     'dean' => [
         'question_update',
+        'question_index',
+        'question_view',
 
         "access-control_permissions",
         "access-control_roles",

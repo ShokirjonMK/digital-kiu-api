@@ -140,7 +140,12 @@ class Profile extends \yii\db\ActiveRecord
                 ],
                 'string', 'max' => 255
             ],
-            [['phone', 'phone_secondary'], 'string', 'max' => 50],
+            [
+                [
+                    // 'phone',
+                    'phone_secondary'
+                ], 'string', 'max' => 50
+            ],
 
             [['passport_pin'], 'unique'],
 

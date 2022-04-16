@@ -83,7 +83,7 @@ return [
 
     /* O'quv bo'limi Admin */
     'edu_admin' => [
-        'question_update',
+        // 'question_update',
         'question_index',
         'question_view',
         'question_status-update',

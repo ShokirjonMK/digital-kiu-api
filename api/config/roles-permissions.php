@@ -163,6 +163,10 @@ return [
         'exams-type_update',
         'exams-type_view',
 
+        'subject_index',
+        'subject_view',
+
+
         'subject-type_index',
         'subject-type_create',
         'subject-type_update',

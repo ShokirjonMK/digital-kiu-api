@@ -7,6 +7,8 @@ use base\ResponseStatus;
 use common\models\model\Kafedra;
 use common\models\model\Question;
 use common\models\model\Subject;
+use GuzzleHttp\Psr7\Query;
+use Matrix\Decomposition\QR;
 
 class QuestionController extends ApiActiveController
 {
@@ -44,6 +46,39 @@ class QuestionController extends ApiActiveController
             $query = $query->andWhere(["created_by" => current_user_id()]);
         }
 
+        if (isRole('mudir')) {
+            $seeStatus = [
+                Question::STATUS_TEACHER_EDITED,
+                Question::STATUS_INACTIVE,
+                Question::STATUS_ACTIVE,
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_MUDIR_REFUSED,
+            ];
+
+            $query = $query->andWhere(['in', 'status', $seeStatus]);
+        }
+        if (isRole('dean')) {
+            $seeStatus = [
+                Question::STATUS_ACTIVE,
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_DEAN_REFUSED,
+            ];
+
+            $query = $query->andWhere(['in', 'status', $seeStatus]);
+        }
+        if (isRole('edu_admin')) {
+            $seeStatus = [
+                Question::STATUS_ACTIVE,
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_EDU_ADMIN_REFUSED,
+            ];
+
+            $query = $query->andWhere(['in', 'status', $seeStatus]);
+        }
+
+
+
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -72,10 +107,74 @@ class QuestionController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = Question::findOne($id);
+
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         $post = Yii::$app->request->post();
+
+        if ($model->status == Question::STATUS_ACTIVE && !isRole('edu_admin')) {
+            return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if (isRole('edu_admin')) {
+            $statusList = [
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_EDU_ADMIN_REFUSED,
+                Question::STATUS_ACTIVE,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+            $status = $post['status'];
+            $post = [];
+            $post['status'] = $status;
+        }
+
+        if (isRole('dean')) {
+            $statusList = [
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_DEAN_REFUSED,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+            $status = $post['status'];
+            $post = [];
+            $post['status'] = $status;
+        }
+
+        if (isRole('mudir')) {
+            $statusList = [
+                Question::STATUS_TEACHER_EDITED,
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_MUDIR_REFUSED,
+                Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_INACTIVE,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
+
+        if (isRole('teacher') && $model->created_by == current_user_id()) {
+            $statusList = [
+                Question::STATUS_MUDIR_REFUSED,
+                Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_EDU_ADMIN_REFUSED,
+                Question::STATUS_ACTIVE,
+                Question::STATUS_INACTIVE,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
+
         $this->load($model, $post);
         $result = Question::updateItem($model, $post);
         if (!is_array($result)) {

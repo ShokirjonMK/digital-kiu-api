@@ -41,8 +41,13 @@ class Question extends \yii\db\ActiveRecord
 
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
-    const STATUS_MUDIR_ACTIVE = 2;
-    const STATUS_DEAN_ACTIVE = 3;
+    const STATUS_TEACHER_EDITED = 2;
+    const STATUS_MUDIR_REFUSED = 3;
+    const STATUS_MUDIR_ACTIVE = 4;
+    const STATUS_DEAN_REFUSED = 5;
+    const STATUS_DEAN_ACTIVE = 6;
+    const STATUS_EDU_ADMIN_REFUSED = 7;
+    // const STATUS_EDU_ADMIN_ACTIVE = 1;
 
 
     // // 0- hali tekshirilmagan, 1- tasdiqlangan, 2- bekor qilingan 
@@ -108,6 +113,7 @@ class Question extends \yii\db\ActiveRecord
 
             [['file'], 'string', 'max' => 255],
             [['ball'], 'double'],
+            [['description'], 'string'],
 
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
@@ -129,6 +135,7 @@ class Question extends \yii\db\ActiveRecord
             'exam_id' => 'Exam Id',
             'teacher_id' => 'Teacher Id',
             'ball' => 'Ball',
+            'description' => 'Description',
 
             'attempt' => 'Attempt',
             'order' => 'Order',
@@ -164,7 +171,7 @@ class Question extends \yii\db\ActiveRecord
             'lang_id',
             'level',
             'question_type_id',
-
+            'description',
             // 'order',
             'status',
             // 'created_at',
@@ -353,7 +360,7 @@ class Question extends \yii\db\ActiveRecord
             }
         }
         // ***
-
+        // status  changing
         if ($model->status == 1) {
             if (isRole('mudir')) {
                 $model->status = self::STATUS_MUDIR_ACTIVE;
@@ -365,6 +372,24 @@ class Question extends \yii\db\ActiveRecord
                 $model->status = self::STATUS_ACTIVE;
             }
         }
+
+        if ($model->status == 0) {
+            if (isRole('mudir')) {
+                $model->status = self::STATUS_MUDIR_REFUSED;
+            }
+            if (isRole('dean')) {
+                $model->status = self::STATUS_DEAN_REFUSED;
+            }
+            if (isRole('edu_admin')) {
+                $model->status = self::STATUS_EDU_ADMIN_REFUSED;
+            }
+        }
+
+        if (isRole('teacher')) {
+            $model->status = self::STATUS_TEACHER_EDITED;
+        }
+
+        // status 
 
         if ($model->save()) {
             $subQuestionPescent = 0;
@@ -473,10 +498,16 @@ class Question extends \yii\db\ActiveRecord
     public static function statusList()
     {
         return [
-            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
-            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
-            self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
-            self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
+            self::STATUS_INACTIVE => _e(' STATUS_INACTIVE'),
+            self::STATUS_ACTIVE => _e(' STATUS_ACTIVE'),
+            self::STATUS_MUDIR_REFUSED => _e(' STATUS_MUDIR_REFUSED'),
+            self::STATUS_MUDIR_ACTIVE => _e(' STATUS_MUDIR_ACTIVE'),
+            self::STATUS_DEAN_REFUSED => _e(' STATUS_DEAN_REFUSED'),
+            self::STATUS_DEAN_ACTIVE => _e(' STATUS_DEAN_ACTIVE'),
+            self::STATUS_EDU_ADMIN_REFUSED => _e(' STATUS_EDU_ADMIN_REFUSED'),
+            // self::STATUS_EDU_ADMIN_ACTIVE => _e(' STATUS_EDU_ADMIN_ACTIVE'),
+
+
         ];
     }
 }

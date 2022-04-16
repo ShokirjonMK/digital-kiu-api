@@ -104,6 +104,87 @@ class QuestionController extends ApiActiveController
         }
     }
 
+    public function actionStatusUpdate($lang, $id)
+    {
+        $model = Question::findOne($id);
+
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $post = Yii::$app->request->post();
+
+        if ($model->status == Question::STATUS_ACTIVE && !isRole('edu_admin')) {
+            return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if (isRole('edu_admin')) {
+            $statusList = [
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_EDU_ADMIN_REFUSED,
+                Question::STATUS_ACTIVE,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+            $status = $post['status'];
+            $post = [];
+            $post['status'] = $status;
+        }
+
+        if (isRole('dean')) {
+            $statusList = [
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_DEAN_REFUSED,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+            $status = $post['status'];
+            $post = [];
+            $post['status'] = $status;
+        }
+
+        if (isRole('mudir')) {
+            $statusList = [
+                Question::STATUS_TEACHER_EDITED,
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_MUDIR_REFUSED,
+                Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_INACTIVE,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
+
+        if (isRole('teacher') && $model->created_by == current_user_id()) {
+            $statusList = [
+                Question::STATUS_MUDIR_REFUSED,
+                Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_EDU_ADMIN_REFUSED,
+                Question::STATUS_ACTIVE,
+                Question::STATUS_INACTIVE,
+            ];
+            if (!(in_array($model->status, $statusList, TRUE))) {
+                return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
+
+        $this->load($model, $post);
+        $result = Question::updateItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+
     public function actionUpdate($lang, $id)
     {
         $model = Question::findOne($id);

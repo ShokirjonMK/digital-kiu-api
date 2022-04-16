@@ -111,6 +111,8 @@ $routes = [
     // statistic
     'GET <lang:\w{2}>/statistics/student-count-by-faculty' => 'statistic/student-count-by-faculty',
 
+    // Question status update
+    'PUT <lang:\w{2}>/questions/status-update/<id>' => 'question/status-update',
 
 
     // Login and get access_token from server

@@ -110,10 +110,8 @@ return [
 
         'user_logout',
         'user_me',
-        'notification_approved',
-        'notification_status-list',
-
-
+ 
+        
         'user_status-list',
         'user_index',
         'user_create',

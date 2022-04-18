@@ -160,6 +160,7 @@ return [
         'exam_create',
         'exam_update',
         'exam_view',
+        'exam_distribution',
 
         'exams-type_index',
         'exams-type_create',
@@ -685,7 +686,7 @@ return [
         "kafedra_index",
         "kafedra_view",
         "languages_index",
-        
+
         "notification_approved",
         "notification_index",
         "notification_my",

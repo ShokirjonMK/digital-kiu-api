@@ -49,6 +49,11 @@ class ExamStudent extends \yii\db\ActiveRecord
     const STATUS_SHARED = 5;
 
 
+    // plagiat_percent
+    // plagiat_file
+    // conclusion
+
+
     /**
      * {@inheritdoc}
      */
@@ -64,7 +69,25 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'exam_id'], 'required'],
-            [['student_id', 'start', 'exam_id', 'teacher_access_id', 'attempt', 'lang_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [
+                [
+                    'student_id',
+                    'start',
+                    'exam_id',
+                    'teacher_access_id',
+                    'attempt',
+                    'lang_id',
+                    'exam_semeta_id',
+
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
             [['ball'], 'number'],
             [['password'], 'safe'],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -86,6 +109,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'exam_id' => 'Exam ID',
             'teacher_access_id' => 'Teacher Access ID',
             'password' => 'Password',
+            'exam_semeta_id' => 'Exam Semeta Id',
             'ball' => 'Ball',
             'start' => 'Start',
             'attempt' => 'Attempt',
@@ -137,6 +161,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
             'statusName',
             'teacherAccess',
+            'examSemeta',
 
             'createdBy',
             'updatedBy',
@@ -145,6 +170,11 @@ class ExamStudent extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+
+    public function getExamStudentAnswers()
+    {
+        return $this->hasmany(ExamStudentAnswer::className(), ['exam_student_id' => 'id']);
+    }
 
     /**
      * Gets query for [[Exam]].
@@ -174,6 +204,16 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
+    /**
+     * Gets query for [[ExamSemeta]].
+     *exam_semeta
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExamSemeta()
+    {
+        return $this->hasOne(ExamSemeta::className(), ['id' => 'exam_semeta_id']);
     }
 
     public function getStatusName()
@@ -220,9 +260,9 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }
@@ -234,7 +274,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             self::STATUS_TAKED => _e('STATUS_TAKED'),
             self::STATUS_COMPLETE => _e('STATUS_COMPLETE'),
             self::STATUS_IN_CHECKING => _e('STATUS_IN_CHECKING'),
-            self::STATUS_CHECKED => _e('STATUS_MARKED'),
+            self::STATUS_CHECKED => _e('STATUS_CHECKED'),
             self::STATUS_SHARED => _e('STATUS_SHARED'),
         ];
     }

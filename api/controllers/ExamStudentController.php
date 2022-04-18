@@ -7,6 +7,7 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamQuestionOption;
 use common\models\model\ExamStudent;
+use common\models\model\TeacherAccess;
 
 class ExamStudentController extends ApiActiveController
 {
@@ -28,6 +29,13 @@ class ExamStudentController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
 
+        if (isRole("teacher")) {
+            $query = $query->andWhere([
+                'in', 'teacher_access_id', TeacherAccess::find()
+                    ->where(['user_id' => current_user_id()])
+                    ->select('id')
+            ]);
+        }
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -99,5 +107,4 @@ class ExamStudentController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
 }

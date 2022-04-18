@@ -2,10 +2,8 @@
 
 namespace api\controllers;
 
-use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\ExamQuestionOption;
 use common\models\model\ExamStudent;
 use common\models\model\TeacherAccess;
 
@@ -31,9 +29,7 @@ class ExamStudentController extends ApiActiveController
 
         if (isRole("teacher")) {
             $query = $query->andWhere([
-                'in', 'teacher_access_id', TeacherAccess::find()
-                    ->where(['user_id' => current_user_id()])
-                    ->select('id')
+                'in', 'teacher_access_id', $this->teacher_access()
             ]);
         }
         // filter
@@ -67,6 +63,13 @@ class ExamStudentController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if (isRole("teacher")) {
+            if (!in_array($model->teacher_access_id, $this->teacher_access(2), true)) {
+                return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+            }
+        }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = ExamStudent::updateItem($model, $post);

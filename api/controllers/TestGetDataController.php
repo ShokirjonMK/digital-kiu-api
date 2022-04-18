@@ -20,6 +20,18 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
+
+        $arr = [
+            'get_host' => get_host(),
+            'getOS' => getOS(),
+            'getBrowser' => getBrowser(),
+            'getIpAddress' => getIpAddress(),
+            'getIpAddressData' => getIpAddressData()
+        ];
+
+        return $arr;
+
+        
         $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";
@@ -29,7 +41,7 @@ class TestGetDataController extends ApiActiveController
         // $array = json_decode($json, TRUE);
 
 
-       /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
+        /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
 
         //Encode the SimpleXMLElement object into a JSON string.
         $jsonString = json_encode($xmlObject);
@@ -47,7 +59,7 @@ class TestGetDataController extends ApiActiveController
 
         $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
 
-        return $rrrr ;
+        return $rrrr;
         return simplexml_load_file($rrrr);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

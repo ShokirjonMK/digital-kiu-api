@@ -872,17 +872,21 @@ return [
 
     /* Teacher */
     'teacher' => [
-        'question_status-update',
+
         'course_index',
         'languages_index',
+
         'notification_index',
         'notification_approved',
+
+        'question_status-update',
         'question-type_index',
         'question_create',
         'question_delete',
         'question_index',
         'question_update',
         'question_view',
+
         'semestr_index',
         'subject-sillabus_index',
         'subject_index',
@@ -891,6 +895,10 @@ return [
 
         'exam-semeta_index',
         'exam_index',
+
+        'exam-student_index',
+        'exam-student_update',
+        'exam-student_view',
 
 
 

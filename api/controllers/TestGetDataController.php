@@ -2,16 +2,15 @@
 
 namespace api\controllers;
 
-use common\models\model\Profile;
+use api\components\MipService;
+use api\components\PersonDataHelper;
+use common\models\model\TeacherAccess;
 use Yii;
-use yii\db\Expression;
-use yii\rest\ActiveController;
+use base\ResponseStatus;
 
-class TestGetDataController extends ActiveController
+class TestGetDataController extends ApiActiveController
 {
-    use ApiOpen;
-
-    public $modelClass = '';
+    public $modelClass = 'api\resources\TestGetData';
 
     public function actions()
     {
@@ -21,19 +20,7 @@ class TestGetDataController extends ActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-
-        $arr = [
-            'get_host' => get_host(),
-            // 'getOS' => getOS(),
-            // 'getBrowser' => getBrowser(),
-            'getIpAddress' => getIpAddress(),
-            'getIpAddressData' => getIpAddressData()
-        ];
-
-        return $arr;
-
-
-        // $mk = new MipService();
+        $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";
 
@@ -42,7 +29,7 @@ class TestGetDataController extends ActiveController
         // $array = json_decode($json, TRUE);
 
 
-        /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
+       /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
 
         //Encode the SimpleXMLElement object into a JSON string.
         $jsonString = json_encode($xmlObject);
@@ -58,20 +45,20 @@ class TestGetDataController extends ActiveController
 
         return $array ; */
 
-        /*  $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
+        $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
 
-        return $rrrr;
+        return $rrrr ;
         return simplexml_load_file($rrrr);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        // $model = new PersonDataHelper();
+        $model = new PersonDataHelper();
         //  $data = $model->services($jshir, $passport);
         $data = $model->services("30505985280023", "AA7231228");
         if (empty($data)) {
             return 'error-no';
         } else {
             return $data;
-        } */
+        }
     }
 
     public function actionView()

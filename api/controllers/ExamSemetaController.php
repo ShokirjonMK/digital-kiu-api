@@ -134,6 +134,14 @@ class ExamSemetaController extends ApiActiveController
         }
         /*  is Self  */
 
+        if ($model->exam->status = Exam::STATUS_DISTRIBUTED) {
+            return $this->response(0, _e('Modification is prohibited to prevent conflict.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if (($model->status == ExamSemeta::STATUS_IN_CHECKING || $model->status == ExamSemeta::STATUS_CONFIRMED) && isRole('mudir')) {
+            return $this->response(0, _e('Can not change.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
         $result = ExamSemeta::updateItem($model, $post);

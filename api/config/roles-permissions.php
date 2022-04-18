@@ -110,8 +110,8 @@ return [
 
         'user_logout',
         'user_me',
- 
-        
+
+
         'user_status-list',
         'user_index',
         'user_create',
@@ -685,17 +685,20 @@ return [
         "kafedra_index",
         "kafedra_view",
         "languages_index",
+        
         "notification_approved",
         "notification_index",
         "notification_my",
         "notification_status-list",
         "notification_view",
+
         "password_index",
         "password_update",
         "password_view",
         "region_index",
         "region_view",
         "semestr_index",
+
         "subject-category_index",
         "subject-category_view",
         "subject-sillabus_create",
@@ -710,6 +713,7 @@ return [
         "subject_index",
         "subject_update",
         "subject_view",
+
         "user-access-type_index",
         "user_create",
         "user_delete",
@@ -718,6 +722,8 @@ return [
         "user_me",
         "user_status-list",
         "user_update",
+        "user_view",
+
         "question_view",
         "question_index",
         "question_update",

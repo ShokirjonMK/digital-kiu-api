@@ -161,6 +161,7 @@ return [
         'exam_update',
         'exam_view',
         'exam_distribution',
+        'exam-semeta_index',
 
         'exams-type_index',
         'exams-type_create',

@@ -7,7 +7,7 @@ use Yii;
 use yii\db\Expression;
 use yii\rest\ActiveController;
 
-class TelegramController extends ActiveController
+class TestGetDataController extends ActiveController
 {
     use ApiOpen;
 

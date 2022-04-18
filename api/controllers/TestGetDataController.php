@@ -2,17 +2,16 @@
 
 namespace api\controllers;
 
-use api\components\MipService;
-use api\components\PersonDataHelper;
-use common\models\model\TeacherAccess;
+use common\models\model\Profile;
 use Yii;
-use base\ResponseStatus;
+use yii\db\Expression;
 use yii\rest\ActiveController;
 
 class TelegramController extends ActiveController
 {
     use ApiOpen;
-    public $modelClass = 'api\resources\TestGetData';
+
+    public $modelClass = '';
 
     public function actions()
     {
@@ -34,7 +33,7 @@ class TelegramController extends ActiveController
         return $arr;
 
 
-        $mk = new MipService();
+        // $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";
 
@@ -59,20 +58,20 @@ class TelegramController extends ActiveController
 
         return $array ; */
 
-        $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
+        /*  $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
 
         return $rrrr;
         return simplexml_load_file($rrrr);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $model = new PersonDataHelper();
+        // $model = new PersonDataHelper();
         //  $data = $model->services($jshir, $passport);
         $data = $model->services("30505985280023", "AA7231228");
         if (empty($data)) {
             return 'error-no';
         } else {
             return $data;
-        }
+        } */
     }
 
     public function actionView()

@@ -23,15 +23,15 @@ class TestGetDataController extends ApiActiveController
 
         $arr = [
             'get_host' => get_host(),
-            'getOS' => getOS(),
-            'getBrowser' => getBrowser(),
+            // 'getOS' => getOS(),
+            // 'getBrowser' => getBrowser(),
             'getIpAddress' => getIpAddress(),
             'getIpAddressData' => getIpAddressData()
         ];
 
         return $arr;
 
-        
+
         $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";

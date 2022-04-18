@@ -7,9 +7,11 @@ use api\components\PersonDataHelper;
 use common\models\model\TeacherAccess;
 use Yii;
 use base\ResponseStatus;
+use yii\rest\ActiveController;
 
-class TestGetDataController extends ApiActiveController
+class TelegramController extends ActiveController
 {
+    use ApiOpen;
     public $modelClass = 'api\resources\TestGetData';
 
     public function actions()

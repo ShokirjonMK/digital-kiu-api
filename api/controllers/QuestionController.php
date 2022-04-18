@@ -176,7 +176,6 @@ class QuestionController extends ApiActiveController
             }
         }
 
-
         $this->load($model, $post);
         $result = Question::updateItem($model, $post);
         if (!is_array($result)) {

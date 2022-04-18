@@ -142,7 +142,7 @@ class Profile extends \yii\db\ActiveRecord
             ],
             [
                 [
-                    // 'phone',
+                    'phone',
                     'phone_secondary'
                 ], 'string', 'max' => 50
             ],

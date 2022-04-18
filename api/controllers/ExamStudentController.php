@@ -65,7 +65,7 @@ class ExamStudentController extends ApiActiveController
         }
 
         if (isRole("teacher")) {
-            if (!in_array($model->teacher_access_id, $this->teacher_access(2), true)) {
+            if ($model->teacherAccess->user_id != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
             }
         }
@@ -87,6 +87,11 @@ class ExamStudentController extends ApiActiveController
             ->one();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        if (isRole("teacher")) {
+            if ($model->teacherAccess->user_id != current_user_id()) {
+                return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+            }
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }

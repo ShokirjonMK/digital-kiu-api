@@ -46,36 +46,38 @@ class QuestionController extends ApiActiveController
             $query = $query->andWhere(["created_by" => current_user_id()]);
         }
 
-        if (isRole('mudir')) {
-            $seeStatus = [
-                Question::STATUS_TEACHER_EDITED,
-                Question::STATUS_INACTIVE,
-                Question::STATUS_ACTIVE,
-                Question::STATUS_MUDIR_ACTIVE,
-                Question::STATUS_MUDIR_REFUSED,
-            ];
+        // if (isRole('mudir')) {
+        //     $seeStatus = [
+        //         Question::STATUS_TEACHER_EDITED,
+        //         Question::STATUS_INACTIVE,
+        //         Question::STATUS_ACTIVE,
+        //         Question::STATUS_MUDIR_ACTIVE,
+        //         Question::STATUS_MUDIR_REFUSED,
+        //         Question::STATUS_DEAN_REFUSED,
+        //     ];
 
-            $query = $query->andWhere(['in', 'status', $seeStatus]);
-        }
-        if (isRole('dean')) {
-            $seeStatus = [
-                Question::STATUS_ACTIVE,
-                Question::STATUS_MUDIR_ACTIVE,
-                Question::STATUS_DEAN_ACTIVE,
-                Question::STATUS_DEAN_REFUSED,
-            ];
+        //     $query = $query->andWhere(['in', 'status', $seeStatus]);
+        // }
+        // if (isRole('dean')) {
+        //     $seeStatus = [
+        //         Question::STATUS_ACTIVE,
+        //         Question::STATUS_MUDIR_ACTIVE,
+        //         Question::STATUS_DEAN_ACTIVE,
+        //         Question::STATUS_DEAN_REFUSED,
+        //         Question::STATUS_EDU_ADMIN_REFUSED,
+        //     ];
 
-            $query = $query->andWhere(['in', 'status', $seeStatus]);
-        }
-        if (isRole('edu_admin')) {
-            $seeStatus = [
-                Question::STATUS_ACTIVE,
-                Question::STATUS_DEAN_ACTIVE,
-                Question::STATUS_EDU_ADMIN_REFUSED,
-            ];
+        //     $query = $query->andWhere(['in', 'status', $seeStatus]);
+        // }
+        // if (isRole('edu_admin')) {
+        //     $seeStatus = [
+        //         Question::STATUS_ACTIVE,
+        //         Question::STATUS_DEAN_ACTIVE,
+        //         Question::STATUS_EDU_ADMIN_REFUSED,
+        //     ];
 
-            $query = $query->andWhere(['in', 'status', $seeStatus]);
-        }
+        //     $query = $query->andWhere(['in', 'status', $seeStatus]);
+        // }
 
 
 
@@ -173,7 +175,6 @@ class QuestionController extends ApiActiveController
                 return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
         }
-
 
         $this->load($model, $post);
         $result = Question::updateItem($model, $post);

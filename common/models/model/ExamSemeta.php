@@ -43,7 +43,8 @@ class ExamSemeta extends \yii\db\ActiveRecord
     }
 
 
-    const STATUS_NEW = 1;
+    const STATUS_NEW = 0;
+    const STATUS_CONFIRMED = 1;
     const STATUS_IN_CHECKING = 2;  // tasdiqlangan
     const STATUS_COMPLETED = 3;
 

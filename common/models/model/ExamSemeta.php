@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "exam_question".
@@ -44,8 +45,8 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
 
     const STATUS_NEW = 0;
-    const STATUS_CONFIRMED = 1;
-    const STATUS_IN_CHECKING = 2;  // tasdiqlangan
+    const STATUS_CONFIRMED = 1; // tasdiqlangan
+    const STATUS_IN_CHECKING = 2;
     const STATUS_COMPLETED = 3;
 
     /**
@@ -138,6 +139,8 @@ class ExamSemeta extends \yii\db\ActiveRecord
             'lang',
             'teacherAccess',
 
+            'statusName',
+
             'createdBy',
             'updatedBy',
         ];
@@ -176,12 +179,19 @@ class ExamSemeta extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
+    public function getStatusName()
+    {
+        return   $this->statusList()[$this->status];
+    }
+
+
     public static function createItems($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $examId = isset($post['exam_id']) ?  $post['exam_id'] : null;
         $data = [];
+        $status = $post['status'] ?? null;
         $data['status'] = true;
         if (isset($examId)) {
             $exam = Exam::findOne($examId);
@@ -196,6 +206,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
                         $data['errors'] = $errors;
                     }
 
+                    $countOfExamStudent = $exam->examStudentCount;
                     $countOfExamStudent = $exam->examStudentCount;
                     $countOfSmetas = 0;
                     foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
@@ -240,6 +251,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
                                 $errors[] = [$teacherAccessId => $newExamSmeta->errors];
                             }
 
+                            $newExamSmeta->status = $status;
                             $newExamSmeta->save();
                             $data['data'][] = $newExamSmeta;
                         } else {
@@ -313,6 +325,53 @@ class ExamSemeta extends \yii\db\ActiveRecord
         }
     }
 
+
+    public static function distribution($exam)
+    {
+
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $exam->status = Exam::STATUS_DISTRIBUTED;
+        if ($exam->save()) {
+
+            $examSmetas = ExamSemeta::findAll(['exam_id' => $exam->id]);
+
+            foreach ($examSmetas as $examSmetaOne) {
+                $examStudent = ExamStudent::find()
+                    ->where([
+                        'exam_id' => $exam->id,
+                        'teacher_access_id' => null,
+                    ])
+                    ->orderBy(new Expression('rand()'))
+                    ->limit($examSmetaOne->count)
+                    ->all();
+
+                $examSmetaOne->status = self::STATUS_IN_CHECKING;
+                if (!$examSmetaOne->save()) {
+                    $errors[] = _('There is an error occurred while distributed');
+                }
+
+                foreach ($examStudent as $examStudentOne) {
+                    $examStudentOne->teacher_access_id = $examSmetaOne->teacher_access_id;
+                    $examStudentOne->status = ExamStudent::STATUS_IN_CHECKING;
+
+                    if (!$examStudentOne->save()) {
+                        $errors[] = _('There is an error occurred while distributed');
+                    }
+                }
+            }
+        } else {
+            $errors[] = _('There is an error occurred on exam');
+        }
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -321,5 +380,15 @@ class ExamSemeta extends \yii\db\ActiveRecord
             $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_NEW => _e('STATUS_NEW'),
+            self::STATUS_CONFIRMED => _e('STATUS_CONFIRMED'),
+            self::STATUS_IN_CHECKING => _e('STATUS_IN_CHECKING'),
+            self::STATUS_COMPLETED => _e('STATUS_COMPLETED'),
+        ];
     }
 }

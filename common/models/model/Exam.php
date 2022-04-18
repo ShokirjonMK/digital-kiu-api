@@ -232,9 +232,19 @@ class Exam extends \yii\db\ActiveRecord
         return $this->eduSemestrSubject->subject->name ?? '';
     }
 
-    public function getExamStudent()
+    public function getExamStudentMain()
     {
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+    }
+
+    public function getExamStudent()
+    {
+        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['status' => ExamStudent::STATUS_TAKED]);
+    }
+
+    public function getExamStudentCountMain()
+    {
+        return count($this->examStudent);
     }
 
     public function getExamStudentCount()

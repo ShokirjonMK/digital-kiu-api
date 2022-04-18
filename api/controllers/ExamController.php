@@ -9,6 +9,7 @@ use common\models\model\EduPlan;
 use common\models\model\EduSemestr;
 use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
+use common\models\model\ExamSemeta;
 use common\models\model\Faculty;
 use common\models\model\Student;
 use common\models\model\TeacherAccess;
@@ -211,6 +212,8 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        // return $model->getExamStudentCount();
+
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
@@ -257,7 +260,21 @@ class ExamController extends ApiActiveController
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 
-    public function action($lang, $id)
+    public function actionDistribution($lang, $id)
     {
+        $model = Exam::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $result = ExamSemeta::distribution($model);
+
+        if (!is_array($result)) {
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
     }
 }

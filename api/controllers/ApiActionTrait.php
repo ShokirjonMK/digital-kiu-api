@@ -6,6 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+use common\models\model\TeacherAccess;
 use common\models\model\UserAccess;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -248,17 +249,20 @@ trait ApiActionTrait
         return true;
     }
 
-    // public function isRole($roleName)
-    // {
-    //     $user_id = current_user_id();
-    //     $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
+    public function teacher_access($select = [], $user_id = null)
+    {
+        if (is_null($user_id)) {
+            $user_id = current_user_id();
+        }
 
-    //     if (property_exists($roles, $roleName)) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
+        if (empty($select)) {
+            $select = ['id'];
+        }
+
+        TeacherAccess::find()
+            ->where(['user_id' => $user_id])
+            ->select($select);
+    }
 
 
     public function isSelf($userAccessTypeId, $type = null)

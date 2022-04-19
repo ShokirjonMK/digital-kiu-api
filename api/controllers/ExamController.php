@@ -69,6 +69,11 @@ class ExamController extends ApiActiveController
 
         $query = $model->find()->with(['infoRelation']);
 
+        $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            // ->groupBy($this->table_name . '.id')
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
 
         $subjectId = Yii::$app->request->get('subject_id');
         if ($subjectId) {
@@ -133,10 +138,7 @@ class ExamController extends ApiActiveController
             }
             /*  is Self  */
         } else {
-            $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
-                ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-                // ->groupBy($this->table_name . '.id')
-                ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
 
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);

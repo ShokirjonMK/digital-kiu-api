@@ -34,12 +34,11 @@ class QuestionController extends ApiActiveController
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
             if ($k['status'] == 1) {
 
-                $subjectIds = Subject::find()
-                    ->where(['kafedra_id' => $k['UserAccess']->table_id])
-                    ->select('id');
-
                 $query->andFilterWhere([
-                    'in', 'subject_id', $subjectIds
+                    'in', 'subject_id',
+                    Subject::find()
+                        ->where(['kafedra_id' => $k['UserAccess']->table_id])
+                        ->select('id')
                 ]);
             }
         } elseif (isRole("teacher")) {

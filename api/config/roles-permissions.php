@@ -695,7 +695,7 @@ return [
         "password_index",
         "password_update",
         "password_view",
-        
+
         "region_index",
         "region_view",
 
@@ -737,8 +737,6 @@ return [
         "question-type_index",
         "question-type_view",
         'question_status-update',
-
-        
 
 
         'exam_distribution',

@@ -204,6 +204,16 @@ class Question extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    /**
+     * Gets query for [['Subject ']].
+     * Subject
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubject()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
+
     public function getStatusName()
     {
         return   $this->statusList()[$this->status];
@@ -235,15 +245,6 @@ class Question extends \yii\db\ActiveRecord
         return $this->hasMany(QuestionOption::className(), ['question_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
-    /**
-     * Gets query for [['Subject ']].
-     * Subject
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSubject()
-    {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
-    }
     /**
      * Gets query for [['QuestionType ']].
      * QuestionType

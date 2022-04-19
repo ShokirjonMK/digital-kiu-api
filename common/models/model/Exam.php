@@ -55,8 +55,6 @@ class Exam extends \yii\db\ActiveRecord
     const PROTECTED_FALSE = 0;
 
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -72,7 +70,20 @@ class Exam extends \yii\db\ActiveRecord
     {
         return [
             [['exam_type_id', 'type', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
-            [['exam_type_id', 'faculty_id', 'is_protected', 'duration', 'edu_semestr_subject_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [
+                [
+                    'exam_type_id',
+                    'faculty_id',
+                    'is_protected',
+                    'duration',
+                    'edu_semestr_subject_id',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by', 'updated_by', 'is_deleted'
+                ], 'integer'
+            ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'double'],
             [['question_count_by_type'], 'safe'],

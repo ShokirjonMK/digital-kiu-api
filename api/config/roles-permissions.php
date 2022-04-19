@@ -665,8 +665,6 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
-        'question_status-update',
-
         "access-control_permissions",
         "access-control_roles",
         "area_index",
@@ -697,9 +695,14 @@ return [
         "password_index",
         "password_update",
         "password_view",
+        
         "region_index",
         "region_view",
+
         "semestr_index",
+
+        'course_index',
+        'course_view',
 
         "subject-category_index",
         "subject-category_view",
@@ -730,6 +733,22 @@ return [
         "question_index",
         "question_update",
         "question_delete",
+
+        "question-type_index",
+        "question-type_view",
+        'question_status-update',
+
+        
+
+
+        'exam_distribution',
+        'exam_view',
+        'exam_index',
+        'exam-semeta_create',
+        'exam-semeta_index',
+        'exam-semeta_view',
+        'exam-question_index',
+        'exam-question_view',
 
     ],
 

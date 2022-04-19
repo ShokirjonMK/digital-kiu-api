@@ -13,8 +13,8 @@ class m220418_071513_alter_exam_student_table_add_conclusion_plagiat_file_and_pl
     public function safeUp()
     {
         $this->execute("ALTER TABLE `exam_student` ADD `conclusion` text NULL COMMENT 'umumiy xulosa';");
-        $this->execute("ALTER TABLE `exam_student` ADD `plagiat_file` varchar(255) NULL COMMENT 'umumiy xulosa';");
-        $this->execute("ALTER TABLE `exam_student` ADD `plagiat_percent` int default(0) COMMENT 'umumiy xulosa';");
+        $this->execute("ALTER TABLE `exam_student` ADD `plagiat_file` varchar(255) NULL COMMENT 'fayl';");
+        $this->execute("ALTER TABLE `exam_student` ADD `plagiat_percent` float default(0) COMMENT 'foyizi';");
     }
 
     /**

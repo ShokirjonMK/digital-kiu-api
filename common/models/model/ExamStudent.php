@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "exam_student".
@@ -49,9 +50,13 @@ class ExamStudent extends \yii\db\ActiveRecord
     const STATUS_SHARED = 5;
 
 
-    // plagiat_percent
-    // plagiat_file
+    const UPLOADS_FOLDER = 'uploads/plagiat_files/';
+    public $plagiat_file;
+    public $plagiatFileMaxSize = 1024 * 1024 * 3; // 3 Mb
+
     // conclusion
+    // plagiat_file
+    // plagiat_percent
 
 
     /**
@@ -88,12 +93,17 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'is_deleted'
                 ], 'integer'
             ],
-            [['ball'], 'number'],
+            [['ball'], 'double'],
+            // [['plagiat_file'], 'string', 'max' => 255],
             [['password'], 'safe'],
+            [['plagiat_percent'], 'double'],
+            [['conclusion'], 'string'],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
+            [['plagiat_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->plagiatFileMaxSize],
+
         ];
     }
 
@@ -136,6 +146,10 @@ class ExamStudent extends \yii\db\ActiveRecord
             'start',
             'attempt',
             'password',
+
+            'conclusion',
+            'plagiat_file',
+            'plagiat_percent',
 
             'order',
             'status',
@@ -248,7 +262,24 @@ class ExamStudent extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        if ($model->save()) {
+        $oldFile = $model->plagiat_file;
+        // plagiat file saqlaymiz
+        $model->plagiat_file = UploadedFile::getInstancesByName('plagiat_file');
+        if ($model->plagiat_file) {
+            $model->plagiat_file = $model->plagiat_file[0];
+            $plagiatFileUrl = $model->uploadFile();
+            if ($plagiatFileUrl) {
+                $model->plagiat_file = $plagiatFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+        // $errors[] = $post['old_file'];
+
+        $model->status = self::STATUS_CHECKED;
+        if ($model->save() && count($errors) == 0) {
+            $model->deleteFile($oldFile);
             $transaction->commit();
             return true;
         } else {
@@ -265,6 +296,51 @@ class ExamStudent extends \yii\db\ActiveRecord
             $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
+    }
+
+    public function uploadFile()
+    {
+        // if ($this->validate()) {
+        //     if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+        //         mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+        //     }
+
+        //     $fileName =  \Yii::$app->security->generateRandomString(10) . '.' . $this->plagiat_file->extension;
+
+        //     $miniUrl = self::UPLOADS_FOLDER . $fileName;
+        //     $url = STORAGE_PATH . $miniUrl;
+        //     $this->plagiat_file->saveAs($url, false);
+        //     return "storage/" . $miniUrl;
+        // } else {
+        //     return false;
+        // }
+
+
+        if ($this->validate()) {
+            $filePath = self::UPLOADS_FOLDER . $this->exam_id . '/';
+            if (!file_exists(STORAGE_PATH . $filePath)) {
+                mkdir(STORAGE_PATH . $filePath);
+            }
+
+            $fileName = $this->id . "_" . $this->lang_id . "_" . $this->teacher_access_id . "_" . time() . '.' . $this->plagiat_file->extension;
+
+            $miniUrl = $filePath . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->plagiat_file->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteFile($oldFile = NULL)
+    {
+        if (isset($oldFile)) {
+            if (file_exists(HOME_PATH . $oldFile)) {
+                unlink(HOME_PATH  . $oldFile);
+            }
+        }
+        return true;
     }
 
     public static function statusList()

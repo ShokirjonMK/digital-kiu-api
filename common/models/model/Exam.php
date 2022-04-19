@@ -445,6 +445,8 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = _e("Start of exam can not be greater than finish");
         }
 
+        $model->type = $model->eduSemestr->type ?? 1;
+
         /** question_count_by_type_with_ball */
         if (isset($post['question_count_by_type_with_ball'])) {
             $post['question_count_by_type_with_ball'] = str_replace("'", "", $post['question_count_by_type_with_ball']);

@@ -85,6 +85,7 @@ class  StudentController extends ApiActiveController
 
                 $post['passport_pin'] = (int)$post['passport_pin'];
                 $post['passport_number'] = (int)$post['passport_number'];
+                $post['phone'] = (string)$post['phone'];
                 $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
                 $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
 

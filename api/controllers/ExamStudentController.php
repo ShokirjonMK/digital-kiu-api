@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\TeacherAccess;
 
@@ -59,7 +60,11 @@ class ExamStudentController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = ExamStudent::findOne($id);
+        if (isRole('teacher')) {
+            $model = ExamNoStudent::findOne($id);
+        } else {
+            $model = ExamStudent::findOne($id);
+        }
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -71,6 +76,8 @@ class ExamStudentController extends ApiActiveController
         }
 
         $post = Yii::$app->request->post();
+        $post['old_file'] = $model->plagiat_file;
+
         $this->load($model, $post);
         $result = ExamStudent::updateItem($model, $post);
         if (!is_array($result)) {

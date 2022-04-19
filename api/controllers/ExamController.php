@@ -152,6 +152,7 @@ class ExamController extends ApiActiveController
     {
         $model = new Exam();
         $post = Yii::$app->request->post();
+        $post['duration'] =  strtotime($post['duration']);
         $this->load($model, $post);
         if (isset($post->start)) {
             $model->start = date('Y-m-d H:i:s', strtotime($post->start));
@@ -184,6 +185,8 @@ class ExamController extends ApiActiveController
         /*  is Self  */
 
         $post = Yii::$app->request->post();
+        $post['duration'] =  strtotime($post['duration']);
+
         if (isset($post->start)) {
             $model->start = date('Y-m-d H:i:s', strtotime($post->start));
         }
@@ -273,6 +276,7 @@ class ExamController extends ApiActiveController
         $result = ExamSemeta::distribution($model);
 
         if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' succesfully distributed.'), null, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

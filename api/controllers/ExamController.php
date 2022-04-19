@@ -133,7 +133,6 @@ class ExamController extends ApiActiveController
             }
             /*  is Self  */
         } else {
-
             $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
                 ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
                 // ->groupBy($this->table_name . '.id')
@@ -230,18 +229,30 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // return $model->getExamStudentCount();
+        // return $model->eduSemestrSubject->subject->kafedra_id;
 
-        /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            if ($model->facuty_id != $t['UserAccess']->table_id) {
+        if (isRole('mudir')) {
+            /*  is Self  */
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
+            if ($k['status'] == 1) {
+                if (!($model->eduSemestrSubject->subject->kafedra_id == $k['UserAccess']->table_id)) {
+                    return $this->response(0, _e('You do not have acceess.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+            }
+            /*  is Self  */
+        } else {
+            /*  is Self  */
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                if ($model->facuty_id != $t['UserAccess']->table_id) {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+            } elseif ($t['status'] == 2) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
             }
-        } elseif ($t['status'] == 2) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            /*  is Self  */
         }
-        /*  is Self  */
+
 
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }

@@ -159,7 +159,6 @@ class Exam extends \yii\db\ActiveRecord
 
             'statusName',
 
-
             'examQuestions',
             'examStudentAnswers',
 
@@ -172,6 +171,8 @@ class Exam extends \yii\db\ActiveRecord
             'examSmeta',
             'typeName',
 
+            'isConfirmed',
+
 
             'description',
             'createdBy',
@@ -179,6 +180,15 @@ class Exam extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getIsConfirmed()
+    {
+        if (ExamSemeta::findOne(['exam_id' => $this->id, 'status' => ExamSemeta::STATUS_NEW])) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     public function getTypeName()

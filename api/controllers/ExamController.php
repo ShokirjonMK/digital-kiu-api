@@ -107,29 +107,24 @@ class ExamController extends ApiActiveController
                 ]);
             }
         } elseif (isRole('teacher')) {
-
-            $forSubjectIdeduSmesterSubjectIds = EduSemestrSubject::find()
-                ->where(['subject_id' => TeacherAccess::find()
-                    ->select('subject_id')
-                    ->where(['user_id' => current_user_id()])])
-                ->select('id');
-
-            if ($forSubjectIdeduSmesterSubjectIds) {
-                $query = $query->andFilterWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
-            }
-
-            //
+            $query = $query->andFilterWhere([
+                'in', 'edu_semestr_subject_id',
+                EduSemestrSubject::find()
+                    ->where(['subject_id' => TeacherAccess::find()
+                        ->select('subject_id')
+                        ->where(['user_id' => current_user_id()])])
+                    ->select('id')
+            ]);
         } elseif (isRole('mudir')) {
             /*  is Self  */
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
             if ($k['status'] == 1) {
-
-                $subjectIds = Subject::find()->where(['kafedra_id' => $k['UserAccess']->table_id])->select('id');
-                $eduSemestrSubjectIds = EduSemestrSubject::find()->where(['in', 'subject_id', $subjectIds])->select('id');
-
-
                 $query = $query->andFilterWhere([
-                    'in', 'edu_semestr_subject_id', $eduSemestrSubjectIds
+                    'in', 'edu_semestr_subject_id',
+                    EduSemestrSubject::find()->where([
+                        'in', 'subject_id',
+                        Subject::find()->where(['kafedra_id' => $k['UserAccess']->table_id])->select('id')
+                    ])->select('id')
                 ]);
             } elseif ($k['status'] == 2) {
                 $query->andFilterWhere([
@@ -137,8 +132,6 @@ class ExamController extends ApiActiveController
                 ]);
             }
             /*  is Self  */
-
-            //
         } else {
 
             $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])

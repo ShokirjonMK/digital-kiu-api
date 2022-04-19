@@ -28,7 +28,7 @@ class ExamSemetaController extends ApiActiveController
         $model = new ExamSemeta();
 
         $query = $model->find()
-            ->andWhere(['is_deleted' => 0])
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
 
@@ -78,25 +78,28 @@ class ExamSemetaController extends ApiActiveController
         $post = Yii::$app->request->post();
         $errors = [];
 
-        /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $exam = Exam::findOne($post['exam_id'] ?? null);
-            if ($exam) {
-                if ($exam->faculty_id != $t['UserAccess']->table_id) {
-                    return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        if (!isRole('mudir')) {
+            /*  is Self  */
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                $exam = Exam::findOne($post['exam_id'] ?? null);
+                if ($exam) {
+                    if ($exam->faculty_id != $t['UserAccess']->table_id) {
+                        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                    }
+                } else {
+                    $errors[] = ['exam_id' => _e('Exam is not found')];
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
                 }
-            } else {
-                $errors[] = ['exam_id' => _e('Exam is not found')];
-                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            } elseif ($t['status'] == 2) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
             }
-        } elseif ($t['status'] == 2) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            /*  is Self  */
         }
-        /*  is Self  */
 
 
-        if ($post['smetas']) {
+
+        if (isset($post['smetas'])) {
             $result = ExamSemeta::createItems($post);
 
             if ($result['status']) {

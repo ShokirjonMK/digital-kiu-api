@@ -126,6 +126,7 @@ class Subject extends \yii\db\ActiveRecord
             'examCount',
 
             'examStudentByLang',
+            'eduSemestrSubjects',
 
             'createdBy',
             'updatedBy',
@@ -137,14 +138,19 @@ class Subject extends \yii\db\ActiveRecord
 
     public function getExam()
     {
-        return Exam::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id ?? 0])->all();
+        return Exam::find()->where([
+            'in', 'edu_semestr_subject_id',
+            EduSemestrSubject::find()
+                ->where(['subject_id' => $this->id])
+                ->select('id')
+                ?? 0
+        ])->all();
     }
 
     public function getExamStudentByLang()
     {
         return ExamForSubject::find()->where(['edu_semestr_subject_id' => $this->eduSemestrSubject->id ?? 0])->all();
     }
-
 
     public function getExamCount()
     {

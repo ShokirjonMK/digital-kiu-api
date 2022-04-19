@@ -11,7 +11,9 @@ use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
 use common\models\model\ExamSemeta;
 use common\models\model\Faculty;
+use common\models\model\Kafedra;
 use common\models\model\Student;
+use common\models\model\Subject;
 use common\models\model\TeacherAccess;
 use DateTime;
 
@@ -67,6 +69,7 @@ class ExamController extends ApiActiveController
 
         $query = $model->find()->with(['infoRelation']);
 
+
         $subjectId = Yii::$app->request->get('subject_id');
         if ($subjectId) {
             $forSubjectIdeduSmesterSubjectIds = EduSemestrSubject::find()
@@ -74,7 +77,7 @@ class ExamController extends ApiActiveController
                 ->select('id');
 
             if ($forSubjectIdeduSmesterSubjectIds) {
-                $query = $query->andWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
+                $query = $query->andFilterWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
             }
         }
 
@@ -95,11 +98,11 @@ class ExamController extends ApiActiveController
                     ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
                     ->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
-                    ->groupBy($this->table_name . '.id')
+                    // ->groupBy($this->table_name . '.id')
                     ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE])
                     ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
             } else {
-                $query = $query->andWhere([
+                $query = $query->andFilterWhere([
                     'edu_semestr_subject_id' => -1
                 ]);
             }
@@ -112,16 +115,35 @@ class ExamController extends ApiActiveController
                 ->select('id');
 
             if ($forSubjectIdeduSmesterSubjectIds) {
-                $query = $query->andWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
+                $query = $query->andFilterWhere(['in', 'edu_semestr_subject_id', $forSubjectIdeduSmesterSubjectIds]);
             }
+
+            //
+        } elseif (isRole('mudir')) {
+            /*  is Self  */
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
+            if ($k['status'] == 1) {
+
+                $subjectIds = Subject::find()->where(['kafedra_id' => $k['UserAccess']->table_id])->select('id');
+                $eduSemestrSubjectIds = EduSemestrSubject::find()->where(['in', 'subject_id', $subjectIds])->select('id');
+
+
+                $query = $query->andFilterWhere([
+                    'in', 'edu_semestr_subject_id', $eduSemestrSubjectIds
+                ]);
+            } elseif ($k['status'] == 2) {
+                $query->andFilterWhere([
+                    'faculty_id' => -1
+                ]);
+            }
+            /*  is Self  */
 
             //
         } else {
 
-            $query = $query->with(['infoRelation'])
-                ->andWhere([$this->table_name . '.is_deleted' => 0])
+            $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
                 ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-                ->groupBy($this->table_name . '.id')
+                // ->groupBy($this->table_name . '.id')
                 ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
             /*  is Self  */

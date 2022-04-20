@@ -29,9 +29,9 @@ class KafedraStatistic extends Kafedra
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'questionsCount' => function ($model) {
-                return $model->questionsCount ?? 0;
-            },
+            // 'questionsCount' => function ($model) {
+            //     return $model->questionsCount ?? 0;
+            // },
             // 'questionCount',
 
         ];
@@ -55,6 +55,9 @@ class KafedraStatistic extends Kafedra
             'subjectsCount',
             'questions',
             'questionsCount',
+
+            'teachers',
+            'teachersCount',
 
 
 
@@ -91,5 +94,31 @@ class KafedraStatistic extends Kafedra
     public function getSubjectsCount()
     {
         return count($this->subjects);
+    }
+
+    public function getTeachers()
+    {
+        $model = new User();
+        $query = $model->find()
+            ->join(
+                'INNER JOIN',
+                'auth_assignment',
+                'auth_assignment.user_id = users.id'
+            )
+            ->join(
+                'INNER JOIN',
+                'user_access',
+                'user_access.user_id = users.id'
+            );
+
+        $query = $query->andWhere(['user_access.user_access_type_id' => self::USER_ACCESS_TYPE_ID]);
+        $query = $query->andWhere(['user_access.table_id' => $this->id]);
+        $query = $query->andWhere(['in', 'auth_assignment.item_name', ['teacher', 'mudir']]);
+        return $query->all();
+    }
+
+    public function getTeachersCount()
+    {
+        return count($this->teachers);
     }
 }

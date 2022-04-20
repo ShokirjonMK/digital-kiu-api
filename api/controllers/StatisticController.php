@@ -45,7 +45,7 @@ class StatisticController extends ApiActiveController
         return 0;
     }
 
-    public function actionQuestionsByKafedra($lang)
+    public function actionKafedra($lang)
     {
         $model = new KafedraStatistic();
 

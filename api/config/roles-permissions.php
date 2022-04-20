@@ -931,6 +931,7 @@ return [
 
         'exam-semeta_index',
         'exam_index',
+        'exam_view',
 
         'exam-student_index',
         'exam-student_update',

@@ -100,12 +100,13 @@ class ExamController extends ApiActiveController
             }
             if (isset($eduSmesterSubjectIds)) {
                 $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
-                    ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+
+                    ->leftJoin("translate", "translate.model_id = $this->table_name.id and translate.table_name = '$this->table_name'")
                     ->andWhere(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     // ->where(['in', 'edu_semestr_subject_id', $eduSmesterSubjectIds])
                     // ->groupBy($this->table_name . '.id')
                     ->andWhere([$this->table_name . '.status' => Exam::STATUS_ACTIVE])
-                    ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+                    ->andFilterWhere(['like', 'translate.name', Yii::$app->request->get('q')]);
             } else {
                 $query = $query->andFilterWhere([
                     'edu_semestr_subject_id' => -1

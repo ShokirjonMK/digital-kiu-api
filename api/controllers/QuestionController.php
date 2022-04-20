@@ -37,11 +37,11 @@ class QuestionController extends ApiActiveController
                 $query->andFilterWhere([
                     'in', 'subject_id',
                     Subject::find()
-                        ->where([' ' => $k['UserAccess']->table_id])
+                        ->where(['kafedra_id' => $k['UserAccess']->table_id])
                         ->select('id')
                 ]);
             }
-    } elseif (isRole("teacher")) {
+        } elseif (isRole("teacher")) {
             $query = $query->andWhere(["created_by" => current_user_id()]);
         }
 

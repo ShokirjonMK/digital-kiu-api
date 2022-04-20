@@ -660,6 +660,24 @@ return [
         'user-access_view',
         'user-access_delete',
 
+        'notification_create',
+        'notification_index',
+        'notification_my',
+
+        'region_index',
+        'region_view',
+
+        'nationality_index',
+        'nationality_view',
+
+        'languages_index',
+        'languages_view',
+
+        'country_index',
+        'country_view',
+
+        'area_index',
+        'area_view',
 
     ],
 
@@ -918,7 +936,8 @@ return [
         'exam-student_update',
         'exam-student_view',
 
-
+        'exam-teacher-check_index',
+        'exam-teacher-check_view',
 
 
         // "access-control_roles",

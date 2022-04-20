@@ -92,9 +92,9 @@ class Subject extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'lang' => function ($model) {
-                return Yii::$app->request->get('lang');
-            },
+            // 'lang' => function ($model) {
+            //     return Yii::$app->request->get('lang');
+            // },
             'kafedra_id',
             'semestr_id',
             'parent_id',
@@ -128,6 +128,9 @@ class Subject extends \yii\db\ActiveRecord
             'examStudentByLang',
             'eduSemestrSubjects',
 
+            'questions',
+            'questionsCount',
+
             'createdBy',
             'updatedBy',
         ];
@@ -145,6 +148,16 @@ class Subject extends \yii\db\ActiveRecord
                 ->select('id')
                 ?? 0
         ])->all();
+    }
+
+    public function getQuestions()
+    {
+        return $this->hasMany(Question::className(), ['subject_id' => 'id']);
+    }
+
+    public function getQuestionsCount()
+    {
+        return count($this->questions);
     }
 
     public function getExamStudentByLang()

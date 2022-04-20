@@ -29,6 +29,9 @@ class KafedraStatistic extends Kafedra
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            'questionsCount' => function ($model) {
+                return $model->questionsCount ?? 0;
+            },
             // 'questionCount',
 
         ];
@@ -39,12 +42,22 @@ class KafedraStatistic extends Kafedra
     public function extraFields()
     {
         $extraFields =  [
+
             'direction',
             'leader',
             'userAccess',
 
             'faculty',
             'subjects',
+            'description',
+
+
+            'subjectsCount',
+            'questions',
+            'questionsCount',
+
+
+
             'description',
             'createdBy',
             'updatedBy',
@@ -53,13 +66,30 @@ class KafedraStatistic extends Kafedra
         return $extraFields;
     }
 
-    public function getQuestionAll()
+    public function getQuestions()
     {
-        return $this->hasMany(Question::className(), ['faculty_id' => 'id']);
+        return Question::find()
+            // ->select('id')
+            ->where([
+                'in', 'subject_id',
+                Subject::find()->where(['kafedra_id' => $this->id])->select('id')
+            ])
+            ->all();
+    }
+
+
+    public function getQuestionsCount()
+    {
+        return count($this->questions);
     }
 
     public function getSubjects()
     {
         return $this->hasMany(Subject::className(), ['kafedra_id' => 'id']);
+    }
+
+    public function getSubjectsCount()
+    {
+        return count($this->subjects);
     }
 }

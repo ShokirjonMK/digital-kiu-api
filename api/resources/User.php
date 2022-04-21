@@ -3,6 +3,8 @@
 namespace api\resources;
 
 use common\models\AuthAssignment;
+use common\models\model\Area;
+use common\models\model\Countries;
 use common\models\model\TeacherAccess;
 use common\models\model\PasswordEncrypts;
 use Yii;
@@ -10,6 +12,7 @@ use Yii;
 use common\models\model\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
+use common\models\model\Region;
 use common\models\model\UserAccess;
 use common\models\model\UserAccessType;
 use common\models\User as CommonUser;
@@ -106,7 +109,16 @@ class User extends CommonUser
             'profile',
             'userAccess',
             'department',
-            'here'
+            'here',
+
+
+            'country',
+            'region',
+            'area',
+            'permanentCountry',
+            'permanentRegion',
+            'permanentArea',
+
         ];
 
         return $extraFields;
@@ -147,6 +159,43 @@ class User extends CommonUser
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'id']);
     }
+
+    // getCountry
+    public function getCountry()
+    {
+        return Countries::findOne($this->profile->country_id) ?? null;
+    }
+
+    // getRegion
+    public function getRegion()
+    {
+        return Region::findOne($this->profile->region_id) ?? null;
+    }
+
+    // getArea
+    public function getArea()
+    {
+        return Area::findOne($this->profile->area_id) ?? null;
+    }
+
+    // getPermanentCountry
+    public function getPermanentCountry()
+    {
+        return Countries::findOne($this->profile->permanent_country_id) ?? null;
+    }
+
+    // getPermanentRegion
+    public function getPermanentRegion()
+    {
+        return Region::findOne($this->profile->permanent_region_id) ?? null;
+    }
+
+    // getPermanentArea
+    public function getPermanentArea()
+    {
+        return Area::findOne($this->profile->permanent_area_id) ?? null;
+    }
+
 
     // UserAccess
     public function getUserAccess()

@@ -35,10 +35,16 @@ class ExamStudentAnswerController extends ApiActiveController
 
     public function actionIndex($lang)
     {
+
+
         $model = new ExamStudentAnswer();
 
         $query = $model->find()
             ->andWhere(['.is_deleted' => 0]);
+
+        if (Yii::$app->request->get('exam_student_id')) {
+            $query = $query->andFilterWhere([$model->tableName() . '.exam_student_id' => $exam_student_id]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);

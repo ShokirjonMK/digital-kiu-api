@@ -173,6 +173,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examQuestions',
             'examStudentAnswers',
 
+            'answers',
+
             'statusName',
             'teacherAccess',
             'examSemeta',
@@ -186,6 +188,11 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
     public function getExamStudentAnswers()
+    {
+        return $this->hasmany(ExamStudentAnswer::className(), ['exam_student_id' => 'id']);
+    }
+
+    public function getAnswers()
     {
         return $this->hasmany(ExamStudentAnswer::className(), ['exam_student_id' => 'id']);
     }

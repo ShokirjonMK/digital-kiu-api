@@ -521,14 +521,6 @@ class Exam extends \yii\db\ActiveRecord
         $has_error = Translate::checkingAll($post);
 
         if ($has_error['status']) {
-            if (isset($post['duration'])) {
-                $model->duration =  str_replace("'", "", $post['duration']);
-                $model->duration =  str_replace('"', "", $model->duration);
-                $duration = explode(":", $model->duration);
-                $hours = isset($duration[0]) ? $duration[0] : 0;
-                $min = isset($duration[1]) ? $duration[1] : 0;
-                $model->duration = (int)$hours * 3600 + (int)$min * 60;
-            }
 
             if ($model->save()) {
                 if (isset($post['description'])) {
@@ -617,14 +609,6 @@ class Exam extends \yii\db\ActiveRecord
 
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
-            if (isset($post['duration'])) {
-                $model->duration =  str_replace("'", "", $post['duration']);
-                $model->duration =  str_replace('"', "", $model->duration);
-                $duration = explode(":", $model->duration);
-                $hours = isset($duration[0]) ? $duration[0] : 0;
-                $min = isset($duration[1]) ? $duration[1] : 0;
-                $model->duration = (int)$hours * 3600 + (int)$min * 60;
-            }
 
             $model->type = $model->eduSemestrSubject->eduSemestr->type ?? 1;
 

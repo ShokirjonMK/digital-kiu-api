@@ -169,7 +169,17 @@ class ExamController extends ApiActiveController
     {
         $model = new Exam();
         $post = Yii::$app->request->post();
-        $post['duration'] =  strtotime($post['duration']);
+        // $post['duration'] =  strtotime($post['duration']);
+
+        if (isset($post['duration'])) {
+            $post['duration'] =  str_replace("'", "", $post['duration']);
+            $post['duration'] =  str_replace('"', "", $post['duration']);
+            $duration = explode(":", $post['duration']);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $post['duration'] = (int)$hours * 3600 + (int)$min * 60;
+        }
+
         $this->load($model, $post);
         if (isset($post->start)) {
             $model->start = date('Y-m-d H:i:s', strtotime($post->start));
@@ -202,7 +212,6 @@ class ExamController extends ApiActiveController
         /*  is Self  */
 
         $post = Yii::$app->request->post();
-        $post['duration'] =  strtotime($post['duration']);
 
         if (isset($post->start)) {
             $model->start = date('Y-m-d H:i:s', strtotime($post->start));
@@ -212,6 +221,15 @@ class ExamController extends ApiActiveController
         }
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if (isset($post['duration'])) {
+            $post['duration'] =  str_replace("'", "", $post['duration']);
+            $post['duration'] =  str_replace('"', "", $post['duration']);
+            $duration = explode(":", $post['duration']);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $post['duration'] = (int)$hours * 3600 + (int)$min * 60;
         }
 
         $this->load($model, $post);
@@ -243,18 +261,19 @@ class ExamController extends ApiActiveController
                 }
             }
             /*  is Self  */
-        } else {
-            // /*  is Self  */
-            // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-            // if ($t['status'] == 1) {
-            //     if ($model->facuty_id != $t['UserAccess']->table_id) {
-            //         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
-            //     }
-            // } elseif ($t['status'] == 2) {
-            //     return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
-            // }
-            // /*  is Self  */
         }
+        // else {
+        // /*  is Self  */
+        // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+        //     if ($model->facuty_id != $t['UserAccess']->table_id) {
+        //         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        //     }
+        // } elseif ($t['status'] == 2) {
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        // }
+        // /*  is Self  */
+        // }
 
 
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);

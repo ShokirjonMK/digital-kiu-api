@@ -5,6 +5,8 @@ namespace api\controllers;
 use common\models\model\ExamStudentAnswer;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\ExamStudent;
+use common\models\model\Student;
 
 class ExamStudentAnswerController extends ApiActiveController
 {
@@ -36,14 +38,39 @@ class ExamStudentAnswerController extends ApiActiveController
     public function actionIndex($lang)
     {
 
-
+        $errors = [];
         $model = new ExamStudentAnswer();
 
         $query = $model->find()
             ->andWhere(['.is_deleted' => 0]);
 
-        if (Yii::$app->request->get('exam_student_id')) {
+        $exam_student_id = Yii::$app->request->get('exam_student_id');
+
+        if ($exam_student_id) {
+            $examStudent = ExamStudent::findOne($exam_student_id);
             $query = $query->andFilterWhere([$model->tableName() . '.exam_student_id' => $exam_student_id]);
+        } else {
+            $errors[] = ['exam_student_id' => _e('Required')];
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if (!$examStudent) {
+            $errors[] = ['examStudent' => _e('not found')];
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+
+        if (isRole('student')) {
+            $student = Student::findOne(['user_id' => current_user_id()]);
+            if (!$student) {
+                $errors[] = ['Student' => _e('not found')];
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+
+            if ($student->id != $examStudent->student_id) {
+                $errors[] = _e('This is not your exam');
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
         }
 
         // filter

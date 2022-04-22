@@ -51,8 +51,8 @@ class QuestionController extends ApiActiveController
         //         Question::STATUS_INACTIVE,
         //         Question::STATUS_ACTIVE,
         //         Question::STATUS_MUDIR_ACTIVE,
-        //         Question::STATUS_MUDIR_REFUSED,
         //         Question::STATUS_DEAN_REFUSED,
+        //         Question::STATUS_MUDIR_REFUSED,
         //     ];
 
         //     $query = $query->andWhere(['in', 'status', $seeStatus]);
@@ -244,6 +244,7 @@ class QuestionController extends ApiActiveController
 
         if (isRole('teacher') && $model->created_by == current_user_id()) {
             $statusList = [
+                Question::STATUS_TEACHER_EDITED,
                 Question::STATUS_MUDIR_REFUSED,
                 Question::STATUS_DEAN_REFUSED,
                 Question::STATUS_EDU_ADMIN_REFUSED,

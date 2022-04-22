@@ -150,9 +150,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'file',
             'exam_id',
 
-            'question' => function ($model) {
-                return $model->questionForExamStudentAnswer ?? [];
-            },
+            // 'question' => function ($model) {
+            //     return $model->questionForExamStudentAnswer ?? [];
+            // },
             'question_type' => function ($model) {
                 return $model->questionType->name ?? '';
             },

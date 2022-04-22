@@ -942,6 +942,7 @@ return [
 
         'exam-student-answer_index',
         'exam-student-answer_view',
+        'exam-student-answer_update',
 
 
         // "access-control_roles",

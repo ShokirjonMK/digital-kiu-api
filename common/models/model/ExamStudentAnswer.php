@@ -54,6 +54,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     const STATUS_NEW = 2;
     const STATUS_COMPLETE = 1;
     const STATUS_IN_CHECKING = 3;
+    const STATUS_IN_CHECKED = 4;
+
 
     const UPLOADS_FOLDER = 'uploads/answer_files/';
     public $answer_file;
@@ -95,6 +97,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['answer'], 'string'],
+            [['teacher_conclusion'], 'string'],
             [['max_ball', 'ball'], 'double'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -121,6 +124,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'student_id' => 'Student ID',
             'option_id' => 'Option ID',
             'answer' => 'Answer',
+            'teacher_conclusion' => 'Еeacher Сonclusion',
             'ball' => 'Ball',
             'max_ball' => 'Max Ball',
             'teacher_access_id' => 'Teacher Access ID',
@@ -155,6 +159,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
             'question_id',
             'exam_student_id',
+            'teacher_conclusion',
             'student_id',
             'option_id',
             'answer',
@@ -177,17 +182,38 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields = [
+
             'exam',
             'examStudent',
             'question',
+            'questionOnly',
             'option',
-            'student',
             'teacherAccess',
+            'questionType',
+
+
+            'subQuestionAnswers',
+            'subQuestions',
+
+            'student',
+
+
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
+    }
+
+    // ExamStudentAnswerSubQuestion
+    public function getSubQuestionAnswers()
+    {
+        return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
+    }
+
+    public function getSubQuestions()
+    {
+        return $this->hasMany(SubQuestion::className(), ['question_id' => 'question_id']);
     }
 
     public function getExam()
@@ -203,6 +229,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function getQuestion()
     {
         return $this->hasOne(Question::className(), ['id' => 'question_id']);
+    }
+
+    public function getQuestionOnly()
+    {
+        return $this->hasOne(Question::className(), ['id' => 'question_id'])->select('question');
     }
 
     public function getQuestionForExamStudentAnswer()
@@ -434,6 +465,48 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         }
     }
 
+    public static function updateItemTeacher($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        // /** subQuestionAnswersChecking */
+        // if (isset($post['subQuestionAnswersChecking'])) {
+        //     $post['subQuestionAnswersChecking'] = str_replace("'", "", $post['subQuestionAnswersChecking']);
+        //     if (!isJsonMK($post['subQuestionAnswersChecking'])) {
+        //         $errors['subQuestionAnswersChecking'] = [_e('Must be Json')];
+        //     }
+
+        //     foreach (((array)json_decode($post['subQuestionAnswersChecking'])) as  $subQuestionOneAnswer) {
+
+        //         $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
+        //         if ($subQuestion) {
+        //             if ($model->question->id == $subQuestion->question_id) {
+        //                 $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
+
+        //                 if (!$examStudentAnswerSubQuestion) {
+        //                     $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
+        //                     $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
+        //                     $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
+        //                 }
+
+        //                 $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
+        //                 $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
+
+        //                 $examStudentAnswerSubQuestion->save();
+        //             } else {
+        //                 $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
+        //             }
+        //         } else {
+        //             $errors[] = _e("This subQuestion is not found");
+        //         }
+        //     }
+        // }
+        // /** subQuestionAnswersChecking */
+
+
+        //
+    }
     public static function updateItem($model, $post)
     {
         // attemp esdan chiqmasin

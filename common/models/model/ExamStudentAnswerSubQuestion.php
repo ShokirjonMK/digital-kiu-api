@@ -44,6 +44,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
     const STATUS_NEW = 2;
     const STATUS_COMPLETE = 1;
     const STATUS_IN_CHECKING = 3;
+    const STATUS_IN_CHECKED = 4;
 
     const UPLOADS_FOLDER = 'uploads/answer_files/sub_question/';
     public $answer_file;
@@ -79,7 +80,9 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['answer'], 'string'],
+            [['teacher_conclusion'], 'string'],
             [['max_ball'], 'double'],
+            [['ball'], 'double'],
             [['file'], 'string', 'max' => 255],
 
             [['exam_student_answer_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudentAnswer::className(), 'targetAttribute' => ['exam_student_answer_id' => 'id']],
@@ -102,6 +105,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             'answer' => 'Answer',
             'ball' => 'Ball',
             'max_ball' => 'Max Ball',
+            'teacher_conclusion' => 'Еeacher Сonclusion',
 
             'order' => 'Order',
             'status' => 'Status',
@@ -126,6 +130,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             /* 'question' => function ($model) {
                 return $model->questionForExamStudentAnswer ?? [];
             }, */
+            'teacher_conclusion',
 
             'answer',
             'ball',

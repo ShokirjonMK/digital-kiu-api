@@ -1,0 +1,98 @@
+<?php
+
+namespace common\models\model;
+
+use api\resources\ResourceTrait;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+
+class ExamStudentAnswerForTeacher extends ExamStudentAnswer
+{
+    public static $selected_language = 'uz';
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+
+            'teacher_conclusion' => 'Еeacher Сonclusion',
+            'ball' => 'Ball',
+
+            'status' => 'Status',
+
+            'updated_at' => 'Updated At',
+
+            'updated_by' => 'Updated By',
+
+        ];
+    }
+
+
+    public function fields()
+    {
+        $fields = [
+            'id',
+            'parent_id',
+            'file',
+            'exam_id',
+
+            // 'question' => function ($model) {
+            //     return $model->questionForExamStudentAnswer ?? [];
+            // },
+            'question_type' => function ($model) {
+                return $model->questionType->name ?? '';
+            },
+
+            'question_id',
+            'exam_student_id',
+            'teacher_conclusion',
+            'option_id',
+            // 'answer',
+            'ball',
+            'max_ball',
+            'teacher_access_id',
+            'attempt',
+            'type',
+            'order',
+            'status',
+            // 'created_at',
+            // 'updated_at',
+            // 'created_by',
+            // 'updated_by',
+        ];
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields = [
+            'exam',
+            'examStudent',
+            'question',
+            'questionOnly',
+            'option',
+            'teacherAccess',
+            'questionType',
+            'questionForExamStudentAnswer',
+            'subQuestionAnswers',
+            // 'subQuestionAnswers',
+
+            'subQuestions',
+
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+}

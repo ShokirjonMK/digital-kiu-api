@@ -6,6 +6,7 @@ use common\models\model\ExamStudentAnswer;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamStudent;
+use common\models\model\ExamStudentAnswerForTeacher;
 use common\models\model\Student;
 
 class ExamStudentAnswerController extends ApiActiveController
@@ -37,27 +38,47 @@ class ExamStudentAnswerController extends ApiActiveController
 
     public function actionIndex($lang)
     {
-
         $errors = [];
-        $model = new ExamStudentAnswer();
 
-        $query = $model->find()
-            ->andWhere(['.is_deleted' => 0]);
+        if (isRole('teacher')) {
+            $model = new ExamStudentAnswerForTeacher();
+
+            $query = $model->find()
+                ->andWhere([$model->tableName() . '.is_deleted' => 0]);
+
+            $examStudentIds = ExamStudent::find()
+                ->where(['in', 'teacher_access_id', $this->teacher_access()])
+                ->select('id');
+
+            $query = $query
+                ->andWhere(['in', $model->tableName() . '.exam_student_id', $examStudentIds]);
+
+
+            // return
+            // $examStudentIds->all();
+        } else {
+            $model = new ExamStudentAnswer();
+
+            $query = $model->find()
+                ->andWhere([$model->tableName() . '.is_deleted' => 0]);
+        }
+
 
         $exam_student_id = Yii::$app->request->get('exam_student_id');
 
         if ($exam_student_id) {
             $examStudent = ExamStudent::findOne($exam_student_id);
             $query = $query->andFilterWhere([$model->tableName() . '.exam_student_id' => $exam_student_id]);
-        } else {
-            $errors[] = ['exam_student_id' => _e('Required')];
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+        //  else {
+        //     $errors[] = ['exam_student_id' => _e('Required')];
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        // }
 
-        if (!$examStudent) {
-            $errors[] = ['examStudent' => _e('not found')];
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        // if (!$examStudent) {
+        //     $errors[] = ['examStudent' => _e('not found')];
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        // }
 
 
         if (isRole('student')) {
@@ -67,10 +88,10 @@ class ExamStudentAnswerController extends ApiActiveController
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
             }
 
-            if ($student->id != $examStudent->student_id) {
-                $errors[] = _e('This is not your exam');
-                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-            }
+            // if ($student->id != $examStudent->student_id) {
+            //     $errors[] = _e('This is not your exam');
+            //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            // }
         }
 
         // filter
@@ -105,10 +126,36 @@ class ExamStudentAnswerController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        $post = Yii::$app->request->post();
-        $this->load($model, $post);
 
-        $result = ExamStudentAnswer::updateItem($model, $post);
+        $post = Yii::$app->request->post();
+
+        if (isRole("teacher")) {
+            if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
+                return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+            } else {
+                $post['teacher_access_id'] = $model->examStudent->teacher_access_id;
+            }
+            $data = [];
+            if (isset($post['teacher_conclusion'])) {
+                $data['teacher_conclusion'] = $post['teacher_conclusion'];
+            }
+            if (isset($post['ball'])) {
+                $data['ball'] = $post['ball'];
+            }
+            if (isset($post['subQuestionAnswersChecking'])) {
+                $data['subQuestionAnswersChecking'] = $post['subQuestionAnswersChecking'];
+            }
+
+            $this->load($model, $data);
+            $result = ExamStudentAnswer::updateItemTeacher($model, $data);
+        } else {
+            $this->load($model, $post);
+
+            $result = ExamStudentAnswer::updateItem($model, $post);
+        }
+
+
+
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {

@@ -940,6 +940,9 @@ return [
         'exam-teacher-check_index',
         'exam-teacher-check_view',
 
+        'exam-student-answer_index',
+        'exam-student-answer_view',
+
 
         // "access-control_roles",
         // "area_view",

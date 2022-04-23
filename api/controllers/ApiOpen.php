@@ -81,7 +81,7 @@ trait ApiOpen
             }
 
             $query->orderBy([$sortField => $sortKey]);
-        };
+        }
 
         return $query;
     }

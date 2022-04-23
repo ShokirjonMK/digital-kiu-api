@@ -217,7 +217,7 @@ class Question extends \yii\db\ActiveRecord
     public function getStatusName()
     {
         // return $this->status;
-        return   $this->statusList()[2];
+        return   $this->statusList()[$this->status];
     }
 
     /**
@@ -487,6 +487,8 @@ class Question extends \yii\db\ActiveRecord
         }
     }
 
+
+    // 
     public function deleteFile($oldFile = NULL)
     {
         if (isset($oldFile)) {

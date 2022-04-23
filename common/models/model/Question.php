@@ -216,7 +216,8 @@ class Question extends \yii\db\ActiveRecord
 
     public function getStatusName()
     {
-        return   $this->statusList()[$this->status];
+        // return $this->status;
+        return   $this->statusList()[2];
     }
 
     /**
@@ -499,14 +500,14 @@ class Question extends \yii\db\ActiveRecord
     public static function statusList()
     {
         return [
-            self::STATUS_INACTIVE => _e(' STATUS_INACTIVE'),
-            self::STATUS_ACTIVE => _e(' STATUS_ACTIVE'),
-            self::STATUS_MUDIR_REFUSED => _e(' STATUS_MUDIR_REFUSED'),
-            self::STATUS_MUDIR_ACTIVE => _e(' STATUS_MUDIR_ACTIVE'),
-            self::STATUS_DEAN_REFUSED => _e(' STATUS_DEAN_REFUSED'),
-            self::STATUS_DEAN_ACTIVE => _e(' STATUS_DEAN_ACTIVE'),
-            self::STATUS_EDU_ADMIN_REFUSED => _e(' STATUS_EDU_ADMIN_REFUSED'),
-            // self::STATUS_EDU_ADMIN_ACTIVE => _e(' STATUS_EDU_ADMIN_ACTIVE'),
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_TEACHER_EDITED => _e('STATUS_TEACHER_EDITED'),
+            self::STATUS_MUDIR_REFUSED => _e('STATUS_MUDIR_REFUSED'),
+            self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
+            self::STATUS_DEAN_REFUSED => _e('STATUS_DEAN_REFUSED'),
+            self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
+            self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
 
 
         ];

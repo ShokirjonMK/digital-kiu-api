@@ -139,6 +139,7 @@ class QuestionController extends ApiActiveController
                 Question::STATUS_MUDIR_ACTIVE,
                 Question::STATUS_DEAN_ACTIVE,
                 Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_EDU_ADMIN_REFUSED,
             ];
             if (!(in_array($model->status, $statusList, TRUE))) {
                 return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);

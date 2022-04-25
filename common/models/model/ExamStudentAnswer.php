@@ -470,7 +470,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        // /** subQuestionAnswersChecking */
+        /** subQuestionAnswersChecking */
         // if (isset($post['subQuestionAnswersChecking'])) {
         //     $post['subQuestionAnswersChecking'] = str_replace("'", "", $post['subQuestionAnswersChecking']);
         //     if (!isJsonMK($post['subQuestionAnswersChecking'])) {
@@ -502,7 +502,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         //         }
         //     }
         // }
-        // /** subQuestionAnswersChecking */
+         /** subQuestionAnswersChecking */
 
 
         //

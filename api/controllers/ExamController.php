@@ -145,11 +145,11 @@ class ExamController extends ApiActiveController
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
                 $query = $query->andWhere([
-                    $this->table_name . 'faculty_id' => $t['UserAccess']->table_id
+                    $this->table_name . '.faculty_id' => $t['UserAccess']->table_id
                 ]);
             } elseif ($t['status'] == 2) {
                 $query->andFilterWhere([
-                    $this->table_name . 'faculty_id' => -1
+                    $this->table_name . '.faculty_id' => -1
                 ]);
             }
             /*  is Self  */

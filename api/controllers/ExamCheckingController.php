@@ -105,12 +105,10 @@ class ExamCheckingController extends ApiActiveController
             } else {
                 $errors[] = _e("teacherAccess");
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-
             }
         } else {
             $errors[] = _e("examStudent");
             return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-
         }
 
         $this->load($model, $data);
@@ -126,8 +124,7 @@ class ExamCheckingController extends ApiActiveController
         }
     }
 
-    public
-    function actionView($lang, $id)
+    public function actionView($lang, $id)
     {
         $model = ExamStudentAnswer::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])

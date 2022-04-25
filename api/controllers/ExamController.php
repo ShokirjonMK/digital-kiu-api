@@ -134,7 +134,7 @@ class ExamController extends ApiActiveController
                 ]);
             } elseif ($k['status'] == 2) {
                 $query->andFilterWhere([
-                    $this->table_name . 'faculty_id' => -1
+                    $this->table_name . '.faculty_id' => -1
                 ]);
             }
             /*  is Self  */

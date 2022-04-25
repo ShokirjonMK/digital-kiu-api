@@ -76,6 +76,12 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             ],
             [
                 [
+                    'credit'
+                ],
+                'double'
+            ],
+            [
+                [
                     'edu_semestr_exams_types',
                     'edu_semestr_subject_category_times',
                 ],

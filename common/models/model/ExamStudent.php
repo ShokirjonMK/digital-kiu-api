@@ -49,6 +49,8 @@ class ExamStudent extends \yii\db\ActiveRecord
     const STATUS_CHECKED = 4;
     const STATUS_SHARED = 5;
 
+    const IS_PLAGIAT_TRUE = 1;
+    const IS_PLAGIAT_FALSE = 0;
 
     const UPLOADS_FOLDER = 'uploads/plagiat_files/';
     public $plagiat_file;
@@ -83,6 +85,7 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'attempt',
                     'lang_id',
                     'exam_semeta_id',
+                    'is_plagiat',
 
                     'order',
                     'status',
@@ -122,6 +125,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'exam_semeta_id' => 'Exam Semeta Id',
             'ball' => 'Ball',
             'start' => 'Start',
+            'is_plagiat' => 'Is Plagiat',
             'attempt' => 'Attempt',
             'order' => 'Order',
             'status' => 'Status',
@@ -136,7 +140,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $fields =  [
+        $fields = [
             'id',
             'student_id',
             'exam_id',
@@ -146,6 +150,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'start',
             'attempt',
             'password',
+            'is_plagiat',
 
             'conclusion',
             'plagiat_file',
@@ -285,6 +290,9 @@ class ExamStudent extends \yii\db\ActiveRecord
         // $errors[] = $post['old_file'];
 
         $model->status = self::STATUS_CHECKED;
+        if ($model->plagiat_percent >= Yii::$app->params['plagiat_percent_max']) {
+            $model->is_plagiat = self::IS_PLAGIAT_TRUE;
+        }
         if ($model->save() && count($errors) == 0) {
             $model->deleteFile($oldFile);
             $transaction->commit();

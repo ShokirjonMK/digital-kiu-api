@@ -85,7 +85,7 @@ $controllers = [
     'teacher-checking-type',
     'statistic',
 
-
+    'exam-checking',
 
 
     'telegram',

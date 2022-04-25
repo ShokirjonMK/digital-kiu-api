@@ -54,7 +54,7 @@ class ExamCheckingController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data =  $this->getData($query);
+        $data = $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
 
@@ -75,35 +75,49 @@ class ExamCheckingController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = ExamStudentAnswer::findOne($id);
+        $errors = [];
+        $model = ExamStudentAnswerForTeacher::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
         $post = Yii::$app->request->post();
 
-        if (isRole("teacher")) {
-            if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
-                return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
-            } else {
-                $post['teacher_access_id'] = $model->examStudent->teacher_access_id;
-            }
-            $data = [];
-            if (isset($post['teacher_conclusion'])) {
-                $data['teacher_conclusion'] = $post['teacher_conclusion'];
-            }
-            if (isset($post['ball'])) {
-                $data['ball'] = $post['ball'];
-            }
-            if (isset($post['subQuestionAnswersChecking'])) {
-                $data['subQuestionAnswersChecking'] = $post['subQuestionAnswersChecking'];
-            }
+        // if (isRole("teacher")) {
+        if (!is_null($model->examStudent)) {
+            if (!is_null($model->examStudent->teacherAccess)) {
 
-            $this->load($model, $data);
-            $result = ExamStudentAnswer::updateItemTeacher($model, $data);
+                if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
+                    return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+                } else {
+                    $post['teacher_access_id'] = $model->examStudent->teacher_access_id;
+                }
+                $data = [];
+                if (isset($post['teacher_conclusion'])) {
+                    $data['teacher_conclusion'] = $post['teacher_conclusion'];
+                }
+                if (isset($post['ball'])) {
+                    $data['ball'] = $post['ball'];
+                }
+                if (isset($post['subQuestionAnswersChecking'])) {
+                    $data['subQuestionAnswersChecking'] = $post['subQuestionAnswersChecking'];
+                }
+            } else {
+                $errors[] = _e("teacherAccess");
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+
+            }
         } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            $errors[] = _e("examStudent");
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+
         }
+
+        $this->load($model, $data);
+        $result = ExamStudentAnswer::updateItemTeacher($model, $data);
+        // } else {
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        // }
 
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
@@ -112,7 +126,8 @@ class ExamCheckingController extends ApiActiveController
         }
     }
 
-    public function actionView($lang, $id)
+    public
+    function actionView($lang, $id)
     {
         $model = ExamStudentAnswer::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])

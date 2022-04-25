@@ -24,8 +24,8 @@ use yii\web\UploadedFile;
  * @property int $is_deleted
  * @property int $parent_id
  *
- * @property ExamStudentAnswer $exam_student_answer_id
- * @property SubQuestion $sub_question_id
+ * @property ExamStudentAnswer $examStudentAnswer
+ * @property SubQuestion $subQuestion
  */
 class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
 {
@@ -39,7 +39,6 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
-
 
     const STATUS_NEW = 2;
     const STATUS_COMPLETE = 1;

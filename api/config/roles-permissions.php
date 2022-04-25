@@ -83,24 +83,92 @@ return [
 
     /* O'quv bo'limi Admin */
     'edu_admin' => [
-        // 'question_update',
-        'question_index',
-        'question_view',
-        'question_status-update',
+        "access-control_permissions",
+        "access-control_roles",
 
-        'password_index',
-        'password_update',
-        'access-control_roles',
-        'access-control_permissions',
-        'enum_education-degrees',
-        'enum_education-types',
-        'enum_educations',
-        'enum_family-statuses',
-        'enum_genders',
-        'enum_rates',
-        'enum_topic-types',
-        'enum_yesno',
-        ////
+        "area_index",
+        "area_view",
+
+        "building_create",
+        "building_index",
+        "building_update",
+        "building_view",
+
+        "citizenship_index",
+
+        "country_index",
+        "country_view",
+
+        "course_index",
+
+        "department_index",
+
+        "direction_create",
+        "direction_index",
+        "direction_update",
+        "direction_view",
+
+        "edu-form_create",
+        "edu-form_index",
+        "edu-form_update",
+        "edu-form_view",
+
+        "edu-plan_create",
+        "edu-plan_delete",
+        "edu-plan_index",
+        "edu-plan_update",
+        "edu-plan_view",
+
+        "edu-semestr-subject_create",
+        "edu-semestr-subject_delete",
+        "edu-semestr-subject_index",
+        "edu-semestr-subject_update",
+        "edu-semestr-subject_view",
+
+        "edu-semestr_create",
+        "edu-semestr_index",
+        "edu-semestr_update",
+        "edu-semestr_view",
+
+        "edu-year_create",
+        "edu-year_index",
+        "edu-year_update",
+        "edu-year_view",
+
+        "enum_education-degrees",
+        "enum_education-types",
+        "enum_educations",
+        "enum_family-statuses",
+        "enum_genders",
+        "enum_rates",
+        "enum_topic-types",
+        "enum_yesno",
+
+        "exam-semeta_index",
+        "exams-type_create",
+        "exams-type_index",
+        "exams-type_update",
+        "exams-type_view",
+
+        "exam_create",
+        "exam_distribution",
+        "exam_index",
+        "exam_update",
+        "exam_view",
+
+        "faculty_create",
+        "faculty_index",
+        "faculty_update",
+        "faculty_view",
+
+        "kafedra_create",
+        "kafedra_index",
+        "kafedra_update",
+        "kafedra_view",
+
+        "languages_index",
+
+        "nationality_index",
 
         "notification_approved",
         "notification_index",
@@ -108,121 +176,74 @@ return [
         "notification_status-list",
         "notification_view",
 
-        'user_logout',
-        'user_me',
+        "para_create",
+        "para_index",
+        "para_update",
+        "para_view",
 
+        "password_index",
+        "password_update",
 
-        'user_status-list',
-        'user_index',
-        'user_create',
-        'user_update',
-        'user_view',
-        'user_delete',
-        /**
-         * 
-         */
-        'languages_index',
-        'teacher-access_index',
-        'citizenship_index',
-        'nationality_index',
-        'course_index',
-        'area_index',
-        'region_index',
-        'country_index',
-        'area_view',
-        'region_view',
-        'country_view',
+        "question-type_create",
+        "question-type_index",
+        "question-type_update",
+        "question-type_view",
+        "question_index",
+        "question_status-update",
+        "question_view",
 
-        'user-access-type_index',
+        "region_index",
+        "region_view",
 
+        "room_create",
+        "room_free",
+        "room_index",
+        "room_update",
+        "room_view",
 
-        'building_index',
-        'building_create',
-        'building_update',
-        'building_view',
+        "student_create",
+        "student_index",
+        "student_update",
+        "student_view",
 
-        'room_index',
-        'room_create',
-        'room_update',
-        'room_view',
+        "subject-category_create",
+        "subject-category_index",
+        "subject-category_update",
+        "subject-category_view",
 
-        'edu-form_index',
-        'edu-form_create',
-        'edu-form_update',
-        'edu-form_view',
+        "subject-type_create",
+        "subject-type_index",
+        "subject-type_update",
+        "subject-type_view",
 
-        'para_index',
-        'para_create',
-        'para_update',
-        'para_view',
+        "subject_index",
+        "subject_view",
 
-        'exam_index',
-        'exam_create',
-        'exam_update',
-        'exam_view',
-        'exam_distribution',
-        'exam-semeta_index',
+        "teacher-access_free",
+        "teacher-access_index",
+        "teacher-access_view",
 
-        'exams-type_index',
-        'exams-type_create',
-        'exams-type_update',
-        'exams-type_view',
+        "time-table_create",
+        "time-table_delete",
+        "time-table_index",
+        "time-table_parent-null",
+        "time-table_update",
+        "time-table_view",
 
-        'subject_index',
-        'subject_view',
+        "user-access-type_index",
 
+        "user_create",
+        "user_delete",
+        "user_index",
+        "user_logout",
+        "user_me",
+        "user_update",
+        "user_view",
 
-        'subject-type_index',
-        'subject-type_create',
-        'subject-type_update',
-        'subject-type_view',
+        "user_status-list",
 
-        'subject-category_index',
-        'subject-category_create',
-        'subject-category_update',
-        'subject-category_view',
-
-        'edu-year_index',
-        'edu-year_create',
-        'edu-year_update',
-        'edu-year_view',
-
-        'edu-semestr_index',
-        'edu-semestr_create',
-        'edu-semestr_update',
-        'edu-semestr_view',
-
-        'question-type_index',
-        'question-type_create',
-        'question-type_update',
-        'question-type_view',
-
-        'direction_index',
-        'direction_create',
-        'direction_update',
-        'direction_view',
-
-        'faculty_index',
-        'department_index',
-        'faculty_create',
-        'faculty_update',
-        'faculty_view',
-
-        'kafedra_index',
-        'kafedra_create',
-        'kafedra_update',
-        'kafedra_view',
-
-        'student_index',
-        'student_create',
-        'student_update',
-        'student_view',
-
-        'time-table_index',
-        'time-table_create',
-        'time-table_update',
-        'time-table_view',
-        'time-table_delete',
+        "week_index",
+        "week_view"
     ],
 
     /* O'quv bo'limi kontenthisi */
@@ -508,15 +529,12 @@ return [
 
     /* Dekan huquqlari */
     'dean' => [
-        'question_update',
-        'question_index',
-        'question_view',
-        'question_status-update',
-
         "access-control_permissions",
         "access-control_roles",
         "area_index",
         "area_view",
+        "building_index",
+        "building_view",
         "citizenship_index",
         "citizenship_view",
         "country_index",
@@ -577,19 +595,31 @@ return [
         "notification_my",
         "notification_status-list",
         "notification_view",
+        "para_index",
+        "para_view",
         "password_index",
         "password_update",
         "password_view",
+        "question_index",
+        "question_status-update",
+        "question_update",
+        "question_view",
         "region_index",
         "region_view",
+        "room_free",
+        "room_index",
+        "room_view",
+
         "semestr_index",
         "semestr_update",
         "semestr_view",
+
         "student_create",
         "student_delete",
         "student_index",
         "student_update",
         "student_view",
+
         "subject-category_index",
         "subject-category_view",
         "subject-sillabus_create",
@@ -599,12 +629,20 @@ return [
         "subject-sillabus_view",
         "subject-type_index",
         "subject-type_view",
-        // "subject_create",
-        // "subject_delete",
         "subject_index",
-        // "subject_update",
         "subject_view",
+
+        "teacher-access_free",
         "teacher-access_index",
+        "teacher-access_view",
+
+        "time-table_create",
+        "time-table_delete",
+        "time-table_index",
+        "time-table_parent-null",
+        "time-table_update",
+        "time-table_view",
+
         "user-access-type_index",
         "user-access_create",
         "user-access_delete",
@@ -618,7 +656,10 @@ return [
         "user_me",
         "user_status-list",
         "user_update",
-        "user_view"
+        "user_view",
+
+        "week_index",
+        "week_view"
 
 
     ],
@@ -940,9 +981,13 @@ return [
         'exam-teacher-check_index',
         'exam-teacher-check_view',
 
-        'exam-student-answer_index',
-        'exam-student-answer_view',
-        'exam-student-answer_update',
+        // 'exam-student-answer_index',
+        // 'exam-student-answer_view',
+        // 'exam-student-answer_update',
+
+        'exam-checking_index',
+        'exam-checking_view',
+        'exam-checking_update',
 
 
         // "access-control_roles",

@@ -471,40 +471,52 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
 
         /** subQuestionAnswersChecking */
-        // if (isset($post['subQuestionAnswersChecking'])) {
-        //     $post['subQuestionAnswersChecking'] = str_replace("'", "", $post['subQuestionAnswersChecking']);
-        //     if (!isJsonMK($post['subQuestionAnswersChecking'])) {
-        //         $errors['subQuestionAnswersChecking'] = [_e('Must be Json')];
-        //     }
+        if (isset($post['subQuestionAnswersChecking'])) {
+            $post['subQuestionAnswersChecking'] = str_replace("'", "", $post['subQuestionAnswersChecking']);
+            if (!isJsonMK($post['subQuestionAnswersChecking'])) {
+                $errors['subQuestionAnswersChecking'] = [_e('Must be Json')];
+                return simplify_errors($errors);
+            }
 
-        //     foreach (((array)json_decode($post['subQuestionAnswersChecking'])) as  $subQuestionOneAnswer) {
+            $mainBallForOneQuestion = 0;
+            foreach (((array)json_decode($post['subQuestionAnswersChecking'])) as $subQuestionOneAnswerChecking) {
+//                dd($subQuestionOneAnswerChecking);
+                $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne($subQuestionOneAnswerChecking->exam_student_answer_sub_question_id);
 
-        //         $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
-        //         if ($subQuestion) {
-        //             if ($model->question->id == $subQuestion->question_id) {
-        //                 $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
+                if ($examStudentAnswerSubQuestion) {
+                    if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
+                        $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
+                        $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
+                        $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
+                        $examStudentAnswerSubQuestion->save();
+                    } else {
+                        $errors[] = [$examStudentAnswerSubQuestion->id => _e("This subQuestion Answer is not for this question's answer")];
+                    }
+                } else {
+                    $errors[] = _e("This subQuestion Answer is not found");
+                }
+            }
+            $model->ball = $mainBallForOneQuestion;
+        }
+        /** subQuestionAnswersChecking */
 
-        //                 if (!$examStudentAnswerSubQuestion) {
-        //                     $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
-        //                     $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
-        //                     $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
-        //                 }
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
 
-        //                 $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
-        //                 $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
-
-        //                 $examStudentAnswerSubQuestion->save();
-        //             } else {
-        //                 $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
-        //             }
-        //         } else {
-        //             $errors[] = _e("This subQuestion is not found");
-        //         }
-        //     }
-        // }
-         /** subQuestionAnswersChecking */
-
-
+        if (count($errors) == 0) {
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        } else {
+            // $errors[] = count($errors);
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
         //
     }
     public static function updateItem($model, $post)

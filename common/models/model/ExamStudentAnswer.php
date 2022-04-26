@@ -317,7 +317,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                             $exam_times['duration'] = $exam->duration;
                             $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
-
+                            $exam_times['now'] = date("Y-m-d H:i:s");
                             $data['times'] = $exam_times;
                             $data['status'] = true;
                             return $data;

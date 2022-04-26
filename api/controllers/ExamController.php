@@ -139,8 +139,6 @@ class ExamController extends ApiActiveController
             }
             /*  is Self  */
         } else {
-
-
             /*  is Self  */
             $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {

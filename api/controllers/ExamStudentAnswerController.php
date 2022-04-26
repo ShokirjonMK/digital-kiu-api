@@ -177,9 +177,12 @@ class ExamStudentAnswerController extends ApiActiveController
             $student = Student::findOne(['user_id' => current_user_id()]);
             if (!$student) {
                 $errors[] = _e("Student not found");
-                return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+                return $this->response(0, _e('Data not found.'), null, $errors, ResponseStatus::NOT_FOUND);
             }
-            $student_id = $student->id;
+            if($model->student_id != $student->id){
+                $errors[] = _e("Student not found");
+                return $this->response(0, _e('Data not found.'), null, $errors, ResponseStatus::NOT_FOUND);
+            }
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }

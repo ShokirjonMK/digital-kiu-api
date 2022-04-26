@@ -218,10 +218,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
     }
 
-    public function getExamStudentAnswerSubQuestionCount()
-    {
-        return count($this->examStudentAnswerSubQuestionCount);
-    }
+//    public function getExamStudentAnswerSubQuestionCount()
+//    {
+//        return ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $this->id])->count();
+//    }
 
     public function getSubQuestions()
     {
@@ -517,7 +517,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     $errors[] = _e("This subQuestion Answer is not found");
                 }
             }
-            if (self::getExamStudentAnswerSubQuestionCount() == $subQuestionOneAnswerCount) {
+            if (ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $model->id])->count() == $subQuestionOneAnswerCount) {
                 $model->status = self::STATUS_CHECKED;
             } else {
                 $model->status = self::STATUS_NON_COMPLATED_CHECKING;

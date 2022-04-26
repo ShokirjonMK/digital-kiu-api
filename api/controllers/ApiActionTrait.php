@@ -299,9 +299,7 @@ trait ApiActionTrait
             ]);
         }
 
-
         $t['status'] = 3;
-
 
         foreach (_eduRoles() as $eduRole) {
             if (property_exists($roles, $eduRole)) {

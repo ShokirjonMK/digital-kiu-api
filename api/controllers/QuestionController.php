@@ -29,8 +29,10 @@ class QuestionController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
-        if (isRole('mudir')) {
 
+
+
+        if (isRole('mudir')) {
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
             if ($k['status'] == 1) {
 
@@ -39,6 +41,10 @@ class QuestionController extends ApiActiveController
                     Subject::find()
                         ->where(['kafedra_id' => $k['UserAccess']->table_id])
                         ->select('id')
+                ]);
+            } else {
+                $query->andFilterWhere([
+                    'subject_id' => -1
                 ]);
             }
         } elseif (isRole("teacher")) {

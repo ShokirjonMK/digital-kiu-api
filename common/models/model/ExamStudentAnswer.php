@@ -192,7 +192,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'questionType',
 
 
-            'subQuestionAnswers',
+//            'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
 
             'subQuestions',
@@ -208,10 +208,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     }
 
     // ExamStudentAnswerSubQuestion
-    public function getSubQuestionAnswers()
-    {
-        return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
-    }
+//    public function getSubQuestionAnswers()
+//    {
+//        return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
+//    }
 
     // ExamStudentAnswerSubQuestion
     public function getExamStudentAnswerSubQuestion()

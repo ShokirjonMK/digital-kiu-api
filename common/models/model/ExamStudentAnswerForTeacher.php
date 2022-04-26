@@ -56,7 +56,7 @@ class ExamStudentAnswerForTeacher extends ExamStudentAnswer
             'exam_student_id',
             'teacher_conclusion',
             'option_id',
-            // 'answer',
+             'answer',
             'ball',
             'max_ball',
             'teacher_access_id',
@@ -87,6 +87,7 @@ class ExamStudentAnswerForTeacher extends ExamStudentAnswer
 //            'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
             // 'subQuestionAnswers',
+            'statusName',
 
             'subQuestions',
 

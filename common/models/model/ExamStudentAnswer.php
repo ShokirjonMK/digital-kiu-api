@@ -54,7 +54,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     const STATUS_NEW = 2;
     const STATUS_COMPLETE = 1;
     const STATUS_IN_CHECKING = 3;
-    const STATUS_IN_CHECKED = 4;
+    const STATUS_NON_COMPLATED_CHECKING = 4;
+    const STATUS_CHECKED = 5;
 
 
     const UPLOADS_FOLDER = 'uploads/answer_files/';
@@ -141,7 +142,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         ];
     }
 
-
     public function fields()
     {
         $fields = [
@@ -191,12 +191,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'teacherAccess',
             'questionType',
 
-
 //            'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
 
             'subQuestions',
-
+            'statusName',
             'student',
 
 
@@ -217,6 +216,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function getExamStudentAnswerSubQuestion()
     {
         return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
+    }
+
+    public function getExamStudentAnswerSubQuestionCount()
+    {
+        return count($this->examStudentAnswerSubQuestionCount);
     }
 
     public function getSubQuestions()
@@ -268,6 +272,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
+    public function getStatusName()
+    {
+        return $this->statusList()[$this->status];
     }
 
 
@@ -487,6 +496,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             }
 
             $mainBallForOneQuestion = 0;
+            $subQuestionOneAnswerCount = 0;
             foreach (((array)json_decode($post['subQuestionAnswersChecking'])) as $subQuestionOneAnswerChecking) {
 //                dd($subQuestionOneAnswerChecking);
                 $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne($subQuestionOneAnswerChecking->exam_student_answer_sub_question_id);
@@ -495,14 +505,22 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
                         $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
                         $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
-                        $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
-                        $examStudentAnswerSubQuestion->save();
+                        if ($examStudentAnswerSubQuestion->save()) {
+                            $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
+                            $subQuestionOneAnswerCount++;
+                        }
+
                     } else {
                         $errors[] = [$examStudentAnswerSubQuestion->id => _e("This subQuestion Answer is not for this question's answer")];
                     }
                 } else {
                     $errors[] = _e("This subQuestion Answer is not found");
                 }
+            }
+            if (self::getExamStudentAnswerSubQuestionCount() == $subQuestionOneAnswerCount) {
+                $model->status = self::STATUS_CHECKED;
+            } else {
+                $model->status = self::STATUS_NON_COMPLATED_CHECKING;
             }
             $model->ball = $mainBallForOneQuestion;
         }
@@ -683,4 +701,17 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
+
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_NEW => _e('STATUS_NEW'),
+            self::STATUS_COMPLETE => _e('STATUS_COMPLETE'),
+            self::STATUS_IN_CHECKING => _e('STATUS_IN_CHECKING'),
+            self::STATUS_NON_COMPLATED_CHECKING => _e('STATUS_NON_COMPLATED_CHECKING'),
+            self::STATUS_CHECKED => _e('STATUS_CHECKED'),
+        ];
+    }
+
 }

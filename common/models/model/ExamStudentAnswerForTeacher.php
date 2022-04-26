@@ -85,6 +85,7 @@ class ExamStudentAnswerForTeacher extends ExamStudentAnswer
             'questionType',
             'questionForExamStudentAnswer',
             'subQuestionAnswers',
+            'examStudentAnswerSubQuestion',
             // 'subQuestionAnswers',
 
             'subQuestions',

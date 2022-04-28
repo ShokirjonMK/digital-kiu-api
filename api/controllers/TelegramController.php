@@ -25,7 +25,7 @@ class TelegramController extends ActiveController
 
         /*   Yii::$app->telegram->sendPhoto([
             'chat_id' => 813225336,
-            'photo' => 'http://digital.tsul.uz/static/media/loginImg.e19938fd.png',
+            'photo' => 'https://digital.tsul.uz/static/media/loginImg.e19938fd.png',
             'caption' => 'this is test'
         ]); */
 

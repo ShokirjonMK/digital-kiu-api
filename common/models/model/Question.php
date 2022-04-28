@@ -511,7 +511,6 @@ class Question extends \yii\db\ActiveRecord
             self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
             self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
 
-
         ];
     }
 }

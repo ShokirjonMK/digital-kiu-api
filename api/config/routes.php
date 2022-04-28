@@ -119,6 +119,9 @@ $routes = [
 
     // Question status update
     'PUT <lang:\w{2}>/questions/status-update/<id>' => 'question/status-update',
+    // Question status list
+    'GET <lang:\w{2}>/questions/status-list' => 'question/status-list',
+
 
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',

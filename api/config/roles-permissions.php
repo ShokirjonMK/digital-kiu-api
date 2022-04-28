@@ -191,6 +191,7 @@ return [
         "question_index",
         "question_status-update",
         "question_view",
+        'question_status-list',
 
         "region_index",
         "region_view",
@@ -597,13 +598,18 @@ return [
         "notification_view",
         "para_index",
         "para_view",
+
         "password_index",
         "password_update",
         "password_view",
+
         "question_index",
         "question_status-update",
         "question_update",
         "question_view",
+
+        'question_status-list',
+
         "region_index",
         "region_view",
         "room_free",
@@ -792,6 +798,7 @@ return [
         "question_index",
         "question_update",
         "question_delete",
+        'question_status-list',
 
         "question-type_index",
         "question-type_view",
@@ -949,7 +956,7 @@ return [
 
     /* Teacher */
     'teacher' => [
-
+        'question_status-list',
         'course_index',
         'languages_index',
 
@@ -1152,7 +1159,7 @@ return [
         'exam-student-answer_create',
         'exam-student-answer_update',
         'exam-student-answer_view',
-//        'exam-student-answer_delete',
+        //        'exam-student-answer_delete',
 
         'exam-student-answer_get-question',
 

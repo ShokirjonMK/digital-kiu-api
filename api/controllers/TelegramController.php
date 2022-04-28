@@ -23,21 +23,21 @@ class TelegramController extends ActiveController
     public function actionIndex()
     {
 
-        /*    Yii::$app->telegram->sendPhoto([
+           Yii::$app->telegram->sendPhoto([
             'chat_id' => 813225336,
             'photo' => 'http://digital.tsul.uz/static/media/loginImg.e19938fd.png',
             'caption' => 'this is test'
-        ]); */
-
-        /* ************** */
-        $telegram = Yii::$app->telegram;
-        $telegram->sendMessage([
-            'chat_id' => 813225336,
-            'text' =>  "aaaasd !!!"
-
         ]);
 
-        return 0;
+        /* ************** */
+        // $telegram = Yii::$app->telegram;
+        // $telegram->sendMessage([
+        //     'chat_id' => 813225336,
+        //     'text' =>  "aaaasd !!!"
+
+        // ]);
+
+        // return 0;
 
         /* ************** */
         $telegram = Yii::$app->telegram;

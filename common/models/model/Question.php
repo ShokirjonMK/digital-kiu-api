@@ -511,6 +511,58 @@ class Question extends \yii\db\ActiveRecord
             self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
             self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
 
+
+        ];
+    }
+
+
+    public static function statusListRole()
+    {
+        if (isRole('teacher')) {
+            return [
+                self::STATUS_TEACHER_EDITED => _e('STATUS_TEACHER_EDITED'),
+                self::STATUS_MUDIR_REFUSED => _e('STATUS_MUDIR_REFUSED'),
+                self::STATUS_DEAN_REFUSED => _e('STATUS_DEAN_REFUSED'),
+                self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
+                self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+                self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            ];
+        }
+        if (isRole('mudir')) {
+            return [
+                self::STATUS_TEACHER_EDITED => _e('STATUS_TEACHER_EDITED'),
+                self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
+                self::STATUS_MUDIR_REFUSED => _e('STATUS_MUDIR_REFUSED'),
+                self::STATUS_DEAN_REFUSED => _e('STATUS_DEAN_REFUSED'),
+                self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            ];
+        }
+        if (isRole('dean')) {
+            return [
+                self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
+                self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
+                self::STATUS_DEAN_REFUSED => _e('STATUS_DEAN_REFUSED'),
+            ];
+        }
+
+        if (isRole('edu_admin')) {
+            return [
+                self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
+                self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
+                self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            ];
+        }
+
+        return [
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_TEACHER_EDITED => _e('STATUS_TEACHER_EDITED'),
+            self::STATUS_MUDIR_REFUSED => _e('STATUS_MUDIR_REFUSED'),
+            self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
+            self::STATUS_DEAN_REFUSED => _e('STATUS_DEAN_REFUSED'),
+            self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
+            self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
+
         ];
     }
 }

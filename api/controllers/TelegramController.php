@@ -23,7 +23,7 @@ class TelegramController extends ActiveController
     public function actionIndex()
     {
 
-      /*   Yii::$app->telegram->sendPhoto([
+        /*   Yii::$app->telegram->sendPhoto([
             'chat_id' => 813225336,
             'photo' => 'http://digital.tsul.uz/static/media/loginImg.e19938fd.png',
             'caption' => 'this is test'
@@ -41,90 +41,95 @@ class TelegramController extends ActiveController
 
         /* ************** */
         $telegram = Yii::$app->telegram;
-        $text = $telegram->input->message->text;
-        $username = $telegram->input->message->chat->username;
-        $telegram_id = $telegram->input->message->chat->id;
+        // return $telegram;
+        if ($telegram) {
+            $text = $telegram->input->message->text;
+            $username = $telegram->input->message->chat->username;
+            $telegram_id = $telegram->input->message->chat->id;
 
-        if ($text == "/start") {
+            if (
+                $text == "/start"
+            ) {
 
-            $keyboards = json_encode([
-                'keyboard' => [
-                    [
-                        ['text' => "☎️Telefon raqamni jo`natish☎️", 'callback_data' => "/start"]
-                    ]
-                ], 'resize_keyboard' => true
-            ]);
+                $keyboards = json_encode([
+                    'keyboard' => [
+                        [
+                            ['text' => "☎️Telefon raqamni jo`natish☎️", 'callback_data' => "/start"]
+                        ]
+                    ], 'resize_keyboard' => true
+                ]);
 
-            $telegram->sendMessage([
-                'chat_id' => $telegram_id,
-                'text' => "Assalomu alaykum @" . $username . " \n DIGITAL TSUL rasmiy botiga xush kelibsiz!!!",
-                'reply_markup' => $keyboards
-            ]);
-        }
+                $telegram->sendMessage([
+                    'chat_id' => $telegram_id,
+                    'text' => "Assalomu alaykum @" . $username . " \n DIGITAL TSUL rasmiy botiga xush kelibsiz!!!",
+                    'reply_markup' => $keyboards
+                ]);
+            }
 
-        if ($text == "☎️Telefon raqamni jo`natish☎️") {
-            $replyMarkup3 = [
-                'keyboard' => [[[
-                    'text' => 'Telefon raqamni jo`nating...',
+            if ($text == "☎️Telefon raqamni jo`natish☎️") {
+                $replyMarkup3 = [
+                    'keyboard' => [[[
+                        'text' => 'Telefon raqamni jo`nating...',
+                        'request_contact' => true,
+                    ]]],
+                    'resize_keyboard' => true,
                     'request_contact' => true,
-                ]]],
-                'resize_keyboard' => true,
-                'request_contact' => true,
-            ];
-            $encodedMarkup = json_encode($replyMarkup3);
-            $telegram->sendMessage([
-                'chat_id' => $telegram_id,
-                'text' => "Telefon raqamni jo`nating...",
-                'reply_markup' => $encodedMarkup
-            ]);
-            die;
-        }
+                ];
+                $encodedMarkup = json_encode($replyMarkup3);
+                $telegram->sendMessage([
+                    'chat_id' => $telegram_id,
+                    'text' => "Telefon raqamni jo`nating...",
+                    'reply_markup' => $encodedMarkup
+                ]);
+                die;
+            }
 
-        if (json_encode($telegram->input->message->contact) != "null") {
-            $test = json_encode($telegram->input->message->contact);
-            $new_test = json_decode($test);
-            $phone = (int) $new_test->phone_number;
+            if (json_encode($telegram->input->message->contact) != "null") {
+                $test = json_encode($telegram->input->message->contact);
+                $new_test = json_decode($test);
+                $phone = (int) $new_test->phone_number;
 
-            $new_phone = "(" . mb_substr($phone, 3, 2) . ")-" . mb_substr($phone, 5, 3) . "-" . mb_substr($phone, 8, 4);
+                $new_phone = "(" . mb_substr($phone, 3, 2) . ")-" . mb_substr($phone, 5, 3) . "-" . mb_substr($phone, 8, 4);
 
-            $new_phone = preg_replace('/[^0-9]/', '', $new_phone);
+                $new_phone = preg_replace('/[^0-9]/', '', $new_phone);
 
-            $userTelegram = Profile::find()
-                ->select([
-                    new Expression("replace(replace(phone, '-', ''), ' ', '') as phone"),
-                    new Expression("replace(replace(phone_secondary, '-', ''), ' ', '') as phone_secondary"),
-                    'telegram_chat_id',
-                    'last_name',
-                    'first_name',
-                    'middle_name',
-                    'id',
-                ])
-                ->orWhere(['phone' => $new_phone])
-                ->orWhere(['phone_secondary' => $new_phone])
-                ->one();
+                $userTelegram = Profile::find()
+                    ->select([
+                        new Expression("replace(replace(phone, '-', ''), ' ', '') as phone"),
+                        new Expression("replace(replace(phone_secondary, '-', ''), ' ', '') as phone_secondary"),
+                        'telegram_chat_id',
+                        'last_name',
+                        'first_name',
+                        'middle_name',
+                        'id',
+                    ])
+                    ->orWhere(['phone' => $new_phone])
+                    ->orWhere(['phone_secondary' => $new_phone])
+                    ->one();
 
 
-            if ($userTelegram) {
-                if ($userTelegram->telegram_chat_id) {
-                    $arr = explode("-", $userTelegram->telegram_chat_id);
-                    if (!in_array($telegram_id, $arr)) {
-                        $userTelegram->telegram_chat_id = $userTelegram->telegram_chat_id . "-" . $telegram_id;
+                if ($userTelegram) {
+                    if ($userTelegram->telegram_chat_id) {
+                        $arr = explode("-", $userTelegram->telegram_chat_id);
+                        if (!in_array($telegram_id, $arr)) {
+                            $userTelegram->telegram_chat_id = $userTelegram->telegram_chat_id . "-" . $telegram_id;
+                        }
+                    } else {
+                        $userTelegram->telegram_chat_id = json_encode($telegram_id);
                     }
+                    $userTelegram->save(false);
+
+                    $telegram->sendMessage([
+                        'chat_id' => $telegram_id,
+                        'text' =>  $userTelegram->full_name . "-" . $new_phone
+                    ]);
                 } else {
-                    $userTelegram->telegram_chat_id = json_encode($telegram_id);
+                    $telegram->sendMessage([
+                        'chat_id' => $telegram_id,
+                        'text' =>  "+998" . $new_phone . " raqamdan ro`yxatdan o`tgan o`quvchi topilmadi!!!"
+
+                    ]);
                 }
-                $userTelegram->save(false);
-
-                $telegram->sendMessage([
-                    'chat_id' => $telegram_id,
-                    'text' =>  $userTelegram->full_name . "-" . $new_phone
-                ]);
-            } else {
-                $telegram->sendMessage([
-                    'chat_id' => $telegram_id,
-                    'text' =>  "+998" . $new_phone . " raqamdan ro`yxatdan o`tgan o`quvchi topilmadi!!!"
-
-                ]);
             }
         }
     }

@@ -308,6 +308,6 @@ class QuestionController extends ApiActiveController
 
     public function actionStatusList()
     {
-        return $this->response(1, _e('Success.'), Question::statusList(), null, ResponseStatus::OK);
+        return $this->response(1, _e('Success.'), Question::statusListRole(), null, ResponseStatus::OK);
     }
 }

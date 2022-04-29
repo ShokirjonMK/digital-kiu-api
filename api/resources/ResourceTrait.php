@@ -2,6 +2,7 @@
 
 namespace api\resources;
 
+use common\models\model\TeacherAccess;
 use common\models\model\Translate;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -24,7 +25,7 @@ trait ResourceTrait
             ],
         ];
     }
-    
+
     public function loadApi($data)
     {
         return $this->load($data, '');
@@ -71,5 +72,10 @@ trait ResourceTrait
             }
         }
     }
-    
+
+    public static function teacher_access_user_id($teacher_access_id)
+    {
+        return TeacherAccess::findOne($teacher_access_id)
+            ->user_id;
+    }
 }

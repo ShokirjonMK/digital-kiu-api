@@ -2,38 +2,30 @@
 
 namespace api\controllers;
 
-use common\models\model\Building;
+use common\models\model\ExamAppeal;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\Translate;
+use common\models\model\Student;
 
-class BuildingController extends ApiActiveController
+class ExamAppealController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Building';
+    public $modelClass = 'api\resources\ExamAppeal';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'building';
-    public $controller_name = 'Building';
+    public $table_name = 'exam_appeal';
+    public $controller_name = 'ExamAppeal';
 
     public function actionIndex($lang)
     {
-        $model = new Building();
+        $model = new ExamAppeal();
 
         $query = $model->find()
-            ->with(['infoRelation'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            // ->groupBy($this->table_name . '.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
-
+            ->andFilterWhere(['like', $this->table_name . 'appeal_text', Yii::$app->request->get('q')]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -48,11 +40,23 @@ class BuildingController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Building();
-        $post = Yii::$app->request->post();
-        $this->load($model, $post);
+        $model = new ExamAppeal();
 
-        $result = Building::createItem($model, $post);
+        if (!isRole('student')) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
+        $student = Student::findOne(['user_id' => current_user_id()]);
+        if (!$student) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Student not found'), ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        $post = Yii::$app->request->post();
+
+        $post['faculty_id'] = $student->faculty_id;
+        $post['student'] = $student;
+
+        $this->load($model, $post);
+        $result = ExamAppeal::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -62,13 +66,24 @@ class BuildingController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Building::findOne($id);
+        $model = ExamAppeal::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if (!isRole('student')) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
+        $student = Student::findOne(['user_id' => current_user_id()]);
+        if (!$student) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Student not found'), ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
         $post = Yii::$app->request->post();
-        $this->load($model, $post);
-        $result = Building::updateItem($model, $post);
+
+        // $this->load($model, $post);
+        $result = ExamAppeal::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -78,7 +93,7 @@ class BuildingController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Building::find()
+        $model = ExamAppeal::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -89,7 +104,7 @@ class BuildingController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Building::find()
+        $model = ExamAppeal::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
@@ -99,7 +114,6 @@ class BuildingController extends ApiActiveController
 
         // remove model
         if ($model) {
-            Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 

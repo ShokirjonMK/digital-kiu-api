@@ -795,6 +795,7 @@ return [
         "user_view",
 
         "question_view",
+        "question_create",
         "question_index",
         "question_update",
         "question_delete",

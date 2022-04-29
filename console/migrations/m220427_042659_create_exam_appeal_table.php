@@ -10,13 +10,19 @@ class m220427_042659_create_exam_appeal_table extends Migration
     /**
      * {@inheritdoc}
      */
-    /* public function safeUp()
+    public function safeUp()
     {
         $this->createTable('{{%exam_appeal}}', [
             'id' => $this->primaryKey(),
 
-            'student_id' => $this->integer()->notNull(),
-
+            'student_id' => $this->integer()->null(),
+            'exam_student_id' => $this->integer()->notNull(),
+            'appeal_text' => $this->text()->null(),
+            'teacher_user_id' => $this->integer()->null(),
+            'subject_id' => $this->integer()->null(),
+            'edu_year_id' => $this->integer()->null(),
+            'semestr_id' => $this->integer()->null(),
+            'faculty_id' => $this->integer()->null(),
 
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -28,16 +34,16 @@ class m220427_042659_create_exam_appeal_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('pe_student_time_table_student_id', 'student_time_table', 'student_id', 'student', 'id');
-    } */
+        $this->addForeignKey('eaes_exam_appeal_exam_student', 'exam_appeal', 'exam_student_id', 'exam_student', 'id');
+    }
 
     /**
      * {@inheritdoc}
      */
-    /* public function safeDown()
+    public function safeDown()
     {
-        $this->dropForeignKey('pe_student_time_table_student_id', 'student_time_table');
+        $this->dropForeignKey('eaes_exam_appeal_exam_student', 'exam_appeal');
 
         $this->dropTable('{{%exam_appeal}}');
-    } */
+    }
 }

@@ -54,7 +54,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     const UPLOADS_FOLDER = 'uploads/plagiat_files/';
     public $plagiat_file;
-    public $plagiatFileMaxSize = 1024 * 1024 * 3; // 3 Mb
+    public $plagiatFileMaxSize = 1024 * 1024 * 5; // 3 Mb
 
     // conclusion
     // plagiat_file

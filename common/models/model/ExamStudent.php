@@ -334,7 +334,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         if ($this->validate()) {
             $filePath = self::UPLOADS_FOLDER . $this->exam_id . '/';
             if (!file_exists(STORAGE_PATH . $filePath)) {
-                mkdir(STORAGE_PATH . $filePath);
+                mkdir(STORAGE_PATH . $filePath, 0777, true);
             }
 
             $fileName = $this->id . "_" . $this->lang_id . "_" . $this->teacher_access_id . "_" . time() . '.' . $this->plagiat_file->extension;

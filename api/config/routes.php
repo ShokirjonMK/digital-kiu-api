@@ -86,6 +86,7 @@ $controllers = [
     'statistic',
 
     'exam-checking',
+    'exam-appeal',
 
 
     'telegram',

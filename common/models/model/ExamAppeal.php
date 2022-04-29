@@ -1,0 +1,262 @@
+<?php
+
+namespace common\models\model;
+
+use api\resources\ResourceTrait;
+use api\resources\User;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+
+/**
+ * This is the model class for table "exam".
+ *
+ * @property int $id
+ * @property int $student_id
+ * @property int $exam_student_id
+ * @property sting $appeal_text
+ * @property int $teacher_user_id
+ * @property int $subject_id
+ * @property int $edu_year_id
+ * @property int $semestr_id
+ *
+ * @property int|null $order
+ * @property int|null $status
+ * @property int|null $created_at
+ * @property int|null $updated_at
+ * @property int $created_by
+ * @property int $updated_by
+ * @property int $is_deleted
+ *
+ * @property ExamStudent $examStudent
+ */
+class ExamAppeal extends \yii\db\ActiveRecord
+{
+    public static $selected_language = 'uz';
+
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'exam_appeal';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [
+                [
+                    'exam_student_id',
+                    'appeal_text',
+                ], 'required'
+            ],
+            [
+                [
+                    'exam_student_id',
+                    'student_id',
+                    'teacher_user_id',
+                    'subject_id',
+                    'edu_year_id',
+                    'semestr_id',
+                    'faculty_id',
+                    'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
+                ], 'integer'
+            ],
+
+            [['appeal_text'], 'string'],
+
+            [['exam_student_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudent::className(), 'targetAttribute' => ['exam_student_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],
+            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
+            [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
+            [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+
+            'faculty_id' => _e('Faculty Id'),
+            'student_id' => _e('Student Id'),
+            'exam_student_id' => _e('Exam Student Id'),
+            'appeal_text' => _e('Appeal Text'),
+            'teacher_user_id' => _e('Teacher_user Id'),
+            'subject_id' => _e('Subject Id'),
+            'edu_year_id' => _e('Edu_year Id'),
+            'semestr_id' => _e('Semestr Id'),
+
+            'order' => _e('Order'),
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
+        ];
+    }
+
+
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'examStudent',
+            'student',
+            'teacherUser',
+            'subject',
+            'eduYear',
+            'semestr',
+
+            'statusName',
+
+
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+
+    // exam_student_id
+    // student_id
+    // teacher_user_id
+    // subject_id
+    // edu_year_id
+    // semestr_id
+
+    public function getExamStudent()
+    {
+        return $this->hasOne(ExamStudent::className(), ['id' => 'exam_student_id']);
+    }
+
+    public function getStudent()
+    {
+        return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    public function getTeacherUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'teacher_user_id']);
+    }
+
+    public function getSubject()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
+
+    public function getEduYear()
+    {
+        return $this->hasOne(EduYear::className(), ['id' => 'edu_year_id']);
+    }
+
+    public function getSemestr()
+    {
+        return $this->hasOne(Semestr::className(), ['id' => 'semestr_id']);
+    }
+
+    /** */
+
+
+    public function getStatusName()
+    {
+        return   $this->statusList()[$this->status];
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            return simplify_errors($errors);
+        }
+        // dd($model->errors);
+        if ($post['student']->id != $model->examStudent->student_id) {
+            $errors[] = _e('This is other student\'s exam, you can not appeal');
+            return simplify_errors($errors);
+        }
+        $model->student_id = $model->examStudent->student_id;
+        $model->teacher_user_id = self::teacher_access_user_id($model->examStudent->teacher_access_id);
+
+        // dd($model->examStudent->exam->eduSemestrSubject->subject->id);
+        $model->subject_id = $model->examStudent->exam->eduSemestrSubject->subject->id;
+        $model->edu_year_id = $model->examStudent->exam->eduSemestrSubject->eduSemestr->eduYear->id;
+        $model->semestr_id =  $model->examStudent->exam->eduSemestrSubject->eduSemestr->semestr->id;
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (isset($post['appeal_teaxt'])) {
+            $model->appeal_teaxt = $post['appeal_teaxt'];
+        }
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            return simplify_errors($errors);
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->created_by = Current_user_id();
+        } else {
+            $this->updated_by = Current_user_id();
+        }
+        return parent::beforeSave($insert);
+    }
+
+
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+
+        ];
+    }
+}

@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Faculty;
 use common\models\model\Kafedra;
 use common\models\model\Question;
 use common\models\model\Subject;
@@ -31,11 +32,28 @@ class QuestionController extends ApiActiveController
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
 
-
-        if (isRole('mudir')) {
+        if (isRole('dean')) {
+            $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID, 2);
+            if ($f['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'subject_id',
+                    Subject::find()
+                        ->where([
+                            'in', 'kafedra_id',
+                            Kafedra::find()
+                                ->where(['faculty_id' => $f['UserAccess']->table_id])
+                                ->select('id')
+                        ])
+                        ->select('id')
+                ]);
+            } else {
+                $query->andFilterWhere([
+                    'subject_id' => -1
+                ]);
+            }
+        } elseif (isRole('mudir')) {
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
             if ($k['status'] == 1) {
-
                 $query->andFilterWhere([
                     'in', 'subject_id',
                     Subject::find()
@@ -293,6 +311,9 @@ class QuestionController extends ApiActiveController
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        if ($model->status == 1) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Can not delete'), ResponseStatus::BAD_REQUEST);
         }
 
         // remove model

@@ -31,7 +31,16 @@ class QuestionController extends ApiActiveController
             ->andWhere(['is_deleted' => 0])
             ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
 
+        $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
 
+        if ($statuses) {
+            $query->andFilterWhere([
+                'in', 'status',
+                $statuses
+            ]);
+        }
+
+        // return $statuses;
         if (isRole('dean')) {
             $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID, 2);
             if ($f['status'] == 1) {

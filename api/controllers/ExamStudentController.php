@@ -69,11 +69,11 @@ class ExamStudentController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if (isRole("teacher")) {
+       /*  if (isRole("teacher")) {
             if ($model->teacherAccess ? $model->teacherAccess->user_id : null != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
             }
-        }
+        } */
 
         $post = Yii::$app->request->post();
         $post['old_file'] = $model->plagiat_file;

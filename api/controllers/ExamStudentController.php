@@ -70,7 +70,7 @@ class ExamStudentController extends ApiActiveController
         }
 
         if (isRole("teacher")) {
-            if ($model->teacherAccess->user_id != current_user_id()) {
+            if ($model->teacherAccess ? $model->teacherAccess->user_id : null != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
             }
         }

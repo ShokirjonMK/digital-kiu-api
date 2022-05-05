@@ -76,6 +76,6 @@ trait ResourceTrait
     public static function teacher_access_user_id($teacher_access_id)
     {
         return TeacherAccess::findOne($teacher_access_id)
-            ->user_id;
+            ->user_id ?? null;
     }
 }

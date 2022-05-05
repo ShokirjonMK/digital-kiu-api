@@ -91,6 +91,7 @@ class QuestionController extends ApiActiveController
                 Question::STATUS_ACTIVE,
                 Question::STATUS_MUDIR_ACTIVE,
                 Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_DEAN_ACTIVE,
                 Question::STATUS_MUDIR_REFUSED,
             ];
 

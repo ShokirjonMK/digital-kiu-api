@@ -38,7 +38,7 @@ class  StudentTimeTableController extends ApiActiveController
             if ($semester) {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
             } else {
-                $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1])->one();
+                $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
             }
 
             $timeTablesIds = TimeTable::find()

@@ -254,10 +254,12 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          */
 
         if (isset($timeTableCheck)) {
-            if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
-                $errors[] = _e('This Time Table is not for you');
-                $transaction->rollBack();
-                return simplify_errors($errors);
+            if ($timeTableCheck->eduSemestr) {
+                if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+                    $errors[] = _e('This Time Table is not for you');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
             }
         }
 
@@ -321,10 +323,12 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          */
 
         if (isset($timeTableCheck)) {
-            if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
-                $errors[] = _e('This Time Table is not for this Student');
-                $transaction->rollBack();
-                return simplify_errors($errors);
+            if ($timeTableCheck->eduSemestr) {
+                if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+                    $errors[] = _e('This Time Table is not for this Student');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
             }
         }
 

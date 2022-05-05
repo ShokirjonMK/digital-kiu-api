@@ -55,6 +55,16 @@ class QuestionController extends ApiActiveController
                         ])
                         ->select('id')
                 ]);
+
+                $seeStatus = [
+                    Question::STATUS_ACTIVE,
+                    Question::STATUS_MUDIR_ACTIVE,
+                    Question::STATUS_DEAN_ACTIVE,
+                    Question::STATUS_DEAN_REFUSED,
+                    Question::STATUS_EDU_ADMIN_REFUSED,
+                ];
+
+                $query = $query->andWhere(['in', 'status', $seeStatus]);
             } else {
                 $query->andFilterWhere([
                     'subject_id' => -1
@@ -74,6 +84,17 @@ class QuestionController extends ApiActiveController
                     'subject_id' => -1
                 ]);
             }
+
+            $seeStatus = [
+                Question::STATUS_TEACHER_EDITED,
+                Question::STATUS_INACTIVE,
+                Question::STATUS_ACTIVE,
+                Question::STATUS_MUDIR_ACTIVE,
+                Question::STATUS_DEAN_REFUSED,
+                Question::STATUS_MUDIR_REFUSED,
+            ];
+
+            $query = $query->andWhere(['in', 'status', $seeStatus]);
         } elseif (isRole("teacher")) {
             $query = $query->andWhere(["created_by" => current_user_id()]);
         }
@@ -101,15 +122,15 @@ class QuestionController extends ApiActiveController
 
         //     $query = $query->andWhere(['in', 'status', $seeStatus]);
         // }
-        // if (isRole('edu_admin')) {
-        //     $seeStatus = [
-        //         Question::STATUS_ACTIVE,
-        //         Question::STATUS_DEAN_ACTIVE,
-        //         Question::STATUS_EDU_ADMIN_REFUSED,
-        //     ];
+        if (isRole('edu_admin')) {
+            $seeStatus = [
+                Question::STATUS_ACTIVE,
+                Question::STATUS_DEAN_ACTIVE,
+                Question::STATUS_EDU_ADMIN_REFUSED,
+            ];
 
-        //     $query = $query->andWhere(['in', 'status', $seeStatus]);
-        // }
+            $query = $query->andWhere(['in', 'status', $seeStatus]);
+        }
 
 
 

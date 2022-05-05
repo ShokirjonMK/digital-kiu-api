@@ -100,6 +100,9 @@ return [
         "country_view",
 
         "course_index",
+        'course_view',
+        'semestr_index',
+        'semestr_view',
 
         "department_index",
 

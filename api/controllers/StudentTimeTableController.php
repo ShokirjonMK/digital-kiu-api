@@ -41,14 +41,17 @@ class  StudentTimeTableController extends ApiActiveController
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
             }
 
-            $timeTablesIds = TimeTable::find()
-                ->select('id')
-                ->where(['edu_semester_id' => $eduSemestr->id])
-                ->all();
-            // dd($timeTablesIds);
-            if ($timeTablesIds) {
-                $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
+            if ($eduSemestr) {
+                $timeTablesIds = TimeTable::find()
+                    ->select('id')
+                    ->where(['edu_semester_id' => $eduSemestr->id])
+                    ->all();
+                // dd($timeTablesIds);
+                if ($timeTablesIds) {
+                    $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
+                }
             }
+
 
             $query->andWhere(['student_id' => $student->id]);
         } else {

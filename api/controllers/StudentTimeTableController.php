@@ -45,7 +45,7 @@ class  StudentTimeTableController extends ApiActiveController
                 ->select('id')
                 ->where(['edu_semester_id' => $eduSemestr->id])
                 ->all();
-            return $timeTablesIds;
+            // dd($timeTablesIds);
             if ($timeTablesIds) {
                 $query->andWhere(['in', 'time_table_id', $timeTablesIds]);
             }

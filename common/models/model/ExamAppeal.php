@@ -200,6 +200,10 @@ class ExamAppeal extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
         $model->student_id = $model->examStudent->student_id;
+        if (is_null($model->examStudent->teacher_access_id)) {
+            $errors[] = _e('This exam is not checked!');
+            return simplify_errors($errors);
+        }
         $model->teacher_user_id = self::teacher_access_user_id($model->examStudent->teacher_access_id);
 
         // dd($model->examStudent->exam->eduSemestrSubject->subject->id);

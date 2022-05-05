@@ -1102,8 +1102,6 @@ return [
         "notification_view",
 
         'user_me',
-        'notification_approved',
-        'notification_status-list',
 
         'user_logout',
 

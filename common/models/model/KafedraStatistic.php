@@ -88,7 +88,7 @@ class KafedraStatistic extends Kafedra
 
     public function getSubjects()
     {
-        return $this->hasMany(Subject::className(), ['kafedra_id' => 'id']);
+        return $this->hasMany(Subject::className(), ['kafedra_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getSubjectsCount()

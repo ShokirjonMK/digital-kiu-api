@@ -327,7 +327,7 @@ class QuestionController extends ApiActiveController
             Question::STATUS_INACTIVE,
         ];
         if (!(in_array($model->status, $statusList, TRUE))) {
-            return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            return $this->response(0, _e('Now you can not delete!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
         if ($model->status == 1) {

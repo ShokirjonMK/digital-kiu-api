@@ -1094,6 +1094,13 @@ return [
 
     /* Student  */
     'student' => [
+
+        "notification_approved",
+        "notification_index",
+        "notification_my",
+        "notification_status-list",
+        "notification_view",
+
         'user_me',
         'notification_approved',
         'notification_status-list',

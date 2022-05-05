@@ -220,6 +220,12 @@ return [
         "subject_index",
         "subject_view",
 
+        "subject-sillabus_create",
+        "subject-sillabus_delete",
+        "subject-sillabus_index",
+        "subject-sillabus_update",
+        "subject-sillabus_view",
+
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",

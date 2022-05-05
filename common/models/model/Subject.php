@@ -130,6 +130,7 @@ class Subject extends \yii\db\ActiveRecord
 
             'questions',
             'questionsCount',
+            'questionsByLang',
 
             'createdBy',
             'updatedBy',
@@ -149,6 +150,42 @@ class Subject extends \yii\db\ActiveRecord
                 ?? 0
         ])->all();
     }
+
+    public function getQuestionsByLang()
+    {
+        return [
+            "UZ" => [
+                'count' => count($this->questionUz),
+                // 'name' =>  _e('Male')
+            ],
+            "RU" => [
+                'count' => count($this->questionRu),
+                // 'name' =>  _e('FEMALE')
+            ],
+
+        ];
+    }
+
+    public  function getQuestionUz()
+    {
+        $model = new Question();
+        $query = $model->find();
+
+        $query = $query->andWhere(['subject_id' => $this->id]);
+        $query = $query->andWhere(['lang_id' => 1]);
+        return $query->all();
+    }
+
+    public  function getQuestionRu()
+    {
+        $model = new Question();
+        $query = $model->find();
+
+        $query = $query->andWhere(['subject_id' => $this->id]);
+        $query = $query->andWhere(['lang_id' => 3]);
+        return $query->all();
+    }
+
 
     public function getQuestions()
     {

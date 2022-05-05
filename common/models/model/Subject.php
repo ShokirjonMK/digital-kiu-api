@@ -132,6 +132,10 @@ class Subject extends \yii\db\ActiveRecord
             'questionsCount',
             'questionsByLang',
 
+            'questionUzCount',
+            'questionEngCount',
+            'questionRuCount',
+
             'createdBy',
             'updatedBy',
         ];
@@ -154,16 +158,25 @@ class Subject extends \yii\db\ActiveRecord
     public function getQuestionsByLang()
     {
         return [
-            "UZ" => [
-                'count' => count($this->questionUz),
-                // 'name' =>  _e('Male')
-            ],
-            "RU" => [
-                'count' => count($this->questionRu),
-                // 'name' =>  _e('FEMALE')
-            ],
+            "UZ"    => ['count' => count($this->questionUz)],
+            "ENG"   => [count($this->questionEng)],
+            "RU"    => [count($this->questionRu)],
 
         ];
+    }
+
+    public  function getQuestionUzCount()
+    {
+        return count($this->questionUz);
+    }
+    public  function getQuestionEngCount()
+    {
+        return count($this->questionEng);
+    }
+
+    public  function getQuestionRuCount()
+    {
+        return count($this->questionRu);
     }
 
     public  function getQuestionUz()
@@ -173,6 +186,15 @@ class Subject extends \yii\db\ActiveRecord
 
         $query = $query->andWhere(['subject_id' => $this->id]);
         $query = $query->andWhere(['lang_id' => 1]);
+        return $query->all();
+    }
+    public  function getQuestionEng()
+    {
+        $model = new Question();
+        $query = $model->find();
+
+        $query = $query->andWhere(['subject_id' => $this->id]);
+        $query = $query->andWhere(['lang_id' => 2]);
         return $query->all();
     }
 
@@ -267,6 +289,7 @@ class Subject extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Kafedra::className(), ['id' => 'kafedra_id']);
     }
+
 
     /**
      * Gets query for [[Semestr]].

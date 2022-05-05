@@ -321,12 +321,22 @@ class QuestionController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        $statusList = [
+            Question::STATUS_MUDIR_REFUSED,
+            Question::STATUS_TEACHER_EDITED,
+            Question::STATUS_INACTIVE,
+        ];
+        if (!(in_array($model->status, $statusList, TRUE))) {
+            return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
         if ($model->status == 1) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Can not delete'), ResponseStatus::BAD_REQUEST);
         }
 
         // remove model
         if ($model) {
+
             $model->is_deleted = 1;
             $model->update();
 

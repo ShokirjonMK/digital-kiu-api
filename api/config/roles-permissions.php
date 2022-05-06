@@ -154,10 +154,12 @@ return [
         "exams-type_view",
 
         "exam_create",
-        "exam_distribution",
         "exam_index",
         "exam_update",
         "exam_view",
+        "exam_distribution",
+        "exam_ad",
+
 
         "faculty_create",
         "faculty_index",

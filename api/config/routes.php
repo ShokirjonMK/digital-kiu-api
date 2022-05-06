@@ -140,6 +140,8 @@ $routes = [
     'POST <lang:\w{2}>/exams/generate-passwords' => 'exam/generate-passwords',
     // exam Distribution
     'GET <lang:\w{2}>/exams/<id>/distribution' => 'exam/distribution',
+    // exam announced // natijani e'lon qilish
+    'GET <lang:\w{2}>/exams/<id>/ad' => 'exam/ad',
 
     // Department type list
     'GET <lang:\w{2}>/departments/types' => 'department/types',

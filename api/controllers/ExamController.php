@@ -344,7 +344,11 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        $model->status = Exam::STATUS_ANNOUNCED;
+        if ($model->status = Exam::STATUS_ANNOUNCED) {
+            $model->status = Exam::STATUS_DISTRIBUTED;
+        } else {
+            $model->status = Exam::STATUS_ANNOUNCED;
+        }
         if ($model->save()) {
             return $this->response(1, _e($this->controller_name . ' succesfully announced.'), null, null, ResponseStatus::OK);
         } else {

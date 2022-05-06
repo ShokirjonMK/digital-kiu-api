@@ -5,8 +5,6 @@ namespace api\controllers;
 use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\EduPlan;
-use common\models\model\EduSemestr;
 use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
 use common\models\model\ExamSemeta;
@@ -15,7 +13,6 @@ use common\models\model\Kafedra;
 use common\models\model\Student;
 use common\models\model\Subject;
 use common\models\model\TeacherAccess;
-use DateTime;
 
 class ExamController extends ApiActiveController
 {
@@ -73,6 +70,15 @@ class ExamController extends ApiActiveController
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             // ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
+        $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
+
+        if ($statuses) {
+            $query->andFilterWhere([
+                'in', $this->table_name . '.status',
+                $statuses
+            ]);
+        }
 
 
         $subjectId = Yii::$app->request->get('subject_id');

@@ -327,4 +327,22 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
+
+    public function actionAd($lang, $id)
+    {
+        $model = Exam::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $model->status = Exam::STATUS_ANNOUNCED;
+        if ($model->save()) {
+            return $this->response(1, _e($this->controller_name . ' succesfully announced.'), null, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
 }

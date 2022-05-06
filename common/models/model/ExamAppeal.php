@@ -74,6 +74,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
                     'edu_year_id',
                     'semestr_id',
                     'faculty_id',
+                    'exam_id',
                     'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
                 ], 'integer'
             ],
@@ -81,6 +82,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             [['appeal_text'], 'string'],
 
             [['exam_student_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudent::className(), 'targetAttribute' => ['exam_student_id' => 'id']],
+            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
@@ -97,7 +99,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-
+            'exam_id' => _e('Exam Id'),
             'faculty_id' => _e('Faculty Id'),
             'student_id' => _e('Student Id'),
             'exam_student_id' => _e('Exam Student Id'),
@@ -208,6 +210,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
         // dd($model->examStudent->exam->eduSemestrSubject->subject->id);
         $model->subject_id = $model->examStudent->exam->eduSemestrSubject->subject->id;
+        $model->exam_id = $model->examStudent->exam->id;
         $model->edu_year_id = $model->examStudent->exam->eduSemestrSubject->eduSemestr->eduYear->id;
         $model->semestr_id =  $model->examStudent->exam->eduSemestrSubject->eduSemestr->semestr->id;
 

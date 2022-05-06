@@ -845,6 +845,7 @@ return [
         ////
         'faculty_index',
         'department_index',
+        'department_types',
 
         'user_logout',
         'user_me',

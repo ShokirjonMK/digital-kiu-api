@@ -362,6 +362,7 @@ class Question extends \yii\db\ActiveRecord
             }
         }
         // ***
+
         // status  changing
         if ($model->status == 1) {
             if (isRole('mudir')) {
@@ -387,9 +388,7 @@ class Question extends \yii\db\ActiveRecord
             }
         }
 
-        if (isRole('teacher')) {
-            $model->status = self::STATUS_TEACHER_EDITED;
-        }
+
 
         // status 
 

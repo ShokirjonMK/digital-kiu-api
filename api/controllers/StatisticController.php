@@ -6,7 +6,6 @@ use Yii;
 use base\ResponseStatus;
 
 use common\models\model\FacultyStatistic;
-use common\models\model\Kafedra;
 use common\models\model\KafedraStatistic;
 
 class StatisticController extends ApiActiveController

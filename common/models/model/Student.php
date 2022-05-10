@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\resources\Password;
 use api\resources\ResourceTrait;
 use api\resources\User;
 use common\models\Languages;
@@ -263,11 +264,36 @@ class Student extends \yii\db\ActiveRecord
             'categoryOfCohabitant',
             'studentCategory',
 
+
+            'usernamePass',
+            'username',
+            'password',
+
+
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
+    }
+
+
+    public function getUsernamePass()
+    {
+        $data = new Password();
+        $data = $data->decryptThisUser($this->user_id);
+        return $data;
+    }
+
+    public function getPassword()
+    {
+
+        return $this->usernamePass['password'];
+    }
+
+    public function getUsername()
+    {
+        return $this->user->username;
     }
 
     /**
@@ -297,7 +323,7 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getResidenceStatus()
     {
-        return $this->hasOne(ResidenceStatus::className(), ['id' => 'residence_status_id']); 
+        return $this->hasOne(ResidenceStatus::className(), ['id' => 'residence_status_id']);
     }
 
     /**
@@ -367,7 +393,6 @@ class Student extends \yii\db\ActiveRecord
     {
         return Nationality::findOne($this->profile->nationality_id) ?? null;
     }
-
 
     /**
      * Gets query for [[Course]].
@@ -457,7 +482,6 @@ class Student extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'tutor_id']);
     }
-
 
 
     public function beforeSave($insert)

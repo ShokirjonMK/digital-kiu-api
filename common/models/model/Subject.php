@@ -189,6 +189,7 @@ class Subject extends \yii\db\ActiveRecord
         $query = $query->andWhere(['is_deleted' => 0]);
         return $query->all();
     }
+
     public  function getQuestionEng()
     {
         $model = new Question();

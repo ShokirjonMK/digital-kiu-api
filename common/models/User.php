@@ -92,6 +92,7 @@ class User extends ActiveRecord implements IdentityInterface
             'username',
             'email',
             'roleName',
+            'rolesAll',
             'status',
             'deleted',
             'created_at',
@@ -111,6 +112,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function getRole()
     {
         return $this->hasOne(AuthAssignment::class, ['user_id' => 'id']);
+    }
+
+
+    public function getRolesAll()
+    {
+        return $this->hasMany(AuthAssignment::class, ['user_id' => 'id']);
     }
 
     public function getRoleItem()

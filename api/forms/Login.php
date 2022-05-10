@@ -51,29 +51,28 @@ class Login extends Model
      */
     public function authorize()
     {
-        
+
         if ($this->validate()) {
             $user = $this->getUser();
 
-            if ($user) { 
+            if ($user) {
                 $user->generateAccessToken();
                 $user->access_token_time = time();
                 $user->save();
                 return ['is_ok' => true, 'user' => $user];
-            }else{
+            } else {
                 return ['is_ok' => false, 'errors' => [_e('User not found')]];
             }
-        }else{
+        } else {
             return ['is_ok' => false, 'errors' => $this->getErrorSummary(true)];
         }
     }
 
     public static function login($model, $post)
     {
-
         $data = null;
         $errors = [];
-        if ($model->load($post,'')) {
+        if ($model->load($post, '')) {
             $result = $model->authorize();
             if ($result['is_ok']) {
                 $user = $result['user'];
@@ -85,7 +84,7 @@ class Login extends Model
                         'last_name' => $profile->last_name,
                         'first_name' => $profile->first_name,
                         'role' => $user->getRoles(),
-                        'permissions' => $user->permissions,
+                        'permissions' => $user->permissionsAll,
                         'access_token' => $user->access_token,
                         'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
                     ];
@@ -99,12 +98,102 @@ class Login extends Model
             $errors[] = [_e('Username and password cannot be blank.')];
         }
 
-        if(count($errors) == 0){
+        if (count($errors) == 0) {
             return ['is_ok' => true, 'data' => $data];
-        }else{
+        } else {
             return ['is_ok' => false, 'errors' => simplify_errors($errors)];
         }
+    }
 
+    public static function loginMain($model, $post)
+    {
+        $data = null;
+        $errors = [];
+        if ($model->load($post, '')) {
+            $result = $model->authorize();
+            if ($result['is_ok']) {
+                $user = $result['user'];
+                if ($user->status === User::STATUS_ACTIVE) {
+                    $profile = $user->profile;
+                    $data = [
+                        'user_id' => $user->id,
+                        'username' => $user->username,
+                        'last_name' => $profile->last_name,
+                        'first_name' => $profile->first_name,
+                        'role' => $user->getRolesNoStudent(),
+                        'permissions' => $user->permissionsNoStudent,
+                        'access_token' => $user->access_token,
+                        'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
+                    ];
+                } else {
+                    $errors[] = [_e('User is not active.')];
+                }
+            } else {
+                $errors[] = $result['errors'];
+            }
+        } else {
+            $errors[] = [_e('Username and password cannot be blank.')];
+        }
+
+        if (count($errors) == 0) {
+            return ['is_ok' => true, 'data' => $data];
+        } else {
+            return ['is_ok' => false, 'errors' => simplify_errors($errors)];
+        }
+    }
+
+
+    public static function logout()
+    {
+        $user = User::findOne(Current_user_id());
+        if (isset($user)) {
+            Yii::$app->user->logout();
+            $user->access_token = NULL;
+            $user->access_token_time = NULL;
+            $user->save(false);
+            // $user->logout();
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public static function loginStd($model, $post)
+    {
+        $data = null;
+        $errors = [];
+        if ($model->load($post, '')) {
+            $result = $model->authorize();
+            if ($result['is_ok']) {
+                $user = $result['user'];
+                if ($user->status === User::STATUS_ACTIVE) {
+                    $profile = $user->profile;
+                    $data = [
+                        'user_id' => $user->id,
+                        'username' => $user->username,
+                        'last_name' => $profile->last_name,
+                        'first_name' => $profile->first_name,
+                        'role' => $user->getRolesStudent(),
+                        'permissions' => $user->permissionsStudent,
+                        'access_token' => $user->access_token,
+                        'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
+                    ];
+                } else {
+                    $errors[] = [_e('User is not active.')];
+                }
+            } else {
+                $errors[] = $result['errors'];
+            }
+        } else {
+            $errors[] = [_e('Username and password cannot be blank.')];
+        }
+
+        if (count($errors) == 0) {
+            return ['is_ok' => true, 'data' => $data];
+        } else {
+            return ['is_ok' => false, 'errors' => simplify_errors($errors)];
+        }
     }
 
     /**

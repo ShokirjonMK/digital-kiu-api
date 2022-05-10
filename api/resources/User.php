@@ -111,6 +111,8 @@ class User extends CommonUser
             'department',
             'here',
 
+            'roles',
+            'rolesAll',
 
             'country',
             'region',
@@ -122,6 +124,67 @@ class User extends CommonUser
         ];
 
         return $extraFields;
+    }
+
+    public function getPermissionsNoStudent()
+    {
+        if ($this->rolesAll) {
+            $result = [];
+            foreach ($this->rolesAll as $roleOne) {
+                if ($roleOne->item_name != 'student') {
+                    $authItem = AuthItem::find()->where(['name' => $roleOne->item_name])->one();
+                    $perms = $authItem->permissions;
+                    if ($perms && is_array($perms)) {
+                        foreach ($perms as $row) {
+                            $result[] = $row['name'];
+                        }
+                    }
+                }
+            }
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
+    public function getPermissionsStudent()
+    {
+        if ($this->rolesAll) {
+            $result = [];
+            foreach ($this->rolesAll as $roleOne) {
+                if ($roleOne->item_name == 'student') {
+                    $authItem = AuthItem::find()->where(['name' => $roleOne->item_name])->one();
+                    $perms = $authItem->permissions;
+                    if ($perms && is_array($perms)) {
+                        foreach ($perms as $row) {
+                            $result[] = $row['name'];
+                        }
+                    }
+                }
+            }
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
+    public function getPermissionsAll()
+    {
+        if ($this->rolesAll) {
+            $result = [];
+            foreach ($this->rolesAll as $roleOne) {
+                $authItem = AuthItem::find()->where(['name' => $roleOne->item_name])->one();
+                $perms = $authItem->permissions;
+                if ($perms && is_array($perms)) {
+                    foreach ($perms as $row) {
+                        $result[] = $row['name'];
+                    }
+                }
+            }
+            return $result;
+        } else {
+            return [];
+        }
     }
 
     public function getPermissions()
@@ -154,6 +217,39 @@ class User extends CommonUser
             return [];
         }
     }
+
+    public function getRolesNoStudent()
+    {
+        if ($this->roleItem) {
+            $authItems = AuthAssignment::find()->where(['user_id' => $this->id])->all();
+            $result = [];
+            foreach ($authItems as $authItem) {
+                if ($authItem['item_name'] != 'student') {
+                    $result[] = $authItem['item_name'];
+                }
+            }
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
+    public function getRolesStudent()
+    {
+        if ($this->roleItem) {
+            $authItems = AuthAssignment::find()->where(['user_id' => $this->id])->all();
+            $result = [];
+            foreach ($authItems as $authItem) {
+                if ($authItem['item_name'] == 'student') {
+                    $result[] = $authItem['item_name'];
+                }
+            }
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
 
     public function getProfile()
     {

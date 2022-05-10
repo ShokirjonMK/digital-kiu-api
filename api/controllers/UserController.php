@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\forms\Login;
 use Yii;
 use api\resources\User;
 use base\ResponseStatus;
@@ -57,14 +58,7 @@ class UserController extends ApiActiveController
 
     public function actionLogout()
     {
-        $user = User::findOne(Current_user_id());
-        if (isset($user)) {
-            Yii::$app->user->logout();
-            $user->access_token = NULL;
-            $user->access_token_time = NULL;
-            $user->save(false);
-            // $user->logout()
-
+        if (Login::logout()) {
             return $this->response(1, _e('User successfully Log Out'), null, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('User not found'), null, null, ResponseStatus::NOT_FOUND);

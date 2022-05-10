@@ -6,6 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+use common\models\model\Subject;
 use common\models\model\TeacherAccess;
 use common\models\model\UserAccess;
 use Yii;
@@ -264,12 +265,18 @@ trait ApiActionTrait
         }
         if ($type == 1) {
             return TeacherAccess::find()
-                ->where(['user_id' => $user_id])
+                ->where(['user_id' => $user_id, 'is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', Subject::find()
+                    ->where(['is_deleted' => 0])
+                    ->select('id')])
                 ->select($select);
         } elseif ($type == 2) {
             return TeacherAccess::find()
                 ->asArray()
-                ->where(['user_id' => $user_id])
+                ->where(['user_id' => $user_id, 'is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', Subject::find()
+                    ->where(['is_deleted' => 0])
+                    ->select('id')])
                 ->select($select)
 
                 ->all();

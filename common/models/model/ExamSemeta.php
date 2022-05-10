@@ -147,7 +147,6 @@ class ExamSemeta extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-
     /**
      * Gets query for [[Exam]].
      *
@@ -182,7 +181,6 @@ class ExamSemeta extends \yii\db\ActiveRecord
     {
         return   $this->statusList()[$this->status];
     }
-
 
     public static function createItems($post)
     {
@@ -323,7 +321,6 @@ class ExamSemeta extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
     }
-
 
     public static function distribution($exam)
     {

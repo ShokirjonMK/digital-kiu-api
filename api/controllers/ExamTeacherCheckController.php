@@ -29,7 +29,7 @@ class ExamTeacherCheckController extends ApiActiveController
 
         $roles = (object) \Yii::$app->authManager->getRolesByUser($user_id);
         if (property_exists($roles, 'teacher')) {
-            $query = $model->find()->andWhere(['in', 'teacher_access_id', TeacherAccess::find()->where(['user_id' => $user_id])->select('id')]);
+            $query = $model->find()->andWhere(['in', 'teacher_access_id', $this->teacher_access()]);
         } else {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0]);

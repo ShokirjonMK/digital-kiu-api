@@ -118,16 +118,20 @@ class ExamController extends ApiActiveController
                     'edu_semestr_subject_id' => -1
                 ]);
             }
-        } elseif (isRole('teacher')) {
+        }
+        if (isRole('teacher') && !isRole('mudir')) {
             $query = $query->andFilterWhere([
                 'in', 'edu_semestr_subject_id',
                 EduSemestrSubject::find()
-                    ->where(['subject_id' => TeacherAccess::find()
-                        ->select('subject_id')
-                        ->where(['user_id' => current_user_id()])])
+                    ->where(['subject_id' => $this->teacher_access()])
                     ->select('id')
             ]);
-        } elseif (isRole('mudir')) {
+
+            $query = $query->andWhere([
+                $this->table_name . '.status' => Exam::STATUS_DISTRIBUTED
+            ]);
+        }
+        if (isRole('mudir')) {
             /*  is Self  */
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
             if ($k['status'] == 1) {
@@ -135,7 +139,7 @@ class ExamController extends ApiActiveController
                     'in', 'edu_semestr_subject_id',
                     EduSemestrSubject::find()->where([
                         'in', 'subject_id',
-                        Subject::find()->where(['kafedra_id' => $k['UserAccess']->table_id])->select('id')
+                        Subject::find()->where(['kafedra_id' => $k['UserAccess']->table_id, 'is_deleted' => 0])->select('id')
                     ])->select('id')
                 ]);
             } elseif ($k['status'] == 2) {

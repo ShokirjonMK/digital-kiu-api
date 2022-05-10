@@ -28,20 +28,52 @@ class UserController extends ApiActiveController
         $data = null;
         $errors = [];
         $user = User::findOne(Current_user_id());
+
         if (isset($user)) {
             if ($user->status === User::STATUS_ACTIVE) {
                 $profile = $user->profile;
-                $data = [
-                    'user_id' => $user->id,
-                    'username' => $user->username,
-                    'last_name' => $profile->last_name,
-                    'first_name' => $profile->first_name,
-                    'role' => $user->getRoles(),
-                    // 'role' => $user->roleItem,
-                    'permissions' => $user->permissions,
-                    'access_token' => $user->access_token,
-                    'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
-                ];
+
+                $isMain = Yii::$app->request->get('is_main') ?? 1;
+                if ($isMain == 0) {
+                    $data = [
+                        'user_id' => $user->id,
+                        'username' => $user->username,
+                        'last_name' => $profile->last_name,
+                        'first_name' => $profile->first_name,
+                        // 'role' => $user->getRoles(),
+                        'role' => $user->getRolesStudent(),
+                        // 'role' => $user->roleItem,
+                        'permissions' => $user->permissionsStudent,
+                        'access_token' => $user->access_token,
+                        'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
+                    ];
+                } elseif ($isMain == 1) {
+                    $data = [
+                        'user_id' => $user->id,
+                        'username' => $user->username,
+                        'last_name' => $profile->last_name,
+                        'first_name' => $profile->first_name,
+                        // 'role' => $user->getRoles(),
+                        'role' => $user->getRolesNoStudent(),
+                        // 'role' => $user->roleItem,
+                        'permissions' => $user->permissionsNoStudent,
+                        'access_token' => $user->access_token,
+                        'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
+                    ];
+                } else {
+                    $data = [
+                        'user_id' => $user->id,
+                        'username' => $user->username,
+                        'last_name' => $profile->last_name,
+                        'first_name' => $profile->first_name,
+                        // 'role' => $user->getRoles(),
+                        'role' => $user->getRoles(),
+                        // 'role' => $user->roleItem,
+                        'permissions' => $user->permissionsAll,
+                        'access_token' => $user->access_token,
+                        'expire_time' => date("Y-m-d H:i:s", $user->expireTime),
+                    ];
+                }
             } else {
                 $errors[] = [_e('User is not active.')];
             }

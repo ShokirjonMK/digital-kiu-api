@@ -68,6 +68,21 @@ class Login extends Model
         }
     }
 
+    public static function logout()
+    {
+        $user = User::findOne(Current_user_id());
+        if (isset($user)) {
+            Yii::$app->user->logout();
+            $user->access_token = NULL;
+            $user->access_token_time = NULL;
+            $user->save(false);
+            // $user->logout();
+            return true;
+        }
+
+        return false;
+    }
+
     public static function login($model, $post)
     {
         $data = null;
@@ -141,23 +156,6 @@ class Login extends Model
             return ['is_ok' => false, 'errors' => simplify_errors($errors)];
         }
     }
-
-
-    public static function logout()
-    {
-        $user = User::findOne(Current_user_id());
-        if (isset($user)) {
-            Yii::$app->user->logout();
-            $user->access_token = NULL;
-            $user->access_token_time = NULL;
-            $user->save(false);
-            // $user->logout();
-            return true;
-        }
-
-        return false;
-    }
-
 
     public static function loginStd($model, $post)
     {

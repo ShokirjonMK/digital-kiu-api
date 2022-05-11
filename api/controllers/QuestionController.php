@@ -53,7 +53,7 @@ class QuestionController extends ApiActiveController
                                 ->where(['faculty_id' => $f['UserAccess']->table_id])
                                 ->select('id')
                         ])
-                        ->andWhere(['is_deleted' => 0])
+                        // ->andWhere(['is_deleted' => 0])
                         ->select('id')
                 ]);
 

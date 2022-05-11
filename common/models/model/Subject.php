@@ -197,6 +197,8 @@ class Subject extends \yii\db\ActiveRecord
 
         $query = $query->andWhere(['subject_id' => $this->id]);
         $query = $query->andWhere(['lang_id' => 2]);
+        $query = $query->andWhere(['is_deleted' => 0]);
+
         return $query->all();
     }
 
@@ -207,6 +209,8 @@ class Subject extends \yii\db\ActiveRecord
 
         $query = $query->andWhere(['subject_id' => $this->id]);
         $query = $query->andWhere(['lang_id' => 3]);
+        $query = $query->andWhere(['is_deleted' => 0]);
+
         return $query->all();
     }
 

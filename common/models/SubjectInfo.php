@@ -62,6 +62,6 @@ class SubjectInfo extends \base\libs\RedisDB
      */
     public function getModel()
     {
-        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 }

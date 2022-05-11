@@ -75,7 +75,7 @@ class KafedraStatistic extends Kafedra
             // ->select('id')
             ->where([
                 'in', 'subject_id',
-                Subject::find()->where(['kafedra_id' => $this->id])->select('id')
+                Subject::find()->where(['kafedra_id' => $this->id, 'is_deleted' => 0])->select('id')
             ])
             ->all();
     }

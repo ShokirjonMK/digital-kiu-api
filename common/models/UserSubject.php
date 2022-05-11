@@ -83,7 +83,7 @@ class UserSubject extends \base\libs\RedisDB
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**
@@ -96,7 +96,8 @@ class UserSubject extends \base\libs\RedisDB
         return $this->hasOne(Reference::class, ['id' => 'language_id']);
     }
 
-    public static function listAll($user_id){
+    public static function listAll($user_id)
+    {
         $data = self::find()->where(['user_id' => $user_id])->all();
         $data2 = [];
         $subjects = [];
@@ -116,14 +117,13 @@ class UserSubject extends \base\libs\RedisDB
         foreach ($subjects as $subject) {
             $tmp = [];
             $tmp['subject'] = $subject;
-            foreach($data2 as $row){
-                if($row['subject'] == $subject){
-                    $tmp['langs'][] = $row['lang'];    
+            foreach ($data2 as $row) {
+                if ($row['subject'] == $subject) {
+                    $tmp['langs'][] = $row['lang'];
                 }
             }
             $data3[] = $tmp;
         }
         return $data3;
     }
-
 }

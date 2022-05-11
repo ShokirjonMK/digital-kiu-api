@@ -43,10 +43,10 @@ class SubjectTopic extends \base\libs\RedisDB
     public function rules()
     {
         return [
-            [['type','subject_id', 'hours', 'sort'], 'required'],
+            [['type', 'subject_id', 'hours', 'sort'], 'required'],
             [['created_on', 'updated_by'], 'safe'],
             [['subject_id', 'type', 'hours', 'sort', 'status', 'deleted', 'created_by', 'updated_by'], 'integer'],
-            [['status', 'sort', 'deleted','type'], 'default', 'value' => 0],
+            [['status', 'sort', 'deleted', 'type'], 'default', 'value' => 0],
             ['created_on', 'default', 'value' => date('Y-m-d H:i:s')],
             ['updated_on', 'default', 'value' => date('Y-m-d H:i:s')],
         ];
@@ -93,7 +93,7 @@ class SubjectTopic extends \base\libs\RedisDB
     {
         self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(SubjectTopicInfo::class, ['subject_topic_id' => 'id'])
-                    ->andOnCondition(['language' => self::$selected_language]);
+            ->andOnCondition(['language' => self::$selected_language]);
     }
 
     /**
@@ -113,7 +113,7 @@ class SubjectTopic extends \base\libs\RedisDB
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**
@@ -122,8 +122,9 @@ class SubjectTopic extends \base\libs\RedisDB
      * @param int $lang
      * @return array
      */
-    public static function listAll($subject_id = null, $lang = null){
-        
+    public static function listAll($subject_id = null, $lang = null)
+    {
+
         $lang = $lang ?? self::$selected_language;
         $result = self::find()
             ->join('INNER JOIN', 'subject_topic_info info', 'info.subject_topic_id = subject_topic.id')
@@ -160,5 +161,4 @@ class SubjectTopic extends \base\libs\RedisDB
 
         return $array;
     }
-
 }

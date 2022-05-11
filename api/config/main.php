@@ -48,7 +48,7 @@ $main_config = array(
             'translations' => [
                 'app*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@common/translations',
+                    'basePath' => '@api/translations',
                     'fileMap' => [
                         'app' => 'app.php',
                     ]

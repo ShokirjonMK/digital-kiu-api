@@ -211,7 +211,8 @@ class Question extends \yii\db\ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        // return $this->hasOne(Subject::className(), ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getStatusName()
@@ -501,19 +502,16 @@ class Question extends \yii\db\ActiveRecord
     public static function statusList()
     {
         return [
-            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_TEACHER_EDITED => _e('STATUS_TEACHER_EDITED'),
             self::STATUS_MUDIR_REFUSED => _e('STATUS_MUDIR_REFUSED'),
             self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),
             self::STATUS_DEAN_REFUSED => _e('STATUS_DEAN_REFUSED'),
             self::STATUS_DEAN_ACTIVE => _e('STATUS_DEAN_ACTIVE'),
             self::STATUS_EDU_ADMIN_REFUSED => _e('STATUS_EDU_ADMIN_REFUSED'),
-
-
         ];
     }
-
 
     public static function statusListRole()
     {
@@ -553,8 +551,8 @@ class Question extends \yii\db\ActiveRecord
         }
 
         return [
-            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_TEACHER_EDITED => _e('STATUS_TEACHER_EDITED'),
             self::STATUS_MUDIR_REFUSED => _e('STATUS_MUDIR_REFUSED'),
             self::STATUS_MUDIR_ACTIVE => _e('STATUS_MUDIR_ACTIVE'),

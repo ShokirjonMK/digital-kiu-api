@@ -283,7 +283,6 @@ trait ApiActionTrait
         }
     }
 
-
     public function isSelf($userAccessTypeId, $type = null)
     {
         if (is_null($type)) {

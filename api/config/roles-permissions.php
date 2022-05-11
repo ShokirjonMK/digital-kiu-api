@@ -823,10 +823,6 @@ return [
         'exam-semeta_create',
         'exam-semeta_index',
         'exam-semeta_view',
-
-        'exam-semeta_random-students',
-
-
         'exam-question_index',
         'exam-question_view',
 

@@ -176,7 +176,7 @@ class Kafedra extends \yii\db\ActiveRecord
      */
     public function getSubjects()
     {
-        return $this->hasMany(Subject::className(), ['kafedra_id' => 'id']);
+        return $this->hasMany(Subject::className(), ['kafedra_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**

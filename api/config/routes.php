@@ -151,8 +151,6 @@ $routes = [
 
     // teacherga studentlarni random tushirish
     'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',
-    // teacherga studentlarni random tushirish
-    'POST <lang:\w{2}>/exam-semetas/random-students' => 'exam-semeta/random-students',
 
     // Subject Content Trash ( get Deleted Content)
     'GET <lang:\w{2}>/subject-contents/trash' => 'subject-content/trash',

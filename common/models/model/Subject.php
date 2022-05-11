@@ -310,7 +310,7 @@ class Subject extends \yii\db\ActiveRecord
      */
     public function getParent()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'parent_id']);
+        return $this->hasOne(Subject::className(), ['id' => 'parent_id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**
@@ -320,7 +320,7 @@ class Subject extends \yii\db\ActiveRecord
      */
     public function getChild()
     {
-        return $this->hasMany(Subject::className(), ['id' => 'parent_id']);
+        return $this->hasMany(Subject::className(), ['id' => 'parent_id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**

@@ -193,10 +193,14 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getIsConfirmed()
     {
-        if (ExamSemeta::findOne(['exam_id' => $this->id, 'status' => ExamSemeta::STATUS_NEW])) {
-            return 0;
+        if (ExamSemeta::findOne(['exam_id' => $this->id])) {
+            if (ExamSemeta::findOne(['exam_id' => $this->id, 'status' => ExamSemeta::STATUS_NEW])) {
+                return 0;
+            } else {
+                return 1;
+            }
         } else {
-            return 1;
+            return 0;
         }
     }
 
@@ -204,7 +208,6 @@ class Exam extends \yii\db\ActiveRecord
     {
         return TeacherCheckingType::typeList()[$this->status];
     }
-
 
     public function getTranslate()
     {

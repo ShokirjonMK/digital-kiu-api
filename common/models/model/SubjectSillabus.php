@@ -165,7 +165,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['subject_id' => 'id']);
+        return $this->hasOne(Subject::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     /**

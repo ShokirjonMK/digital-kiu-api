@@ -30,7 +30,7 @@ class SubjectTopic extends CommonSubjectTopic
             },
             'subject_id',
             'type',
-            'type_text'=> function ($model) {
+            'type_text' => function ($model) {
                 return $model->typeText ?? '';
             },
             'hours',
@@ -70,7 +70,7 @@ class SubjectTopic extends CommonSubjectTopic
     {
         self::$selected_language = Yii::$app->request->get('lang') ?? 'en';
         return $this->hasMany(SubjectTopicInfo::class, ['subject_topic_id' => 'id'])
-                    ->andOnCondition(['language' => self::$selected_language]);
+            ->andOnCondition(['language' => self::$selected_language]);
     }
 
     /**
@@ -90,10 +90,11 @@ class SubjectTopic extends CommonSubjectTopic
      */
     public function getSubject()
     {
-        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
-    public function getTypeText(){
+    public function getTypeText()
+    {
         return TopicType::list()[$this->type];
     }
 
@@ -101,12 +102,12 @@ class SubjectTopic extends CommonSubjectTopic
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        $model->status = 1;         
-        if($model->save()){
+        $model->status = 1;
+        if ($model->save()) {
             if (isset($post['name'])) {
                 if (!is_array($post['name'])) {
-                    $errors[] = [_e('Please send Name attribute as array.')];       
-                }else{
+                    $errors[] = [_e('Please send Name attribute as array.')];
+                } else {
                     foreach ($post['name'] as $lang => $name) {
                         $info = new SubjectTopicInfo();
                         $info->subject_topic_id = $model->id;
@@ -117,32 +118,32 @@ class SubjectTopic extends CommonSubjectTopic
                         }
                     }
                 }
-            }else{
-                $errors[] = [_e('Please send at least one Name attribute.')];      
+            } else {
+                $errors[] = [_e('Please send at least one Name attribute.')];
             }
-        }else{
-            $errors[] = $model->getErrorSummary(true);  
+        } else {
+            $errors[] = $model->getErrorSummary(true);
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-    } 
+    }
 
     public static function updateItem($model, $post)
     {
-        
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        if($model->save()){
+        if ($model->save()) {
             if (isset($post['name'])) {
                 if (!is_array($post['name'])) {
-                    $errors[] = [_e('Please send Name attribute as array.')];       
-                }else{
+                    $errors[] = [_e('Please send Name attribute as array.')];
+                } else {
                     foreach ($post['name'] as $lang => $name) {
                         $info = SubjectTopicInfo::find()->where(['subject_topic_id' => $model->id, 'language' => $lang])->one();
                         if ($info) {
@@ -154,19 +155,16 @@ class SubjectTopic extends CommonSubjectTopic
                     }
                 }
             }
-        }else{
-            $errors[] = $model->getErrorSummary(true);  
+        } else {
+            $errors[] = $model->getErrorSummary(true);
         }
-        
-        if(count($errors) == 0){
+
+        if (count($errors) == 0) {
             $transaction->commit();
             return true;
-        }else{
+        } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-    } 
-
-
-
+    }
 }

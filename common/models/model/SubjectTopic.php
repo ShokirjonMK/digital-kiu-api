@@ -147,7 +147,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
     public function getSubject()
     {
-        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getSubjectCategory()

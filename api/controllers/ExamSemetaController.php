@@ -23,24 +23,6 @@ class ExamSemetaController extends ApiActiveController
     public $table_name = 'exam_semeta';
     public $controller_name = 'ExamSemeta';
 
-
-    public function actionRandomStudents($lang)
-    {
-        $model = new ExamSemeta();
-        $post = Yii::$app->request->post();
-
-        $this->load($model, $post);
-
-        $result = ExamSemeta::randomStudent($model, $post);
-        if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
-        } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
-    }
-
-
-
     public function actionIndex($lang)
     {
         $model = new ExamSemeta();
@@ -114,6 +96,8 @@ class ExamSemetaController extends ApiActiveController
             }
             /*  is Self  */
         }
+
+
 
         if (isset($post['smetas'])) {
             $result = ExamSemeta::createItems($post);

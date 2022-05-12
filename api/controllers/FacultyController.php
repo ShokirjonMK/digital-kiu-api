@@ -133,7 +133,7 @@ class FacultyController extends ApiController
 
         // remove model
         if ($model) {
-            Translate::deleteTranslate($this->table_name, $model->id);
+            // Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 

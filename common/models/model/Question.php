@@ -283,18 +283,7 @@ class Question extends \yii\db\ActiveRecord
         $errors = [];
 
 
-        // question file saqlaymiz
-        $model->question_file = UploadedFile::getInstancesByName('question_file');
-        if ($model->question_file) {
-            $model->question_file = $model->question_file[0];
-            $questionFileUrl = $model->uploadFile();
-            if ($questionFileUrl) {
-                $model->file = $questionFileUrl;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        // ***
+
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -304,6 +293,26 @@ class Question extends \yii\db\ActiveRecord
 
         $model->status = 0;
         if ($model->save()) {
+
+            // question file saqlaymiz
+            $model->question_file = UploadedFile::getInstancesByName('question_file');
+            if ($model->question_file) {
+                $model->question_file = $model->question_file[0];
+                $questionFileUrl = $model->uploadFile();
+                if ($questionFileUrl) {
+                    $model->file = $questionFileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
+
+            // if (!($model->validate())) {
+            //     $errors[] = $model->errors;
+            //     $transaction->rollBack();
+            //     return simplify_errors($errors);
+            // }
+
 
             if (isset($post['sub_question'])) {
                 if ($post['sub_question'] != null && $post['sub_question'] != "") {
@@ -332,9 +341,15 @@ class Question extends \yii\db\ActiveRecord
                     }
                 }
             }
+
             if (count($errors) == 0) {
-                $transaction->commit();
-                return true;
+                if ($model->save()) {
+                    $transaction->commit();
+                    return true;
+                } else {
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
             }
         }
 
@@ -473,11 +488,9 @@ class Question extends \yii\db\ActiveRecord
             if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
-            if ($this->isNewRecord) {
-                $fileName = Question::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
-            } else {
-                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
-            }
+
+            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
+
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->question_file->saveAs($url, false);

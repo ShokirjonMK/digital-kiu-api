@@ -206,23 +206,29 @@ class ExamQuestion extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        // question file saqlaymiz
-        $model->question_file = UploadedFile::getInstancesByName('question_file');
-        if ($model->question_file) {
-            $model->question_file = $model->question_file[0];
-            $questionFileUrl = $model->uploadFile();
-            if ($questionFileUrl) {
-                $model->file = $questionFileUrl;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        // ***
+
 
         if ($model->save()) {
+            // question file saqlaymiz
+            $model->question_file = UploadedFile::getInstancesByName('question_file');
+            if ($model->question_file) {
+                $model->question_file = $model->question_file[0];
+                $questionFileUrl = $model->uploadFile();
+                if ($questionFileUrl) {
+                    $model->file = $questionFileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
 
-            $transaction->commit();
-            return true;
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
             return simplify_errors($errors);
@@ -276,11 +282,9 @@ class ExamQuestion extends \yii\db\ActiveRecord
             if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
-            if ($this->isNewRecord) {
-                $fileName = ExamQuestion::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
-            } else {
-                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
-            }
+
+            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->question_file->extension;
+
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->question_file->saveAs($url, false);

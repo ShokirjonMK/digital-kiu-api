@@ -194,64 +194,68 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         $model->type = self::TYPE_TEXT;
 
-        /* Fayl Yuklash*/
-        $model->file_file = UploadedFile::getInstancesByName('file_file');
 
-        if ($model->file_file) {
-            $model->file_file = $model->file_file[0];
-            $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
-            if ($fileUrl) {
-                $model->file_url = $fileUrl;
-                $model->type = self::TYPE_FILE;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        /* Fayl Yuklash*/
-
-        /* Image Yuklash*/
-        $model->file_image = UploadedFile::getInstancesByName('file_image');
-        if ($model->file_image) {
-            $model->file_image = $model->file_image[0];
-            $fileUrl = $model->uploadFile("file_image", $model->subject_topic_id);
-            if ($fileUrl) {
-                $model->type = self::TYPE_IMAGE;
-                $model->file_url = $fileUrl;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        /* Image Yuklash*/
-
-        /* Video Yuklash*/
-        $model->file_video = UploadedFile::getInstancesByName('file_video');
-        if ($model->file_video) {
-            $model->file_video = $model->file_video[0];
-            $fileUrl = $model->uploadFile("file_video", $model->subject_topic_id);
-            if ($fileUrl) {
-                $model->file_url = $fileUrl;
-                $model->type = self::TYPE_VIDEO;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        /* Video Yuklash*/
-
-        /* Audio Yuklash*/
-        $model->file_audio = UploadedFile::getInstancesByName('file_audio');
-        if ($model->file_audio) {
-            $model->file_audio = $model->file_audio[0];
-            $fileUrl = $model->uploadFile("file_audio", $model->subject_topic_id);
-            if ($fileUrl) {
-                $model->file_url = $fileUrl;
-                $model->type = self::TYPE_AUDIO;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        /* Audio Yuklash*/
 
         if ($model->save()) {
+
+            /* Fayl Yuklash*/
+            $model->file_file = UploadedFile::getInstancesByName('file_file');
+
+            if ($model->file_file) {
+                $model->file_file = $model->file_file[0];
+                $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
+                if ($fileUrl) {
+                    $model->file_url = $fileUrl;
+                    $model->type = self::TYPE_FILE;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            /* Fayl Yuklash*/
+
+            /* Image Yuklash*/
+            $model->file_image = UploadedFile::getInstancesByName('file_image');
+            if ($model->file_image) {
+                $model->file_image = $model->file_image[0];
+                $fileUrl = $model->uploadFile("file_image", $model->subject_topic_id);
+                if ($fileUrl) {
+                    $model->type = self::TYPE_IMAGE;
+                    $model->file_url = $fileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            /* Image Yuklash*/
+
+            /* Video Yuklash*/
+            $model->file_video = UploadedFile::getInstancesByName('file_video');
+            if ($model->file_video) {
+                $model->file_video = $model->file_video[0];
+                $fileUrl = $model->uploadFile("file_video", $model->subject_topic_id);
+                if ($fileUrl) {
+                    $model->file_url = $fileUrl;
+                    $model->type = self::TYPE_VIDEO;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            /* Video Yuklash*/
+
+            /* Audio Yuklash*/
+            $model->file_audio = UploadedFile::getInstancesByName('file_audio');
+            if ($model->file_audio) {
+                $model->file_audio = $model->file_audio[0];
+                $fileUrl = $model->uploadFile("file_audio", $model->subject_topic_id);
+                if ($fileUrl) {
+                    $model->file_url = $fileUrl;
+                    $model->type = self::TYPE_AUDIO;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            /* Audio Yuklash*/
+
+
             if (isset($post['order'])) {
                 $lastOrder = SubjectContent::find()
                     ->where(['subject_topic_id' => $model->subject_topic_id])
@@ -393,12 +397,9 @@ class SubjectContent extends \yii\db\ActiveRecord
             if (!file_exists(STORAGE_PATH . $folder)) {
                 mkdir(STORAGE_PATH . $folder, 0777, true);
             }
-            if ($this->isNewRecord) {
-                $subjectContent = SubjectContent::find()->orderBy('id DESC')->one();
-                $fileName = ($subjectContent ? ($subjectContent->id + 1) : 1) . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
-            } else {
-                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
-            }
+
+            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->$type->extension;
+
             $miniUrl = $folder . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->$type->saveAs($url, false);

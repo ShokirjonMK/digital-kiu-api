@@ -306,12 +306,9 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             if (!file_exists(STORAGE_PATH . $folder)) {
                 mkdir(STORAGE_PATH . $folder, 0777, true);
             }
-            if ($this->isNewRecord) {
-                $fileName = ExamStudentAnswer::find()->orderBy(['id' => SORT_DESC])->one()->id
-                    + 1 . "_" . $student_id . "_"  . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
-            } else {
-                $fileName = $this->id . "_" . $student_id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
-            }
+
+            $fileName = $this->id . "_" . $student_id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
+
             $miniUrl = $folder . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->answer_file->saveAs($url, false);

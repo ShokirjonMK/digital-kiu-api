@@ -6,6 +6,8 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+use common\models\model\ActionLog;
+use common\models\model\ActionLogs;
 use common\models\model\Subject;
 use common\models\model\TeacherAccess;
 use common\models\model\UserAccess;
@@ -65,12 +67,44 @@ trait ApiActionTrait
     }
 
     /**
-     * Before action
+     * After action
      *
      * @param $action
      * @return void
      */
 
+    public function afterAction($action, $result)
+    {
+
+        // vdd(Yii::$app->request);
+        // vdd(get_host());
+        // vdd(getIpAddressData());
+
+
+        $action_log = Yii::$app->session->get('action_log');
+        $action_log->user_id = current_user_id();
+        $action_log->status = $result['status'];
+        $action_log->message = $result['message'];
+        $action_log->browser = json_encode(getBrowser());
+        $action_log->ip_address = getIpAddress();
+        $action_log->host = get_host();
+        $action_log->ip_address_data = getIpAddressData();
+
+        if (isset($result['errors'])) {
+            $action_log->errors = json_encode($result['errors']);
+        }
+        $action_log->save(false);
+
+        $result = parent::afterAction($action, $result);
+        return $result;
+    }
+
+    /**
+     * Before action
+     *
+     * @param $action
+     * @return void
+     */
     public function beforeAction($action)
     {
 
@@ -84,6 +118,9 @@ trait ApiActionTrait
             return false;
         }
 
+        // echo "Please wait!!";
+        // die();
+        // return 0;
         $lang = Yii::$app->request->get('lang');
 
         $languages = get_languages();
@@ -96,13 +133,21 @@ trait ApiActionTrait
         } else {
 
 
-            // return _eduRoles();
+            // dd("asdasd");
+            // vdd(Yii::$app->request->get());
+            // vdd(Yii::$app->request->post());
 
-            /* $action_logos = new Action();
-            $action_logos->user_id = current_user_id();
-            $action_logos->controller = Yii::$app->controller->id;
-            $action_logos->action = Yii::$app->controller->action->id;
-            $action_logos->method = $_SERVER['REQUEST_METHOD']; */
+            $action_log = new ActionLog();
+            $action_log->user_id = current_user_id();
+            $action_log->controller = Yii::$app->controller->id;
+            $action_log->action = Yii::$app->controller->action->id;
+            $action_log->method = $_SERVER['REQUEST_METHOD'];
+            $action_log->get_data = json_encode(Yii::$app->request->get());
+            $action_log->post_data = json_encode(Yii::$app->request->post());
+            $action_log->save(false);
+            Yii::$app->session->set('action_log', $action_log);
+
+
 
             Yii::$app->language = $lang;
             return parent::beforeAction($action);

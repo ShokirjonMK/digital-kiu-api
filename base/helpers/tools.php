@@ -1,6 +1,7 @@
 <?php
 
-function rawsql($query){
+function rawsql($query)
+{
     echo '<pre>';
     print_r($query->createCommand()->rawsql);
     echo '</pre>';
@@ -309,6 +310,7 @@ function getBrowser()
     $browser_name = 'Unknown Browser';
     $platform = 'Unknown OS';
     $version = "";
+    $ub = "";
 
     // First get the platform
     $os_array = array(

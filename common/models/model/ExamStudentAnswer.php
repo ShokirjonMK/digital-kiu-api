@@ -191,7 +191,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'teacherAccess',
             'questionType',
 
-//            'subQuestionAnswers',
+            //            'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
 
             'subQuestions',
@@ -207,10 +207,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     }
 
     // ExamStudentAnswerSubQuestion
-//    public function getSubQuestionAnswers()
-//    {
-//        return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
-//    }
+    //    public function getSubQuestionAnswers()
+    //    {
+    //        return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
+    //    }
 
     // ExamStudentAnswerSubQuestion
     public function getExamStudentAnswerSubQuestion()
@@ -218,10 +218,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
     }
 
-//    public function getExamStudentAnswerSubQuestionCount()
-//    {
-//        return ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $this->id])->count();
-//    }
+    //    public function getExamStudentAnswerSubQuestionCount()
+    //    {
+    //        return ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $this->id])->count();
+    //    }
 
     public function getSubQuestions()
     {
@@ -498,7 +498,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             $mainBallForOneQuestion = 0;
             $subQuestionOneAnswerCount = 0;
             foreach (((array)json_decode($post['subQuestionAnswersChecking'])) as $subQuestionOneAnswerChecking) {
-//                dd($subQuestionOneAnswerChecking);
+                //                dd($subQuestionOneAnswerChecking);
                 $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne($subQuestionOneAnswerChecking->exam_student_answer_sub_question_id);
 
                 if ($examStudentAnswerSubQuestion) {
@@ -509,7 +509,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
                             $subQuestionOneAnswerCount++;
                         }
-
                     } else {
                         $errors[] = [$examStudentAnswerSubQuestion->id => _e("This subQuestion Answer is not for this question's answer")];
                     }
@@ -667,12 +666,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             if (!file_exists(STORAGE_PATH . $folder)) {
                 mkdir(STORAGE_PATH . $folder, 0777, true);
             }
-            if ($this->isNewRecord) {
-                $fileName = ExamStudentAnswer::find()->orderBy(['id' => SORT_DESC])->one()->id
-                    + 1 . "_" . $student_id . "_"  . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
-            } else {
-                $fileName = $this->id . "_" . $student_id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
-            }
+
+            $fileName = $this->id . "_" . $student_id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->answer_file->extension;
+
             $miniUrl = $folder . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->answer_file->saveAs($url, false);
@@ -713,5 +709,4 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             self::STATUS_CHECKED => _e('STATUS_CHECKED'),
         ];
     }
-
 }

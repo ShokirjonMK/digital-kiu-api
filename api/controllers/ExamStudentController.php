@@ -48,6 +48,23 @@ class ExamStudentController extends ApiActiveController
     {
         $model = new ExamStudent();
         $post = Yii::$app->request->post();
+
+        if (isset($post['duration'])) {
+            $post['duration'] =  str_replace("'", "", $post['duration']);
+            $post['duration'] =  str_replace('"', "", $post['duration']);
+            $duration = explode(":", $post['duration']);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $post['duration'] = (int)$hours * 3600 + (int)$min * 60;
+        }
+
+        if (isset($post['start'])) {
+            $post['start'] = strtotime($post['start']);
+        }
+        if (isset($post['finish'])) {
+            $post['finish'] = strtotime($post['finish']);
+        }
+
         $this->load($model, $post);
 
         $result = ExamStudent::createItem($model, $post);
@@ -79,6 +96,23 @@ class ExamStudentController extends ApiActiveController
         }
 
         $post = Yii::$app->request->post();
+
+        if (isset($post['duration'])) {
+            $post['duration'] =  str_replace("'", "", $post['duration']);
+            $post['duration'] =  str_replace('"', "", $post['duration']);
+            $duration = explode(":", $post['duration']);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $post['duration'] = (int)$hours * 3600 + (int)$min * 60;
+        }
+
+        if (isset($post['start'])) {
+            $post['start'] = strtotime($post['start']);
+        }
+        if (isset($post['finish'])) {
+            $post['finish'] = strtotime($post['finish']);
+        }
+
         $post['old_file'] = $model->plagiat_file;
 
         $this->load($model, $post);

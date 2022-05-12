@@ -80,12 +80,14 @@ class ExamStudent extends \yii\db\ActiveRecord
                 [
                     'student_id',
                     'start',
+                    'finish',
                     'exam_id',
                     'teacher_access_id',
                     'attempt',
                     'lang_id',
                     'exam_semeta_id',
                     'is_plagiat',
+                    'duration',
 
                     'order',
                     'status',
@@ -124,7 +126,9 @@ class ExamStudent extends \yii\db\ActiveRecord
             'password' => 'Password',
             'exam_semeta_id' => 'Exam Semeta Id',
             'ball' => 'Ball',
+            'duration' => 'Duration',
             'start' => 'Start',
+            'finish' => 'Finish',
             'is_plagiat' => 'Is Plagiat',
             'attempt' => 'Attempt',
             'order' => 'Order',
@@ -151,6 +155,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'attempt',
             'password',
             'is_plagiat',
+            'duration',
 
             'conclusion',
             'plagiat_file',

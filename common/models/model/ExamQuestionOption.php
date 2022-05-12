@@ -153,22 +153,29 @@ class ExamQuestionOption extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        // option file saqlaymiz
-        $model->option_file = UploadedFile::getInstancesByName('option_file');
-        if ($model->option_file) {
-            $model->option_file = $model->option_file[0];
-            $optionFileUrl = $model->uploadFile();
-            if ($optionFileUrl) {
-                $model->file = $optionFileUrl;
-            } else {
-                $errors[] = $model->errors;
-            }
-        }
-        // ***
+
 
         if ($model->save()) {
-            $transaction->commit();
-            return true;
+            // option file saqlaymiz
+            $model->option_file = UploadedFile::getInstancesByName('option_file');
+            if ($model->option_file) {
+                $model->option_file = $model->option_file[0];
+                $optionFileUrl = $model->uploadFile();
+                if ($optionFileUrl) {
+                    $model->file = $optionFileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
+
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
             return simplify_errors($errors);
@@ -223,11 +230,9 @@ class ExamQuestionOption extends \yii\db\ActiveRecord
             if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
-            if ($this->isNewRecord) {
-                $fileName = ExamQuestionOption::find()->count() + 1 . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->option_file->extension;
-            }else{
-                $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->option_file->extension;
-            }
+
+            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $this->option_file->extension;
+
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->option_file->saveAs($url, false);

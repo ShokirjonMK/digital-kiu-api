@@ -58,7 +58,6 @@ class ActionLog extends \yii\db\ActiveRecord
                     'controller',
                     'action',
                     'method',
-                    'browser',
                     'message'
                 ], 'string', 'max' => 255
             ],
@@ -70,6 +69,9 @@ class ActionLog extends \yii\db\ActiveRecord
                     'post_data',
                     'result',
                     'errors',
+                    'host',
+                    'ip_address_data',
+                    'browser'
                 ], 'string'
             ],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

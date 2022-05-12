@@ -31,10 +31,13 @@ class m220512_112417_create_action_log_table extends Migration
 
             'message' => $this->string(255)->null(),
 
-            'browser' => $this->string(255)->null(),
+            'browser' => $this->text()->null(),
             'ip_address' => $this->string(33)->null(),
             'result' => $this->text()->null(),
             'errors' => $this->text()->null(),
+
+            'host' => $this->text()->null(),
+            'ip_address_data' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
 

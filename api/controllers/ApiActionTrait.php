@@ -73,22 +73,31 @@ trait ApiActionTrait
      * @return void
      */
 
-    /*  public function afterAction($action, $result)
+    public function afterAction($action, $result)
     {
+
+        // vdd(Yii::$app->request);
+        // vdd(get_host());
+        // vdd(getIpAddressData());
+
+
         $action_log = Yii::$app->session->get('action_log');
         $action_log->user_id = current_user_id();
         $action_log->status = $result['status'];
         $action_log->message = $result['message'];
+        $action_log->browser = json_encode(getBrowser());
+        $action_log->ip_address = getIpAddress();
+        $action_log->host = get_host();
+        $action_log->ip_address_data = getIpAddressData();
+
         if (isset($result['errors'])) {
-            $action_log->errors = $result['errors'];
-        } else {
-            $action_log->errors = '';
+            $action_log->errors = json_encode($result['errors']);
         }
         $action_log->save(false);
 
         $result = parent::afterAction($action, $result);
         return $result;
-    } */
+    }
 
     /**
      * Before action
@@ -126,9 +135,9 @@ trait ApiActionTrait
 
             // dd("asdasd");
             // vdd(Yii::$app->request->get());
-            // vdd(Yii::$app->request);
+            // vdd(Yii::$app->request->post());
 
-            /*   $action_log = new ActionLog();
+            $action_log = new ActionLog();
             $action_log->user_id = current_user_id();
             $action_log->controller = Yii::$app->controller->id;
             $action_log->action = Yii::$app->controller->action->id;
@@ -137,7 +146,7 @@ trait ApiActionTrait
             $action_log->post_data = json_encode(Yii::$app->request->post());
             $action_log->save(false);
             Yii::$app->session->set('action_log', $action_log);
- */
+
 
 
             Yii::$app->language = $lang;

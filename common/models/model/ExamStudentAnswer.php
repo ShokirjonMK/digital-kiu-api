@@ -574,73 +574,96 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->one();
                 $now_second = time();
                 if ($examStudent) {
-                    $finishExamStudent = strtotime($examStudent->start) + $exam->duration + $examStudent->duration;
+                    $finishExamStudent = $examStudent->start + $exam->duration + $examStudent->duration;
 
-                    if (
+                    /*  if (
                         (strtotime($exam->start) <= $now_second)
-                        && (strtotime($exam->finish) >= $now_second)
-                        && ($now_second <= strtotime($finishExamStudent))
-                    ) {
-                        $model->attempt = $examStudent->attempt;
-                        $model->answer_file = UploadedFile::getInstancesByName('answer_file');
-                        if ($model->answer_file) {
-                            $model->answer_file = $model->answer_file[0];
-                            $answer_fileFileUrl = $model->uploadFile($exam->id, $student_id);
-                            if ($answer_fileFileUrl) {
-                                $model->file = $answer_fileFileUrl;
-                            } else {
-                                $errors[] = $model->errors;
-                            }
-                        }
+                        && ((strtotime($exam->finish) >= $now_second) || ($examStudent->finish >= $now_second))
+                        && ($now_second <= $finishExamStudent)
+                    ) { */
 
-                        /** subQuestionAnswers */
-                        if (isset($post['subQuestionAnswers'])) {
-                            $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
-                            if (!isJsonMK($post['subQuestionAnswers'])) {
-                                $errors['subQuestionAnswers'] = [_e('Must be Json')];
-                            }
 
-                            foreach (((array)json_decode($post['subQuestionAnswers'])) as  $subQuestionOneAnswer) {
+                    /* dd([
+                        'now' => $now_second,
+                        'exam->start' => strtotime($exam->start),
+                        'exam->finish' => strtotime($exam->finish),
+                        'examStudent->finish' => $examStudent->finish,
+                        'examStudent->start' => $examStudent->start,
+                        'exam->duration + $examStudent->duration' => $exam->duration + $examStudent->duration,
+                        'finishExamStudent' => $finishExamStudent,
+                    ]); */
 
-                                $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
-                                if ($subQuestion) {
-                                    if ($model->question->id == $subQuestion->question_id) {
-                                        $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
+                    if (strtotime($exam->start) <= $now_second) {
+                        if ((strtotime($exam->finish) >= $now_second) || ($examStudent->finish >= $now_second)) {
+                            if (($now_second <= $finishExamStudent)) {
 
-                                        if (!$examStudentAnswerSubQuestion) {
-                                            $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
-                                            $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
-                                            $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
-                                        }
-
-                                        $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
-                                        $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
-
-                                        $examStudentAnswerSubQuestion->save();
+                                // dd('if ichi ');
+                                $model->attempt = $examStudent->attempt;
+                                $model->answer_file = UploadedFile::getInstancesByName('answer_file');
+                                if ($model->answer_file) {
+                                    $model->answer_file = $model->answer_file[0];
+                                    $answer_fileFileUrl = $model->uploadFile($exam->id, $student_id);
+                                    if ($answer_fileFileUrl) {
+                                        $model->file = $answer_fileFileUrl;
                                     } else {
-                                        $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
+                                        $errors[] = $model->errors;
                                     }
-                                } else {
-                                    $errors[] = _e("This subQuestion is not found");
                                 }
-                            }
-                        }
-                        /** subQuestionAnswers */
 
-                        if (!($model->validate())) {
-                            $errors[] = $model->errors;
+                                /** subQuestionAnswers */
+                                if (isset($post['subQuestionAnswers'])) {
+                                    $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
+                                    if (!isJsonMK($post['subQuestionAnswers'])) {
+                                        $errors['subQuestionAnswers'] = [_e('Must be Json')];
+                                    }
+
+                                    foreach (((array)json_decode($post['subQuestionAnswers'])) as  $subQuestionOneAnswer) {
+
+                                        $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
+                                        if ($subQuestion) {
+                                            if ($model->question->id == $subQuestion->question_id) {
+                                                $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
+
+                                                if (!$examStudentAnswerSubQuestion) {
+                                                    $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
+                                                    $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
+                                                    $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
+                                                }
+
+                                                $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
+                                                $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
+
+                                                $examStudentAnswerSubQuestion->save();
+                                            } else {
+                                                $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
+                                            }
+                                        } else {
+                                            $errors[] = _e("This subQuestion is not found");
+                                        }
+                                    }
+                                }
+                                /** subQuestionAnswers */
+
+                                if (!($model->validate())) {
+                                    $errors[] = $model->errors;
+                                }
+                            } else {
+                                $errors[] = _e("This exam already finished for you!");
+                            }
+                        } else {
+                            $errors[] = _e("This exam's time finished!");
                         }
                     } else {
-                        $errors[] = _e("This exam`s time expired or finished");
+                        $errors[] = _e("This exam is not starts!");
                     }
                 } else {
-                    $errors[] = _e("Student not found for this exam");
+                    $errors[] = _e("Student not found for this exam!");
                 }
             } else {
-                $errors[] = _e("This exam not found");
+                $errors[] = _e("This exam not found!");
             }
         } else {
-            $errors[] = _e("This exam not found");
+            $errors[] = _e("This exam not found!");
         }
 
         if (count($errors) == 0) {

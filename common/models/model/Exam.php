@@ -290,7 +290,7 @@ class Exam extends \yii\db\ActiveRecord
             ->from('exam_student')
             ->select(['COUNT(*) AS count', 'lang_id'])
             ->where(['exam_id' => $this->id])
-            ->andWhere(['status' => ExamStudent::STATUS_TAKED])
+            // ->andWhere(['status' => ExamStudent::STATUS_TAKED])
             ->groupBy(['lang_id'])
             ->all();
     }

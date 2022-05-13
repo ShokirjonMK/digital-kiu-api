@@ -156,6 +156,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'password',
             'is_plagiat',
             'duration',
+            'finish',
 
             'conclusion',
             'plagiat_file',

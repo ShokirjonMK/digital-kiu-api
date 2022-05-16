@@ -194,6 +194,12 @@ class ExamSemeta extends \yii\db\ActiveRecord
             $exam = Exam::findOne($examId);
             if (isset($exam)) {
                 /** smetas */
+                if ($exam->status == Exam::STATUS_DISTRIBUTED) {
+                    $errors[] = [_e('Exam already distributed, you can not change!')];
+
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
                 if (isset($post['smetas'])) {
                     $post['smetas'] = str_replace("'", "", $post['smetas']);
                     if (!isJsonMK($post['smetas'])) {

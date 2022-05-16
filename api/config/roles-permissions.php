@@ -122,6 +122,9 @@ return [
         "edu-plan_update",
         "edu-plan_view",
 
+        "edu-type_index",
+        
+
         "edu-semestr-subject_create",
         "edu-semestr-subject_delete",
         "edu-semestr-subject_index",
@@ -1183,6 +1186,8 @@ return [
 
         'subject-topic_index',
         'subject-content_index',
+
+        'subject-category_index',
     ],
 
 ];

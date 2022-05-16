@@ -286,8 +286,9 @@ class EduPlan extends \yii\db\ActiveRecord
                         $data['name'][Yii::$app->request->get('lang')] = $eduYear[$i]->year . '-' . date('Y', strtotime('+1 years', strtotime($newEduSmester->start_date)));
                         $res = EduYear::createItem($eduYear[$i], $data);
                         if (is_array($res)) {
-                            $model->delete();
-                            return $res;
+                            $errors[] = _e('Error on creating EduYear');
+                            // $model->delete();
+                            // return $res;
                         }
                     }
 
@@ -328,7 +329,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 }
 
                 if (count($errors) > 0) {
-                    $model->delete();
+                    // $model->delete();
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }

@@ -6,8 +6,6 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
-use common\models\model\ActionLog;
-use common\models\model\ActionLogs;
 use common\models\model\Subject;
 use common\models\model\TeacherAccess;
 use common\models\model\UserAccess;

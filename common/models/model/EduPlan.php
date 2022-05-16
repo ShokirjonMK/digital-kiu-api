@@ -286,8 +286,9 @@ class EduPlan extends \yii\db\ActiveRecord
                         $data['name'][Yii::$app->request->get('lang')] = $eduYear[$i]->year . '-' . date('Y', strtotime('+1 years', strtotime($newEduSmester->start_date)));
                         $res = EduYear::createItem($eduYear[$i], $data);
                         if (is_array($res)) {
-                            $model->delete();
-                            return $res;
+                            $errors[] = _e('Error on creating EduYear');
+                            // $model->delete();
+                            // return $res;
                         }
                     }
 
@@ -328,7 +329,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 }
 
                 if (count($errors) > 0) {
-                    $model->delete();
+                    // $model->delete();
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
@@ -363,6 +364,96 @@ class EduPlan extends \yii\db\ActiveRecord
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                     }
                 }
+
+
+                $eduYear = [];
+                if (EduSemestr::deleteAll(['edu_plan_id' => $model->id])) {
+                    for ($i = 0; $i < $post['course']; $i++) {
+                        /* Kuzgi semestrni qo`shish */
+
+                        // $eduSemestrsHas = EduSemestr::findOne(['edu_plan_id' => $model->id, 'course_id' => $i + 1, 'semestr_id' => ($i + 1) * 2 - 1]);
+
+                        // if ($eduSemestrsHas) {
+                        //     $newEduSmester = $eduSemestrsHas;
+                        // } else {
+                        //     $newEduSmester = new EduSemestr();
+                        // }
+                        $newEduSmester = new EduSemestr();
+                        $newEduSmester->start_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_start'])));
+                        $newEduSmester->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['fall_end'])));
+                        $newEduSmester->edu_plan_id = $model->id;
+                        $newEduSmester->course_id = $i + 1;
+                        $newEduSmester->status = 0;
+                        $newEduSmester->semestr_id = ($i + 1) * 2 - 1;
+                        $eduYear[$i] = EduYear::findOne(['year' => date('Y', strtotime($newEduSmester->start_date))]);
+                        if (!isset($eduYear[$i])) {
+                            $eduYear[$i] = new EduYear();
+                            $data = [];
+                            $eduYear[$i]->year = date('Y', strtotime($newEduSmester->start_date));
+                            $data['name'][Yii::$app->request->get('lang')] = $eduYear[$i]->year . '-' . date('Y', strtotime('+1 years', strtotime($newEduSmester->start_date)));
+                            $res = EduYear::createItem($eduYear[$i], $data);
+                            if (is_array($res)) {
+                                $errors[] = _e('Error on creating EduYear');
+                                // $model->delete();
+                                // return $res;
+                            }
+                        }
+
+                        $newEduSmester->edu_year_id = $eduYear[$i]->id;
+
+                        $teacherCheckingType = TeacherCheckingType::findOne(['edu_year_id' => $newEduSmester->edu_year_id, 'semestr_id' => 1]);
+                        if ($teacherCheckingType) {
+                            $newEduSmester->type = $teacherCheckingType->type;
+                        }
+
+                        if (!$newEduSmester->validate()) {
+                            $errors[] = $newEduSmester->errors;
+                        }
+                        $newEduSmester->save();
+                        /* Kuzgi semestrni qo`shish */
+
+                        /* Baxorgi semestrni qo`shish */
+
+                        // $eduSemestrsHas1 = EduSemestr::findOne(['edu_plan_id' => $model->id, 'course_id' => $i + 1, 'semestr_id' => ($i + 1) * 2]);
+
+                        // if ($eduSemestrsHas1) {
+                        //     $newEduSmester1 = $eduSemestrsHas1;
+                        // } else {
+                        //     $newEduSmester1 = new EduSemestr();
+                        // }
+
+                        $newEduSmester1 = new EduSemestr();
+
+                        $newEduSmester1->start_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['spring_start'])));
+                        $newEduSmester1->end_date = date('Y-m-d', strtotime('+' . $i . ' years', strtotime($post['spring_end'])));
+                        $newEduSmester1->edu_plan_id = $model->id;
+                        $newEduSmester1->course_id = $i + 1;
+                        $newEduSmester1->status = 0;
+                        $newEduSmester1->semestr_id = ($i + 1) * 2;
+
+                        $newEduSmester1->edu_year_id = $eduYear[$i]->id;
+
+                        $teacherCheckingType = TeacherCheckingType::findOne(['edu_year_id' => $newEduSmester1->edu_year_id, 'semestr_id' => 1]);
+                        if ($teacherCheckingType) {
+                            $newEduSmester1->type = $teacherCheckingType->type;
+                        }
+
+                        if (!$newEduSmester1->validate()) {
+                            $errors[] = $newEduSmester1->errors;
+                        }
+                        $newEduSmester1->save();
+                        /* Baxorgi semestrni qo`shish */
+                    }
+                }
+
+
+                if (count($errors) > 0) {
+                    // $model->delete();
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
+
                 $transaction->commit();
                 return true;
             } else {

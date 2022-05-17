@@ -348,6 +348,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
                     ->where([
                         'exam_id' => $exam->id,
                         'teacher_access_id' => null,
+                        'status' => ExamStudent::STATUS_TAKED,
                     ])
                     ->orderBy(new Expression('rand()'))
                     ->limit($examSmetaOne->count)

@@ -373,7 +373,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $ExamStudent->lang_id = $student_lang_id;
                             // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
                             $ExamStudent->status = ExamStudent::STATUS_TAKED;
-                            $ExamStudent->save(false);
+                            $ExamStudent->save();
 
                             /* *****************************/
                             // isJsonMK($question_count_by_type);
@@ -408,8 +408,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     }
                                 } else {
 
-                                    ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                                    ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                                    // ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+                                    // ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
                                     $errors[] = _e("Questions are not found for this exam");
 
                                     $transaction->rollBack();

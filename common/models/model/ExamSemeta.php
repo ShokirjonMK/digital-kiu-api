@@ -220,8 +220,8 @@ class ExamSemeta extends \yii\db\ActiveRecord
                     //     $oldExamSemetaOne->is_deleted = 1;
                     //     $oldExamSemetaOne->save();
                     // }
-                    ExamSemeta::deleteAll(['exam_id' => $exam->id]);
 
+                    ExamSemeta::deleteAll(['exam_id' => $exam->id]);
 
                     foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
                         // [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],

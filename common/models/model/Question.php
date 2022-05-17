@@ -440,7 +440,7 @@ class Question extends \yii\db\ActiveRecord
             }
             if (count($errors) == 0) {
 
-                $model->deleteFile($oldFile);
+                // $model->deleteFile($oldFile);
                 $transaction->commit();
                 return true;
             }

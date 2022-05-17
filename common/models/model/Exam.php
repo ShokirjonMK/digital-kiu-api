@@ -261,7 +261,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getExamStudent()
     {
-        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']); //->onCondition(['status' => ExamStudent::STATUS_TAKED]);
+        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['status' => ExamStudent::STATUS_TAKED]);
     }
 
     public function getExamStudentCountMain()

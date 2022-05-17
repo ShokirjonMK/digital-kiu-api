@@ -196,7 +196,6 @@ class ExamSemeta extends \yii\db\ActiveRecord
                 /** smetas */
                 if ($exam->status == Exam::STATUS_DISTRIBUTED) {
                     $errors[] = [_e('Exam already distributed, you can not change!')];
-                    $errors['smetas'] = [_e('Must be Json')];
                     $data['status'] = false;
                     $transaction->rollBack();
                     $data['errors'] = $errors;

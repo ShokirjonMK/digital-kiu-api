@@ -210,67 +210,72 @@ class ExamSemeta extends \yii\db\ActiveRecord
                         $data['status'] = false;
                         $transaction->rollBack();
                         $data['errors'] = $errors;
+                        return $data;
                     }
 
                     // $countOfExamStudent = $exam->examStudentCount;
                     $countOfExamStudent = $exam->examStudentCount;
                     $countOfSmetas = 0;
-                    if (ExamSemeta::deleteAll(['exam_id' => $exam->id])) {
-                        foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
-                            // [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
+                    // foreach (ExamSemeta::findAll(['exam_id' => $exam->id]) as $oldExamSemetaOne) {
+                    //     $oldExamSemetaOne->is_deleted = 1;
+                    //     $oldExamSemetaOne->save();
+                    // }
+                    ExamSemeta::deleteAll(['exam_id' => $exam->id]);
 
-                            $subjectId = $exam->eduSemestrSubject->subject_id;
 
-                            $hasTeacherAccess = TeacherAccess::findOne([
-                                'subject_id' => $subjectId,
-                                'language_id' => $smetaAttribute->lang_id,
-                                'id' =>  $teacherAccessId
+                    foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
+                        // [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
+
+                        $subjectId = $exam->eduSemestrSubject->subject_id;
+
+                        $hasTeacherAccess = TeacherAccess::findOne([
+                            'subject_id' => $subjectId,
+                            'language_id' => $smetaAttribute->lang_id,
+                            'id' =>  $teacherAccessId
+                        ]);
+
+                        if ($hasTeacherAccess) {
+
+                            $oldExamSmeta = ExamSemeta::findOne([
+                                'exam_id' => $examId,
+                                'lang_id' => $smetaAttribute->lang_id,
+                                'teacher_access_id' => $teacherAccessId
                             ]);
 
-                            if ($hasTeacherAccess) {
-
-                                $oldExamSmeta = ExamSemeta::findOne([
-                                    'exam_id' => $examId,
-                                    'lang_id' => $smetaAttribute->lang_id,
-                                    'teacher_access_id' => $teacherAccessId
-                                ]);
-
-                                if ($oldExamSmeta) {
-                                    $newExamSmeta = $oldExamSmeta;
-                                } else {
-                                    $newExamSmeta = new ExamSemeta();
-                                }
-                                if (isset($post['start'])) {
-                                    $newExamSmeta->start = strtotime($post['start']);
-                                }
-                                if (isset($post['finish'])) {
-                                    $newExamSmeta->finish = strtotime($post['finish']);
-                                }
-                                $newExamSmeta->exam_id = (int)$examId;
-                                $newExamSmeta->lang_id = $smetaAttribute->lang_id;
-                                $newExamSmeta->count = $smetaAttribute->count;
-                                $newExamSmeta->teacher_access_id = $teacherAccessId;
-
-                                $newExamSmeta->status = self::STATUS_NEW;
-
-
-                                if (!($newExamSmeta->validate())) {
-                                    $errors[] = [$teacherAccessId => $newExamSmeta->errors];
-                                }
-
-                                $newExamSmeta->status = $status;
-                                $newExamSmeta->save();
-                                $data['data'][] = $newExamSmeta;
+                            if ($oldExamSmeta) {
+                                $newExamSmeta = $oldExamSmeta;
                             } else {
-                                $errors[] = [$teacherAccessId  => _e(' Teacher Access Id is not vailed (' . $teacherAccessId . ')')];
+                                $newExamSmeta = new ExamSemeta();
+                            }
+                            if (isset($post['start'])) {
+                                $newExamSmeta->start = strtotime($post['start']);
+                            }
+                            if (isset($post['finish'])) {
+                                $newExamSmeta->finish = strtotime($post['finish']);
+                            }
+                            $newExamSmeta->exam_id = (int)$examId;
+                            $newExamSmeta->lang_id = $smetaAttribute->lang_id;
+                            $newExamSmeta->count = $smetaAttribute->count;
+                            $newExamSmeta->teacher_access_id = $teacherAccessId;
+
+                            $newExamSmeta->status = self::STATUS_NEW;
+
+
+                            if (!($newExamSmeta->validate())) {
+                                $errors[] = [$teacherAccessId => $newExamSmeta->errors];
                             }
 
-                            $countOfSmetas += $smetaAttribute->count;
-                            // ***
+                            $newExamSmeta->status = $status;
+                            $newExamSmeta->save();
+                            $data['data'][] = $newExamSmeta;
+                        } else {
+                            $errors[] = [$teacherAccessId  => _e(' Teacher Access Id is not vailed (' . $teacherAccessId . ')')];
                         }
-                    } else {
-                        $errors[] = [_e('Errors on deleting old Exam Semetas')];
+
+                        $countOfSmetas += $smetaAttribute->count;
+                        // ***
                     }
+
                     if ($countOfSmetas != $countOfExamStudent) {
                         $errors['smetas'] = [_e('Incorrectly distributed')];
                     }

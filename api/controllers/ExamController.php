@@ -88,26 +88,27 @@ class ExamController extends ApiActiveController
                 ->where(['subject_id' => $subjectId])
                 ->andWhere(['is_deleted' => 0])
                 ->select('id')]);
-
         }
 
         if ($student) {
-//            dd($student->edu_plan_id);
+            //            dd($student->edu_plan_id);
             if (isset($eduSmesterId)) {
-                $query = $query->andWhere(['in', 'edu_semestr_subject_id', EduSemestrSubject::find()
-                    ->andWhere(['edu_semestr_id' => $eduSmesterId])
-                    ->andWhere(['is_deleted' => 0])
-                    ->select('id')
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->andWhere(['edu_semestr_id' => $eduSmesterId])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
                 ]);
             } else {
 
-                $query = $query->andWhere(['in', 'edu_semestr_subject_id', EduSemestrSubject::find()
-                    ->where(['in', 'edu_semestr_id', EduSemestr::find()
-                        ->where(['edu_plan_id' => $student->edu_plan_id])
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->where(['in', 'edu_semestr_id', EduSemestr::find()
+                            ->where(['edu_plan_id' => $student->edu_plan_id])
+                            ->andWhere(['is_deleted' => 0])
+                            ->select('id')])
                         ->andWhere(['is_deleted' => 0])
-                        ->select('id')])
-                    ->andWhere(['is_deleted' => 0])
-                    ->select('id')
+                        ->select('id')
                 ]);
             }
             // filter
@@ -123,7 +124,7 @@ class ExamController extends ApiActiveController
             $query = $query->andFilterWhere([
                 'in', 'edu_semestr_subject_id',
                 EduSemestrSubject::find()
-                    ->where(['subject_id' => $this->teacher_access()])
+                    ->where(['subject_id' => $this->teacher_access(1, ['subject_id'])])
                     ->andWhere(['is_deleted' => 0])
                     ->select('id')
             ]);

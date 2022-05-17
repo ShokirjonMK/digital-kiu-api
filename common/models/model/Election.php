@@ -7,10 +7,11 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "edu_year".
+ * This is the model class for table "election".
  *
  * @property int $id
  * @property string $name
+ * @property string $roles
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -19,9 +20,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property EduPlan[] $eduPlans
- * @property EduSemestr[] $eduSemestrs
- * @property TimeTable[] $timeTables
  */
 class Election extends \yii\db\ActiveRecord
 {
@@ -51,6 +49,7 @@ class Election extends \yii\db\ActiveRecord
         return [
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'integer'],
+            [['roles'], 'string', 'max' => 255],
         ];
     }
 
@@ -63,6 +62,7 @@ class Election extends \yii\db\ActiveRecord
             'id' => 'ID',
             'start',
             'finish',
+            'roles',
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -82,6 +82,7 @@ class Election extends \yii\db\ActiveRecord
             },
             'start',
             'finish',
+            'roles',
             'order',
             'status',
             'created_at',

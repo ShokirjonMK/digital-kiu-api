@@ -3,22 +3,20 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%election}}`.
+ * Handles the creation of table `{{%election_candidate}}`.
  */
-class m220514_052345_create_election_table extends Migration
+class m220517_033357_create_election_candidate_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%election}}', [
+        $this->createTable('{{%election_candidate}}', [
             'id' => $this->primaryKey(),
-            // 'start' => $this->dateTime()->notNull(),
-            // 'finish' => $this->dateTime()->notNull(),
-            'roles' => $this->string(255)->defaultValue(0),
-            'start' => $this->integer()->defaultValue(0),
-            'finish' => $this->integer()->defaultValue(0),
+            'election_id' => $this->integer()->notNull(),
+            
+
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -27,6 +25,7 @@ class m220514_052345_create_election_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+        $this->addForeignKey('eec_election_candidate_election_mk', 'election_candidate', 'election_id', 'election', 'id');
     }
 
     /**
@@ -34,6 +33,7 @@ class m220514_052345_create_election_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%election}}');
+        $this->dropForeignKey('eec_election_candidate_election_mk', 'election_candidate');
+        $this->dropTable('{{%election_candidate}}');
     }
 }

@@ -382,7 +382,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 $questionAll = Question::find()
                                     ->where([
                                         'subject_id' => $subject_id,
-                                        'semestr_id' => $semestr_id,
+                                        'semestr_id' => $semestr_id, // 
                                         'lang_id' => $student_lang_id,
                                         'question_type_id' => $type,
                                         'status' => 1,

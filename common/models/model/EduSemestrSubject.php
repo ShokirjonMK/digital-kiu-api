@@ -335,27 +335,27 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                     $max_ball = $max_ball + $examsTypeMaxBal1;
 
                     /** imtihonlar  imtixon turlari bo'yicha avto yaralishi */
-                    $hasExam = Exam::findOne(['exam_type_id' => $examsTypeId1, 'edu_semestr_subject_id' => $model->id]);
-                    if (!isset($hasExam)) {
-                        $newExam = new Exam();
-                        $newExam->faculty_id = $model->eduSemestr->eduPlan->faculty_id;
-                        $newExam->direction_id = $model->eduSemestr->eduPlan->direction_id;
-                        $newExam->exam_type_id = $examsTypeId1;
-                        $newExam->edu_semestr_subject_id = $model->id;
-                        $newExam->start = date("Y-m-d H:i:s");
-                        $newExam->finish = date("Y-m-d H:i:s");
-                        $newExam->max_ball = $examsTypeMaxBal1;
-                        $newExam->min_ball = $examsTypeMaxBal1;
-                        $newExam->status = Exam::STATUS_INACTIVE;
-                        $newExam->save();
-                    } else {
-                        $hasExam->is_deleted = 0;
-                        $hasExam->start = date("Y-m-d H:i:s");
-                        $hasExam->finish = date("Y-m-d H:i:s");
-                        $hasExam->max_ball = $examsTypeMaxBal1;
-                        $hasExam->min_ball = $examsTypeMaxBal1;
-                        $hasExam->save();
-                    }
+                    // $hasExam = Exam::findOne(['exam_type_id' => $examsTypeId1, 'edu_semestr_subject_id' => $model->id]);
+                    // if (!isset($hasExam)) {
+                    //     $newExam = new Exam();
+                    //     $newExam->faculty_id = $model->eduSemestr->eduPlan->faculty_id;
+                    //     $newExam->direction_id = $model->eduSemestr->eduPlan->direction_id;
+                    //     $newExam->exam_type_id = $examsTypeId1;
+                    //     $newExam->edu_semestr_subject_id = $model->id;
+                    //     $newExam->start = date("Y-m-d H:i:s");
+                    //     $newExam->finish = date("Y-m-d H:i:s");
+                    //     $newExam->max_ball = $examsTypeMaxBal1;
+                    //     $newExam->min_ball = $examsTypeMaxBal1;
+                    //     $newExam->status = Exam::STATUS_INACTIVE;
+                    //     $newExam->save();
+                    // } else {
+                    //     $hasExam->is_deleted = 0;
+                    //     $hasExam->start = date("Y-m-d H:i:s");
+                    //     $hasExam->finish = date("Y-m-d H:i:s");
+                    //     $hasExam->max_ball = $examsTypeMaxBal1;
+                    //     $hasExam->min_ball = $examsTypeMaxBal1;
+                    //     $hasExam->save();
+                    // }
                     /** imtihonlar  imtixon turlari bo'yicha avto yaralishi */
                 }
             }

@@ -209,7 +209,7 @@ class ExamSemeta extends \yii\db\ActiveRecord
                         $data['errors'] = $errors;
                     }
 
-                    $countOfExamStudent = $exam->examStudentCount;
+                    // $countOfExamStudent = $exam->examStudentCount;
                     $countOfExamStudent = $exam->examStudentCount;
                     $countOfSmetas = 0;
                     foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {

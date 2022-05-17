@@ -3,6 +3,8 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+
+use common\models\model\Student;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -347,18 +349,54 @@ class Exam extends \yii\db\ActiveRecord
             if (isset($exam)) {
                 $eduSemestrSubject = EduSemestrSubject::findOne($exam->edu_semestr_subject_id);
                 if (isset($eduSemestrSubject)) {
-                    $studentTimeTable = StudentTimeTable::find()
-                        // ->select(['student_time_table.id as id', 'student_time_table.student_id as student_id', 'tt.language_id as lang_id'])
-                        ->leftJoin("time_table tt", "tt.id = student_time_table.time_table_id")
-                        ->where([
-                            'tt.edu_semester_id' => $eduSemestrSubject->edu_semestr_id,
-                            'tt.subject_id' => $eduSemestrSubject->subject_id,
-                        ])
-                        ->all();
 
-                    foreach ($studentTimeTable as $studentTimeTableOne) {
-                        $student_id = $studentTimeTableOne->student_id;
-                        $langId = $studentTimeTableOne->timeTable->language_id;
+                    // $studentTimeTable = StudentTimeTable::find()
+                    //     // ->select(['student_time_table.id as id', 'student_time_table.student_id as student_id', 'tt.language_id as lang_id'])
+                    //     ->leftJoin("time_table tt", "tt.id = student_time_table.time_table_id")
+                    //     ->where([
+                    //         'tt.edu_semester_id' => $eduSemestrSubject->edu_semestr_id,
+                    //         'tt.subject_id' => $eduSemestrSubject->subject_id,
+                    //     ])
+                    //     ->all();
+
+                    // foreach ($studentTimeTable as $studentTimeTableOne) {
+                    //     $student_id = $studentTimeTableOne->student_id;
+                    //     $langId = $studentTimeTableOne->timeTable->language_id;
+
+                    //     $ExamStudentHas = ExamStudent::find()->where([
+                    //         'exam_id' => $examId,
+                    //         'student_id' => $student_id,
+                    //     ])
+                    //         ->orderBy('id desc')
+                    //         ->one();
+
+                    //     if (isset($ExamStudentHas)) {
+                    //         $ExamStudent = $ExamStudentHas;
+                    //     } else {
+                    //         $ExamStudent = new ExamStudent();
+                    //     }
+
+                    //     $ExamStudent->exam_id = $examId;
+                    //     $ExamStudent->student_id = $student_id;
+                    //     $ExamStudent->lang_id = $langId;
+                    //     $ExamStudent->password = _random_string('numeric', 4);
+                    //     // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                    //     $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
+                    //     $ExamStudent->save(false);
+                    // }
+
+
+
+                    /** Student generate Password and create ExamStudent begin */
+
+                    $eduPlan_id = $exam->eduSemestrSubject->eduSemestr->edu_plan_id;
+
+                    $studentsonThisEduPlan = Student::find()
+                        ->where(['edu_plan_id' => $eduPlan_id])
+                        ->all();
+                    foreach ($studentsonThisEduPlan as $studentsonThisEduPlanOne) {
+                        $student_id = $studentsonThisEduPlanOne->id;
+                        $langId = $studentsonThisEduPlanOne->edu_lang_id;
 
                         $ExamStudentHas = ExamStudent::find()->where([
                             'exam_id' => $examId,
@@ -381,6 +419,8 @@ class Exam extends \yii\db\ActiveRecord
                         $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
                         $ExamStudent->save(false);
                     }
+                    /** Student generate Password and create ExamStudent end */
+
                     ////
                 } else {
                     $errors[] = _e("This subject does not belongs to this smester");

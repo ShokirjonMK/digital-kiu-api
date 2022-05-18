@@ -261,20 +261,20 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                         $max_ball = $max_ball + $examsTypeMaxBal;
 
                         /** imtihonlar  imtixon turlari bo'yicha avto yaralishi  */
-                        $newExam = new Exam();
-                        $newExam->faculty_id = $model->eduSemestr->eduPlan->faculty_id;
-                        $newExam->direction_id = $model->eduSemestr->eduPlan->direction_id;
-                        $newExam->exam_type_id = $examsTypeId;
-                        $newExam->edu_semestr_subject_id = $model->id;
-                        //
-                        $newExam->type = $model->eduSemestr->type ?? 1;
+                        // $newExam = new Exam();
+                        // $newExam->faculty_id = $model->eduSemestr->eduPlan->faculty_id;
+                        // $newExam->direction_id = $model->eduSemestr->eduPlan->direction_id;
+                        // $newExam->exam_type_id = $examsTypeId;
+                        // $newExam->edu_semestr_subject_id = $model->id;
+                        // //
+                        // $newExam->type = $model->eduSemestr->type ?? 1;
 
-                        $newExam->start = date("Y-m-d H:i:s");
-                        $newExam->finish = date("Y-m-d H:i:s");
-                        $newExam->max_ball = $examsTypeMaxBal;
-                        $newExam->min_ball = $examsTypeMaxBal;
-                        $newExam->status = Exam::STATUS_INACTIVE;
-                        $newExam->save();
+                        // $newExam->start = date("Y-m-d H:i:s");
+                        // $newExam->finish = date("Y-m-d H:i:s");
+                        // $newExam->max_ball = $examsTypeMaxBal;
+                        // $newExam->min_ball = $examsTypeMaxBal;
+                        // $newExam->status = Exam::STATUS_INACTIVE;
+                        // $newExam->save();
                         /** imtihonlar  imtixon turlari bo'yicha avto yaralishi  */
                     }
                 }

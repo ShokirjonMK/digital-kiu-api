@@ -47,11 +47,11 @@ class ElectionController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Building();
+        $model = new Election();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = Building::createItem($model, $post);
+        $result = Election::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -61,13 +61,13 @@ class ElectionController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Building::findOne($id);
+        $model = Election::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Building::updateItem($model, $post);
+        $result = Election::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,7 +77,7 @@ class ElectionController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Building::find()
+        $model = Election::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -88,7 +88,7 @@ class ElectionController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Building::find()
+        $model = Election::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

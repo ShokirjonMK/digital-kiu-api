@@ -12,9 +12,13 @@ class m220517_040815_create_election_candidate_innfo_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%election_candidate_innfo}}', [
+        $this->createTable('{{%election_candidate_info}}', [
             'id' => $this->primaryKey(),
-            'election_candidate' => $this->integer()->notNull(),
+            'election_candidate_id' => $this->integer()->notNull(),
+            'lang' => $this->string(3)->null(),
+            'photo' => $this->string(255)->null(),
+            'short_info' => $this->text()->null(),
+            'full_info' => $this->text()->null(),
 
 
             'status' => $this->tinyInteger(1)->defaultValue(0),

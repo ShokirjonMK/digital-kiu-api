@@ -394,6 +394,9 @@ class Exam extends \yii\db\ActiveRecord
                     $studentsonThisEduPlan = Student::find()
                         ->where(['edu_plan_id' => $eduPlan_id])
                         ->all();
+
+                    $examPassword = _random_string('numeric', 6);
+
                     foreach ($studentsonThisEduPlan as $studentsonThisEduPlanOne) {
                         $student_id = $studentsonThisEduPlanOne->id;
                         $langId = $studentsonThisEduPlanOne->edu_lang_id;
@@ -414,7 +417,8 @@ class Exam extends \yii\db\ActiveRecord
                         $ExamStudent->exam_id = $examId;
                         $ExamStudent->student_id = $student_id;
                         $ExamStudent->lang_id = $langId;
-                        $ExamStudent->password = _random_string('numeric', 4);
+                        // $ExamStudent->password = _random_string('numeric', 4);
+                        $ExamStudent->password = $examPassword;
                         // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
                         $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
                         $ExamStudent->save(false);

@@ -15,7 +15,9 @@ class m220517_033357_create_election_candidate_table extends Migration
         $this->createTable('{{%election_candidate}}', [
             'id' => $this->primaryKey(),
             'election_id' => $this->integer()->notNull(),
-            
+            'photo' => $this->string(255)->null(),
+            'short_info' => $this->text()->null(),
+            'full_info' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -25,7 +27,7 @@ class m220517_033357_create_election_candidate_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
-        $this->addForeignKey('eec_election_candidate_election_mk', 'election_candidate', 'election_id', 'election', 'id');
+        $this->addForeignKey('user_ideec_election_candidate_election_mk', 'election_candidate', 'election_id', 'election', 'id');
     }
 
     /**
@@ -33,7 +35,7 @@ class m220517_033357_create_election_candidate_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('eec_election_candidate_election_mk', 'election_candidate');
+        $this->dropForeignKey('eeuser_idc_election_candidate_election_mk', 'election_candidate');
         $this->dropTable('{{%election_candidate}}');
     }
 }

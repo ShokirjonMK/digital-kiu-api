@@ -60,9 +60,9 @@ class Election extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'start',
-            'finish',
-            'roles',
+            'roles' => _e('roles'),
+            'start' => _e('start'),
+            'finish' => _e('finish'),
             'order' => 'Order',
             'status' => 'Status',
             'created_at' => 'Created At',

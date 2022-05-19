@@ -1,0 +1,42 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Handles the creation of table `{{%survey_question_info}}`.
+ */
+class m220519_102901_create_survey_question_info_table extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        $this->createTable('{{%survey_question_info}}', [
+
+            'id' => $this->primaryKey(),
+            'survey_question_id' => $this->integer()->notNull(),
+
+            'question' => $this->text()->null(),
+            'description' => $this->text()->null(),
+
+            'status' => $this->tinyInteger(1)->defaultValue(0),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
+            'created_at' => $this->integer()->Null(),
+            'updated_at' => $this->integer()->Null(),
+            'created_by' => $this->integer()->notNull()->defaultValue(0),
+            'updated_by' => $this->integer()->notNull()->defaultValue(0),
+            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+        ]);
+        $this->addForeignKey('sqisq_survey_question_info_survey_question', 'survey_question_info', 'survey_question_id', 'survey_question', 'id');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        $this->dropForeignKey('sqisq_survey_question_info_survey_question', 'survey_question_info');
+        $this->dropTable('{{%survey_question_info}}');
+    }
+}

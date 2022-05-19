@@ -188,6 +188,7 @@ class Exam extends \yii\db\ActiveRecord
             'questionCount',
             'question',
 
+            'key',
 
             'description',
             'createdBy',
@@ -278,6 +279,11 @@ class Exam extends \yii\db\ActiveRecord
     public function getExamStudentMain()
     {
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+    }
+
+    public function getKey()
+    {
+        return $this->examStudentMain[0]->password ?? '';
     }
 
     public function getExamStudent()

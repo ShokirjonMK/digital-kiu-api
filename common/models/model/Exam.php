@@ -257,7 +257,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getQuestion()
     {
-        return $this->eduSemestrSubject->subject->questions ?? [];
+        return $this->eduSemestrSubject->subject->questionActive ?? [];
     }
 
     public function getQuestionCount()

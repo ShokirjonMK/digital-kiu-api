@@ -4,7 +4,8 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
-
+use common\models\model\EduPlan;
+use common\models\model\Faculty;
 use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
 
@@ -69,5 +70,43 @@ class StatisticController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
 
         return 0;
+    }
+
+    public function actionEduPlan($lang)
+    {
+        $model = new EduPlan();
+
+        $query = $model->find()
+            ->with(['infoRelation'])
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            // ->groupBy($this->table_name . '.id')
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query->andFilterWhere([
+                'faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'faculty_id' => -1
+            ]);
+        }
+        // dd('ss');
+
+        /*  is Self  */
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
     }
 }

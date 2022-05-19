@@ -541,29 +541,6 @@ return [
 
     ],
 
-    /** edu_quality */
-    'edu_viewer' => [
-
-        "question_index",
-        "question_status-update",
-        "question_update",
-        "question_view",
-        'question_status-list',
-
-        // "nationality_index",
-        // "notification_approved",
-
-        // "notification_index",
-        // "notification_my",
-        // "notification_status-list",
-        // "notification_view",
-
-
-        // "user_logout",
-        // "user_me",
-
-    ],
-
 
     /* Dekan huquqlari */
     'dean' => [

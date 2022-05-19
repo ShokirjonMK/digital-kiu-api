@@ -123,7 +123,7 @@ return [
         "edu-plan_view",
 
         "edu-type_index",
-        
+
 
         "edu-semestr-subject_create",
         "edu-semestr-subject_delete",
@@ -162,7 +162,6 @@ return [
         "exam_view",
         "exam_distribution",
         "exam_ad",
-
 
         "faculty_create",
         "faculty_index",
@@ -541,6 +540,30 @@ return [
         'student_view',
 
     ],
+
+    /** edu_quality */
+    'edu_viewer' => [
+
+        "question_index",
+        "question_status-update",
+        "question_update",
+        "question_view",
+        'question_status-list',
+
+        "nationality_index",
+        "notification_approved",
+        "notification_create",
+        "notification_index",
+        "notification_my",
+        "notification_status-list",
+        "notification_view",
+
+
+        "user_logout",
+        "user_me",
+
+    ],
+
 
     /* Dekan huquqlari */
     'dean' => [

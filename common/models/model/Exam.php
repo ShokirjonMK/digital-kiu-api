@@ -184,6 +184,10 @@ class Exam extends \yii\db\ActiveRecord
 
             'isConfirmed',
 
+            'eduPlan',
+            'questionCount',
+            'question',
+
 
             'description',
             'createdBy',
@@ -243,6 +247,21 @@ class Exam extends \yii\db\ActiveRecord
     public function getEduSemestrSubject()
     {
         return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
+    }
+
+    public function getEduPlan()
+    {
+        return $this->eduSemestrSubject->eduSemestr->eduPlan ?? [];
+    }
+
+    public function getQuestion()
+    {
+        return $this->eduSemestrSubject->subject->questions ?? [];
+    }
+
+    public function getQuestionCount()
+    {
+        return count($this->question);
     }
 
 

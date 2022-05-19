@@ -550,17 +550,17 @@ return [
         "question_view",
         'question_status-list',
 
-        "nationality_index",
-        "notification_approved",
-        "notification_create",
-        "notification_index",
-        "notification_my",
-        "notification_status-list",
-        "notification_view",
+        // "nationality_index",
+        // "notification_approved",
+
+        // "notification_index",
+        // "notification_my",
+        // "notification_status-list",
+        // "notification_view",
 
 
-        "user_logout",
-        "user_me",
+        // "user_logout",
+        // "user_me",
 
     ],
 

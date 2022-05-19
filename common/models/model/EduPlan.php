@@ -137,7 +137,22 @@ class EduPlan extends \yii\db\ActiveRecord
             'faculty',
             'eduForm',
             'eduType',
+
             'eduSemestrs',
+
+
+            'student',
+            'studentsByLang',
+            'studentCount',
+            'studentsByLang',
+            'studentUzCount',
+            'studentEngCount',
+            'studentRuCount',
+            'studentUz',
+            'studentEng',
+
+
+            'studentRu',
             'description',
             'createdBy',
             'updatedBy',
@@ -176,6 +191,77 @@ class EduPlan extends \yii\db\ActiveRecord
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
+
+
+    public function getStudent()
+    {
+        return $this->hasMany(Student::className(), ['edu_plan_id' => 'id']);
+    }
+    public function getStudentCount()
+    {
+        return count($this->student);
+    }
+
+    public function getStudentsByLang()
+    {
+        return [
+            "UZ"    => ['count' => count($this->studentUz)],
+            "ENG"   => [count($this->studentEng)],
+            "RU"    => [count($this->studentRu)],
+
+        ];
+    }
+
+    public  function getStudentUzCount()
+    {
+        return count($this->studentUz);
+    }
+    public  function getStudentEngCount()
+    {
+        return count($this->studentEng);
+    }
+
+    public  function getStudentRuCount()
+    {
+        return count($this->studentRu);
+    }
+
+    public  function getStudentUz()
+    {
+        $model = new Student();
+        $query = $model->find();
+
+        $query = $query->andWhere(['edu_plan_id' => $this->id]);
+        $query = $query->andWhere(['edu_lang_id' => 1]);
+        $query = $query->andWhere(['is_deleted' => 0]);
+        return $query->all();
+    }
+
+    public  function getStudentEng()
+    {
+        $model = new Student();
+        $query = $model->find();
+
+        $query = $query->andWhere(['edu_plan_id' => $this->id]);
+        $query = $query->andWhere(['edu_lang_id' => 2]);
+        $query = $query->andWhere(['is_deleted' => 0]);
+
+        return $query->all();
+    }
+
+    public  function getStudentRu()
+    {
+        $model = new Student();
+        $query = $model->find();
+
+        $query = $query->andWhere(['edu_plan_id' => $this->id]);
+        $query = $query->andWhere(['edu_lang_id' => 3]);
+        $query = $query->andWhere(['is_deleted' => 0]);
+
+        return $query->all();
+    }
+
+
 
     /**
      * Gets query for [[Direction]].

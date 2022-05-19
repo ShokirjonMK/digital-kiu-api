@@ -12,6 +12,11 @@ class m220519_102213_create_survey_question_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'survey_question';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('survey_question');
+        }
+
         $this->createTable('{{%survey_question}}', [
             'id' => $this->primaryKey(),
             'min' => $this->integer()->notNull()->defaultValue(0),

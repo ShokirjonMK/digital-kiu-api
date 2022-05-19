@@ -59,7 +59,9 @@ class SurveyQuestion extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-
+            [['status', 'type'], 'default', 'value' => 1],
+            [['min'], 'default', 'value' => 0],
+            [['max'], 'default', 'value' => 10],
         ];
     }
 
@@ -114,6 +116,8 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     {
         $extraFields =  [
 
+            'description',
+
             'createdBy',
             'updatedBy',
         ];
@@ -138,42 +142,18 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(Translate::class, ['model_id' => 'id'])
-            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+        return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
+            ->andOnCondition(['lang' => Yii::$app->request->get('lang')]);
     }
 
     public function getInfoRelationDefaultLanguage()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(Translate::class, ['model_id' => 'id'])
-            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+        return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language]);
     }
 
-    /**
-     * Gets query for [[Faculty]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFaculty()
-    {
-        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
-    }
 
-    /**
-     * Gets query for [[EduPlans]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEduPlans()
-    {
-        return $this->hasMany(EduPlan::className(), ['direction_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Kafedras]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getKafedras()
     {
         return $this->hasMany(Kafedra::className(), ['direction_id' => 'id']);
@@ -185,28 +165,38 @@ class SurveyQuestion extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
+        // if (!($model->validate())) {
+        //     $errors[] = $model->errors;
+        // }
 
-        $has_error = Translate::checkingAll($post);
-
-        if ($has_error['status']) {
-            if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+        if ($model->save()) {
+            if (isset($post['question'])) {
+                if (!is_array($post['question'])) {
+                    $errors[] = [_e('Please send Question attribute as array.')];
                 } else {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                    foreach ($post['question'] as $lang => $question) {
+                        $info = new SurveyQuestionInfo();
+                        $info->survey_question_id = $model->id;
+                        $info->lang = $lang;
+                        $info->question = $question;
+                        $info->description = $post['description'][$lang] ?? null;
+                        if (!$info->save()) {
+                            $errors[] = $info->getErrorSummary(true);
+                        }
+                    }
                 }
-                $transaction->commit();
-                return true;
             } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
+                $errors[] = [_e('Please send at least one Question attribute.')];
             }
         } else {
+            $errors[] = $model->getErrorSummary(true);
+        }
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 
@@ -215,29 +205,48 @@ class SurveyQuestion extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
+        // if (!($model->validate())) {
+        //     $errors[] = $model->errors;
+        // }
 
-        $has_error = Translate::checkingUpdate($post);
-        if ($has_error['status']) {
-            if ($model->save()) {
-                if (isset($post['name'])) {
-                    if (isset($post['description'])) {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                    } else {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+
+        if ($model->save()) {
+            if (isset($post['question'])) {
+                if (!is_array($post['question'])) {
+                    $errors[] = [_e('Please send Question attribute as array.')];
+                } else {
+                    foreach ($post['question'] as $lang => $question) {
+                        $info = SurveyQuestionInfo::find()->where(['survey_question_id' => $model->id, 'lang' => $lang])->one();
+                        if ($info) {
+                            $info->question = $question;
+                            $info->description = $post['description'][$lang] ?? null;
+                            if (!$info->save()) {
+                                $errors[] = $info->getErrorSummary(true);
+                            }
+                        } else {
+                            $info = new SurveyQuestionInfo();
+                            $info->survey_question_id = $model->id;
+                            $info->lang = $lang;
+                            $info->question = $question;
+                            $info->description = $post['description'][$lang] ?? null;
+                            if (!$info->save()) {
+                                $errors[] = $info->getErrorSummary(true);
+                            }
+                        }
                     }
                 }
-                $transaction->commit();
-                return true;
             } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
+                $errors[] = [_e('Please send at least one Question attribute.')];
             }
         } else {
+            $errors[] = $model->getErrorSummary(true);
+        }
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 

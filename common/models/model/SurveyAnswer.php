@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -53,15 +54,24 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'min',
-                    'max',
-                    'type',
+                    'subject_id',
+                    'survey_question_id',
+                    'ball',
+                    'exam_id',
+                    'edu_semestr_subject_id',
+                    'student_id',
+                    'user_id',
                 ], 'integer'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status', 'type'], 'default', 'value' => 1],
-            [['min'], 'default', 'value' => 0],
-            [['max'], 'default', 'value' => 10],
+            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+            [['survey_question_id'], 'exist', 'skipOnError' => true, 'targetClass' => SurveyQuestion::className(), 'targetAttribute' => ['survey_question_id' => 'id']],
+            [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
+            [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+
         ];
     }
 
@@ -75,9 +85,14 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             'id' => 'ID',
             //            'name' => 'Name',
 
-            'min',
-            'max',
-            'type',
+            'subject_id' => _e('subject_id'),
+            'survey_question_id' => _e('survey_question_id'),
+            'ball' => _e('ball'),
+            'exam_id' => _e('exam_id'),
+            'edu_semestr_subject_id' => _e('edu_semestr_subject_id'),
+            'student_id' => _e('student_id'),
+            'user_id' => _e('user_id'),
+
 
             'order' => 'Order',
             'status' => 'Status',
@@ -93,12 +108,15 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'question' => function ($model) {
-                return $model->info->question ?? '';
-            },
-            'min',
-            'max',
-            // 'type',
+
+
+            'subject_id',
+            'survey_question_id',
+            'ball',
+            'exam_id',
+            // 'edu_semestr_subject_id',
+            // 'student_id',
+            // 'user_id',
 
             'order',
             'status',
@@ -125,33 +143,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getInfo()
-    {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
-
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
-
-    public function getDescription()
-    {
-        return $this->info->description ?? '';
-    }
-
-    public function getInfoRelation()
-    {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
-            ->andOnCondition(['lang' => Yii::$app->request->get('lang')]);
-    }
-
-    public function getInfoRelationDefaultLanguage()
-    {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
-            ->andOnCondition(['language' => self::$selected_language]);
-    }
 
 
     public function getKafedras()

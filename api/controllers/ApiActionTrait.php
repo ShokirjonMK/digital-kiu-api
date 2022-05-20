@@ -6,6 +6,7 @@ use api\components\HttpBearerAuth;
 use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
+use common\models\model\Student;
 use common\models\model\Subject;
 use common\models\model\TeacherAccess;
 use common\models\model\UserAccess;
@@ -366,5 +367,21 @@ trait ApiActionTrait
         }
 
         return $t;
+    }
+
+    public static function student($type = null, $user_id = null)
+    {
+        if ($user_id == null) {
+            $user_id = current_user_id();
+        }
+        if ($type == null) {
+            $type = 1;
+        }
+        $student = Student::findOne(['user_id' => $user_id]);
+        if ($type == 1) {
+            return  $student->id ?? null;
+        } elseif ($type == 2) {
+            return  $student ?? null;
+        }
     }
 }

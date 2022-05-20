@@ -11,7 +11,14 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "direction".
  *
  * @property int $id
- * @property string $name
+ * 
+ * @property int $subject_id
+ * @property int $survey_question_id
+ * @property int $ball
+ * @property int $exam_id
+ * @property int $edu_semestr_subject_id
+ * @property int $student_id
+ * @property int $user_id
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -19,10 +26,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- *
- * @property Faculty $faculty
- * @property EduPlan[] $eduPlans
- * @property Kafedra[] $kafedras
  */
 class SurveyAnswer extends \yii\db\ActiveRecord
 {
@@ -58,19 +61,41 @@ class SurveyAnswer extends \yii\db\ActiveRecord
                     'survey_question_id',
                     'ball',
                     'exam_id',
+
+                ], 'required'
+            ],
+            [
+                [
+                    'subject_id',
+                    'survey_question_id',
+                    'ball',
+                    'exam_id',
                     'edu_semestr_subject_id',
                     'student_id',
                     'user_id',
                 ], 'integer'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['status', 'type'], 'default', 'value' => 1],
+            [['status'], 'default', 'value' => 1],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['survey_question_id'], 'exist', 'skipOnError' => true, 'targetClass' => SurveyQuestion::className(), 'targetAttribute' => ['survey_question_id' => 'id']],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['edu_semestr_subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestrSubject::className(), 'targetAttribute' => ['edu_semestr_subject_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+
+            [['survey_question_id'], 'unique', 'targetAttribute' => ['survey_question_id', 'exam_id', 'student_id']],
+
+            // a1 needs to be unique
+            // ['a1', 'unique'],
+            // a1 needs to be unique, but column a2 will be used to check the uniqueness of the a1 value
+            // ['a1', 'unique', 'targetAttribute' => 'a2'],
+            // a1 and a2 need to be unique together, and they both will receive error message
+            // a1 and a2 need to be unique together, only a1 will receive error message
+            // ['a1', 'unique', 'targetAttribute' => ['a1', 'a2']],
+            // a1 needs to be unique by checking the uniqueness of both a2 and a3 (using a1 value)
+            // ['a1', 'unique', 'targetAttribute' => ['a2', 'a1' => 'a3']],
+
 
         ];
     }
@@ -114,8 +139,8 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             'survey_question_id',
             'ball',
             'exam_id',
+            'student_id',
             // 'edu_semestr_subject_id',
-            // 'student_id',
             // 'user_id',
 
             'order',
@@ -134,6 +159,12 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     {
         $extraFields =  [
 
+            'subject',
+            'surveyQuestion',
+            'exam',
+            'eduSemestrSubject',
+            'student',
+            'user',
             'description',
 
             'createdBy',
@@ -143,46 +174,50 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-
-
-    public function getKafedras()
+    public function getSubject()
     {
-        return $this->hasMany(Kafedra::className(), ['direction_id' => 'id']);
+        return $this->hasOne(Subject::className(), ['id' =>  'subject_id']);
     }
 
+    public function getSurveyQuestion()
+    {
+        return $this->hasOne(SurveyQuestion::className(), ['id' =>  'survey_question_id']);
+    }
+
+    public function getExam()
+    {
+        return $this->hasOne(exam::className(), ['id' =>  'exam_id']);
+    }
+
+    public function getEduSemestrSubject()
+    {
+        return $this->hasOne(EduSemestrSubject::className(), ['id' =>  'edu_semestr_subject_id']);
+    }
+
+    public function getStudent()
+    {
+        return $this->hasOne(Student::className(), ['id' =>  'student_id']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' =>  'user_id']);
+    }
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        // if (!($model->validate())) {
-        //     $errors[] = $model->errors;
-        // }
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $model->edu_semestr_subject_id = $model->exam->edu_semestr_subject_id;
 
         if ($model->save()) {
-            if (isset($post['question'])) {
-                if (!is_array($post['question'])) {
-                    $errors[] = [_e('Please send Question attribute as array.')];
-                } else {
-                    foreach ($post['question'] as $lang => $question) {
-                        $info = new SurveyQuestionInfo();
-                        $info->survey_question_id = $model->id;
-                        $info->lang = $lang;
-                        $info->question = $question;
-                        $info->description = $post['description'][$lang] ?? null;
-                        if (!$info->save()) {
-                            $errors[] = $info->getErrorSummary(true);
-                        }
-                    }
-                }
-            } else {
-                $errors[] = [_e('Please send at least one Question attribute.')];
-            }
-        } else {
-            $errors[] = $model->getErrorSummary(true);
-        }
-        if (count($errors) == 0) {
             $transaction->commit();
             return true;
         } else {
@@ -200,45 +235,15 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         //     $errors[] = $model->errors;
         // }
 
-
         if ($model->save()) {
-            if (isset($post['question'])) {
-                if (!is_array($post['question'])) {
-                    $errors[] = [_e('Please send Question attribute as array.')];
-                } else {
-                    foreach ($post['question'] as $lang => $question) {
-                        $info = SurveyQuestionInfo::find()->where(['survey_question_id' => $model->id, 'lang' => $lang])->one();
-                        if ($info) {
-                            $info->question = $question;
-                            $info->description = $post['description'][$lang] ?? null;
-                            if (!$info->save()) {
-                                $errors[] = $info->getErrorSummary(true);
-                            }
-                        } else {
-                            $info = new SurveyQuestionInfo();
-                            $info->survey_question_id = $model->id;
-                            $info->lang = $lang;
-                            $info->question = $question;
-                            $info->description = $post['description'][$lang] ?? null;
-                            if (!$info->save()) {
-                                $errors[] = $info->getErrorSummary(true);
-                            }
-                        }
-                    }
-                }
-            } else {
-                $errors[] = [_e('Please send at least one Question attribute.')];
-            }
-        } else {
-            $errors[] = $model->getErrorSummary(true);
-        }
-        if (count($errors) == 0) {
             $transaction->commit();
             return true;
         } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
+            $errors[] = $model->getErrorSummary(true);
         }
+
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
 

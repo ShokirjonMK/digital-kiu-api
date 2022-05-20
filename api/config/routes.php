@@ -174,6 +174,10 @@ $routes = [
     'POST <lang:\w{2}>/rooms/free' => 'room/free',
     /**  */
 
+
+    // Student Get me
+    'GET <lang:\w{2}>/students/me' => 'student/me',
+
     // Student Import
     'POST <lang:\w{2}>/students/import' => 'student/import',
     // 'POST <lang:\w{2}>/students/read' => 'student/read',

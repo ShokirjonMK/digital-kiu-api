@@ -245,6 +245,7 @@ class Student extends \yii\db\ActiveRecord
             'eduType',
             'eduYear',
             'eduForm',
+            'eduLang',
             'faculty',
             'user',
             'tutor',
@@ -314,6 +315,11 @@ class Student extends \yii\db\ActiveRecord
     public function getSocialCategory()
     {
         return $this->hasOne(SocialCategory::className(), ['id' => 'social_category_id']);
+    }
+
+    public function getEduLang()
+    {
+        return $this->hasOne(Languages::className(), ['id' => 'edu_lang_id']);
     }
 
     /**

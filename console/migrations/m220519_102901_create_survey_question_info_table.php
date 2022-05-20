@@ -34,6 +34,7 @@ class m220519_102901_create_survey_question_info_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+
         $this->addForeignKey('sqisq_survey_question_info_survey_question', 'survey_question_info', 'survey_question_id', 'survey_question', 'id');
     }
 

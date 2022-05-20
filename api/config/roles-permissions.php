@@ -85,7 +85,7 @@ return [
     'edu_admin' => [
         "access-control_permissions",
         "access-control_roles",
-
+        'statistic_student-count-by-faculty',
         "area_index",
         "area_view",
 
@@ -1175,7 +1175,11 @@ return [
         "user_logout",
         "user_me",
         "week_index",
-        "week_view"
+        "week_view",
+
+
+        'survey-answer_create',
+        'survey-answer_update',
     ],
 
 ];

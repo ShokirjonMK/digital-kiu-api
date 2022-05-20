@@ -190,6 +190,9 @@ class Exam extends \yii\db\ActiveRecord
             'question',
 
             'key',
+            'surveyStatus',
+            'surveyAnswer',
+
 
             'description',
             'createdBy',
@@ -283,6 +286,35 @@ class Exam extends \yii\db\ActiveRecord
             return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $this->student()]);
         }
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+    }
+
+    public function getSurveyAnswer()
+    {
+        if (isRole('student')) {
+            return $this->hasMany(SurveyAnswer::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $this->student()]);
+        }
+        return $this->hasMany(SurveyAnswer::className(), ['exam_id' => 'id']);
+    }
+
+    public function getSurveyStatus()
+    {
+        if (isRole('student')) {
+            if (
+                count(SurveyAnswer::find()
+                    ->where(['exam_id' => 'id', 'student_id' => $this->student()])
+                    ->all())
+                ==
+                count(SurveyQuestion::find()
+                    ->where(['status' => SurveyQuestion::STATUS_ACTIVE, 'is_deleted' => 0])
+                    ->all())
+
+            ) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        return 1;
     }
 
     public function getKey()

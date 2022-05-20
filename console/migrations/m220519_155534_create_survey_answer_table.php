@@ -37,7 +37,8 @@ class m220519_155534_create_survey_answer_table extends Migration
         ]);
 
         $this->addForeignKey('sasq_survey_answer_survey_question', 'survey_answer', 'survey_question_id', 'survey_question', 'id');
-        $this->addForeignKey('saq_survey_answer_subject', 'survey_answer', 'survey_question_id', 'survey_question', 'id');
+        $this->addForeignKey('sas_survey_answer_subject', 'survey_answer', 'subject_id', 'subject', 'id');
+        $this->addForeignKey('sae_survey_answer_exam', 'survey_answer', 'exam_id', 'exam', 'id');
     }
 
     /**
@@ -46,7 +47,8 @@ class m220519_155534_create_survey_answer_table extends Migration
     public function safeDown()
     {
         $this->dropForeignKey('sasq_survey_answer_survey_question', 'survey_answer');
-        $this->dropForeignKey('saq_survey_answer_subject', 'survey_answer');
+        $this->dropForeignKey('sas_survey_answer_subject', 'survey_answer');
+        $this->dropForeignKey('sae_survey_answer_exam', 'survey_answer');
 
         $this->dropTable('{{%survey_answer}}');
     }

@@ -89,6 +89,7 @@ $controllers = [
     'exam-appeal',
 
     'survey-question',
+    'survey-answer',
 
 
     'telegram',

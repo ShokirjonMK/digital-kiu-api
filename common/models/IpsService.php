@@ -71,9 +71,9 @@ class IpsService extends \yii\db\ActiveRecord
             'function' => 'Function',
             'comment' => 'Comment',
             'is_working' => 'Is Working',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
         ];
     }
 }

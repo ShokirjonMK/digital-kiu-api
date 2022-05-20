@@ -88,6 +88,8 @@ $controllers = [
     'exam-checking',
     'exam-appeal',
 
+    'survey-question',
+
 
     'telegram',
     'test-get-data',

@@ -77,7 +77,7 @@ class SurveyQuestion extends \yii\db\ActiveRecord
 
             'min',
             'max',
-            'type',
+            // 'type',
 
             'order' => 'Order',
             'status' => 'Status',

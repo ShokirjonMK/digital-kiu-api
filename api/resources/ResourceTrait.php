@@ -2,6 +2,7 @@
 
 namespace api\resources;
 
+use common\models\model\Student;
 use common\models\model\TeacherAccess;
 use common\models\model\Translate;
 use Yii;
@@ -77,5 +78,21 @@ trait ResourceTrait
     {
         return TeacherAccess::findOne($teacher_access_id)
             ->user_id ?? null;
+    }
+
+    public static function student($type = null, $user_id = null)
+    {
+        if ($user_id == null) {
+            $user_id = current_user_id();
+        }
+        if ($type == null) {
+            $type = 1;
+        }
+        $student = Student::findOne(['user_id' => $user_id]);
+        if ($type == 1) {
+            return  $student->id ?? null;
+        } elseif ($type == 2) {
+            return  $student ?? null;
+        }
     }
 }

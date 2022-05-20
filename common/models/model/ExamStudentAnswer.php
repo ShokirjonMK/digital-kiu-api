@@ -335,7 +335,16 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $data['questions'] = $getQuestion;
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                             $exam_times['duration'] = $exam->duration;
-                            $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->start + $exam->duration);
+                            if ($ExamStudentHas->finish > 0) {
+                                $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->finish);
+                            } else {
+                                $exam_finish = $ExamStudentHas->start + $exam->duration;
+                                if ($exam_finish > strtotime($exam->finish)) {
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", $exam->finish);
+                                } else {
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                }
+                            }
                             $exam_times['now'] = date("Y-m-d H:i:s");
                             $data['times'] = $exam_times;
                             $data['status'] = true;

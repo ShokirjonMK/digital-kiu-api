@@ -32,17 +32,15 @@ class Password extends Model
 
         // return "asd";
 
-        if (isset($user_id)) {
-            $user = User::findOne($user_id);
-            if (!isset($user)) {
-                $data['username'] = '))';
-                $data['password'] = ':)';
-                return $data;
-            }
-        } else {
-            $user = current_user_id();
+        if (!isset($user_id)) {
+            $user_id = current_user_id();
         }
-
+        $user = User::findOne($user_id);
+        if (!isset($user)) {
+            $data['username'] = '))';
+            $data['password'] = ':)';
+            return $data;
+        }
         $pass = PasswordEncrypts::find()
             ->where(['user_id' => $user->id])
             ->one();

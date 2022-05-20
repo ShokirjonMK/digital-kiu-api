@@ -98,7 +98,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             },
             'min',
             'max',
-            'type',
+            // 'type',
 
             'order',
             'status',

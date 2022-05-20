@@ -289,11 +289,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
         $password = isset($post["password"]) ? $post["password"] : "";
         $student = Student::findOne(['user_id' => current_user_id()]);
+
         if (!$student) {
             $errors[] = _e("Student not found");
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
         $student_id = $student->id;
         // $student_id = 15;
         $exam_times = [];
@@ -339,7 +341,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $data['status'] = true;
                             return $data;
                         }
-
 
                         // $now_date = date('Y-m-d H:i:s');
                         $now_second = time();

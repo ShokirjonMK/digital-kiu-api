@@ -1180,7 +1180,11 @@ return [
         'exam-student-answer_create',
         'exam-student-answer_update',
         'exam-student-answer_view',
-        //        'exam-student-answer_delete',
+
+        'exam-student_index',
+        'exam-student_update',
+        'exam-student_view',
+        //'exam-student-answer_delete',
 
         'exam-student-answer_get-question',
 

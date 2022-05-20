@@ -86,15 +86,15 @@ class EduSemestr extends \yii\db\ActiveRecord
             'end_date' => 'End Date',
             'is_checked' => 'Is Checked',
             'type' => 'Type',
-            'order' => 'Order',
+            'order' => _e('Order'),
             'optional_subject_count' => 'Optional Subject Count',
             'required_subject_count' => 'Required Subject Count',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 

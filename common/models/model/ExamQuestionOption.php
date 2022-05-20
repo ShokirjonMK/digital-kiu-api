@@ -77,13 +77,13 @@ class ExamQuestionOption extends \yii\db\ActiveRecord
             'file' => 'File',
             'is_correct' => 'Is Correct',
             'option' => 'Option',
-            'order' => 'Order',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'order' => _e('Order'),
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 

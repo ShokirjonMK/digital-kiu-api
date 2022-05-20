@@ -75,13 +75,13 @@ class Subject extends \yii\db\ActiveRecord
             'kafedra_id' => 'Kafedra ID',
             'semestr_id' => 'Semestr ID',
             'parent_id' => 'Parent ID',
-            'order' => 'Order',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'order' => _e('Order'),
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 

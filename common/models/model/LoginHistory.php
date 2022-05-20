@@ -71,11 +71,11 @@ class LoginHistory extends \yii\db\ActiveRecord
             'device_id' => 'Device ID',
             'type' => 'Type',
             'model_device' => 'Model Device',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
         ];
     }
 

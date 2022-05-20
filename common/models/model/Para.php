@@ -65,16 +65,16 @@ class Para extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             //            'name' => 'Name',
-            'order' => 'Order',
+            'order' => _e('Order'),
             'start_time' => 'Start Time',
             'end_time' => 'End Time',
 
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 

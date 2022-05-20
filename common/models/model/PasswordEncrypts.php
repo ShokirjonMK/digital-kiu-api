@@ -62,8 +62,8 @@ class PasswordEncrypts extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'key_id' => 'Key ID',
 
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
         ];
     }
 

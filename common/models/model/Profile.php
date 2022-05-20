@@ -196,13 +196,13 @@ class Profile extends \yii\db\ActiveRecord
             'permanent_region_id' => 'Permanent Region ID',
             'permanent_area_id' => 'Permanent Area ID',
             'permanent_address' => 'Permanent Address',
-            'order' => 'Order',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'created_by' => 'Created By',
-            'updated_by' => 'Updated By',
-            'is_deleted' => 'Is Deleted',
+            'order' => _e('Order'),
+            'status' => _e('Status'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 

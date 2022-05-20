@@ -73,11 +73,11 @@ class Region extends \yii\db\ActiveRecord
             'lat' => 'Lat',
             'long' => 'Long',
             'sort' => 'Sort',
-            'status' => 'Status',
+            'status' => _e('Status'),
             'created_on' => 'Created On',
-            'created_by' => 'Created By',
+            'created_by' => _e('Created By'),
             'updated_on' => 'Updated On',
-            'updated_by' => 'Updated By',
+            'updated_by' => _e('Updated By'),
         ];
     }
 

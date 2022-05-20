@@ -27,11 +27,11 @@ class ExamStudentAnswerForTeacher extends ExamStudentAnswer
             'teacher_conclusion' => 'Еeacher Сonclusion',
             'ball' => 'Ball',
 
-            'status' => 'Status',
+            'status' => _e('Status'),
 
-            'updated_at' => 'Updated At',
+            'updated_at' => _e('Updated At'),
 
-            'updated_by' => 'Updated By',
+            'updated_by' => _e('Updated By'),
 
         ];
     }

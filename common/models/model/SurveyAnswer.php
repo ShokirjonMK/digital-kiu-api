@@ -33,12 +33,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
 
     use ResourceTrait;
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
+    
 
     /**
      * {@inheritdoc}

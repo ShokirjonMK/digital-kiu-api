@@ -291,7 +291,7 @@ class Exam extends \yii\db\ActiveRecord
     public function getSurveyAnswer()
     {
         if (isRole('student')) {
-            return $this->hasMany(SurveyAnswer::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $this->student()]);
+            return $this->hasMany(SurveyAnswer::className(), ['exam_id' => 'id'])->onCondition(['user_id' => current_user_id()]);
         }
         return $this->hasMany(SurveyAnswer::className(), ['exam_id' => 'id']);
     }

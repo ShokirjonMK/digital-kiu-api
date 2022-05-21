@@ -85,7 +85,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
 
-            [['survey_question_id'], 'unique', 'targetAttribute' => ['survey_question_id', 'exam_id', 'student_id']],
+            [['survey_question_id'], 'unique', 'targetAttribute' => ['survey_question_id', 'exam_id', 'user_id']],
 
             // a1 needs to be unique
             // ['a1', 'unique'],

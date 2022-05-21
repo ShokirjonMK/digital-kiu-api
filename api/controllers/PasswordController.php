@@ -39,20 +39,26 @@ class PasswordController extends ApiActiveController
         $data = new Password();
         $data = $data->decryptThisUser(current_user_id());
         // if ($data['password'] == $passwordOld) {
-        if ($passwordRe == $passwordNew) {
-            $model = User::findOne(current_user_id());
-            //**parolni shifrlab saqlaymiz */
-            $model->savePassword($passwordNew, current_user_id());
-            //**** */
-            $model->password_hash = \Yii::$app->security->generatePasswordHash($passwordNew);
 
-            if ($model->save()) {
-                return $this->response(1, _e('Password successfully changed!'), null, null, ResponseStatus::OK);
+        if (strlen($passwordNew) >= 6) {
+
+            if ($passwordRe == $passwordNew) {
+                $model = User::findOne(current_user_id());
+                //**parolni shifrlab saqlaymiz */
+                $model->savePassword($passwordNew, current_user_id());
+                //**** */
+                $model->password_hash = \Yii::$app->security->generatePasswordHash($passwordNew);
+
+                if ($model->save()) {
+                    return $this->response(1, _e('Password successfully changed!'), null, null, ResponseStatus::OK);
+                } else {
+                    return $this->response(0, _e('There is an error occurred while changing password!'), null, null, ResponseStatus::FORBIDDEN);
+                }
             } else {
-                return $this->response(0, _e('There is an error occurred while changing password!'), null, null, ResponseStatus::FORBIDDEN);
+                return $this->response(0, _e('Passwords not same.'), null, null, ResponseStatus::FORBIDDEN);
             }
         } else {
-            return $this->response(0, _e('Passwords not same.'), null, null, ResponseStatus::FORBIDDEN);
+            return $this->response(0, _e('Password must be 6 simbol.'), null, null, ResponseStatus::FORBIDDEN);
         }
         // } else {
         //     return $this->response(0, _e('Old password incorrect.'), null, null, ResponseStatus::FORBIDDEN);

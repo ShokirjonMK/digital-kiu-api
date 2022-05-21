@@ -28,6 +28,13 @@ class SurveyAnswer extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     use ResourceTrait;
 
     const STATUS_ACTIVE = 1;
@@ -98,7 +105,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            
+
             'subject_id' => _e('subject_id'),
             'survey_question_id' => _e('survey_question_id'),
             'ball' => _e('ball'),

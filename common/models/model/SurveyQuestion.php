@@ -25,7 +25,6 @@ use yii\behaviors\TimestampBehavior;
  */
 class SurveyQuestion extends \yii\db\ActiveRecord
 {
-
     public static $selected_language = 'uz';
 
     use ResourceTrait;

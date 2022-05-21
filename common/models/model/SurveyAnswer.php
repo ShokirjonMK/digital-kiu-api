@@ -239,7 +239,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         return simplify_errors($errors);
     }
 
-
     public function beforeSave($insert)
     {
         if ($insert) {

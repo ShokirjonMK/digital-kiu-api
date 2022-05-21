@@ -156,6 +156,9 @@ return [
         "exams-type_update",
         "exams-type_view",
 
+        'exam_generate-passwords',
+
+        'exam_get-passwords',
         "exam_create",
         "exam_index",
         "exam_update",

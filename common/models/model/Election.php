@@ -19,7 +19,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- *
  */
 class Election extends \yii\db\ActiveRecord
 {

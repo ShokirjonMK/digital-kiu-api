@@ -53,7 +53,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
                     'survey_question_id',
                     'ball',
                     'exam_id',
-
                 ], 'required'
             ],
             [

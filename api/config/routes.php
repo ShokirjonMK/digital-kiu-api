@@ -181,6 +181,8 @@ $routes = [
 
     // Student Import
     'POST <lang:\w{2}>/students/import' => 'student/import',
+    // Student Export
+    'GET <lang:\w{2}>/students/export' => 'student/export',
     // 'POST <lang:\w{2}>/students/read' => 'student/read',
 
     // My Notifications

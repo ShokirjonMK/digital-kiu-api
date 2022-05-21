@@ -228,7 +228,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-       
         if ($model->save()) {
             $transaction->commit();
             return true;

@@ -301,7 +301,7 @@ class Exam extends \yii\db\ActiveRecord
         if (isRole('student')) {
             if (
                 count(SurveyAnswer::find()
-                    ->where(['exam_id' => $this->id, 'student_id' => $this->student()])
+                    ->where(['exam_id' => $this->id, 'user_id' => current_user_id()])
                     ->all())
                 ==
                 count(SurveyQuestion::find()

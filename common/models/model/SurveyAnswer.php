@@ -29,6 +29,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     public static $selected_language = 'uz';
 
     use ResourceTrait;
+    
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
 

@@ -10,7 +10,6 @@ use yii\behaviors\TimestampBehavior;
 /**
  * This is the model class for table "direction".
  * @property int $id
- * 
  * @property int $subject_id
  * @property int $survey_question_id
  * @property int $ball

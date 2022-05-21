@@ -34,7 +34,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     use ResourceTrait;
 
 
-
     /**
      * {@inheritdoc}
      */

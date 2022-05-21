@@ -5,7 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use api\resources\User;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "direction".

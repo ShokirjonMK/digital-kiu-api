@@ -5,13 +5,10 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use api\resources\User;
 use Yii;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "direction".
- *
  * @property int $id
- * 
  * @property int $subject_id
  * @property int $survey_question_id
  * @property int $ball
@@ -29,17 +26,12 @@ use yii\behaviors\TimestampBehavior;
  */
 class SurveyAnswer extends \yii\db\ActiveRecord
 {
-
     public static $selected_language = 'uz';
 
     use ResourceTrait;
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
 
     /**
      * {@inheritdoc}
@@ -61,7 +53,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
                     'survey_question_id',
                     'ball',
                     'exam_id',
-
                 ], 'required'
             ],
             [
@@ -96,7 +87,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             // a1 needs to be unique by checking the uniqueness of both a2 and a3 (using a1 value)
             // ['a1', 'unique', 'targetAttribute' => ['a2', 'a1' => 'a3']],
 
-
         ];
     }
 
@@ -108,8 +98,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            //            'name' => 'Name',
-
+            
             'subject_id' => _e('subject_id'),
             'survey_question_id' => _e('survey_question_id'),
             'ball' => _e('ball'),
@@ -117,7 +106,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             'edu_semestr_subject_id' => _e('edu_semestr_subject_id'),
             'student_id' => _e('student_id'),
             'user_id' => _e('user_id'),
-
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -134,7 +122,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         $fields =  [
             'id',
 
-
             'subject_id',
             'survey_question_id',
             'ball',
@@ -149,7 +136,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
-
         ];
 
         return $fields;
@@ -231,10 +217,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        // if (!($model->validate())) {
-        //     $errors[] = $model->errors;
-        // }
-
         if ($model->save()) {
             $transaction->commit();
             return true;
@@ -245,7 +227,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         $transaction->rollBack();
         return simplify_errors($errors);
     }
-
 
     public function beforeSave($insert)
     {

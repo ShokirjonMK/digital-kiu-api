@@ -25,7 +25,6 @@ use yii\behaviors\TimestampBehavior;
  */
 class SurveyQuestion extends \yii\db\ActiveRecord
 {
-
     public static $selected_language = 'uz';
 
     use ResourceTrait;
@@ -39,6 +38,7 @@ class SurveyQuestion extends \yii\db\ActiveRecord
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -75,7 +75,8 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            //            'name' => 'Name',
+            // question on info table
+            // description on info table
 
             'min',
             'max',

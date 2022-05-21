@@ -134,7 +134,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         $fields =  [
             'id',
 
-
             'subject_id',
             'survey_question_id',
             'ball',

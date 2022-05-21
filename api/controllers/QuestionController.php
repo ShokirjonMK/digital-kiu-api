@@ -204,9 +204,7 @@ class QuestionController extends ApiActiveController
             $status = $post['status'];
             $post = [];
             $post['status'] = $status;
-        }
-
-        if (isRole('mudir')) {
+        } elseif (isRole('mudir')) {
             $statusList = [
                 Question::STATUS_TEACHER_EDITED,
                 Question::STATUS_MUDIR_ACTIVE,
@@ -217,10 +215,7 @@ class QuestionController extends ApiActiveController
             if (!(in_array($model->status, $statusList, TRUE))) {
                 return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
-        }
-
-
-        if (isRole('teacher') && $model->created_by == current_user_id()) {
+        } elseif (isRole('teacher') && $model->created_by == current_user_id()) {
             $statusList = [
                 Question::STATUS_MUDIR_REFUSED,
                 Question::STATUS_DEAN_REFUSED,

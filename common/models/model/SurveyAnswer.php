@@ -29,7 +29,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     public static $selected_language = 'uz';
 
     use ResourceTrait;
-    
+
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
 
@@ -86,7 +86,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             // ['a1', 'unique', 'targetAttribute' => ['a1', 'a2']],
             // a1 needs to be unique by checking the uniqueness of both a2 and a3 (using a1 value)
             // ['a1', 'unique', 'targetAttribute' => ['a2', 'a1' => 'a3']],
-
 
         ];
     }

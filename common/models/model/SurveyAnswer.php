@@ -99,6 +99,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             // question on info table
+            // description on info table
             'subject_id' => _e('subject_id'),
             'survey_question_id' => _e('survey_question_id'),
             'ball' => _e('ball'),

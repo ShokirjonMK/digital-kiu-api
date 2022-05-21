@@ -1180,6 +1180,7 @@ return [
 
         'survey-answer_create',
         'survey-answer_update',
+        'survey-question_index',
     ],
 
 ];

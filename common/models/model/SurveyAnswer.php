@@ -118,7 +118,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             'student_id' => _e('student_id'),
             'user_id' => _e('user_id'),
 
-
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),

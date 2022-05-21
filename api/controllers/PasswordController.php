@@ -52,7 +52,7 @@ class PasswordController extends ApiActiveController
                 return $this->response(0, _e('There is an error occurred while changing password!'), null, null, ResponseStatus::FORBIDDEN);
             }
         } else {
-            return $this->response(0, _e('Old password .'), null, null, ResponseStatus::FORBIDDEN);
+            return $this->response(0, _e('Passwords not same.'), null, null, ResponseStatus::FORBIDDEN);
         }
         // } else {
         //     return $this->response(0, _e('Old password incorrect.'), null, null, ResponseStatus::FORBIDDEN);

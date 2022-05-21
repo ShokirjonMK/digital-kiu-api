@@ -15,6 +15,7 @@ use base\ResponseStatus;
 use common\models\model\Faculty;
 use common\models\model\Profile;
 use common\models\model\Student;
+use common\models\model\StudentExport;
 use Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
@@ -274,10 +275,10 @@ class  StudentController extends ApiActiveController
     public function actionExport($lang)
     {
         /*********/
-        $model = new Student();
+        $model = new StudentExport();
 
         $query = $model->find()
-            ->with(['profile'])
+            ->with(['profile', 'eduLang', 'eduPlan'])
             ->where(['student.is_deleted' => 0])
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
             // ->groupBy('student.id')
@@ -332,22 +333,23 @@ class  StudentController extends ApiActiveController
 
         // data
         $data =  $this->getData($query);
+        $data =  $data->asArray();
 
         /** Excel Export */
 
+        // return $model->attributes();
+        return $data;
         $mySpreadsheet = new Spreadsheet();
         $mySpreadsheet->removeSheetByIndex(0);
 
         // Create "Sheet 1" tab as the first worksheet.
         // https://phpspreadsheet.readthedocs.io/en/latest/topics/worksheets/adding-a-new-worksheet
-        $worksheet1 = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($mySpreadsheet, "Sheet 1");
+        $worksheet1 = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($mySpreadsheet, "Students");
         $mySpreadsheet->addSheet($worksheet1, 0);
 
-        // Create "Sheet 2" tab as the second worksheet.
-        $worksheet2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($mySpreadsheet, "Sheet 2");
-        $mySpreadsheet->addSheet($worksheet2, 1);
 
-        // sheet 1 contains the birthdays of famous people.
+
+
         $sheet1Data = [
             ["First Name", "Last Name", "Date of Birth"],
             ['Britney',  "Spears", "02-12-1981"],
@@ -356,21 +358,16 @@ class  StudentController extends ApiActiveController
         ];
 
         // Sheet 2 contains list of ferrari cars and when they were manufactured.
-        $sheet2Data = [
-            ["Model", "Production Year Start", "Production Year End"],
-            ["308 GTB",  1975, 1985],
-            ["360 Spider",  1999, 2004],
-            ["488 GTB",  2015, 2020],
-        ];
+
 
 
         $worksheet1->fromArray($sheet1Data);
-        $worksheet2->fromArray($sheet2Data);
+
 
 
         // Change the widths of the columns to be appropriately large for the content in them.
         // https://stackoverflow.com/questions/62203260/php-spreadsheet-cant-find-the-function-to-auto-size-column-width
-        $worksheets = [$worksheet1, $worksheet2];
+        $worksheets = [$worksheet1];
 
         foreach ($worksheets as $worksheet) {
             foreach ($worksheet->getColumnIterator() as $column) {
@@ -382,10 +379,19 @@ class  StudentController extends ApiActiveController
         $writer = new Xlsx($mySpreadsheet);
         $writer->save('output.xlsx');
 
-        // return $writer;
-        /** Excel Export */
+        if (!file_exists(STORAGE_PATH  . 'student_export')) {
+            mkdir(STORAGE_PATH  . 'student_export', 0777, true);
+        }
 
-        return $this->response(1, _e('Success'), $data);
+        $fileName = time() . '_std.xlsx';
+
+        $miniUrl =  'student_export/' . $fileName;
+        $url = STORAGE_PATH . $miniUrl;
+        $writer->save($url, false);
+        $excel_url =  "storage/" . $miniUrl;
+
+
+        return $this->response(1, _e('Success'), $excel_url);
     }
 
     public function actionCreate($lang)

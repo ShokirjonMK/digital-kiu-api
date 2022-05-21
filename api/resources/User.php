@@ -370,10 +370,10 @@ class User extends CommonUser
                 if ($post['password'] != 'undefined' && $post['password'] != 'null' && $post['password'] != '') {
                     $password = $post['password'];
                 } else {
-                    $password = _random_string();
+                    $password = _passwordMK();
                 }
             } else {
-                $password = _random_string();
+                $password = _passwordMK();
             }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($password);
 

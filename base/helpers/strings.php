@@ -26,6 +26,13 @@ function _random_string($type = 'alnum', $len = 8)
     return substr(str_shuffle(str_repeat($pool, ceil($len / strlen($pool)))), 0, $len);
 }
 
+function _passwordMK($len = 8)
+{
+    $pool = '123456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+
+    return substr(str_shuffle(str_repeat($pool, ceil($len / strlen($pool)))), 0, $len);
+}
+
 // Remove all chars from string
 function _remove_all($string, $except = false)
 {

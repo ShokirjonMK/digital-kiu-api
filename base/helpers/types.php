@@ -27,9 +27,8 @@ function json_output($type = 'error', $array = array())
 function gender($key = null)
 {
     $array = array(
-        '0' => '-',
         '1' => _e('Male'),
-        '2' => _e('Female'),
+        '0' => _e('Female'),
     );
 
     if (is_numeric($key)) {

@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use api\resources\User;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "direction".
@@ -28,6 +29,8 @@ class SurveyAnswer extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
+    use ResourceTrait;
+
     public function behaviors()
     {
         return [
@@ -35,7 +38,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         ];
     }
 
-    use ResourceTrait;
+
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;

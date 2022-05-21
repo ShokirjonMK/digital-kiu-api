@@ -20,8 +20,8 @@ trait ResourceTrait
             ],
             [
                 'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'created_on',
-                'updatedAtAttribute' => 'updated_on',
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
                 'value' => date('Y-m-d H:i:s'),
             ],
         ];

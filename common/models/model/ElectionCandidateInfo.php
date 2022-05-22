@@ -20,7 +20,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $is_deleted
  *
  */
-class SurveyQuestionInfo extends \yii\db\ActiveRecord
+class ElectionCandidateInfo extends \yii\db\ActiveRecord
 {
 
     public static $selected_language = 'uz';

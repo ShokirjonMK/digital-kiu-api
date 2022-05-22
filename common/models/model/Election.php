@@ -46,6 +46,13 @@ class Election extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [
+                [
+                    'start',
+                    'finish',
+                    'roles',
+                ], 'required'
+            ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'integer'],
             [['roles'], 'string', 'max' => 255],
@@ -77,7 +84,7 @@ class Election extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'name' => function ($model) {
-                return $model->translate->name ?? $model->year . '-' . date('Y', strtotime($model->year));
+                return $model->translate->name ?? '';
             },
             'start',
             'finish',
@@ -145,6 +152,10 @@ class Election extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $model->start = strtotime($model->start);
+        $model->finish = strtotime($model->finish);
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -174,6 +185,16 @@ class Election extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        if (isset($post['start'])) {
+            $model->start = strtotime($post['start']);
+        }
+
+        if (isset($post['finish'])) {
+            $model->finish = strtotime($post['finish']);
+        }
+
+        // dd($model);
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

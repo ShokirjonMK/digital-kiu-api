@@ -56,8 +56,10 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [
+                ['election_id', 'short_info'], 'required'
+            ],
             [['election_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['start', 'finish'], 'integer'],
             [['photo'], 'string', 'max' => 255],
             [['short_info', 'full_info'], 'string'],
             [['photo_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg', 'maxSize' => $this->photoFileMaxSize],
@@ -97,9 +99,6 @@ class ElectionCandidate extends \yii\db\ActiveRecord
             'short_info',
             'full_info',
 
-            'start',
-            'finish',
-            'roles',
             'order',
             'status',
             'created_at',
@@ -145,7 +144,7 @@ class ElectionCandidate extends \yii\db\ActiveRecord
                 $model->photo_file = $model->photo_file[0];
                 $photoFileUrl = $model->uploadFile();
                 if ($photoFileUrl) {
-                    $model->file = $photoFileUrl;
+                    $model->photo = $photoFileUrl;
                 } else {
                     $errors[] = $model->errors;
                 }

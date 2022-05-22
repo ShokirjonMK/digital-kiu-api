@@ -15,7 +15,7 @@ class ElectionCandidateController extends ApiActiveController
         return [];
     }
 
-    public $table_name = 'election';
+    public $table_name = 'election_candidate';
     public $controller_name = 'ElectionCandidate';
 
     public function actionIndex($lang)

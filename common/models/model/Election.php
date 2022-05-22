@@ -208,6 +208,7 @@ class Election extends \yii\db\ActiveRecord
         $has_error = Translate::checkingUpdate($post);
 
         if ($has_error['status']) {
+            
             if ($model->save()) {
 
                 if (isset($post['name'])) {
@@ -221,11 +222,12 @@ class Election extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-                
+
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }

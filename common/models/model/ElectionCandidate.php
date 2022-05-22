@@ -134,7 +134,8 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     public function getDescription()
     {
         return $this->info->description ?? '';
-    }public function getInfoRelation()
+    }
+    public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])

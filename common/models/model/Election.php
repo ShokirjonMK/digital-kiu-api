@@ -204,7 +204,9 @@ class Election extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+        
         $has_error = Translate::checkingUpdate($post);
+
         if ($has_error['status']) {
             if ($model->save()) {
 

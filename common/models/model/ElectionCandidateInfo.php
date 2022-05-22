@@ -87,11 +87,11 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
+
             'election_candidate_id' => _e('election_candidate_id'),
             'lang' => _e('lang'),
             'photo' => _e('photo'),

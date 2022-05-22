@@ -12,6 +12,11 @@ class m220517_040815_create_election_candidate_innfo_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'election_candidate_info';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('election_candidate_info');
+        }
+
         $this->createTable('{{%election_candidate_info}}', [
             'id' => $this->primaryKey(),
             'election_candidate_id' => $this->integer()->notNull(),

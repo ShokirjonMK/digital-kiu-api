@@ -12,14 +12,20 @@ class m220514_052345_create_election_table extends Migration
      */
     public function safeUp()
     {
+
+        $tableName = Yii::$app->db->tablePrefix . 'election';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('election');
+        }
+
         $this->createTable('{{%election}}', [
             'id' => $this->primaryKey(),
             // 'start' => $this->dateTime()->notNull(),
             // 'finish' => $this->dateTime()->notNull(),
             'roles' => $this->string(255)->defaultValue(0),
-            'start' => $this->integer()->defaultValue(0),
-            'finish' => $this->integer()->defaultValue(0),
-            'status' => $this->tinyInteger(1)->defaultValue(0),
+            'start' => $this->integer()->Null(),
+            'finish' => $this->integer()->Null(),
+            'status' => $this->tinyInteger(1)->defaultValue(1),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
             'updated_at' => $this->integer()->Null(),

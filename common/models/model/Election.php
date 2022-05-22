@@ -55,6 +55,8 @@ class Election extends \yii\db\ActiveRecord
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'integer'],
+            [['start', 'finish'], 'default', 'value' => time()],
+            [['status'], 'default', 'value' => 1],
             [['roles'], 'string', 'max' => 255],
         ];
     }

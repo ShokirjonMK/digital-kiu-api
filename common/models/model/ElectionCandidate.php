@@ -41,7 +41,6 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     public $photo_file;
     public $photoFileMaxSize = 1024 * 1024 * 3; // 3 Mb
 
-
     /**
      * {@inheritdoc}
      */
@@ -122,6 +121,35 @@ class ElectionCandidate extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getInfo()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
+    public function getDescription()
+    {
+        return $this->info->description ?? '';
+    }
+
+    public function getInfoRelation()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
+            ->andOnCondition(['lang' => Yii::$app->request->get('lang')]);
+    }
+
+    public function getInfoRelationDefaultLanguage()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language]);
+    }
+
 
     public function getElection()
     {

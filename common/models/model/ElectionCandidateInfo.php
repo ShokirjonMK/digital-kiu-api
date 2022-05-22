@@ -39,7 +39,7 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'survey_question_info';
+        return 'election_candidate_info';
     }
 
     /**
@@ -50,8 +50,9 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'survey_question_id',
+                    'election_candidate_id',
                     'lang',
+                    'short_info',
                 ], 'required'
             ],
             [
@@ -61,13 +62,24 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
             ],
             [
                 [
-                    'question',
-                    'description',
+                    'photo',
+                ], 'string', 'max' => 255
+            ],
+            [
+                [
+                    'short_info',
+                    'full_info',
                 ], 'string'
             ],
-            [['survey_question_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['election_candidate_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
 
-            [['survey_question_id'], 'exist', 'skipOnError' => true, 'targetClass' => SurveyQuestion::className(), 'targetAttribute' => ['survey_question_id' => 'id']],
+            [
+                ['election_candidate_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => ElectionCandidate::className(),
+                'targetAttribute' => ['election_candidate_id' => 'id']
+            ],
 
         ];
     }
@@ -80,12 +92,11 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            //            'name' => 'Name',
-
-            'survey_question_id',
-            'lang',
-            'question',
-            'description',
+            'election_candidate_id' => _e('election_candidate_id'),
+            'lang' => _e('lang'),
+            'photo' => _e('photo'),
+            'short_info' => _e('short_info'),
+            'full_info' => _e('full_info'),
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -100,7 +111,7 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'surveyQuestion',
+            'electionCandidate',
             'createdBy',
             'updatedBy',
         ];
@@ -108,11 +119,10 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getSurveyQuestion()
+    public function getElectionCandidate()
     {
-        return $this->hasMany(SurveyQuestion::className(), ['id' => 'survey_question_id']);
+        return $this->hasMany(ElectionCandidate::className(), ['id' => 'election_candidate_id']);
     }
-
 
     public static function createItem($model, $post)
     {
@@ -141,7 +151,6 @@ class ElectionCandidateInfo extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-
 
         if ($model->save()) {
 

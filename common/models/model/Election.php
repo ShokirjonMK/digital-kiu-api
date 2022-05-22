@@ -177,11 +177,12 @@ class Election extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
-                
+
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+            
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }

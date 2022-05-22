@@ -109,7 +109,7 @@ class Election extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get Tranlate
+     * Get Translate
      *
      * @return void
      */
@@ -136,10 +136,13 @@ class Election extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
 
     public static function createItem($model, $post)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         if (!($model->validate())) {

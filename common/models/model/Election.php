@@ -182,7 +182,7 @@ class Election extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
-            
+
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
@@ -201,7 +201,6 @@ class Election extends \yii\db\ActiveRecord
             $model->finish = strtotime($post['finish']);
         }
 
-        // dd($model);
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

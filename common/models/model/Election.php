@@ -165,6 +165,7 @@ class Election extends \yii\db\ActiveRecord
         $has_error = Translate::checkingAll($post);
 
         if ($has_error['status']) {
+            
             if ($model->save()) {
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);

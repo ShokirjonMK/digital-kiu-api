@@ -23,15 +23,14 @@ class ElectionCandidateController extends ApiActiveController
         $model = new ElectionCandidate();
 
         $query = $model->find()
-            ->with(['infoRelation'])
+            ->with(['info'])
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
-            // ->groupBy($this->table_name . '.id')
-            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->leftJoin("election_candidate_info eci", "eci.election_candidate_id = $this->table_name.id")
+            ->groupBy($this->table_name . '.id')
+            // ->andWhere(['eci.language' => Yii::$app->request->get('lang')])
+            // ->andWhere(['eci.tabel_name' => 'faculty'])
+            ->andFilterWhere(['like', 'eci.name', Yii::$app->request->get('q')]);
 
 
         // filter

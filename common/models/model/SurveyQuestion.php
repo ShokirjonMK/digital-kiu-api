@@ -149,7 +149,7 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
-            ->andOnCondition(['language' => self::$selected_language]);
+            ->andOnCondition(['lang' => self::$selected_language]);
     }
 
 

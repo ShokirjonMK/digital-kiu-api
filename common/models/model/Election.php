@@ -11,7 +11,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id
  * @property string $name
- * @property string $roles
+ * @property string $role
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -50,14 +50,14 @@ class Election extends \yii\db\ActiveRecord
                 [
                     'start',
                     'finish',
-                    'roles',
+                    'role',
                 ], 'required'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start', 'finish'], 'integer'],
             [['start', 'finish'], 'default', 'value' => time()],
             [['status'], 'default', 'value' => 1],
-            [['roles'], 'string', 'max' => 255],
+            [['role'], 'string', 'max' => 255],
         ];
     }
 
@@ -68,7 +68,7 @@ class Election extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'roles' => _e('roles'),
+            'role' => _e('role'),
             'start' => _e('start'),
             'finish' => _e('finish'),
             'order' => _e('Order'),
@@ -90,7 +90,7 @@ class Election extends \yii\db\ActiveRecord
             },
             'start',
             'finish',
-            'roles',
+            'role',
             'order',
             'status',
             'created_at',

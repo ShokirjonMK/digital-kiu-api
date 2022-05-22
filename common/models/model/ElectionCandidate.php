@@ -147,7 +147,7 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
-            ->andOnCondition(['language' => self::$selected_language]);
+            ->andOnCondition(['lang' => self::$selected_language]);
     }
 
 

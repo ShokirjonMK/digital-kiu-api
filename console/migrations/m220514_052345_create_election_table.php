@@ -22,7 +22,7 @@ class m220514_052345_create_election_table extends Migration
             'id' => $this->primaryKey(),
             // 'start' => $this->dateTime()->notNull(),
             // 'finish' => $this->dateTime()->notNull(),
-            'roles' => $this->string(255)->defaultValue(0),
+            'role' => $this->string(255)->defaultValue(0),
             'start' => $this->integer()->Null(),
             'finish' => $this->integer()->Null(),
             'status' => $this->tinyInteger(1)->defaultValue(1),

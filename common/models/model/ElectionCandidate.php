@@ -93,6 +93,8 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
+
+            
             'election_id',
             'photo',
             'short_info',

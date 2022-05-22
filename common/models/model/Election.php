@@ -173,10 +173,11 @@ class Election extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-                
+
                 $transaction->commit();
                 return true;
             } else {
+                
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }

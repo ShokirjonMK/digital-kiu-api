@@ -18,10 +18,6 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- *
- * @property Faculty $faculty
- * @property EduPlan[] $eduPlans
- * @property Kafedra[] $kafedras
  */
 class SurveyQuestion extends \yii\db\ActiveRecord
 {

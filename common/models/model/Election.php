@@ -204,7 +204,7 @@ class Election extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        
+
         $has_error = Translate::checkingUpdate($post);
 
         if ($has_error['status']) {
@@ -217,9 +217,11 @@ class Election extends \yii\db\ActiveRecord
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                     }
                 }
+
                 $transaction->commit();
                 return true;
             } else {
+                
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }

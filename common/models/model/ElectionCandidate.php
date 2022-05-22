@@ -135,7 +135,7 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     {
         return $this->info->description ?? '';
     }
-     
+      
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');

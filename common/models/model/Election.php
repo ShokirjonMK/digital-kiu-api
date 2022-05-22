@@ -167,12 +167,13 @@ class Election extends \yii\db\ActiveRecord
         if ($has_error['status']) {
 
             if ($model->save()) {
-                
+
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
+                
                 $transaction->commit();
                 return true;
             } else {

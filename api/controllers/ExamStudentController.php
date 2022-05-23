@@ -6,6 +6,7 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
+use common\models\model\Profile;
 use common\models\model\TeacherAccess;
 
 class ExamStudentController extends ApiActiveController
@@ -25,8 +26,32 @@ class ExamStudentController extends ApiActiveController
         $model = new ExamStudent();
 
         $query = $model->find()
-            ->andWhere(['is_deleted' => 0])
+            ->andWhere(['exam_student.is_deleted' => 0])
+            ->join('INNER JOIN', 'student', 'student.id = exam_student.student_id')
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
         if (isRole("teacher")) {
             $query = $query->andWhere([

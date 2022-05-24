@@ -121,6 +121,10 @@ class ElectionCandidate extends \yii\db\ActiveRecord
         $extraFields =  [
 
             'election',
+            'electionVoteCount',
+            'electionVote',
+
+
             'createdBy',
             'updatedBy',
         ];
@@ -160,6 +164,17 @@ class ElectionCandidate extends \yii\db\ActiveRecord
     public function getElection()
     {
         return $this->hasOne(Election::className(), ['id' => 'election_id']);
+    }
+
+
+    public function getElectionVote()
+    {
+        return $this->hasMany(ElectionVote::className(), ['election_candidate_id' => 'id']);
+    }
+
+    public function getElectionVoteCount()
+    {
+        return count($this->electionVote);
     }
 
     public static function createItem($model, $post)

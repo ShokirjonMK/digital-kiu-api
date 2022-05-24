@@ -34,6 +34,11 @@ class ElectionController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
 
+        // return current_user_roles_array();
+        if (!isRole('admin')) {
+            $query = $query->andWhere(['in', 'role', current_user_roles_array()]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 

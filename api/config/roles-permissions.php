@@ -356,10 +356,10 @@ return [
         'para_update',
         'para_view',
 
-        'exam_index',
-        'exam_create',
-        'exam_update',
-        'exam_view',
+        // 'exam_index',
+        // 'exam_create',
+        // 'exam_update',
+        // 'exam_view',
 
         'exams-type_index',
         'exams-type_create',
@@ -486,10 +486,10 @@ return [
         'para_update',
         'para_view',
 
-        'exam_index',
-        'exam_create',
-        'exam_update',
-        'exam_view',
+        // 'exam_index',
+        // 'exam_create',
+        // 'exam_update',
+        // 'exam_view',
 
         'exams-type_index',
         'exams-type_create',
@@ -592,11 +592,11 @@ return [
         "enum_topic-types",
         "enum_yesno",
         "exams-type_index",
-        "exam_create",
-        "exam_delete",
-        "exam_index",
-        "exam_update",
-        "exam_view",
+        // "exam_create",
+        // "exam_delete",
+        // "exam_index",
+        // "exam_update",
+        // "exam_view",
         "faculty_index",
         "faculty_view",
         "kafedra_create",
@@ -1184,6 +1184,10 @@ return [
         'survey-answer_create',
         'survey-answer_update',
         'survey-question_index',
+
+        'election_index',
+        'election-vote_create',
+        'election-vote_update',
     ],
 
 ];

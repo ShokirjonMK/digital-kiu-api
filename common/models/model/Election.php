@@ -110,6 +110,10 @@ class Election extends \yii\db\ActiveRecord
             'description',
 
             'electionCondidate',
+            'electionCondidateCount',
+            'electionVoteCount',
+            'electionVoteAll',
+            'electionVote',
             'createdBy',
             'updatedBy',
         ];
@@ -154,6 +158,28 @@ class Election extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ElectionCandidate::className(), ['election_id' => 'id']);
     }
+
+    public function getElectionCondidateCount()
+    {
+        return count($this->electionCondidate);
+    }
+
+
+    public function getElectionVote()
+    {
+        return $this->hasMany(ElectionVote::className(), ['election_id' => 'id'])->onCondition(['user_id' => current_user_id()]);
+    }
+
+    public function getElectionVoteAll()
+    {
+        return $this->hasMany(ElectionVote::className(), ['election_id' => 'id']);
+    }
+
+    public function getElectionVoteCount()
+    {
+        return count($this->electionVote);
+    }
+
 
     public static function createItem($model, $post)
     {

@@ -59,9 +59,7 @@ class ElectionVote extends \yii\db\ActiveRecord
                 'user_id',
                 'election_candidate_id',
             ], 'integer'],
-
             [['status'], 'default', 'value' => 1],
-
             [
                 ['election_candidate_id'],
                 'exist',
@@ -76,6 +74,9 @@ class ElectionVote extends \yii\db\ActiveRecord
                 'targetClass' => Election::className(),
                 'targetAttribute' => ['election_id' => 'id']
             ],
+
+            [['election_candidate_id'], 'unique', 'targetAttribute' => ['election_id', 'user_id'], 'message' => _e('You have already elected')],
+
         ];
     }
 
@@ -169,7 +170,7 @@ class ElectionVote extends \yii\db\ActiveRecord
 
     public function getElectionCondidate()
     {
-        return $this->hasOne(ElectionCandidate::className(), ['election_id' => 'id']);
+        return $this->hasOne(ElectionCandidate::className(), ['id' => 'election_candidate_id']);
     }
 
     public function getElection()
@@ -181,9 +182,23 @@ class ElectionVote extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        // dd($model->electionCondidate);
+        $model->election_id = $model->electionCondidate->election_id;
 
         if (!in_array($model->election->role, current_user_roles_array())) {
             $errors[] = "This election not for you";
+            return simplify_errors($errors);
+        }
+
+        $now_time = time();
+
+        if (!($model->election->start <= $now_time)) {
+            $errors[] = "Election not starts yet";
+            return simplify_errors($errors);
+        }
+
+        if (!($now_time <= $model->election->finish)) {
+            $errors[] = "Election time expired";
             return simplify_errors($errors);
         }
 

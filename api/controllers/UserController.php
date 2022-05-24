@@ -87,7 +87,6 @@ class UserController extends ApiActiveController
         }
     }
 
-
     public function actionLogout()
     {
         if (Login::logout()) {

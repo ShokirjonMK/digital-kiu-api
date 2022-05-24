@@ -124,6 +124,9 @@ $routes = [
 
     /* statistics all */
 
+    // election password generator
+    'GET <lang:\w{2}>/elections/<id>/password' => 'election/password',
+
     // Question status update
     'PUT <lang:\w{2}>/questions/status-update/<id>' => 'question/status-update',
     // Question status list

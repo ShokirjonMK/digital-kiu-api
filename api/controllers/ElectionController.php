@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\Election;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\ElectionPass;
 
 class ElectionController extends ApiActiveController
 {
@@ -88,7 +89,28 @@ class ElectionController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+
+        if ($model->password == Yii::$app->request->get('password')) {
+            return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('Incorrect password.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+    }
+
+    public function actionPassword($lang, $id)
+    {
+        $model = ElectionPass::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        $model->password = _passwordMK(6);
+        if ($model->save()) {
+            return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('Error occured.'), null, null, ResponseStatus::NOT_FOUND);
+        }
     }
 
     public function actionDelete($lang, $id)

@@ -57,7 +57,7 @@ class Election extends \yii\db\ActiveRecord
             [['start', 'finish'], 'integer'],
             [['start', 'finish'], 'default', 'value' => time()],
             [['status'], 'default', 'value' => 1],
-            [['role'], 'string', 'max' => 255],
+            [['role', 'password'], 'string', 'max' => 255],
         ];
     }
 
@@ -70,6 +70,7 @@ class Election extends \yii\db\ActiveRecord
             'id' => 'ID',
             'role' => _e('role'),
             'start' => _e('start'),
+            'password' => _e('password'),
             'finish' => _e('finish'),
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -91,6 +92,7 @@ class Election extends \yii\db\ActiveRecord
             'start',
             'finish',
             'role',
+            // 'password',
             'order',
             'status',
             'created_at',
@@ -114,12 +116,23 @@ class Election extends \yii\db\ActiveRecord
             'electionVoteCount',
             'electionVoteAll',
             'electionVote',
+
+            'password',
+
             'createdBy',
             'updatedBy',
         ];
 
         return $extraFields;
     }
+
+
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
 
     /**
      * Get Translate
@@ -185,6 +198,8 @@ class Election extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $model->password = _passwordMK(6);
 
         $model->start = strtotime($model->start);
         $model->finish = strtotime($model->finish);

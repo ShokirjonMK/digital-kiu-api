@@ -12,6 +12,8 @@ class m220524_190916_alter_election_table_add_password extends Migration
      */
     public function safeUp()
     {
+        $this->execute("ALTER TABLE `election` ADD `password` varchar(255) null COMMENT 'password' after `id`;");
+
 
     }
 

@@ -92,6 +92,7 @@ $controllers = [
     'survey-answer',
     'election',
     'election-candidate',
+    'election-vote',
 
 
     'telegram',

@@ -625,30 +625,30 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
                                     if (!isJsonMK($post['subQuestionAnswers'])) {
                                         $errors['subQuestionAnswers'] = [_e('Must be Json')];
-                                    }
+                                    } else {
+                                        foreach (((array)json_decode($post['subQuestionAnswers'])) as  $subQuestionOneAnswer) {
 
-                                    foreach (((array)json_decode($post['subQuestionAnswers'])) as  $subQuestionOneAnswer) {
+                                            $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
+                                            if ($subQuestion) {
+                                                if ($model->question->id == $subQuestion->question_id) {
+                                                    $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
 
-                                        $subQuestion = SubQuestion::findOne($subQuestionOneAnswer->sub_question_id);
-                                        if ($subQuestion) {
-                                            if ($model->question->id == $subQuestion->question_id) {
-                                                $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne(['exam_student_answer_id' => $model->id, 'sub_question_id' => $subQuestionOneAnswer->sub_question_id]);
+                                                    if (!$examStudentAnswerSubQuestion) {
+                                                        $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
+                                                        $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
+                                                        $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
+                                                    }
 
-                                                if (!$examStudentAnswerSubQuestion) {
-                                                    $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
-                                                    $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
-                                                    $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
+                                                    $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
+                                                    $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
+
+                                                    $examStudentAnswerSubQuestion->save();
+                                                } else {
+                                                    $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
                                                 }
-
-                                                $examStudentAnswerSubQuestion->answer = $subQuestionOneAnswer->answer;
-                                                $examStudentAnswerSubQuestion->max_ball = $subQuestion->ball;
-
-                                                $examStudentAnswerSubQuestion->save();
                                             } else {
-                                                $errors[] = [$subQuestion->id => _e("This subQuestion is not for this question")];
+                                                $errors[] = _e("This subQuestion is not found");
                                             }
-                                        } else {
-                                            $errors[] = _e("This subQuestion is not found");
                                         }
                                     }
                                 }

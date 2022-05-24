@@ -12,6 +12,12 @@ class m220518_034502_create_election_vote_table extends Migration
      */
     public function safeUp()
     {
+
+        $tableName = Yii::$app->db->tablePrefix . 'election_vote';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('election_vote');
+        }
+
         $this->createTable('{{%election_vote}}', [
             'id' => $this->primaryKey(),
             'election_id' => $this->integer()->notNull(),

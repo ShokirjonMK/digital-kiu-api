@@ -12,6 +12,11 @@ class m220517_033357_create_election_candidate_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'election_candidate';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('election_candidate');
+        }
+
         $this->createTable('{{%election_candidate}}', [
             'id' => $this->primaryKey(),
             'election_id' => $this->integer()->notNull(),
@@ -27,7 +32,7 @@ class m220517_033357_create_election_candidate_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
-        $this->addForeignKey('user_ideec_election_candidate_election_mk', 'election_candidate', 'election_id', 'election', 'id');
+        $this->addForeignKey('ece_election_candidate_election_mk', 'election_candidate', 'election_id', 'election', 'id');
     }
 
     /**
@@ -35,7 +40,7 @@ class m220517_033357_create_election_candidate_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('eeuser_idc_election_candidate_election_mk', 'election_candidate');
+        $this->dropForeignKey('ece_election_candidate_election_mk', 'election_candidate');
         $this->dropTable('{{%election_candidate}}');
     }
 }

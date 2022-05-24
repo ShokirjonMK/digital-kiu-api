@@ -2,25 +2,25 @@
 
 namespace api\controllers;
 
-use common\models\model\ElectionCandidate;
+use common\models\model\ElectionVote;
 use Yii;
 use base\ResponseStatus;
 
-class ElectionCandidateController extends ApiActiveController
+class ElectionVoteController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\ElectionCandidate';
+    public $modelClass = 'api\resources\ElectionVote';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'election_candidate';
-    public $controller_name = 'ElectionCandidate';
+    public $table_name = 'election_vote';
+    public $controller_name = 'ElectionVote';
 
     public function actionIndex($lang)
     {
-        $model = new ElectionCandidate();
+        $model = new ElectionVote();
 
         $query = $model->find()
             // ->with(['info'])
@@ -31,7 +31,7 @@ class ElectionCandidateController extends ApiActiveController
             // ->andWhere(['eci.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['eci.tabel_name' => 'faculty'])
             // ->andFilterWhere(['like', 'eci.name', Yii::$app->request->get('q')])
-            ;
+        ;
 
 
         // filter
@@ -47,11 +47,13 @@ class ElectionCandidateController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new ElectionCandidate();
+        $model = new ElectionVote();
         $post = Yii::$app->request->post();
+        $post['user_id'] = current_user_id();
+
         $this->load($model, $post);
-        $result = ElectionCandidate::createItem($model, $post);
-       
+        $result = ElectionVote::createItem($model, $post);
+
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -61,13 +63,18 @@ class ElectionCandidateController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = ElectionCandidate::findOne($id);
+        $model = ElectionVote::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
+
+        if ($model->user_id != current_user_id()) {
+            return $this->response(0, _e('This is not your vote.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
         $this->load($model, $post);
-        $result = ElectionCandidate::updateItem($model, $post);
+        $result = ElectionVote::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,7 +84,7 @@ class ElectionCandidateController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = ElectionCandidate::find()
+        $model = ElectionVote::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -88,7 +95,10 @@ class ElectionCandidateController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = ElectionCandidate::find()
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+
+
+        $model = ElectionVote::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

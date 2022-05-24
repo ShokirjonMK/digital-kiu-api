@@ -10,8 +10,9 @@ use yii\behaviors\TimestampBehavior;
  * This is the model class for table "election".
  *
  * @property int $id
- * @property string $name
- * @property string $role
+ * @property string $election_id
+ * @property string $user_id
+ * @property string $election_candidate_id
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -20,7 +21,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_by
  * @property int $is_deleted
  */
-class Election extends \yii\db\ActiveRecord
+class ElectionVote extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
     use ResourceTrait;
@@ -37,7 +38,7 @@ class Election extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'election';
+        return 'election_vote';
     }
 
     /**
@@ -48,16 +49,33 @@ class Election extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'start',
-                    'finish',
-                    'role',
+                    'election_id',
+                    'election_candidate_id',
                 ], 'required'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['start', 'finish'], 'integer'],
-            [['start', 'finish'], 'default', 'value' => time()],
+            [[
+                'election_id',
+                'user_id',
+                'election_candidate_id',
+            ], 'integer'],
+
             [['status'], 'default', 'value' => 1],
-            [['role'], 'string', 'max' => 255],
+
+            [
+                ['election_candidate_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => ElectionCandidate::className(),
+                'targetAttribute' => ['election_candidate_id' => 'id']
+            ],
+            [
+                ['election_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Election::className(),
+                'targetAttribute' => ['election_id' => 'id']
+            ],
         ];
     }
 
@@ -68,9 +86,9 @@ class Election extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'role' => _e('role'),
-            'start' => _e('start'),
-            'finish' => _e('finish'),
+            'election_id' => _e('election_id'),
+            'user_id' => _e('user_id'),
+            'election_candidate_id' => _e('election_candidate_id'),
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -85,12 +103,11 @@ class Election extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'name' => function ($model) {
-                return $model->translate->name ?? '';
-            },
-            'start',
-            'finish',
-            'role',
+
+            'election_id',
+            'user_id',
+            'election_candidate_id',
+
             'order',
             'status',
             'created_at',
@@ -152,7 +169,12 @@ class Election extends \yii\db\ActiveRecord
 
     public function getElectionCondidate()
     {
-        return $this->hasMany(ElectionCandidate::className(), ['election_id' => 'id']);
+        return $this->hasOne(ElectionCandidate::className(), ['election_id' => 'id']);
+    }
+
+    public function getElection()
+    {
+        return $this->hasOne(Election::className(), ['id' => 'election_id']);
     }
 
     public static function createItem($model, $post)
@@ -160,36 +182,22 @@ class Election extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model->start = strtotime($model->start);
-        $model->finish = strtotime($model->finish);
+        if (!in_array($model->election->role, current_user_roles_array())) {
+            $errors[] = "This election not for you";
+            return simplify_errors($errors);
+        }
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
 
-        $has_error = Translate::checkingAll($post);
+        if ($model->save()) {
 
-        if ($has_error['status']) {
-
-            if ($model->save()) {
-
-                if (isset($post['description'])) {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
-                }
-
-                $transaction->commit();
-                return true;
-            } else {
-
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $transaction->commit();
+            return true;
         } else {
-
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 
@@ -198,53 +206,25 @@ class Election extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if (isset($post['start'])) {
-            $model->start = strtotime($post['start']);
-        }
-
-        if (isset($post['finish'])) {
-            $model->finish = strtotime($post['finish']);
-        }
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
 
-        $has_error = Translate::checkingUpdate($post);
-
-        if ($has_error['status']) {
-
-            if ($model->save()) {
-
-                if (isset($post['name'])) {
-                    if (isset($post['description'])) {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                    } else {
-                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
-                    }
-                }
-
-                $transaction->commit();
-                return true;
-            } else {
-
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
         } else {
-
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
-
 
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }

@@ -63,7 +63,13 @@ class ElectionCandidate extends \yii\db\ActiveRecord
             [['short_info', 'full_info'], 'string'],
             [['photo_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg', 'maxSize' => $this->photoFileMaxSize],
 
-
+            [
+                ['election_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Election::className(),
+                'targetAttribute' => ['election_id' => 'id']
+            ],
         ];
     }
 
@@ -122,38 +128,38 @@ class ElectionCandidate extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getInfo()
-    {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
+    // public function getInfo()
+    // {
+    //     if (Yii::$app->request->get('self') == 1) {
+    //         return $this->infoRelation[0];
+    //     }
 
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
+    //     return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    // }
 
-    public function getDescription()
-    {
-        return $this->info->description ?? '';
-    }
-    
-    public function getInfoRelation()
-    {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
-            ->andOnCondition(['lang' => Yii::$app->request->get('lang')]);
-    }
+    // public function getDescription()
+    // {
+    //     return $this->info->description ?? '';
+    // }
 
-    public function getInfoRelationDefaultLanguage()
-    {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
-            ->andOnCondition(['lang' => self::$selected_language]);
-    }
+    // public function getInfoRelation()
+    // {
+    //     // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+    //     return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
+    //         ->andOnCondition(['lang' => Yii::$app->request->get('lang')]);
+    // }
+
+    // public function getInfoRelationDefaultLanguage()
+    // {
+    //     // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+    //     return $this->hasMany(ElectionCandidateInfo::class, ['election_candidate_id' => 'id'])
+    //         ->andOnCondition(['lang' => self::$selected_language]);
+    // }
 
 
     public function getElection()
     {
-        return $this->hasOne(Election::className(), ['election_id' => 'id']);
+        return $this->hasOne(Election::className(), ['id' => 'election_id']);
     }
 
     public static function createItem($model, $post)
@@ -202,6 +208,26 @@ class ElectionCandidate extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
+        // Photo file saqlaymiz
+        $model->photo_file = UploadedFile::getInstancesByName('photo_file');
+        if ($model->photo_file) {
+            $model->photo_file = $model->photo_file[0];
+            $photoFileUrl = $model->uploadFile();
+            if ($photoFileUrl) {
+                $model->photo = $photoFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+        // Photo file saqlaymiz
 
         if ($model->save()) {
             $transaction->commit();

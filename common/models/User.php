@@ -148,6 +148,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
+        // user expiration time
         $apiExpirationTimeInSeconds = 60 * 60 * 24 * API_EXPIRATION_DAYS;
         return static::find()->where([
             'AND',

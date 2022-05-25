@@ -287,7 +287,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $data = [];
         $exam_id = $post["exam_id"] ?? null;
 
-        $password = isset($post["password"]) ? $post["password"] : "";
+
         $student = Student::findOne(['user_id' => current_user_id()]);
 
         if (!$student) {
@@ -313,15 +313,26 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         ->orderBy('id desc')
                         ->one();
 
+
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
                     if ($exam->is_protected == 1) {
-                        if ($password == $ExamStudentHas->password) {
-                            $t = true;
+                        if ($ExamStudentHas) {
+                            if (isset($post["password"])) {
+                                $password = $post["password"];
+                                if ($password == $ExamStudentHas->password) {
+                                    $t = true;
+                                } else {
+                                    $t = false;
+                                }
+                            } else {
+                                $errors[] = _e("Password required!");
+                            }
                         } else {
-                            $t = false;
+                            $errors[] = _e("Not Generated!");
                         }
                     }
+
                     if ($t) {
 
                         $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
@@ -340,9 +351,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             } else {
                                 $exam_finish = $ExamStudentHas->start + $exam->duration;
                                 if ($exam_finish > strtotime($exam->finish)) {
-                                    $exam_times['finish'] = date("Y-m-d H:i:s", $exam->finish);
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
                                 } else {
-                                    $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam_finish));
                                 }
                             }
                             $exam_times['now'] = date("Y-m-d H:i:s");

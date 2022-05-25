@@ -93,7 +93,7 @@ class ElectionController extends ApiActiveController
         if ($model->password == Yii::$app->request->get('password')) {
             return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
         } else {
-            return $this->response(0, _e('Incorrect password.'), null, null, ResponseStatus::NOT_FOUND);
+            return $this->response(0, _e('Incorrect password.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
 

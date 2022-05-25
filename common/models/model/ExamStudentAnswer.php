@@ -621,7 +621,21 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                                 /** subQuestionAnswers */
                                 if (isset($post['subQuestionAnswers'])) {
-                                    $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
+
+                                    if (($post['subQuestionAnswers'][0] == "'") && ($post['subQuestionAnswers'][strlen($post['subQuestionAnswers']) - 1] == "'")) {
+                                        $post['subQuestionAnswers'] =  substr($post['subQuestionAnswers'], 1, -1);
+                                    }
+
+                                    // if ($post['subQuestionAnswers'][0] == "'" && $post['subQuestionAnswers'][strlen($post['subQuestionAnswers']) - 1] == "'") {
+                                    //     dd(substr($post['subQuestionAnswers']));
+                                    // }
+                                    // dd('aa');
+                                    // dd(substr($post['subQuestionAnswers'], 1, -1));
+                                    // dd(substr($post['subQuestionAnswers'], 1));
+
+                                    // dd(json_encode($post['subQuestionAnswers']));
+                                    // dd('ss');
+                                    // $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
                                     if (!isJsonMK($post['subQuestionAnswers'])) {
                                         $errors['subQuestionAnswers'] = [_e('Must be Json')];
                                     } else {

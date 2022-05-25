@@ -3,5 +3,6 @@
   // 'STATUS_INACTIVE' => 'faolmas',
 
 
-  'Incorrect password' => 'Parol xato kiritildi!',
+  'Incorrect password' => 'Parol noto\'g\'ri!',
+  'Data not found.' => 'Ma\'lumot topilmadi!',
 ];

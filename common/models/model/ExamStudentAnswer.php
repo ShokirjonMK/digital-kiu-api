@@ -453,7 +453,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             // $errors[] = $exam;
                         }
                     } else {
-                        $errors[] = _e("Exam password incorrect");
+                        $errors[] = _e("Incorrect password");
                     }
                 } else {
                     $errors[] = _e("This exam is " . $exam->getStatusName());

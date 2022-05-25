@@ -3,5 +3,5 @@
   // 'STATUS_INACTIVE' => 'faolmas',
 
 
-  'Incorrect password.' => 'Parol xato kiritildi!',
+  'Incorrect password' => 'Parol xato kiritildi!',
 ];

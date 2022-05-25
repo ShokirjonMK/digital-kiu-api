@@ -369,7 +369,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                             /* Bu yerga bolani imtixonga a`zo qilamiz*/
 
-                            $student = Student::findOne(['id' => $student_id]);
                             $student_lang_id = $student->edu_lang_id;
                             if ($ExamStudentHas) {
                                 $ExamStudent = $ExamStudentHas;

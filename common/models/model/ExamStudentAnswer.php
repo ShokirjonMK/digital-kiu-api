@@ -357,7 +357,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 }
                             }
                             $exam_times['now'] = date("Y-m-d H:i:s");
-                            $exam_times['exam_finish'] = $exam_finish;
+                            // $exam_times['exam_finish'] = $exam_finish;
                             $data['times'] = $exam_times;
                             $data['status'] = true;
                             return $data;
@@ -449,6 +449,19 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudent->start);
                             $exam_times['duration'] = $exam->duration;
+
+                            /** */
+                            if ($ExamStudentHas->finish > 0) {
+                                $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->finish);
+                            } else {
+                                $exam_finish = $ExamStudentHas->start + $exam->duration + (int)$ExamStudentHas->duration;
+                                if ($exam_finish > strtotime($exam->finish)) {
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
+                                } else {
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                }
+                            }
+                            /** */
                             if ($ExamStudent->finish > 0) {
                                 $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->finish);
                             } else {

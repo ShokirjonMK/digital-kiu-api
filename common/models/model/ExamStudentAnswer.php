@@ -461,6 +461,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                             // $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->start + $exam->duration);
                             $exam_times['now'] = date("Y-m-d H:i:s");
+                            $exam_times['exam_finish'] = $exam_finish;
                             $data['times'] = $exam_times;
                             $data['status'] = true;
                             $transaction->commit();

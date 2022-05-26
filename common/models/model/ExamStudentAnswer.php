@@ -448,10 +448,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudent->start);
                             $exam_times['duration'] = $exam->duration;
-                            if ($ExamStudentHas->finish > 0) {
-                                $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->finish);
+                            if ($ExamStudent->finish > 0) {
+                                $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->finish);
                             } else {
-                                $exam_finish = $ExamStudentHas->start + $exam->duration;
+                                $exam_finish = $ExamStudent->start + $exam->duration;
                                 if ($exam_finish > strtotime($exam->finish)) {
                                     $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
                                 } else {

@@ -6,6 +6,8 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
+use common\models\model\ExamStudentAnswer;
+use common\models\model\ExamStudentAnswerSubQuestion;
 use common\models\model\Profile;
 use common\models\model\TeacherAccess;
 
@@ -182,12 +184,11 @@ class ExamStudentController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove model
-        if ($model) {
-            $model->is_deleted = 1;
-            $model->update();
-
+       $result = ExamStudent::deleteMK($model);
+        if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }

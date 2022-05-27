@@ -31,7 +31,7 @@ use yii\web\UploadedFile;
  * @property Student $student0
  * @property TeacherAccess $teacherAccess0
  */
-class ExamStudent extends \yii\db\ActiveRecord
+class ExamStudentDeleted extends \yii\db\ActiveRecord
 {
     use ResourceTrait;
 
@@ -66,7 +66,7 @@ class ExamStudent extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'exam_student';
+        return 'exam_student_deleted';
     }
 
     /**
@@ -75,12 +75,13 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'exam_id'], 'required'],
+            // [['student_id', 'exam_id'], 'required'],
             [
                 [
                     'student_id',
                     'start',
                     'finish',
+                    'exam_student_id',
                     'exam_id',
                     'teacher_access_id',
                     'attempt',
@@ -104,6 +105,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             [['plagiat_percent'], 'double'],
             [['conclusion'], 'string'],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
+            [['exam_student_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudent::className(), 'targetAttribute' => ['exam_student_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
@@ -120,6 +122,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'student_id' => 'Student ID',
+            'exam_student_id' => 'exam_student',
             'lang_id' => 'Lang ID',
             'exam_id' => 'Exam ID',
             'teacher_access_id' => 'Teacher Access ID',
@@ -147,6 +150,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         $fields = [
             'id',
             'student_id',
+            'exam_student_id',
             'exam_id',
             'lang_id',
             'teacher_access_id',
@@ -181,6 +185,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examType',
             'exam',
             'student',
+            'examStudent',
             'examQuestions',
             'examStudentAnswers',
 
@@ -195,6 +200,11 @@ class ExamStudent extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getExamStudent()
+    {
+        return $this->hasOne(ExamStudent::className(), ['id' => 'exam_student_id']);
     }
 
 
@@ -303,49 +313,6 @@ class ExamStudent extends \yii\db\ActiveRecord
         }
         if ($model->save() && count($errors) == 0) {
             // $model->deleteFile($oldFile);
-            $transaction->commit();
-            return true;
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-    }
-
-    public static function deleteMK($model)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-
-        $model->is_deleted = 1;
-        $model->update();
-
-        $examStudentAnswers = ExamStudentAnswer::find()->where(['exam_student_id' => $model->id])->all();
-
-        foreach ($examStudentAnswers as $examStudentAnswerOne) {
-            $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $examStudentAnswerOne->id])->all();
-            foreach ($examStudentAnswerSubQuestion as $examStudentAnswerSubQuestionOne) {
-                $examStudentAnswerSubQuestionDeteledNew = new ExamStudentAnswerSubQuestionDeleted();
-                $examStudentAnswerSubQuestionDeteledNew->load($examStudentAnswerSubQuestionOne, '');
-                $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_sub_question_id = $examStudentAnswerSubQuestionOne->id;
-                if (!($examStudentAnswerSubQuestionDeteledNew->save() && $examStudentAnswerSubQuestionOne->delete())) {
-                    $errors[] = _e("Deleting on ExamStudentAnswerSubQuestion ID(" . $examStudentAnswerSubQuestionOne->id . ")");
-                }
-                // return $examStudentAnswerSubQuestionDeteledNew;
-            }
-            $ExamStudentAnswerDeletedNew = new ExamStudentAnswerDeleted();
-            $ExamStudentAnswerDeletedNew->load($examStudentAnswerOne, '');
-            $ExamStudentAnswerDeletedNew->exam_student_answer_id = $examStudentAnswerOne->id;
-            if (!($ExamStudentAnswerDeletedNew->save() && $examStudentAnswerOne->delete())) {
-                $errors[] = _e("Deleting on ExamStudentAnswer ID(" . $examStudentAnswerOne->id . ")");
-            }
-        }
-
-        $examStudentDeletedNew = new ExamStudentDeleted();
-        $examStudentDeletedNew->load($model, '');
-        $examStudentDeletedNew->exam_student_id = $model->id;
-        $examStudentDeletedNew->save();
-
-        if ($model->delete() && count($errors) == 0) {
             $transaction->commit();
             return true;
         } else {

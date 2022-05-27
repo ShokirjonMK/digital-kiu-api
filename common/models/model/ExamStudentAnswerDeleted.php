@@ -38,7 +38,7 @@ use yii\web\UploadedFile;
  * @property Student $student
  * @property TeacherAccess $teacherAccess
  */
-class ExamStudentAnswer extends \yii\db\ActiveRecord
+class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -67,7 +67,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'exam_student_answer';
+        return 'exam_student_answer_deleted';
     }
 
     /**
@@ -76,7 +76,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
+            // [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
             [
                 [
                     'exam_id',
@@ -86,6 +86,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     'option_id',
                     'teacher_access_id',
                     'exam_student_id',
+                    'exam_student_answer_id',
                     'attempt',
                     'type',
                     'order',
@@ -101,6 +102,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             [['teacher_conclusion'], 'string'],
             [['max_ball', 'ball'], 'double'],
             [['file'], 'string', 'max' => 255],
+            [['exam_student_answer_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudentAnswer::className(), 'targetAttribute' => ['exam_student_answer_id' => 'id']],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
             [['exam_student_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudent::className(), 'targetAttribute' => ['exam_student_id' => 'id']],
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
@@ -119,6 +121,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'file' => 'File',
+            'exam_student_answer_id' => 'exam_student_answer_id',
             'parent_id' => 'parent_id',
             'exam_id' => 'Exam ID',
             'question_id' => ' Question ID',
@@ -149,6 +152,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'parent_id',
             'file',
             'exam_id',
+            'exam_student_answer_id',
 
             // 'question' => function ($model) {
             //     return $model->questionForExamStudentAnswer ?? [];
@@ -190,7 +194,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'option',
             'teacherAccess',
             'questionType',
-
+            'examStudentAnswer',
             //            'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
 
@@ -236,6 +240,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function getExamStudent()
     {
         return $this->hasOne(ExamStudent::className(), ['id' => 'exam_student_id']);
+    }
+    public function getExamStudentAnswer()
+    {
+        return $this->hasOne(ExamStudentAnswer::className(), ['id' => 'exam_student_answer_id']);
     }
 
     public function getQuestion()
@@ -451,10 +459,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $exam_times['duration'] = $exam->duration;
 
                             /** */
-                            if ($ExamStudent->finish > 0) {
-                                $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->finish);
+                            if ($ExamStudentHas->finish > 0) {
+                                $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudentHas->finish);
                             } else {
-                                $exam_finish = $ExamStudent->start + $exam->duration + (int)$ExamStudent->duration;
+                                $exam_finish = $ExamStudentHas->start + $exam->duration + (int)$ExamStudentHas->duration;
                                 if ($exam_finish > strtotime($exam->finish)) {
                                     $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
                                 } else {

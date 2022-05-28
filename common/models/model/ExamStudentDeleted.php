@@ -9,7 +9,6 @@ use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "exam_student".
- *
  * @property int $id
  * @property int $student_id
  * @property int $exam_id

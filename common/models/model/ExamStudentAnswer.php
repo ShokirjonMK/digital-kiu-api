@@ -334,7 +334,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     }
 
                     if ($t) {
-
                         $hasExamStudentAnswer = ExamStudentAnswer::findOne(['exam_id' => $exam_id, 'student_id' => $student_id]);
                         if ($hasExamStudentAnswer) {
                             $getQuestionModel = new ExamStudentAnswer();

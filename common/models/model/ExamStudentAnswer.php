@@ -287,7 +287,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $data = [];
         $exam_id = $post["exam_id"] ?? null;
 
-
         $student = Student::findOne(['user_id' => current_user_id()]);
 
         if (!$student) {

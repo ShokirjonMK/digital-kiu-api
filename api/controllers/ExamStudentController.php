@@ -61,13 +61,12 @@ class ExamStudentController extends ApiActiveController
             ]);
         }
 
-
         if (isRole("student")) {
             $query = $query->andWhere([
                 'student_id' => $this->student()
             ]);
         }
-        
+
         // filter
         $query = $this->filterAll($query, $model);
 

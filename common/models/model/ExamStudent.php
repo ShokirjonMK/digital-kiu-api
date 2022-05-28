@@ -60,7 +60,6 @@ class ExamStudent extends \yii\db\ActiveRecord
     // plagiat_file
     // plagiat_percent
 
-
     /**
      * {@inheritdoc}
      */

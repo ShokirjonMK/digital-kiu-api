@@ -57,7 +57,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     const STATUS_NON_COMPLATED_CHECKING = 4;
     const STATUS_CHECKED = 5;
 
-
     const UPLOADS_FOLDER = 'uploads/answer_files/';
     public $answer_file;
     public $answerFileMaxSize = 1024 * 1024 * 5; // 3 Mb

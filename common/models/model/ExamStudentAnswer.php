@@ -258,7 +258,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->hasOne(ExamQuestionOption::className(), ['id' => 'option_id']);
     }
 
-
     public function getQuestionType()
     {
         return $this->hasOne(QuestionType::className(), ['id' => 'type']);

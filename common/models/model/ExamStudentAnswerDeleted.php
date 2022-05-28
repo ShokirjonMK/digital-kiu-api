@@ -201,7 +201,6 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
             'statusName',
             'student',
 
-
             'createdBy',
             'updatedBy',
         ];

@@ -31,7 +31,6 @@ use yii\web\UploadedFile;
  * @property int $updated_by
  * @property int $is_deleted
  * @property int $parent_id
- *
  * @property Exam $exam
  * @property ExamQuestion $examQuestion
  * @property ExamQuestionOption $option

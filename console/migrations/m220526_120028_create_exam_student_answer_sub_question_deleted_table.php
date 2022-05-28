@@ -12,7 +12,6 @@ class m220526_120028_create_exam_student_answer_sub_question_deleted_table exten
      */
     public function safeUp()
     {
-
         $tableName = Yii::$app->db->tablePrefix . 'exam_student_answer_sub_question_deleted';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('exam_student_answer_sub_question_deleted');

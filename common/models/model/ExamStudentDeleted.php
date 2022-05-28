@@ -206,7 +206,6 @@ class ExamStudentDeleted extends \yii\db\ActiveRecord
         return $this->hasOne(ExamStudent::className(), ['id' => 'exam_student_id']);
     }
 
-
     public function getExamStudentAnswers()
     {
         return $this->hasmany(ExamStudentAnswer::className(), ['exam_student_id' => 'id']);

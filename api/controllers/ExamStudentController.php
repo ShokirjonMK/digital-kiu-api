@@ -95,6 +95,7 @@ class ExamStudentController extends ApiActiveController
         if (isset($post['start'])) {
             $post['start'] = strtotime($post['start']);
         }
+        
         if (isset($post['finish'])) {
             $post['finish'] = strtotime($post['finish']);
         }
@@ -167,7 +168,7 @@ class ExamStudentController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        
+
         if (isRole("teacher")) {
             if ($model->teacherAccess->user_id != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

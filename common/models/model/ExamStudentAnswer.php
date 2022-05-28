@@ -279,7 +279,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         return $this->statusList()[$this->status];
     }
 
-
     public static function randomQuestions($post)
     {
         $transaction = Yii::$app->db->beginTransaction();

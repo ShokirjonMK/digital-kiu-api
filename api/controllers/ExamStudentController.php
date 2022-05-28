@@ -67,6 +67,7 @@ class ExamStudentController extends ApiActiveController
                 'student_id' => $this->student()
             ]);
         }
+        
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -95,7 +96,7 @@ class ExamStudentController extends ApiActiveController
         if (isset($post['start'])) {
             $post['start'] = strtotime($post['start']);
         }
-        
+
         if (isset($post['finish'])) {
             $post['finish'] = strtotime($post['finish']);
         }

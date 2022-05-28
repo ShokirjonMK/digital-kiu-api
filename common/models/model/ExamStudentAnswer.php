@@ -149,7 +149,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'parent_id',
             'file',
             'exam_id',
-
             // 'question' => function ($model) {
             //     return $model->questionForExamStudentAnswer ?? [];
             // },

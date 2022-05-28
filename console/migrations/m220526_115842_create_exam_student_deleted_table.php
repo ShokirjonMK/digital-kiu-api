@@ -31,7 +31,6 @@ class m220526_115842_create_exam_student_deleted_table extends Migration
             'is_plagiat' => $this->integer()->Null(),
             'duration' => $this->integer()->Null(),
             'ball' => $this->double()->Null(),
-
             'plagiat_file' => $this->string()->Null(),
             'password' => $this->integer()->Null(),
             'plagiat_percent' => $this->integer()->Null(),

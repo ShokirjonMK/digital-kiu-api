@@ -18,7 +18,6 @@ class m220526_115842_create_exam_student_deleted_table extends Migration
         }
 
         $this->createTable('{{%exam_student_deleted}}', [
-
             'id' => $this->primaryKey(),
             'exam_student_id' => $this->integer()->Null(),
 

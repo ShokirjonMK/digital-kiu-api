@@ -19,7 +19,6 @@ class m220526_120048_create_exam_student_answer_deleted_table extends Migration
             $this->dropTable('exam_student_answer_deleted');
         }
 
-
         $this->createTable('{{%exam_student_answer_deleted}}', [
             'id' => $this->primaryKey(),
             'file' => $this->string(255)->Null(),

@@ -305,7 +305,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             if ($exam) {
                 if ($exam->status == 1) {
 
-
                     $ExamStudentHas = ExamStudent::find()->where([
                         'exam_id' => $exam_id,
                         'student_id' => $student_id,

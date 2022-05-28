@@ -318,7 +318,6 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                         ->orderBy('id desc')
                         ->one();
 
-
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
                     if ($exam->is_protected == 1) {

@@ -771,7 +771,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                 unlink(HOME_PATH  . $oldFile);
             }
         }
-        
+
         return true;
     }
 

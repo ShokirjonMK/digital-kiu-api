@@ -591,8 +591,8 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        //
     }
+
     public static function updateItem($model, $post)
     {
         // attemp esdan chiqmasin

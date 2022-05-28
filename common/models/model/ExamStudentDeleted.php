@@ -190,7 +190,6 @@ class ExamStudentDeleted extends \yii\db\ActiveRecord
             'examStudentAnswers',
 
             'answers',
-
             'statusName',
             'teacherAccess',
             'examSemeta',

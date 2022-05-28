@@ -7,7 +7,6 @@ use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\ExamStudentAnswer;
-use common\models\model\ExamStudentAnswerSubQuestion;
 use common\models\model\Profile;
 use common\models\model\TeacherAccess;
 

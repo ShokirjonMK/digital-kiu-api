@@ -13,7 +13,6 @@ class m220526_120048_create_exam_student_answer_deleted_table extends Migration
     public function safeUp()
     {
 
-
         $tableName = Yii::$app->db->tablePrefix . 'exam_student_answer_deleted';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('exam_student_answer_deleted');

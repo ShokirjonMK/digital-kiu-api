@@ -191,7 +191,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'teacherAccess',
             'questionType',
 
-            //            'subQuestionAnswers',
+            //'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
 
             'subQuestions',

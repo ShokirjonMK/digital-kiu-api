@@ -23,7 +23,6 @@ use yii\web\UploadedFile;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- *
  * @property Student $exam
  * @property Student $student
  * @property TeacherAccess $teacherAccess

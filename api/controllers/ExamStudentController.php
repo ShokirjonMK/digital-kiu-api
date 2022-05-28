@@ -8,7 +8,6 @@ use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\ExamStudentAnswer;
 use common\models\model\Profile;
-use common\models\model\TeacherAccess;
 
 class ExamStudentController extends ApiActiveController
 {

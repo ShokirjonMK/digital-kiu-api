@@ -4,9 +4,7 @@ namespace api\controllers;
 
 use common\models\model\EduSemestr;
 use Yii;
-use api\resources\Job;
 use base\ResponseStatus;
-use common\models\JobInfo;
 use common\models\model\EduPlan;
 use common\models\model\Faculty;
 use common\models\model\Student;
@@ -19,7 +17,6 @@ class EduSemestrController extends ApiActiveController
     {
         return [];
     }
-
 
     public function actionIndex($lang)
     {

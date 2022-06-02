@@ -148,6 +148,9 @@ class ExamStudentController extends ApiActiveController
         $post['old_file'] = $model->plagiat_file;
 
         $this->load($model, $post);
+        // if (isRole("teacher")) {
+        //     $model->status = ExamStudent::STATUS_CHECKED;
+        // }
         $result = ExamStudent::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
@@ -184,7 +187,7 @@ class ExamStudentController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-       $result = ExamStudent::deleteMK($model);
+        $result = ExamStudent::deleteMK($model);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         } else {

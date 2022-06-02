@@ -484,7 +484,7 @@ class Exam extends \yii\db\ActiveRecord
                         // $ExamStudent->password = _random_string('numeric', 4);
                         $ExamStudent->password = $examPassword;
                         // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
-                        $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
+                        // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
                         $ExamStudent->save(false);
                     }
                     /** Student generate Password and create ExamStudent end */

@@ -708,7 +708,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $errors[] = _e("This exam`s time is not starts");
                     }
                 } else {
-                    $errors[] = _e("This eman is not for you!");
+                    $errors[] = _e("This exam is not for you!");
                 }
             } else {
                 $errors[] = _e("This exam not found!");

@@ -348,7 +348,7 @@ class ExamController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        $result = ExamSemeta::distribution($model);
+        $result = Exam::distribution($model);
 
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' succesfully distributed.'), null, null, ResponseStatus::OK);

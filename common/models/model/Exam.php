@@ -7,6 +7,7 @@ use api\resources\ResourceTrait;
 use common\models\model\Student;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "exam".
@@ -740,6 +741,52 @@ class Exam extends \yii\db\ActiveRecord
         } else {
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
+        }
+    }
+
+    public static function distribution($exam)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $exam->status = Exam::STATUS_DISTRIBUTED;
+        if ($exam->save()) {
+
+            $examSmetas = ExamSemeta::findAll(['exam_id' => $exam->id]);
+
+            foreach ($examSmetas as $examSmetaOne) {
+                $examStudent = ExamStudent::find()
+                    ->where([
+                        'exam_id' => $exam->id,
+                        'teacher_access_id' => null,
+                        // 'status' => ExamStudent::STATUS_TAKED,
+                    ])
+                    ->orderBy(new Expression('rand()'))
+                    ->limit($examSmetaOne->count)
+                    ->all();
+
+                $examSmetaOne->status = ExamSemeta::STATUS_IN_CHECKING;
+                if (!$examSmetaOne->save()) {
+                    $errors[] = _('There is an error occurred while distributed');
+                }
+
+                foreach ($examStudent as $examStudentOne) {
+                    $examStudentOne->teacher_access_id = $examSmetaOne->teacher_access_id;
+                    $examStudentOne->status = ExamStudent::STATUS_IN_CHECKING;
+
+                    if (!$examStudentOne->save()) {
+                        $errors[] = _('There is an error occurred while distributed');
+                    }
+                }
+            }
+        } else {
+            $errors[] = _('There is an error occurred on exam');
+        }
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
     }
 

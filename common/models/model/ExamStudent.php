@@ -296,7 +296,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         // ***
         // $errors[] = $post['old_file'];
 
-        
+
         // $model->status = self::STATUS_CHECKED;
         if ($model->plagiat_percent >= Yii::$app->params['plagiat_percent_max']) {
             $model->is_plagiat = self::IS_PLAGIAT_TRUE;
@@ -345,7 +345,11 @@ class ExamStudent extends \yii\db\ActiveRecord
         $examStudentDeletedNew->exam_student_id = $model->id;
         $examStudentDeletedNew->save();
 
-        if ($model->delete() && count($errors) == 0) {
+        $model->duration = null;
+        $model->start = null;
+        $model->status = 0;
+
+        if ($model->save() && count($errors) == 0) {
             $transaction->commit();
             return true;
         } else {

@@ -68,7 +68,6 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                 [
                     'exam_student_answer_id',
                     'sub_question_id',
-
                     'order',
                     'status',
                     'created_at',

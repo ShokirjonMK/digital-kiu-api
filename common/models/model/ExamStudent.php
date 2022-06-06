@@ -325,24 +325,84 @@ class ExamStudent extends \yii\db\ActiveRecord
             $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $examStudentAnswerOne->id])->all();
             foreach ($examStudentAnswerSubQuestion as $examStudentAnswerSubQuestionOne) {
                 $examStudentAnswerSubQuestionDeteledNew = new ExamStudentAnswerSubQuestionDeleted();
-                $examStudentAnswerSubQuestionDeteledNew->load($examStudentAnswerSubQuestionOne, '');
-                $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_sub_question_id = $examStudentAnswerSubQuestionOne->id;
+                // $examStudentAnswerSubQuestionDeteledNew->load($examStudentAnswerSubQuestionOne, '');
+
+                $examStudentAnswerSubQuestionDeteledNew->file = $examStudentAnswerSubQuestionOne->file;
+                $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_id = $examStudentAnswerSubQuestionOne->exam_student_answer_id;
+                $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_sub_question_id = $examStudentAnswerSubQuestionOne->exam_student_answer_sub_question_id;
+                $examStudentAnswerSubQuestionDeteledNew->sub_question_id = $examStudentAnswerSubQuestionOne->sub_question_id;
+                $examStudentAnswerSubQuestionDeteledNew->teacher_conclusion = $examStudentAnswerSubQuestionOne->teacher_conclusion;
+                $examStudentAnswerSubQuestionDeteledNew->answer = $examStudentAnswerSubQuestionOne->answer;
+                $examStudentAnswerSubQuestionDeteledNew->ball = $examStudentAnswerSubQuestionOne->ball;
+                $examStudentAnswerSubQuestionDeteledNew->max_ball = $examStudentAnswerSubQuestionOne->max_ball;
+
+                $examStudentAnswerSubQuestionDeteledNew->order = $examStudentAnswerSubQuestionOne->order;
+                $examStudentAnswerSubQuestionDeteledNew->status = $examStudentAnswerSubQuestionOne->status;
+                $examStudentAnswerSubQuestionDeteledNew->created_at = $examStudentAnswerSubQuestionOne->created_at;
+                $examStudentAnswerSubQuestionDeteledNew->updated_at = $examStudentAnswerSubQuestionOne->updated_at;
+                $examStudentAnswerSubQuestionDeteledNew->created_by = $examStudentAnswerSubQuestionOne->created_by;
+                $examStudentAnswerSubQuestionDeteledNew->updated_by = $examStudentAnswerSubQuestionOne->updated_by;
+                $examStudentAnswerSubQuestionDeteledNew->is_deleted = $examStudentAnswerSubQuestionOne->is_deleted;
+
                 if (!($examStudentAnswerSubQuestionDeteledNew->save() && $examStudentAnswerSubQuestionOne->delete())) {
                     $errors[] = _e("Deleting on ExamStudentAnswerSubQuestion ID(" . $examStudentAnswerSubQuestionOne->id . ")");
                 }
                 // return $examStudentAnswerSubQuestionDeteledNew;
             }
             $ExamStudentAnswerDeletedNew = new ExamStudentAnswerDeleted();
-            $ExamStudentAnswerDeletedNew->load($examStudentAnswerOne, '');
+            // $ExamStudentAnswerDeletedNew->load($examStudentAnswerOne, '');
             $ExamStudentAnswerDeletedNew->exam_student_answer_id = $examStudentAnswerOne->id;
+
+
+            $ExamStudentAnswerDeletedNew->exam_id = $examStudentAnswerOne->exam_id;
+            $ExamStudentAnswerDeletedNew->question_id = $examStudentAnswerOne->question_id;
+            $ExamStudentAnswerDeletedNew->parent_id = $examStudentAnswerOne->parent_id;
+            $ExamStudentAnswerDeletedNew->student_id = $examStudentAnswerOne->student_id;
+            $ExamStudentAnswerDeletedNew->option_id = $examStudentAnswerOne->option_id;
+            $ExamStudentAnswerDeletedNew->teacher_access_id = $examStudentAnswerOne->teacher_access_id;
+            $ExamStudentAnswerDeletedNew->exam_student_id = $examStudentAnswerOne->exam_student_id;
+            $ExamStudentAnswerDeletedNew->exam_student_answer_id = $examStudentAnswerOne->exam_student_answer_id;
+            $ExamStudentAnswerDeletedNew->attempt = $examStudentAnswerOne->attempt;
+            $ExamStudentAnswerDeletedNew->type = $examStudentAnswerOne->type;
+            $ExamStudentAnswerDeletedNew->order = $examStudentAnswerOne->order;
+            $ExamStudentAnswerDeletedNew->status = $examStudentAnswerOne->status;
+            $ExamStudentAnswerDeletedNew->created_at = $examStudentAnswerOne->created_at;
+            $ExamStudentAnswerDeletedNew->updated_at = $examStudentAnswerOne->updated_at;
+            $ExamStudentAnswerDeletedNew->created_by = $examStudentAnswerOne->created_by;
+            $ExamStudentAnswerDeletedNew->updated_by = $examStudentAnswerOne->updated_by;
+            $ExamStudentAnswerDeletedNew->is_deleted = $examStudentAnswerOne->is_deleted;
+
             if (!($ExamStudentAnswerDeletedNew->save() && $examStudentAnswerOne->delete())) {
                 $errors[] = _e("Deleting on ExamStudentAnswer ID(" . $examStudentAnswerOne->id . ")");
             }
         }
 
         $examStudentDeletedNew = new ExamStudentDeleted();
-        $examStudentDeletedNew->load($model, '');
-        $examStudentDeletedNew->exam_student_id = $model->id;
+        // $examStudentDeletedNew->load($model, '');
+        $examStudentDeletedNew->student_id = $model->student_id;
+        $examStudentDeletedNew->start = $model->start;
+        $examStudentDeletedNew->finish = $model->finish;
+        $examStudentDeletedNew->exam_id = $model->exam_id;
+        $examStudentDeletedNew->teacher_access_id = $model->teacher_access_id;
+        $examStudentDeletedNew->attempt = $model->attempt;
+        $examStudentDeletedNew->lang_id = $model->lang_id;
+        $examStudentDeletedNew->exam_semeta_id = $model->exam_semeta_id;
+        $examStudentDeletedNew->is_plagiat = $model->is_plagiat;
+        $examStudentDeletedNew->duration = $model->duration;
+        $examStudentDeletedNew->ball = $model->ball;
+        $examStudentDeletedNew->plagiat_file = $model->plagiat_file;
+        $examStudentDeletedNew->password = $model->password;
+        $examStudentDeletedNew->plagiat_percent = $model->plagiat_percent;
+        $examStudentDeletedNew->conclusion = $model->conclusion;
+
+        $examStudentDeletedNew->order = $model->order;
+        $examStudentDeletedNew->status = $model->status;
+        $examStudentDeletedNew->created_at = $model->created_at;
+        $examStudentDeletedNew->updated_at = $model->updated_at;
+        $examStudentDeletedNew->created_by = $model->created_by;
+        $examStudentDeletedNew->updated_by = $model->updated_by;
+        $examStudentDeletedNew->is_deleted = $model->is_deleted;
+
         $examStudentDeletedNew->save();
 
         $model->duration = null;

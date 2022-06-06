@@ -189,7 +189,7 @@ class ExamStudentController extends ApiActiveController
 
         $result = ExamStudent::deleteMK($model);
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e($this->controller_name . ' succesfully cleared for next attempt.'), null, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

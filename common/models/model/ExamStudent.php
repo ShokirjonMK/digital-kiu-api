@@ -176,11 +176,10 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'eduSemestrSubject',
-            'examType',
+            
             'exam',
             'student',
-            'examQuestions',
+            
             'examStudentAnswers',
 
             'answers',
@@ -316,9 +315,6 @@ class ExamStudent extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model->is_deleted = 1;
-        $model->update();
-
         $examStudentAnswers = ExamStudentAnswer::find()->where(['exam_student_id' => $model->id])->all();
 
         foreach ($examStudentAnswers as $examStudentAnswerOne) {
@@ -327,9 +323,11 @@ class ExamStudent extends \yii\db\ActiveRecord
                 $examStudentAnswerSubQuestionDeteledNew = new ExamStudentAnswerSubQuestionDeleted();
                 // $examStudentAnswerSubQuestionDeteledNew->load($examStudentAnswerSubQuestionOne, '');
 
+                $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_sub_question_id = $examStudentAnswerSubQuestionOne->id;
+
                 $examStudentAnswerSubQuestionDeteledNew->file = $examStudentAnswerSubQuestionOne->file;
                 $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_id = $examStudentAnswerSubQuestionOne->exam_student_answer_id;
-                $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_sub_question_id = $examStudentAnswerSubQuestionOne->exam_student_answer_sub_question_id;
+                
                 $examStudentAnswerSubQuestionDeteledNew->sub_question_id = $examStudentAnswerSubQuestionOne->sub_question_id;
                 $examStudentAnswerSubQuestionDeteledNew->teacher_conclusion = $examStudentAnswerSubQuestionOne->teacher_conclusion;
                 $examStudentAnswerSubQuestionDeteledNew->answer = $examStudentAnswerSubQuestionOne->answer;
@@ -361,9 +359,9 @@ class ExamStudent extends \yii\db\ActiveRecord
             $ExamStudentAnswerDeletedNew->option_id = $examStudentAnswerOne->option_id;
             $ExamStudentAnswerDeletedNew->teacher_access_id = $examStudentAnswerOne->teacher_access_id;
             $ExamStudentAnswerDeletedNew->exam_student_id = $examStudentAnswerOne->exam_student_id;
-            $ExamStudentAnswerDeletedNew->exam_student_answer_id = $examStudentAnswerOne->exam_student_answer_id;
             $ExamStudentAnswerDeletedNew->attempt = $examStudentAnswerOne->attempt;
             $ExamStudentAnswerDeletedNew->type = $examStudentAnswerOne->type;
+
             $ExamStudentAnswerDeletedNew->order = $examStudentAnswerOne->order;
             $ExamStudentAnswerDeletedNew->status = $examStudentAnswerOne->status;
             $ExamStudentAnswerDeletedNew->created_at = $examStudentAnswerOne->created_at;
@@ -380,6 +378,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         $examStudentDeletedNew = new ExamStudentDeleted();
         // $examStudentDeletedNew->load($model, '');
         $examStudentDeletedNew->student_id = $model->student_id;
+        $examStudentDeletedNew->exam_student_id = $model->id;
         $examStudentDeletedNew->start = $model->start;
         $examStudentDeletedNew->finish = $model->finish;
         $examStudentDeletedNew->exam_id = $model->exam_id;
@@ -393,6 +392,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         $examStudentDeletedNew->plagiat_file = $model->plagiat_file;
         $examStudentDeletedNew->password = $model->password;
         $examStudentDeletedNew->plagiat_percent = $model->plagiat_percent;
+
         $examStudentDeletedNew->conclusion = $model->conclusion;
 
         $examStudentDeletedNew->order = $model->order;
@@ -408,6 +408,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         $model->duration = null;
         $model->start = null;
         $model->status = 0;
+        $model->attempt = $model->attempt + 1;
 
         if ($model->save() && count($errors) == 0) {
             $transaction->commit();

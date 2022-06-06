@@ -822,6 +822,12 @@ return [
         "question-type_view",
         'question_status-update',
 
+        "teacher-access_index",
+        'user-access_create',
+        'user-access_delete',
+        'user-access_index',
+        'user-access_update',
+        'user-access_view',
 
         'exam_distribution',
         'exam_view',

@@ -94,6 +94,7 @@ $controllers = [
     'election-candidate',
     'election-vote',
     'kpi-category',
+    'kpi-store',
 
 
     'telegram',

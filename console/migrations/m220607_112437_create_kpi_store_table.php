@@ -1,0 +1,57 @@
+<?php
+
+use yii\db\Migration;
+
+/**
+ * Handles the creation of table `{{%kpi_store}}`.
+ */
+class m220607_112437_create_kpi_store_table extends Migration
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function safeUp()
+    {
+        $tableName = Yii::$app->db->tablePrefix . 'kpi_store';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('kpi_store');
+        }
+
+        $this->createTable('{{%kpi_store}}', [
+            'id' => $this->primaryKey(),
+
+            'kpi_category_id' => $this->integer()->notNull(),
+            'date' => $this->dateTime()->notNull(),
+            'file' => $this->string(255)->null(),
+            'subject_category_id' => $this->integer()->notNull(),
+            'count_of_copyright' => $this->integer()->defaultValue(0),
+            'link' => $this->string(255)->null(),
+            'ball' => $this->double()->defaultValue(0),
+            'user_id' => $this->integer()->notNull(),
+
+            'status' => $this->tinyInteger(1)->defaultValue(0),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
+            'created_at' => $this->integer()->Null(),
+            'updated_at' => $this->integer()->Null(),
+            'created_by' => $this->integer()->notNull()->defaultValue(0),
+            'updated_by' => $this->integer()->notNull()->defaultValue(0),
+            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+
+        ]);
+        $this->addForeignKey('kpiskc_kpi_store_kpi_category', 'kpi_store', 'kpi_category_id', 'kpi_category', 'id');
+        $this->addForeignKey('kpissc_kpi_store_subject_category', 'kpi_store', 'subject_category_id', 'subject_category', 'id');
+        $this->addForeignKey('kpissc_kpi_store_user', 'kpi_store', 'user_id', 'users', 'id');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function safeDown()
+    {
+        $this->dropForeignKey('kpiskc_kpi_store_kpi_category', 'kpi_store');
+        $this->dropForeignKey('kpissc_kpi_store_subject_category', 'kpi_store');
+        $this->dropForeignKey('kpissc_kpi_store_user', 'kpi_store');
+
+        $this->dropTable('{{%kpi_store}}');
+    }
+}

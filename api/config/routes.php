@@ -93,6 +93,7 @@ $controllers = [
     'election',
     'election-candidate',
     'election-vote',
+    'kpi-category',
 
 
     'telegram',
@@ -132,6 +133,8 @@ $routes = [
     // Question status list
     'GET <lang:\w{2}>/questions/status-list' => 'question/status-list',
 
+    // KpiCategory Extra fields, term, tab, status
+    'GET <lang:\w{2}>/kpi-categories/extra' => 'kpi-category/extra',
 
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',

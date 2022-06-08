@@ -104,7 +104,7 @@ class UserController extends ApiActiveController
 
         $query = $model->find()
             ->with(['profile'])
-            ->andWhere(['users.deleted' => 0])
+            ->where(['users.deleted' => 0])
             ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
             ->join('INNER JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')

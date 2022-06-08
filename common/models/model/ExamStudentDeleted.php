@@ -94,7 +94,12 @@ class ExamStudentDeleted extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
-                    'is_deleted'
+                    'is_deleted',
+
+                    'created_at_o',
+                    'updated_at_o',
+                    'created_by_o',
+                    'updated_by_o',
                 ], 'integer'
             ],
             [['ball'], 'double'],
@@ -139,6 +144,11 @@ class ExamStudentDeleted extends \yii\db\ActiveRecord
             'created_by' => _e('Created By'),
             'updated_by' => _e('Updated By'),
             'is_deleted' => _e('Is Deleted'),
+            'created_at_o',
+            'updated_at_o',
+            'created_by_o',
+            'updated_by_o',
+
         ];
     }
 
@@ -170,6 +180,11 @@ class ExamStudentDeleted extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
+
+            'created_at_o',
+            'updated_at_o',
+            'created_by_o',
+            'updated_by_o',
 
         ];
 

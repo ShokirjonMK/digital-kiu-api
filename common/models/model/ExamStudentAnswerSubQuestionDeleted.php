@@ -76,7 +76,12 @@ class ExamStudentAnswerSubQuestionDeleted extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
-                    'is_deleted'
+                    'is_deleted',
+
+                    'created_at_o',
+                    'updated_at_o',
+                    'created_by_o',
+                    'updated_by_o',
                 ], 'integer'
             ],
             [['answer'], 'string'],
@@ -108,7 +113,10 @@ class ExamStudentAnswerSubQuestionDeleted extends \yii\db\ActiveRecord
             'ball' => 'Ball',
             'max_ball' => 'Max Ball',
             'teacher_conclusion' => 'Еeacher Сonclusion',
-
+            'created_at_o',
+            'updated_at_o',
+            'created_by_o',
+            'updated_by_o',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -139,6 +147,11 @@ class ExamStudentAnswerSubQuestionDeleted extends \yii\db\ActiveRecord
             'ball',
             'max_ball',
 
+
+            'created_at_o',
+            'updated_at_o',
+            'created_by_o',
+            'updated_by_o',
             'order',
             'status',
             'created_at',

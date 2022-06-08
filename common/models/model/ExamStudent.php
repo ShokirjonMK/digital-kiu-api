@@ -176,10 +176,10 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            
+
             'exam',
             'student',
-            
+
             'examStudentAnswers',
 
             'answers',
@@ -327,7 +327,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
                 $examStudentAnswerSubQuestionDeteledNew->file = $examStudentAnswerSubQuestionOne->file;
                 $examStudentAnswerSubQuestionDeteledNew->exam_student_answer_id = $examStudentAnswerSubQuestionOne->exam_student_answer_id;
-                
+
                 $examStudentAnswerSubQuestionDeteledNew->sub_question_id = $examStudentAnswerSubQuestionOne->sub_question_id;
                 $examStudentAnswerSubQuestionDeteledNew->teacher_conclusion = $examStudentAnswerSubQuestionOne->teacher_conclusion;
                 $examStudentAnswerSubQuestionDeteledNew->answer = $examStudentAnswerSubQuestionOne->answer;
@@ -336,11 +336,13 @@ class ExamStudent extends \yii\db\ActiveRecord
 
                 $examStudentAnswerSubQuestionDeteledNew->order = $examStudentAnswerSubQuestionOne->order;
                 $examStudentAnswerSubQuestionDeteledNew->status = $examStudentAnswerSubQuestionOne->status;
-                $examStudentAnswerSubQuestionDeteledNew->created_at = $examStudentAnswerSubQuestionOne->created_at;
-                $examStudentAnswerSubQuestionDeteledNew->updated_at = $examStudentAnswerSubQuestionOne->updated_at;
-                $examStudentAnswerSubQuestionDeteledNew->created_by = $examStudentAnswerSubQuestionOne->created_by;
-                $examStudentAnswerSubQuestionDeteledNew->updated_by = $examStudentAnswerSubQuestionOne->updated_by;
+
                 $examStudentAnswerSubQuestionDeteledNew->is_deleted = $examStudentAnswerSubQuestionOne->is_deleted;
+
+                $examStudentAnswerSubQuestionDeteledNew->created_at_o = $examStudentAnswerSubQuestionOne->created_at;
+                $examStudentAnswerSubQuestionDeteledNew->updated_at_o = $examStudentAnswerSubQuestionOne->updated_at;
+                $examStudentAnswerSubQuestionDeteledNew->created_by_o = $examStudentAnswerSubQuestionOne->created_by;
+                $examStudentAnswerSubQuestionDeteledNew->updated_by_o = $examStudentAnswerSubQuestionOne->updated_by;
 
                 if (!($examStudentAnswerSubQuestionDeteledNew->save() && $examStudentAnswerSubQuestionOne->delete())) {
                     $errors[] = _e("Deleting on ExamStudentAnswerSubQuestion ID(" . $examStudentAnswerSubQuestionOne->id . ")");
@@ -364,11 +366,13 @@ class ExamStudent extends \yii\db\ActiveRecord
 
             $ExamStudentAnswerDeletedNew->order = $examStudentAnswerOne->order;
             $ExamStudentAnswerDeletedNew->status = $examStudentAnswerOne->status;
-            $ExamStudentAnswerDeletedNew->created_at = $examStudentAnswerOne->created_at;
-            $ExamStudentAnswerDeletedNew->updated_at = $examStudentAnswerOne->updated_at;
-            $ExamStudentAnswerDeletedNew->created_by = $examStudentAnswerOne->created_by;
-            $ExamStudentAnswerDeletedNew->updated_by = $examStudentAnswerOne->updated_by;
             $ExamStudentAnswerDeletedNew->is_deleted = $examStudentAnswerOne->is_deleted;
+
+
+            $ExamStudentAnswerDeletedNew->created_at_o = $examStudentAnswerOne->created_at;
+            $ExamStudentAnswerDeletedNew->updated_at_o = $examStudentAnswerOne->updated_at;
+            $ExamStudentAnswerDeletedNew->created_by_o = $examStudentAnswerOne->created_by;
+            $ExamStudentAnswerDeletedNew->updated_by_o = $examStudentAnswerOne->updated_by;
 
             if (!($ExamStudentAnswerDeletedNew->save() && $examStudentAnswerOne->delete())) {
                 $errors[] = _e("Deleting on ExamStudentAnswer ID(" . $examStudentAnswerOne->id . ")");
@@ -397,11 +401,12 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         $examStudentDeletedNew->order = $model->order;
         $examStudentDeletedNew->status = $model->status;
-        $examStudentDeletedNew->created_at = $model->created_at;
-        $examStudentDeletedNew->updated_at = $model->updated_at;
-        $examStudentDeletedNew->created_by = $model->created_by;
-        $examStudentDeletedNew->updated_by = $model->updated_by;
         $examStudentDeletedNew->is_deleted = $model->is_deleted;
+
+        $examStudentDeletedNew->created_at_o = $model->created_at;
+        $examStudentDeletedNew->updated_at_o = $model->updated_at;
+        $examStudentDeletedNew->created_by_o = $model->created_by;
+        $examStudentDeletedNew->updated_by_o = $model->updated_by;
 
         $examStudentDeletedNew->save();
 

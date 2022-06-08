@@ -193,6 +193,7 @@ return [
 
         "password_index",
         "password_update",
+        "password_view",
 
         "question-type_create",
         "question-type_index",

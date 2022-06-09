@@ -5,6 +5,7 @@ namespace api\controllers;
 use Yii;
 use base\ResponseStatus;
 use api\forms\Login;
+use common\models\model\LoginHistory;
 
 class AuthController extends ApiController
 {
@@ -30,7 +31,11 @@ class AuthController extends ApiController
                         // return $result['data']['role'];
                         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UNAUTHORIZED);
                     }
-                    return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+                    $res = LoginHistory::createItemLogin($result['data']['user_id']);
+                    if (!is_array($res)) {
+                        return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+                    }
+                    return $this->response(1, _e('User successfully logged in.'), $result['data'], _e('Login not saved'));
                 } else {
                     return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UNAUTHORIZED);
                 }
@@ -42,7 +47,12 @@ class AuthController extends ApiController
                         // return $result['data']['role'];
                         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UNAUTHORIZED);
                     }
-                    return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+
+                    $res = LoginHistory::createItemLogin($result['data']['user_id']);
+                    if (!is_array($res)) {
+                        return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+                    }
+                    return $this->response(1, _e('User successfully logged in.'), $result['data'], _e('Login not saved'));
                 } else {
                     return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UNAUTHORIZED);
                 }
@@ -51,7 +61,12 @@ class AuthController extends ApiController
             /* olib tashlash sharti bilan */
             $result = Login::login(new Login(), $post);
             if ($result['is_ok']) {
-                return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+                $res = LoginHistory::createItemLogin($result['data']['user_id']);
+                if (!is_array($res)) {
+                    return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+                }
+
+                return $this->response(1, _e('User successfully logged in.'), $result['data'], _e('Login not saved'));
             } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UNAUTHORIZED);
             }
@@ -62,7 +77,11 @@ class AuthController extends ApiController
 
         $result = Login::login(new Login(), $post);
         if ($result['is_ok']) {
-            return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+            $res = LoginHistory::createItemLogin($result['data']['user_id']);
+            if (!is_array($res)) {
+                return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
+            }
+            return $this->response(1, _e('User successfully logged in.'), $result['data'], _e('Login not saved'));
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UNAUTHORIZED);
         }

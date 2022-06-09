@@ -1,8 +1,9 @@
 <?php
 
-namespace common\models;
+namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -36,6 +37,9 @@ class LoginHistory extends \yii\db\ActiveRecord
         ];
     }
 
+    const LOGIN = 1;
+    const LOGOUT = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -51,10 +55,11 @@ class LoginHistory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ip', 'user_id', 'device', 'device_id', 'type', 'model_device'], 'required'],
-            [['user_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['user_id'], 'required'],
+            [['data', 'host'], 'string'],
+            [['user_id', 'log_in_out', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['ip', 'device', 'device_id', 'type', 'model_device'], 'string', 'max' => 255],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \api\resources\User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -70,6 +75,9 @@ class LoginHistory extends \yii\db\ActiveRecord
             'device' => 'Device',
             'device_id' => 'Device ID',
             'type' => 'Type',
+            'data' => 'Data',
+            'log_in_out' => 'Data',
+            'host' => 'Host',
             'model_device' => 'Model Device',
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -101,11 +109,52 @@ class LoginHistory extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public static function createItemLogin($user_id, $log_in_out = self::LOGIN)
+    {
+        // dd($log_in_out);
+        $model = new self;
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $model->user_id = $user_id;
+        $model->ip = getIpAddress();
+        $model->data = json_encode(getBrowser());
+        $model->host = get_host();
+        $model->log_in_out = $log_in_out;
+
+        // vdd(Yii::$app->request);
+        // vdd(get_host());
+        // vdd(getIpAddressData());
+
+        // ip
+        // user_id
+        // device
+        // device_id
+        // type
+        // model_device
+        // data
+
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+        if ($model->save()) {
+            // dd($model->errors);
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

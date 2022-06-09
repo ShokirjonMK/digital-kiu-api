@@ -21,9 +21,12 @@ class m220608_121732_create_work_rate_table extends Migration
         $this->createTable('{{%work_rate}}', [
             'id' => $this->primaryKey(),
 
-            'hour' => $this->double()->defaultValue(0),
             'rate' => $this->double()->defaultValue(0),
+            'hour_day' => $this->double()->defaultValue(0),
+            'hour_week' => $this->double()->defaultValue(0),
             'description' => $this->text()->null(),
+            'name' => $this->string(255)->null(),
+            'type' => $this->tinyInteger(1)->defaultValue(0),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

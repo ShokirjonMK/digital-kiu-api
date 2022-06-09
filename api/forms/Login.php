@@ -3,6 +3,7 @@
 namespace api\forms;
 
 use api\resources\User;
+use common\models\model\LoginHistory;
 use Yii;
 use yii\base\Model;
 
@@ -70,8 +71,9 @@ class Login extends Model
 
     public static function logout()
     {
-        $user = User::findOne(Current_user_id());
+        $user = User::findOne(current_user_id());
         if (isset($user)) {
+            LoginHistory::createItemLogin(current_user_id(), LoginHistory::LOGOUT);
             Yii::$app->user->logout();
             $user->access_token = NULL;
             $user->access_token_time = NULL;
@@ -186,6 +188,8 @@ class Login extends Model
         } else {
             $errors[] = [_e('Username and password cannot be blank.')];
         }
+
+        // new LoginHistory();
 
         if (count($errors) == 0) {
             return ['is_ok' => true, 'data' => $data];

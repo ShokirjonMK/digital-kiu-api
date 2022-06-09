@@ -20,7 +20,7 @@ class m220607_055958_create_kpi_category_table extends Migration
         $this->createTable('{{%kpi_category}}', [
             'id' => $this->primaryKey(),
 
-            'fields' => $this->string(255)->Null()->comment('["date", "file", "subject_category", "count_of_copyright", "link"]'),
+            'fields' => $this->json()->Null()->comment('["date", "file", "subject_category", "count_of_copyright", "link"]'),
             'max_ball' => $this->double()->defaultValue(0),
             'term' => $this->tinyInteger(1)->defaultValue(1)->comment('muddati 1-bir yil 2-olti oy'),
             'tab' => $this->tinyInteger(1)->defaultValue(1)->comment('tab raqami'),

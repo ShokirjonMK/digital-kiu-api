@@ -259,7 +259,7 @@ class KpiCategory extends \yii\db\ActiveRecord
         if (!isJsonMK($post['fields'])) {
             $errors['fields'] = [_e('Must be Json')];
         } else {
-            $model->fields = ((array)json_decode($post['fields']));
+            $model->fields = (json_decode($post['fields']));
         }
 
         if ($model->save()) {

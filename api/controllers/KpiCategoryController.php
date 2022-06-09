@@ -110,6 +110,6 @@ class KpiCategoryController extends ApiActiveController
 
     public function actionExtra()
     {
-        return $this->response(1, _e('Success.'), KpiCategory::extraParams(), null, ResponseStatus::OK);
+        return $this->response(1, _e('Success.'), KpiCategory::extra(), null, ResponseStatus::OK);
     }
 }

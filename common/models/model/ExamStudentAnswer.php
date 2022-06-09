@@ -420,14 +420,16 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     }
                                 } else {
 
+
                                     // ExamStudentAnswer::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
-                                    // ExamStudent::deleteAll(['exam_id' => $exam_id, 'student_id' => $student_id]);
+
                                     $errors[] = _e("Questions are not found for this exam");
 
                                     $transaction->rollBack();
                                     return simplify_errors($errors);
                                 }
                             }
+
                             $getQuestionModel = new ExamStudentAnswer();
                             $getQuestion = $getQuestionModel->find()
                                 ->with(['question'])

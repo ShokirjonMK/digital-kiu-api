@@ -136,6 +136,7 @@ class KpiCategory extends \yii\db\ActiveRecord
             'description',
             'term',
             'tabName',
+            'extra',
 
             'createdBy',
             'updatedBy',
@@ -322,14 +323,19 @@ class KpiCategory extends \yii\db\ActiveRecord
     public static function tab()
     {
         return [
-            1,
-            2,
-            3,
-            4
+            1 => _e("O‘quv va o‘quv-uslubiy ishlar"),
+            2 => _e("Ilmiy va innovatsiyalarga oid ishlar"),
+            3 => _e("Xalqaro hamkorlikka oid ishlar"),
+            4 => _e("Ma'naviy-ma'rifiy ishlarga rioya etish holati")
         ];
     }
 
-    public static function extraParams()
+    public function getExtra()
+    {
+        return self::extra();
+    }
+
+    public static function extra()
     {
         return ["fields" => self::categoryFields(), "term" => self::term(), "tab" => self::tab()];
     }

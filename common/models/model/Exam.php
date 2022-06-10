@@ -328,7 +328,7 @@ class Exam extends \yii\db\ActiveRecord
         if (isRole('student')) {
             return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $this->student()]);
         }
-        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['!=', 'status', ExamStudent::STATUS_INACTIVE]);
+        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
     }
 
     public function getExamStudentCountMain()

@@ -3,21 +3,21 @@
 use yii\db\Migration;
 
 /**
- * Class m220610_052950_diploma_type
+ * Class m220610_054230_degree
  */
-class m220610_052950_diploma_type extends Migration
+class m220610_054230_degree extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $tableName = Yii::$app->db->tablePrefix . 'diploma_type';
+        $tableName = Yii::$app->db->tablePrefix . 'degree';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
-            $this->dropTable('diploma_type');
+            $this->dropTable('degree');
         }
 
-        $this->createTable('{{%diploma_type}}', [
+        $this->createTable('{{%degree}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->null(),
             'name_ru' => $this->string(255)->null(),
@@ -32,29 +32,28 @@ class m220610_052950_diploma_type extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->insert('diploma_type', array(
+        $this->insert('degree', array(
             'id' => '1',
-            'name' => "Bakalavr",
+            'name' => "Unvonsiz",
+            'name_ru' => 'Без степень',
+            'name_en' => 'Without a degree',
+
         ));
 
-        $this->insert('diploma_type', array(
+        $this->insert('degree', array(
             'id' => '2',
-            'name' => "Magistr",
+            'name' => "Dotsent",
+            'name_ru' => 'Доцент',
+            'name_en' => 'Docent',
+
         ));
 
-        $this->insert('diploma_type', array(
+        $this->insert('degree', array(
             'id' => '3',
-            'name' => "PhD (fan nomzodi)",
-        ));
+            'name' => "Professor",
+            'name_ru' => 'Профессор',
+            'name_en' => 'Professor',
 
-        $this->insert('diploma_type', array(
-            'id' => '4',
-            'name' => "DSc (fan doktori)",
-        ));
-
-        $this->insert('diploma_type', array(
-            'id' => '5',
-            'name' => "Mutaxassislik diplomi",
         ));
     }
 
@@ -63,8 +62,8 @@ class m220610_052950_diploma_type extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%diploma_type}}');
-        echo "m220610_052950_diploma_type cannot be reverted.\n";
+        $this->dropTable('{{%degree}}');
+        echo "m220610_054230_degree cannot be reverted.\n";
 
         return false;
     }
@@ -78,7 +77,7 @@ class m220610_052950_diploma_type extends Migration
 
     public function down()
     {
-        echo "m220610_052950_diploma_type cannot be reverted.\n";
+        echo "m220610_054230_degree cannot be reverted.\n";
 
         return false;
     }

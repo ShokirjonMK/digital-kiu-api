@@ -97,6 +97,15 @@ $controllers = [
     'kpi-store',
 
 
+    'partiya',
+    'diploma-type',
+    'degree',
+    'degree-info',
+    'academic-degree',
+
+
+
+
     'telegram',
     'test-get-data',
 ];

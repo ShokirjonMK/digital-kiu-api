@@ -830,7 +830,7 @@ return [
         'user-access_update',
         'user-access_view',
 
-        'exam_distribution',
+
         'exam_view',
         'exam_index',
         'exam-semeta_create',

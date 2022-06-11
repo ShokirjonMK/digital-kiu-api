@@ -3,21 +3,21 @@
 use yii\db\Migration;
 
 /**
- * Class m220610_052950_diploma_type
+ * Class m220610_061250_partiya
  */
-class m220610_052950_diploma_type extends Migration
+class m220610_061250_partiya extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $tableName = Yii::$app->db->tablePrefix . 'diploma_type';
+        $tableName = Yii::$app->db->tablePrefix . 'partiya';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
-            $this->dropTable('diploma_type');
+            $this->dropTable('partiya');
         }
 
-        $this->createTable('{{%diploma_type}}', [
+        $this->createTable('{{%partiya}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->null(),
             'name_ru' => $this->string(255)->null(),
@@ -32,29 +32,34 @@ class m220610_052950_diploma_type extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->insert('diploma_type', array(
+        $this->insert('partiya', array(
             'id' => '1',
-            'name' => "Bakalavr",
+            'name' => "Yo'q",
         ));
 
-        $this->insert('diploma_type', array(
+        $this->insert('partiya', array(
             'id' => '2',
-            'name' => "Magistr",
+            'name' => "XDP",
         ));
 
-        $this->insert('diploma_type', array(
+        $this->insert('partiya', array(
             'id' => '3',
-            'name' => "PhD (fan nomzodi)",
+            'name' => "Adolat SDP",
         ));
 
-        $this->insert('diploma_type', array(
+        $this->insert('partiya', array(
             'id' => '4',
-            'name' => "DSc (fan doktori)",
+            'name' => "Milliy tiklanish DP",
         ));
 
-        $this->insert('diploma_type', array(
+        $this->insert('partiya', array(
             'id' => '5',
-            'name' => "Mutaxassislik diplomi",
+            'name' => "O'Z LiDeP",
+        ));
+
+        $this->insert('partiya', array(
+            'id' => '6',
+            'name' => "Ekologiya",
         ));
     }
 
@@ -63,24 +68,9 @@ class m220610_052950_diploma_type extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%diploma_type}}');
-        echo "m220610_052950_diploma_type cannot be reverted.\n";
+        $this->dropTable('{{%partiya}}');
+        echo "m220610_052036_partiya cannot be reverted.\n";
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220610_052950_diploma_type cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

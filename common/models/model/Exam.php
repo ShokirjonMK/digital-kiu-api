@@ -782,6 +782,7 @@ class Exam extends \yii\db\ActiveRecord
 
                 foreach ($examStudent as $examStudentOne) {
                     $examStudentOne->teacher_access_id = $examSmetaOne->teacher_access_id;
+                    $examStudentOne->exam_semeta_id = $examSmetaOne->id;
                     $examStudentOne->status = ExamStudent::STATUS_IN_CHECKING;
 
                     if (!$examStudentOne->save()) {

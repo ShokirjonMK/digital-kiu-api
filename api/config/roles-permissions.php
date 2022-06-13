@@ -229,6 +229,7 @@ return [
         "subject-type_view",
 
         "subject_index",
+        "subject_update",
         "subject_view",
 
         "subject-sillabus_create",

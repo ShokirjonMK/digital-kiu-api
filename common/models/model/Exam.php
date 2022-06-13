@@ -351,6 +351,7 @@ class Exam extends \yii\db\ActiveRecord
             ->andWhere(['us.deleted' => 0])
             ->andWhere([$table_name . '.subject_id' => $this->eduSemestrSubject->subject->id, $table_name . '.status' => 1])
             ->groupBy($table_name . '.id');
+        // dd($query->createCommand()->getRawSql());
 
         return $query->all();
     }
@@ -767,6 +768,7 @@ class Exam extends \yii\db\ActiveRecord
                     ->where([
                         'exam_id' => $exam->id,
                         'teacher_access_id' => null,
+                        'lang_id' => $examSmetaOne->lang_id,
                         // 'status' => ExamStudent::STATUS_TAKED,
                     ])
                     ->orderBy(new Expression('rand()'))

@@ -27,6 +27,7 @@ class ExamNoStudent extends ExamStudent
             'exam_id',
             'lang_id',
             'teacher_access_id',
+            'is_plagiat',
             'ball',
 
             'attempt',

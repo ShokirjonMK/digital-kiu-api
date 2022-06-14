@@ -13,7 +13,7 @@ class m220611_132438_alter_user_access_table_add_work_rate_tabel_number extends 
     public function safeUp()
     {
         $this->execute("ALTER TABLE `user_access` ADD `work_rate_id` int null COMMENT 'work_rate';");
-        $this->execute("ALTER TABLE `user_access` ADD `tabel` int null COMMENT 'tabel';");
+        $this->execute("ALTER TABLE `user_access` ADD `tabel` int null COMMENT 'work_rate';");
 
     }
 

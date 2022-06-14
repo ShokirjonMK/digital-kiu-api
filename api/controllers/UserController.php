@@ -104,13 +104,15 @@ class UserController extends ApiActiveController
 
         $query = $model->find()
             ->with(['profile'])
-            ->andWhere(['users.deleted' => 1])
-            ->join('INNER JOIN', 'profile', 'profile.user_id = users.id')
-            ->join('INNER JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->andWhere(['users.deleted' => 0])
+            ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
+            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
 
+        // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
+
 
         $userIds = AuthAssignment::find()->select('user_id')->where([
             'in', 'auth_assignment.item_name',
@@ -122,7 +124,7 @@ class UserController extends ApiActiveController
             ])
         ]);
 
-        $query->orFilterWhere([
+        $query->andFilterWhere([
             'in', 'users.id', $userIds
         ]);
 
@@ -134,8 +136,6 @@ class UserController extends ApiActiveController
 
         if (!(isRole('admin'))) {
             // dd(123);
-
-
             $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
             $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
@@ -217,6 +217,8 @@ class UserController extends ApiActiveController
 
         // sort
         $query = $this->sort($query);
+
+        // dd($query->createCommand()->getRawSql());
 
         // data
         $data = $this->getData($query);

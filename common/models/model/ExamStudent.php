@@ -297,7 +297,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
         // $model->status = self::STATUS_CHECKED;
-        if ($model->plagiat_percent >= Yii::$app->params['plagiat_percent_max']) {
+        if ($model->plagiat_percent > Yii::$app->params['plagiat_percent_max']) {
             $model->is_plagiat = self::IS_PLAGIAT_TRUE;
         }
         if ($model->save() && count($errors) == 0) {

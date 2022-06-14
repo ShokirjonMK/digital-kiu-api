@@ -23,17 +23,25 @@ class ExamNoStudent extends ExamStudent
     public function fields()
     {
         $fields =  [
+
             'id',
             'exam_id',
             'lang_id',
             'teacher_access_id',
-            'is_plagiat',
             'ball',
-
             'attempt',
+
+            'is_plagiat',
+
             'conclusion',
             'plagiat_file',
             'plagiat_percent',
+            'order',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
 
         ];
 

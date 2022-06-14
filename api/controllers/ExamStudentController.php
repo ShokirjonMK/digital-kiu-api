@@ -161,9 +161,15 @@ class ExamStudentController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = ExamStudent::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
-            ->one();
+        if (isRole('teacher')) {
+            $model = ExamNoStudent::find()
+                ->andWhere(['id' => $id, 'is_deleted' => 0])
+                ->one();
+        } else {
+            $model = ExamStudent::find()
+                ->andWhere(['id' => $id, 'is_deleted' => 0])
+                ->one();
+        }
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

@@ -542,21 +542,24 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             $subQuestionOneAnswerCount = 0;
             foreach (((array)json_decode($post['subQuestionAnswersChecking'])) as $subQuestionOneAnswerChecking) {
                 //                dd($subQuestionOneAnswerChecking);
-                $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne($subQuestionOneAnswerChecking->exam_student_answer_sub_question_id ?? null);
 
-                if ($examStudentAnswerSubQuestion) {
-                    if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
-                        $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
-                        $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
-                        if ($examStudentAnswerSubQuestion->save()) {
-                            $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
-                            $subQuestionOneAnswerCount++;
+                if (isset($subQuestionOneAnswerChecking->exam_student_answer_sub_question_id)) {
+                    $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne($subQuestionOneAnswerChecking->exam_student_answer_sub_question_id);
+
+                    if ($examStudentAnswerSubQuestion) {
+                        if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
+                            $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
+                            $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
+                            if ($examStudentAnswerSubQuestion->save()) {
+                                $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
+                                $subQuestionOneAnswerCount++;
+                            }
+                        } else {
+                            $errors[] = [$examStudentAnswerSubQuestion->id => _e("This subQuestion Answer is not for this question's answer")];
                         }
                     } else {
-                        $errors[] = [$examStudentAnswerSubQuestion->id => _e("This subQuestion Answer is not for this question's answer")];
+                        $errors[] = _e("This subQuestion Answer is not found");
                     }
-                } else {
-                    $errors[] = _e("This subQuestion Answer is not found");
                 }
             }
             if (ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $model->id])->count() == $subQuestionOneAnswerCount) {

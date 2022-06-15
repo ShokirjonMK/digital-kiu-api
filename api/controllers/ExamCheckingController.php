@@ -35,11 +35,12 @@ class ExamCheckingController extends ApiActiveController
             $examStudentIds = ExamStudent::find()
                 ->where(['in', 'teacher_access_id', $this->teacher_access()])
                 ->select('id');
+            $query = $query
+                ->andWhere(['in', $model->tableName() . '.exam_student_id', $examStudentIds]);
         }
 
 
-        $query = $query
-            ->andWhere(['in', $model->tableName() . '.exam_student_id', $examStudentIds]);
+
 
         $exam_student_id = Yii::$app->request->get('exam_student_id');
 

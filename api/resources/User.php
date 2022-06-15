@@ -706,6 +706,12 @@ class User extends CommonUser
                 $errors[] = [_e('Error in profile deleting process.')];
             }
 
+            $userAccess = UserAccess::findAll(['user_id' => $model->id]);
+            foreach ($userAccess as $userAccessOne) {
+                $userAccessOne->is_deleted = 1;
+                $userAccessOne->update();
+            }
+
             $model->deleted = 1;
             $model->status = self::STATUS_BANNED;
 

@@ -337,7 +337,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $data['questions'] = $getQuestion;
                             if ($exam->id = 345 || $exam->id = 346) {
                                 $ExamStudentHas->start = time();
-                                $ExamStudentHas->save(false);
+                                $ExamStudentHas->save();
                             }
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                             $exam_times['duration'] = $exam->duration;

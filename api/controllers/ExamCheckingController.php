@@ -40,8 +40,6 @@ class ExamCheckingController extends ApiActiveController
         }
 
 
-
-
         $exam_student_id = Yii::$app->request->get('exam_student_id');
 
         if ($exam_student_id) {

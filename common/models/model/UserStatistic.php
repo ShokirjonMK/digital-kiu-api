@@ -78,7 +78,7 @@ class UserStatistic extends User
     }
     public function getTeacherAccess()
     {
-        return $this->hasOne(TeacherAccessStatistic::className(), ['user_id' => 'id']);
+        return $this->hasMany(TeacherAccessStatistic::className(), ['user_id' => 'id']);
     }
 
     // UserAccess

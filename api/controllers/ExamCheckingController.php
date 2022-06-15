@@ -31,9 +31,12 @@ class ExamCheckingController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$model->tableName() . '.is_deleted' => 0]);
 
-        $examStudentIds = ExamStudent::find()
-            ->where(['in', 'teacher_access_id', $this->teacher_access()])
-            ->select('id');
+        if (!isRole("admin")) {
+            $examStudentIds = ExamStudent::find()
+                ->where(['in', 'teacher_access_id', $this->teacher_access()])
+                ->select('id');
+        }
+
 
         $query = $query
             ->andWhere(['in', $model->tableName() . '.exam_student_id', $examStudentIds]);

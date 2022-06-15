@@ -10,6 +10,7 @@ use common\models\model\Profile;
 use common\models\model\UserAccess;
 
 use common\models\model\EduPlan;
+use common\models\model\ExamStudent;
 use common\models\model\Faculty;
 use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;

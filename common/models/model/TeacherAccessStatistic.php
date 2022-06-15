@@ -11,17 +11,15 @@ class TeacherAccessStatistic extends TeacherAccess
     {
         $fields =  [
             'id',
-            // 'subject_id',
-            // 'subject' => function ($model) {
-            // return $model->subject->name ?? '';
-            // },
-            // 'examStudentCount' => function ($model) {
-            //     return $model->examStudentCount ?? 0;
-            // },
-            // 'checkedCount' => function ($model) {
-            //     return $model->checkedCount ?? 0;
-            // },
-            'checkCountaaaa' => function ($model) {
+            'subject_id',
+            'subject' => function ($model) {
+                return $model->subject->name ?? '';
+            },
+            'examStudentCount' => function ($model) {
+                return $model->examStudentCount ?? 0;
+            },
+
+            'checkedCount' => function ($model) {
                 return $model->checkCount ?? 0;
             },
             // 'examStudent' => function ($model) {
@@ -65,19 +63,16 @@ class TeacherAccessStatistic extends TeacherAccess
 
     public function getCheckCount()
     {
-        // return "asd";
         $model = new ExamStudent();
         $query = $model->find();
-
         $query = $query->andWhere([$model->tableName() . '.teacher_access_id' => $this->id])
-            ->leftJoin("exam_student_answer esa", "esa.id = " . $model->tableName() . " .id ")
-            ->leftJoin("exam_student_answer_sub_question esasq", "esasq.exam_student_answer_id = esa.id")
+            ->leftJoin("exam_student_answer", "exam_student_answer.exam_student_id = " . $model->tableName() . ".id ")
+            ->leftJoin("exam_student_answer_sub_question", "exam_student_answer_sub_question.exam_student_answer_id = exam_student_answer.id")
             // ->andWhere(['not', ['esasq.ball' => null, 'esasq.teacher_conclusion' => null]])
-            ->andWhere(['!=', 'esasq.teacher_conclusion', null])
-            ->andWhere(['!=', 'esasq.ball', null])
-            // ->andWhere(['not', ['State' => null]])
-            // ->andWhere(['not', ['esa.teacher_conclusion' => null]])
-        ;
+
+            ->andWhere(['IS NOT', 'exam_student_answer_sub_question.ball', null])
+            ->andWhere(['IS NOT', 'exam_student_answer_sub_question.teacher_conclusion', null])
+            ->groupBy('exam_student.id');
 
         // dd($query->createCommand()->getRawSql());
         // dd("qweqwe");

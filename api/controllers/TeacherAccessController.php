@@ -86,6 +86,7 @@ class TeacherAccessController extends ApiActiveController
         $model = new TeacherAccess();
 
         $query = $model->find()
+            ->with(['teacher'])
             ->andWhere(['is_deleted' => 0]);
 
         // filter

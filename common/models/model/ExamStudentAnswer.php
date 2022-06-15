@@ -190,6 +190,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
             //'subQuestionAnswers',
             'examStudentAnswerSubQuestion',
+            'examStudentAnswerSubQuestionNoChecked',
 
             'subQuestions',
             'statusName',
@@ -213,6 +214,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     public function getExamStudentAnswerSubQuestion()
     {
         return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id']);
+    }
+
+    public function getExamStudentAnswerSubQuestionNoChecked()
+    {
+        return $this->hasMany(ExamStudentAnswerSubQuestion::className(), ['exam_student_answer_id' => 'id'])->onCondition(['ball' => null, 'teacher_conclusion' => null]);
     }
 
     //    public function getExamStudentAnswerSubQuestionCount()

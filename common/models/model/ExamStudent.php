@@ -183,6 +183,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examStudentAnswers',
 
             'answers',
+            'isChecked',
 
             'statusName',
             'teacherAccess',
@@ -193,6 +194,26 @@ class ExamStudent extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getIsChecked()
+    {
+
+        // return $this->examStudentAnswers->examStudentAnswerSubQuestion;
+
+        $model = new ExamStudentAnswer();
+        $query = $model->find()->with('examStudentAnswerSubQuestion');
+
+        $query = $query->andWhere([$model->tableName() . '.exam_student_id' => $this->id])
+            ->leftJoin("exam_student_answer_sub_question esasq", "esasq.exam_student_answer_id = " . $model->tableName() . " .id ")
+            ->andWhere(['esasq.ball' => null, 'esasq.teacher_conclusion' => null])
+            ->andWhere([$model->tableName() . '.teacher_conclusion' => null]);
+
+        if (count($query->all()) > 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
 

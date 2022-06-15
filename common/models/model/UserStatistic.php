@@ -72,48 +72,9 @@ class UserStatistic extends User
         return $extraFields;
     }
 
-    public function getProfile()
-    {
-        return $this->hasOne(Profile::className(), ['user_id' => 'id']);
-    }
+
     public function getTeacherAccess()
     {
         return $this->hasMany(TeacherAccessStatistic::className(), ['user_id' => 'id']);
-    }
-
-    // UserAccess
-    public function getDepartment()
-    {
-        $data = [];
-
-        // return $this->userAccess;
-        foreach ($this->userAccess as $userAccessOne) {
-            $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
-            $data[$userAccessOne->user_access_type_id][] =
-                $user_access_type ? $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]) : [];
-        }
-        return $data;
-        // return $this->userAccess->user_access_type_id;
-        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
-
-        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
-    }
-
-    // Dep Kaf Fac
-    public function getHere()
-    {
-        // return $this->userAccess->user_access_type_id;
-        $data = [];
-
-        foreach ($this->userAccess as $userAccessOne) {
-            $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
-            $data[] =
-                $user_access_type ? $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]) : [];
-        }
-
-        return $data;
-        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
-
-        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
     }
 }

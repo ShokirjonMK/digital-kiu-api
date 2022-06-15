@@ -148,6 +148,12 @@ class ExamStudentAnswerController extends ApiActiveController
 
             $this->load($model, $data);
             $result = ExamStudentAnswer::updateItemTeacher($model, $data);
+
+            if (!is_array($result)) {
+                return $this->response(1, _e($this->controller_name . ' successfully saved.'), $model, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
         } else {
             $this->load($model, $post);
 
@@ -173,13 +179,13 @@ class ExamStudentAnswerController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if(isRole('student')){
+        if (isRole('student')) {
             $student = Student::findOne(['user_id' => current_user_id()]);
             if (!$student) {
                 $errors[] = _e("Student not found");
                 return $this->response(0, _e('Data not found.'), null, $errors, ResponseStatus::NOT_FOUND);
             }
-            if($model->student_id != $student->id){
+            if ($model->student_id != $student->id) {
                 $errors[] = _e("Student not found");
                 return $this->response(0, _e('Data not found.'), null, $errors, ResponseStatus::NOT_FOUND);
             }

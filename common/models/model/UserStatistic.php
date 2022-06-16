@@ -16,7 +16,7 @@ class UserStatistic extends User
     {
         $fields = [
             'id',
-            'username',
+            // 'username',
             'first_name' => function ($model) {
                 return $model->profile->first_name ?? '';
             },
@@ -31,7 +31,7 @@ class UserStatistic extends User
             },
 
 
-            'status',
+            // 'status',
             // 'deleted'
 
         ];

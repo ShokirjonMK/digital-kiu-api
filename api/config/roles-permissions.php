@@ -83,6 +83,9 @@ return [
 
     /* O'quv bo'limi Admin */
     'edu_admin' => [
+
+        'statistic_checking',
+
         "access-control_permissions",
         "access-control_roles",
         'statistic_student-count-by-faculty',

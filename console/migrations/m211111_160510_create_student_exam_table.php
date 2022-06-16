@@ -20,6 +20,7 @@ class m211111_160510_create_student_exam_table extends Migration
             'ball' => $this->double()->defaultValue(0),
             
             'attempt' => $this->integer()->defaultValue(1)->comment("Nechinchi marta topshirayotgani"),
+            'act' => $this->integer()->defaultValue(0)->comment("1 act tuzilgan imtihon qodalarini bizgan"),
 
             //'exam_question' => $this->text()->Null()->comment("JSON formatda: question_id, option_id, ball, is_correct,"),
             // 'file' => $this->string(255)->Null(),

@@ -42,8 +42,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         ];
     }
 
-    const STATUS_INACTIVE = 0;
-    const STATUS_TAKED = 1;
+
     const STATUS_COMPLETE = 2;
     const STATUS_IN_CHECKING = 3;
     const STATUS_CHECKED = 4;
@@ -59,6 +58,10 @@ class ExamStudent extends \yii\db\ActiveRecord
     // conclusion
     // plagiat_file
     // plagiat_percent
+
+
+    const ACT_FALSE = 0;
+    const ACT_TRUE = 1;
 
     /**
      * {@inheritdoc}
@@ -94,7 +97,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
-                    'is_deleted'
+                    'is_deleted',
+                    'act'
                 ], 'integer'
             ],
             [['ball'], 'double'],
@@ -132,6 +136,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'attempt' => 'Attempt',
             'order' => _e('Order'),
             'status' => _e('Status'),
+            'act' => _e('act'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
@@ -161,6 +166,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'plagiat_file',
             'plagiat_percent',
 
+            'act',
             'order',
             'status',
             'created_at',

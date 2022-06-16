@@ -166,6 +166,9 @@ return [
         "exam_distribution",
         "exam_ad",
 
+        "exam-student_index",
+        "exam-student_update",
+
         "faculty_create",
         "faculty_index",
         "faculty_update",

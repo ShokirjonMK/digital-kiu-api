@@ -22,6 +22,9 @@ class TeacherAccessStatistic extends TeacherAccess
             'checkedCount' => function ($model) {
                 return $model->checkCount ?? 0;
             },
+            'percent' => function ($model) {
+                return $model->checkCount ?  $model->checkCount / $model->examStudentCount * 100 : 0;
+            },
             // 'examStudent' => function ($model) {
             //     return $model->examStudent ?? 0;
             // },

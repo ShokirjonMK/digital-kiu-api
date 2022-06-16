@@ -168,6 +168,7 @@ return [
 
         "exam-student_index",
         "exam-student_update",
+        // "exam-student_view",
 
         "faculty_create",
         "faculty_index",

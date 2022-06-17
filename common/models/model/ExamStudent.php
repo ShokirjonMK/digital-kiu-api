@@ -42,7 +42,8 @@ class ExamStudent extends \yii\db\ActiveRecord
         ];
     }
 
-
+    const STATUS_INACTIVE = 0;
+    const STATUS_TAKED = 1;
     const STATUS_COMPLETE = 2;
     const STATUS_IN_CHECKING = 3;
     const STATUS_CHECKED = 4;
@@ -62,6 +63,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     const ACT_FALSE = 0;
     const ACT_TRUE = 1;
+
 
     /**
      * {@inheritdoc}

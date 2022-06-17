@@ -12,6 +12,11 @@ class m220613_133129_create_holiday_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'holiday';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('holiday');
+        }
+
         $this->createTable('{{%holiday}}', [
             'id' => $this->primaryKey(),
             'start_date' => $this->date()->notNull(),
@@ -19,6 +24,8 @@ class m220613_133129_create_holiday_table extends Migration
             'year' => $this->integer()->Null(),
             'month' => $this->integer()->Null(),
 
+            // 'name' => $this->string(255)->null(),
+            // 'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'order' => $this->tinyInteger(1)->defaultValue(1),

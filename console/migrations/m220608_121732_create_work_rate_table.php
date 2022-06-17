@@ -22,11 +22,14 @@ class m220608_121732_create_work_rate_table extends Migration
             'id' => $this->primaryKey(),
 
             'rate' => $this->double()->defaultValue(0),
+            'weekly_hours' => $this->double()->defaultValue(0),
             'hour_day' => $this->double()->defaultValue(0),
-            'hour_week' => $this->double()->defaultValue(0),
-            'description' => $this->text()->null(),
-            'name' => $this->string(255)->null(),
+            'daily_hours' => $this->json()->Null()->comment('{"1":8, "2":7, "3":7, "4":7, "5":7}'),
             'type' => $this->tinyInteger(1)->defaultValue(0),
+
+
+            // 'name' => $this->string(255)->null(),
+            // 'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

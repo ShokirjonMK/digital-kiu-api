@@ -17,7 +17,7 @@ class m220613_133358_create_vocation_table extends Migration
 
             'start_date' => $this->date()->notNull(),
             'finish_date' => $this->date()->notNull(),
-            'symbol' => $this->string(2)->null(),
+            'symbol' => $this->string(5)->null(),
             'user_id' => $this->integer()->notNull(),
             'type' => $this->tinyInteger(2)->defaultValue(1)->comment("1- tatil, 2-kasal, 3-......"),
 

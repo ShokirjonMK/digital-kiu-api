@@ -2,33 +2,34 @@
 
 namespace api\controllers;
 
-use common\models\model\Holiday;
+use common\models\model\JobTitle;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\Translate;
 
-class HolidayController extends ApiActiveController
+class JobTitleController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Holiday';
+    public $modelClass = 'api\resources\JobTitle';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'holiday';
-    public $controller_name = 'Holiday';
+    public $table_name = 'job_title';
+    public $controller_name = 'JobTitle';
 
     public function actionIndex($lang)
     {
-        $model = new Holiday();
+        $model = new JobTitle();
 
         $query = $model->find()
             ->with(['infoRelation'])
-            // ->andWhere([$this->table_name . '.is_deleted' => 0])
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin("job_title_info jtinfo", "jtinfo.job_title_id = $this->table_name.id")
             ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'jtinfo.name', Yii::$app->request->get('q')]);
+
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -43,13 +44,11 @@ class HolidayController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Holiday();
+        $model = new JobTitle();
         $post = Yii::$app->request->post();
-        $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
-        $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
-
         $this->load($model, $post);
-        $result = Holiday::createItem($model, $post);
+
+        $result = JobTitle::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -59,15 +58,13 @@ class HolidayController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Holiday::findOne($id);
+        $model = JobTitle::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
-        $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
-        $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
         $this->load($model, $post);
-        $result = Holiday::updateItem($model, $post);
+        $result = JobTitle::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,9 +74,10 @@ class HolidayController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Holiday::find()
-            ->andWhere(['id' => $id])
+        $model = JobTitle::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -88,8 +86,8 @@ class HolidayController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Holiday::find()
-            ->andWhere(['id' => $id])
+        $model = JobTitle::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
         if (!$model) {
@@ -98,8 +96,8 @@ class HolidayController extends ApiActiveController
 
         // remove model
         if ($model) {
-            Translate::deleteTranslate($this->table_name, $model->id);
-            $model->delete();
+            $model->is_deleted = 1;
+            $model->update();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

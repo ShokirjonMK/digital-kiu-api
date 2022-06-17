@@ -2,26 +2,26 @@
 
 namespace api\controllers;
 
-use common\models\model\Holiday;
+use common\models\model\Vocation;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Translate;
 
-class HolidayController extends ApiActiveController
+class VocationController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Holiday';
+    public $modelClass = 'api\resources\Vocation';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'holiday';
-    public $controller_name = 'Holiday';
+    public $table_name = 'vocation';
+    public $controller_name = 'Vocation';
 
     public function actionIndex($lang)
     {
-        $model = new Holiday();
+        $model = new Vocation();
 
         $query = $model->find()
             ->with(['infoRelation'])
@@ -43,13 +43,13 @@ class HolidayController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Holiday();
+        $model = new Vocation();
         $post = Yii::$app->request->post();
         $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
         $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
-
         $this->load($model, $post);
-        $result = Holiday::createItem($model, $post);
+
+        $result = Vocation::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -59,7 +59,7 @@ class HolidayController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Holiday::findOne($id);
+        $model = Vocation::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -67,7 +67,7 @@ class HolidayController extends ApiActiveController
         $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
         $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
         $this->load($model, $post);
-        $result = Holiday::updateItem($model, $post);
+        $result = Vocation::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,7 +77,7 @@ class HolidayController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Holiday::find()
+        $model = Vocation::find()
             ->andWhere(['id' => $id])
             ->one();
         if (!$model) {
@@ -88,7 +88,7 @@ class HolidayController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Holiday::find()
+        $model = Vocation::find()
             ->andWhere(['id' => $id])
             ->one();
 

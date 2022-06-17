@@ -103,6 +103,11 @@ $controllers = [
     'degree-info',
     'academic-degree',
 
+    'vocation',
+    'holiday',
+    'job-title',
+
+
 
 
 

@@ -12,11 +12,18 @@ class m220613_133755_create_job_title_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'job_title';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('job_title');
+        }
+
         $this->createTable('{{%job_title}}', [
             'id' => $this->primaryKey(),
-            'user_access_type_id' => $this->integer()->notNull(),
-            'is_leader' => $this->tinyInteger(1)->defaultValue(0)->comment(''),
 
+            'user_access_type_id' => $this->integer()->Null(),
+            'table_id' => $this->integer()->Null(),
+            'is_leader' => $this->tinyInteger(1)->defaultValue(0),
+            'type' => $this->tinyInteger(1)->defaultValue(1),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'order' => $this->tinyInteger(1)->defaultValue(1),

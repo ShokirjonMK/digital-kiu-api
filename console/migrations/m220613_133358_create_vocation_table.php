@@ -12,6 +12,11 @@ class m220613_133358_create_vocation_table extends Migration
      */
     public function safeUp()
     {
+        $tableName = Yii::$app->db->tablePrefix . 'vocation';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('vocation');
+        }
+
         $this->createTable('{{%vocation}}', [
             'id' => $this->primaryKey(),
 
@@ -20,7 +25,6 @@ class m220613_133358_create_vocation_table extends Migration
             'symbol' => $this->string(5)->null(),
             'user_id' => $this->integer()->notNull(),
             'type' => $this->tinyInteger(2)->defaultValue(1)->comment("1- tatil, 2-kasal, 3-......"),
-
             'year' => $this->integer()->Null(),
             'month' => $this->integer()->Null(),
 

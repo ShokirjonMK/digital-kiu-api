@@ -6,7 +6,7 @@ use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
-class SurveyQuestionInfo extends \yii\db\ActiveRecord
+class JobTitleInfo extends \yii\db\ActiveRecord
 {
 
     public static $selected_language = 'uz';
@@ -25,7 +25,7 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'survey_question_info';
+        return 'job_title_info';
     }
 
     /**
@@ -36,7 +36,7 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'survey_question_id',
+                    'job_title_id',
                     'lang',
                 ], 'required'
             ],
@@ -47,13 +47,13 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
             ],
             [
                 [
-                    'question',
+                    'name',
                     'description',
                 ], 'string'
             ],
-            [['survey_question_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['job_title_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
 
-            [['survey_question_id'], 'exist', 'skipOnError' => true, 'targetClass' => SurveyQuestion::className(), 'targetAttribute' => ['survey_question_id' => 'id']],
+            [['job_title_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobTitle::className(), 'targetAttribute' => ['job_title_id' => 'id']],
 
         ];
     }
@@ -68,10 +68,10 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
             'id' => 'ID',
             //            'name' => 'Name',
 
-            'survey_question_id',
-            'lang',
-            'question',
-            'description',
+            'job_title_id' => _e('job_title_id'),
+            'lang' => _e('lang'),
+            'name' => _e('name'),
+            'description' => _e('description'),
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -86,7 +86,7 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'surveyQuestion',
+            'JobTitle',
             'createdBy',
             'updatedBy',
         ];
@@ -94,9 +94,9 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getSurveyQuestion()
+    public function getJonTitle()
     {
-        return $this->hasMany(SurveyQuestion::className(), ['id' => 'survey_question_id']);
+        return $this->hasMany(JobTitle::className(), ['id' => 'job_title_id']);
     }
 
 

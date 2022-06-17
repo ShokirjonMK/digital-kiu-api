@@ -6,7 +6,7 @@ use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
-class SurveyQuestion extends \yii\db\ActiveRecord
+class JobTitle extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -27,7 +27,7 @@ class SurveyQuestion extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'survey_question';
+        return 'job_title';
     }
 
     /**
@@ -38,15 +38,14 @@ class SurveyQuestion extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'min',
-                    'max',
+                    'user_access_type_id',
+                    'table_id',
+                    'is_leader',
                     'type',
                 ], 'integer'
             ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['status', 'type'], 'default', 'value' => 1],
-            [['min'], 'default', 'value' => 0],
-            [['max'], 'default', 'value' => 10],
+            [['is_leader'], 'default', 'value' => 0],
         ];
     }
 
@@ -58,12 +57,13 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            // question on info table
+            // name on info table
             // description on info table
 
-            'min',
-            'max',
-            // 'type',
+            'user_access_type_id' => _e('user_access_type_id'),
+            'table_id' => _e('table_id'),
+            'is_leader' => _e('is_leader'),
+            'type' => _e('type'),
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -79,11 +79,13 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'question' => function ($model) {
-                return $model->info->question ?? '';
+            'name' => function ($model) {
+                return $model->info->name ?? '';
             },
-            'min',
-            'max',
+
+            'user_access_type_id',
+            'table_id',
+            'is_leader',
             'type',
 
             'order',
@@ -128,23 +130,16 @@ class SurveyQuestion extends \yii\db\ActiveRecord
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
+        return $this->hasMany(JobTitleInfo::class, ['job_title_id' => 'id'])
             ->andOnCondition(['lang' => Yii::$app->request->get('lang')]);
     }
 
     public function getInfoRelationDefaultLanguage()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(SurveyQuestionInfo::class, ['survey_question_id' => 'id'])
+        return $this->hasMany(JobTitleInfo::class, ['job_title_id' => 'id'])
             ->andOnCondition(['lang' => self::$selected_language]);
     }
-
-
-    public function getKafedras()
-    {
-        return $this->hasMany(Kafedra::className(), ['direction_id' => 'id']);
-    }
-
 
     public static function createItem($model, $post)
     {
@@ -156,15 +151,15 @@ class SurveyQuestion extends \yii\db\ActiveRecord
         // }
 
         if ($model->save()) {
-            if (isset($post['question'])) {
-                if (!is_array($post['question'])) {
-                    $errors[] = [_e('Please send Question attribute as array.')];
+            if (isset($post['name'])) {
+                if (!is_array($post['name'])) {
+                    $errors[] = [_e('Please send Name attribute as array.')];
                 } else {
-                    foreach ($post['question'] as $lang => $question) {
-                        $info = new SurveyQuestionInfo();
-                        $info->survey_question_id = $model->id;
+                    foreach ($post['name'] as $lang => $name) {
+                        $info = new JobTitleInfo();
+                        $info->job_title_id = $model->id;
                         $info->lang = $lang;
-                        $info->question = $question;
+                        $info->name = $name;
                         $info->description = $post['description'][$lang] ?? null;
                         if (!$info->save()) {
                             $errors[] = $info->getErrorSummary(true);
@@ -172,7 +167,7 @@ class SurveyQuestion extends \yii\db\ActiveRecord
                     }
                 }
             } else {
-                $errors[] = [_e('Please send at least one Question attribute.')];
+                $errors[] = [_e('Please send at least one Name attribute.')];
             }
         } else {
             $errors[] = $model->getErrorSummary(true);
@@ -197,23 +192,23 @@ class SurveyQuestion extends \yii\db\ActiveRecord
 
 
         if ($model->save()) {
-            if (isset($post['question'])) {
-                if (!is_array($post['question'])) {
-                    $errors[] = [_e('Please send Question attribute as array.')];
+            if (isset($post['name'])) {
+                if (!is_array($post['name'])) {
+                    $errors[] = [_e('Please send Name attribute as array.')];
                 } else {
-                    foreach ($post['question'] as $lang => $question) {
-                        $info = SurveyQuestionInfo::find()->where(['survey_question_id' => $model->id, 'lang' => $lang])->one();
+                    foreach ($post['name'] as $lang => $name) {
+                        $info = JobTitleInfo::find()->where(['job_title_id' => $model->id, 'lang' => $lang])->one();
                         if ($info) {
-                            $info->question = $question;
+                            $info->name = $name;
                             $info->description = $post['description'][$lang] ?? null;
                             if (!$info->save()) {
                                 $errors[] = $info->getErrorSummary(true);
                             }
                         } else {
-                            $info = new SurveyQuestionInfo();
-                            $info->survey_question_id = $model->id;
+                            $info = new JobTitleInfo();
+                            $info->job_title_id = $model->id;
                             $info->lang = $lang;
-                            $info->question = $question;
+                            $info->name = $name;
                             $info->description = $post['description'][$lang] ?? null;
                             if (!$info->save()) {
                                 $errors[] = $info->getErrorSummary(true);
@@ -222,7 +217,7 @@ class SurveyQuestion extends \yii\db\ActiveRecord
                     }
                 }
             } else {
-                $errors[] = [_e('Please send at least one Question attribute.')];
+                $errors[] = [_e('Please send at least one Name attribute.')];
             }
         } else {
             $errors[] = $model->getErrorSummary(true);

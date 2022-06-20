@@ -15,7 +15,7 @@ class PartiyaController extends ApiActiveController
         return [];
     }
 
-    public $table_name = 'Partiya';
+    public $table_name = 'partiya';
     public $controller_name = 'Partiya';
 
     public function actionIndex($lang)

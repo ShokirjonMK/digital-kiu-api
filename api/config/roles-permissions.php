@@ -1034,6 +1034,7 @@ return [
         'kpi-store_create',
         'kpi-store_view',
         'kpi-store_update',
+        'kpi-store_delete',
         'kpi-category_index',
         'kpi-category_extra',
         // 'kpi-category_extra',

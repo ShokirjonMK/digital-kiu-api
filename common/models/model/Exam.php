@@ -175,10 +175,13 @@ class Exam extends \yii\db\ActiveRecord
             'examStudentAnswers',
 
 
+
             'examStudent',
             'examStudentMain',
             'examStudentCount',
             'examStudentByLang',
+
+            'checkCount',
 
             'teacherAccess',
             'examSmeta',
@@ -328,6 +331,12 @@ class Exam extends \yii\db\ActiveRecord
         if (isRole('student')) {
             return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $this->student()]);
         }
+        if (isRole('teacher') && (!isRole('mudir'))) {
+            return  ExamStudent::find()
+                ->where(['exam_id' => $this->id])
+                ->andWhere(['in', 'teacher_access_id', self::teacher_access()])
+                ->all();
+        }
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
     }
 
@@ -340,6 +349,30 @@ class Exam extends \yii\db\ActiveRecord
     {
         return count($this->examStudent);
     }
+
+    public function getCheckCount()
+    {
+        $model = new ExamStudent();
+        $query = $model->find();
+        $query->andWhere([$model->tableName() . '.exam_id' => $this->id]);
+
+        if (isRole('teacher') && (!isRole('mudir'))) {
+            $query->andWhere(['in', $model->tableName() . '.teacher_access_id', self::teacher_access()]);
+        }
+        $query->leftJoin("exam_student_answer", "exam_student_answer.exam_student_id = " . $model->tableName() . ".id ")
+            ->leftJoin("exam_student_answer_sub_question", "exam_student_answer_sub_question.exam_student_answer_id = exam_student_answer.id")
+            // ->andWhere(['not', ['esasq.ball' => null, 'esasq.teacher_conclusion' => null]])
+
+            ->andWhere(['IS NOT', 'exam_student_answer_sub_question.ball', null])
+            ->andWhere(['IS NOT', 'exam_student_answer_sub_question.teacher_conclusion', null])
+            ->groupBy('exam_student.id');
+
+        // dd($query->createCommand()->getRawSql());
+        // dd("qweqwe");
+        // return 122;
+        return count($query->all());
+    }
+
 
     public function getTeacherAccess()
     {

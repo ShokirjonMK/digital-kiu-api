@@ -95,4 +95,37 @@ trait ResourceTrait
             return  $student ?? null;
         }
     }
+
+    public static function teacher_access($type = null, $select = [], $user_id = null)
+    {
+        if (is_null($user_id)) {
+            $user_id = current_user_id();
+        }
+
+        if (is_null($type)) {
+            $type = 1;
+        }
+
+        if (empty($select)) {
+            $select = ['id'];
+        }
+        if ($type == 1) {
+            return TeacherAccess::find()
+                ->where(['user_id' => $user_id, 'is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', Subject::find()
+                    ->where(['is_deleted' => 0])
+                    ->select('id')])
+                ->select($select);
+        } elseif ($type == 2) {
+            return TeacherAccess::find()
+                ->asArray()
+                ->where(['user_id' => $user_id, 'is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', Subject::find()
+                    ->where(['is_deleted' => 0])
+                    ->select('id')])
+                ->select($select)
+
+                ->all();
+        }
+    }
 }

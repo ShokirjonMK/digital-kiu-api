@@ -97,9 +97,14 @@ class Profile extends \yii\db\ActiveRecord
             //     'permanent_region_id', 'permanent_area_id', 'permanent_address'
             // ], 'required'],
 
-
             [
                 [
+                    'diploma_type_id',
+                    'degree_id',
+                    'academic_degree_id',
+                    'degree_info_id',
+                    'partiya_id',
+
                     'user_id',
                     'nationality_id',
                     'is_foreign',
@@ -159,6 +164,12 @@ class Profile extends \yii\db\ActiveRecord
             [['region_id'], 'exist', 'skipOnError' => true, 'targetClass' => Region::className(), 'targetAttribute' => ['region_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['nationality_id'], 'exist', 'skipOnError' => true, 'targetClass' => Nationality::className(), 'targetAttribute' => ['nationality_id' => 'id']],
+
+            [['diploma_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => DiplomaType::className(), 'targetAttribute' => ['diploma_type_id' => 'id']],
+            [['degree_id'], 'exist', 'skipOnError' => true, 'targetClass' => Degree::className(), 'targetAttribute' => ['degree_id' => 'id']],
+            [['academic_degree_id'], 'exist', 'skipOnError' => true, 'targetClass' => AcademicDegree::className(), 'targetAttribute' => ['academic_degree_id' => 'id']],
+            [['degree_info_id'], 'exist', 'skipOnError' => true, 'targetClass' => DegreeInfo::className(), 'targetAttribute' => ['degree_info_id' => 'id']],
+            [['partiya_id'], 'exist', 'skipOnError' => true, 'targetClass' => Partiya::className(), 'targetAttribute' => ['partiya_id' => 'id']],
         ];
     }
 
@@ -189,6 +200,13 @@ class Profile extends \yii\db\ActiveRecord
             'area_id' => 'Area ID',
             'address' => 'Address',
             'gender' => 'Gender',
+
+            'diploma_type_id' => _e('diploma_type'),
+            'degree_id' => _e('degree'),
+            'academic_degree_id' => _e('academic_degree'),
+            'degree_info_id' => _e('degree_info'),
+            'partiya_id' => _e('partiya'),
+
             'passport_given_date' => 'Passport Given Date',
             'passport_issued_date' => 'Passport Issued Date',
             'passport_given_by' => 'Passport Given By',

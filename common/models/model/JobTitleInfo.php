@@ -130,7 +130,6 @@ class JobTitleInfo extends \yii\db\ActiveRecord
 
 
         if ($model->save()) {
-
             $transaction->commit();
             return true;
         } else {

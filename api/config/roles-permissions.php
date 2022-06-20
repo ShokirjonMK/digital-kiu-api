@@ -1030,6 +1030,14 @@ return [
         'exam-checking_view',
         'exam-checking_update',
 
+        'kpi-store_index',
+        'kpi-store_create',
+        'kpi-store_view',
+        'kpi-store_update',
+        'kpi-category_index',
+        'kpi-category_extra',
+        'kpi-category_extra',
+
 
         // "access-control_roles",
         // "area_view",

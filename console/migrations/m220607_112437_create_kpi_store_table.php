@@ -21,9 +21,9 @@ class m220607_112437_create_kpi_store_table extends Migration
             'id' => $this->primaryKey(),
 
             'kpi_category_id' => $this->integer()->notNull(),
-            'date' => $this->date()->notNull(),
+            'date' => $this->date()->Null(),
             'file' => $this->string(255)->null(),
-            'subject_category_id' => $this->integer()->notNull(),
+            'subject_category_id' => $this->integer()->Null(),
             'count_of_copyright' => $this->integer()->defaultValue(0),
             'link' => $this->string(255)->null(),
             'ball' => $this->double()->defaultValue(0),

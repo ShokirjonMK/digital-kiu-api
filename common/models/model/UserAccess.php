@@ -69,6 +69,9 @@ class UserAccess extends \yii\db\ActiveRecord
             ],
             [
                 [
+                    'work_rate_id',
+                    'job_title_id',
+
                     'user_id',
                     'table_id',
                     'is_leader',
@@ -83,6 +86,7 @@ class UserAccess extends \yii\db\ActiveRecord
                 ],
                 'integer'
             ],
+            [['tabel_number'], 'string', 'max' => 22],
             [['role_name', 'table_name'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['user_access_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccessType::className(), 'targetAttribute' => ['user_access_type_id' => 'id']],
@@ -102,6 +106,10 @@ class UserAccess extends \yii\db\ActiveRecord
             'table_id' => 'Table Id',
             'role_name' => 'Role Name',
             'user_access_type_id' => 'Type',
+
+            'work_rate_id' => _e('work_rate_id'),
+            'job_title_id' => _e('job_title_id'),
+            'tabel_number' => _e('tabel_number'),
 
             'order' => _e('Order'),
             'status' => _e('Status'),

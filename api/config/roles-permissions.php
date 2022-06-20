@@ -1036,7 +1036,7 @@ return [
         'kpi-store_update',
         'kpi-category_index',
         'kpi-category_extra',
-        'kpi-category_extra',
+        // 'kpi-category_extra',
 
 
         // "access-control_roles",

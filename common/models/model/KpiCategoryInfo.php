@@ -66,9 +66,13 @@ class KpiCategoryInfo extends \yii\db\ActiveRecord
             ],
             [
                 [
-                    'name',
                     'tab_name',
                 ], 'string', 'max' => 255
+            ],
+            [
+                [
+                    'name',
+                ], 'string'
             ],
             [
                 [

@@ -22,7 +22,7 @@ class m220607_061126_create_kpi_category_info_table extends Migration
 
             'kpi_category_id' => $this->integer()->notNull(),
             'lang' => $this->string(3)->null(),
-            'name' => $this->string(255)->null(),
+            'name' => $this->text()->null(),
             'description' => $this->text()->null(),
             'tab_name' => $this->string(255)->null(),
 

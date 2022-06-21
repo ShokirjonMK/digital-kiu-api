@@ -14,8 +14,17 @@ class TeacherAccessStatistic extends TeacherAccess
             'subject' => function ($model) {
                 return $model->subject->name ?? '';
             },
+            'examStudent' => function ($model) {
+                return $model->examStudent ?? 0;
+            },
             'examStudentCount' => function ($model) {
                 return $model->examStudentCount ?? 0;
+            },
+            'exam' => function ($model) {
+                return $model->exam->name ?? '';
+            },
+            'exams' => function ($model) {
+                return $model->exams->name ?? '';
             },
             'checkedCount' => function ($model) {
                 return $model->checkCount ?? 0;
@@ -89,6 +98,20 @@ class TeacherAccessStatistic extends TeacherAccess
     public function getExamStudentCount()
     {
         return count($this->examStudent);
+    }
+
+    public function getExam()
+    {
+        return $this->examStudent[0]->exam;
+    }
+    public function getExams()
+    {
+        return $this->examStudentOne->exam;
+    }
+
+    public function getExamStudentOne()
+    {
+        return $this->hasOne(ExamStudent::className(), ['teacher_access_id' => 'id']);
     }
 
 

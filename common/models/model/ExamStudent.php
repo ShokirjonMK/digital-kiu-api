@@ -191,6 +191,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examStudentAnswers',
 
             'answers',
+            'hasAnswer',
             'isChecked',
 
             'statusName',
@@ -224,6 +225,28 @@ class ExamStudent extends \yii\db\ActiveRecord
         }
     }
 
+    public function getHasAnswer()
+    {
+        $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
+
+        $query = $query->andWhere([
+            'in', $model->tableName() . '.exam_student_answer_id',
+            ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+        ]);
+        // dd(ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id]));
+        // dd($query->createCommand()->getSql());
+
+        // dd(count($query->all()));
+
+        if (count($query->all()) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
 
     public function getExamStudentAnswers()
     {
@@ -232,7 +255,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getAnswers()
     {
-        return $this->hasmany(ExamStudentAnswer::className(), ['exam_student_id' => 'id']);
+        return $this->hasMany(ExamStudentAnswer::className(), ['exam_student_id' => 'id']);
     }
 
     /**

@@ -838,7 +838,7 @@ return [
         "user_status-list",
         "user_update",
         "user_view",
-        "course_index",
+        // "course_index",
         "exam-checking_index",
         "exam-checking_update",
         "exam-checking_view",

@@ -756,9 +756,6 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
-
-
-
         "access-control_permissions",
         "access-control_roles",
         "area_index",
@@ -777,6 +774,9 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
+        "exam-checking_index",
+        "exam-checking_update",
+        "exam-checking_view",
         "exam-question_index",
         "exam-question_view",
         "exam-semeta_create",
@@ -837,43 +837,7 @@ return [
         "user_me",
         "user_status-list",
         "user_update",
-        "user_view",
-        // "course_index",
-        "exam-checking_index",
-        "exam-checking_update",
-        "exam-checking_view",
-        "exam-semeta_index",
-        "exam-student_index",
-        "exam-student_update",
-        "exam-student_view",
-        "exam-teacher-check_index",
-        "exam-teacher-check_view",
-        "exam_index",
-        "exam_view",
-        "kpi-category_extra",
-        "kpi-category_index",
-        "kpi-store_create",
-        "kpi-store_delete",
-        "kpi-store_index",
-        "kpi-store_update",
-        "kpi-store_view",
-        "languages_index",
-        "notification_approved",
-        "notification_index",
-        "question-type_index",
-        "question_create",
-        "question_delete",
-        "question_index",
-        "question_status-list",
-        "question_status-update",
-        "question_update",
-        "question_view",
-        "semestr_index",
-        "subject-sillabus_index",
-        "subject_index",
-        "user_logout",
-        "user_me"
-
+        "user_view"
 
         // "access-control_permissions",
         // "access-control_roles",

@@ -380,6 +380,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                             // $exam_times['exam_finish'] = $exam_finish;
                             $data['times'] = $exam_times;
                             $data['status'] = true;
+                            $data['new'] = false;
                             return $data;
                         }
 
@@ -497,6 +498,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                             $exam_times['now'] = date("Y-m-d H:i:s");
                             // $exam_times['exam_finish'] = $exam_finish;
                             $data['times'] = $exam_times;
+                            $data['new'] = true;
                             $data['status'] = true;
                             $transaction->commit();
                             return $data;

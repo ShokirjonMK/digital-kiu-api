@@ -360,6 +360,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $exam_times['now'] = date("Y-m-d H:i:s");
                             // $exam_times['exam_finish'] = $exam_finish;
                             $data['times'] = $exam_times;
+                            $data['new'] = false;
                             $data['status'] = true;
                             return $data;
                         }
@@ -480,6 +481,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $exam_times['now'] = date("Y-m-d H:i:s");
                             // $exam_times['exam_finish'] = $exam_finish;
                             $data['times'] = $exam_times;
+                            $data['new'] = true;
                             $data['status'] = true;
                             $transaction->commit();
                             return $data;

@@ -20,6 +20,7 @@ class GetTeacherController extends ActiveController
 
     public function actionIndex($lang)
     {
+        return $_SERVER;
         $model = new GetTeacher();
         $query = $model->find()
             ->with(['profile'])

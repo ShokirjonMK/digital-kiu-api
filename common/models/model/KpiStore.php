@@ -193,6 +193,10 @@ class KpiStore extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        if (!isset($post['user_id'])) {
+            $model->user_id = current_user_id();
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -243,6 +247,9 @@ class KpiStore extends \yii\db\ActiveRecord
             }
         }
         // ***
+        if (!isset($post['user_id'])) {
+            $model->user_id = current_user_id();
+        }
 
         if (!$model->save()) {
             $errors[] = $model->getErrorSummary(true);

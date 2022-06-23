@@ -96,6 +96,11 @@ class KpiStoreController extends ApiActiveController
 
         // remove model
         if ($model) {
+
+            if (isRole('teacher') && !isRole('mudir') && !($model->user_id == current_user_id())) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::BAD_REQUEST);
+            }
+
             // Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();

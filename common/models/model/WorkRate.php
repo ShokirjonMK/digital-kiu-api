@@ -34,11 +34,11 @@ class WorkRate extends \yii\db\ActiveRecord
     {
         return [
 
-            [
-                [
-                    'daily_hours',
-                ], 'json'
-            ],
+            // [
+            //     [
+            //         'daily_hours',
+            //     ], 'string'
+            // ],
             [
                 [
                     'rate',
@@ -151,6 +151,20 @@ class WorkRate extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        if (isset($post['daily_hours'])) {
+            if (($post['daily_hours'][0] == "'") && ($post['daily_hours'][strlen($post['daily_hours']) - 1] == "'")) {
+                $post['daily_hours'] =  substr($post['daily_hours'], 1, -1);
+            }
+
+            if (!isJsonMK($post['daily_hours'])) {
+                $errors['daily_hours'] = [_e('Must be Json')];
+            } else {
+                $daily_hours = ((array)json_decode($post['daily_hours']));
+                $model->daily_hours = $daily_hours;
+            }
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -180,6 +194,20 @@ class WorkRate extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        if (isset($post['daily_hours'])) {
+            if (($post['daily_hours'][0] == "'") && ($post['daily_hours'][strlen($post['daily_hours']) - 1] == "'")) {
+                $post['daily_hours'] =  substr($post['daily_hours'], 1, -1);
+            }
+
+            if (!isJsonMK($post['daily_hours'])) {
+                $errors['daily_hours'] = [_e('Must be Json')];
+            } else {
+                $daily_hours = ((array)json_decode($post['daily_hours']));
+                $model->daily_hours = $daily_hours;
+            }
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

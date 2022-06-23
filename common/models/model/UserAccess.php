@@ -76,6 +76,7 @@ class UserAccess extends \yii\db\ActiveRecord
                     'table_id',
                     'is_leader',
                     'user_access_type_id',
+
                     'order',
                     'status',
                     'created_at',
@@ -90,6 +91,8 @@ class UserAccess extends \yii\db\ActiveRecord
             [['role_name', 'table_name'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['user_access_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccessType::className(), 'targetAttribute' => ['user_access_type_id' => 'id']],
+            [['job_title_id'], 'exist', 'skipOnError' => true, 'targetClass' => JobTitle::className(), 'targetAttribute' => ['job_title_id' => 'id']],
+            [['work_rate_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorkRate::className(), 'targetAttribute' => ['work_rate_id' => 'id']],
         ];
     }
 
@@ -305,7 +308,7 @@ class UserAccess extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
             $this->updated_by = Current_user_id();
         }

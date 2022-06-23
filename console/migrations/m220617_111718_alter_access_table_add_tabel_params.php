@@ -13,8 +13,8 @@ class m220617_111718_alter_access_table_add_tabel_params extends Migration
     public function safeUp()
     {
         $this->execute("ALTER TABLE `user_access` ADD `work_rate_id` int null COMMENT 'work_rate';");
-        $this->execute("ALTER TABLE `user_access` ADD `job_title_id` int null COMMENT 'job_title';");
         $this->execute("ALTER TABLE `user_access` ADD `tabel_number` varchar(22) null COMMENT 'tabel_number';");
+        $this->execute("ALTER TABLE `user_access` ADD `job_title_id` int null COMMENT 'job_title';");
     }
 
     /**

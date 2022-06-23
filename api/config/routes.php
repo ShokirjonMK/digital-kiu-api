@@ -106,6 +106,9 @@ $controllers = [
     'vocation',
     'holiday',
     'job-title',
+    'work-rate',
+
+    'table-store',
 
 
 

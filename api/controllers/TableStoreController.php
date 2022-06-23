@@ -2,34 +2,31 @@
 
 namespace api\controllers;
 
-use common\models\model\KpiStore;
+use common\models\model\TableStore;
 use Yii;
 use base\ResponseStatus;
 
-class KpiStoreController extends ApiActiveController
+class TableStoreController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\KpiStore';
+    public $modelClass = 'api\resources\TableStore';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'kpi_store';
-    public $controller_name = 'KpiStore';
+    public $table_name = 'tabel_store';
+    public $controller_name = 'TableStor';
 
     public function actionIndex($lang)
     {
-        $model = new KpiStore();
+        $model = new TableStore();
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
+            // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
+        ;
 
-            ->andFilterWhere(['like', 'link', Yii::$app->request->get('q')]);
-
-        if (isRole('teacher') && !isRole('mudir')) {
-            $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);
-        }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -44,11 +41,12 @@ class KpiStoreController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new KpiStore();
+        $model = new TableStore();
         $post = Yii::$app->request->post();
+
         $this->load($model, $post);
 
-        $result = KpiStore::createItem($model, $post);
+        $result = TableStore::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -58,13 +56,13 @@ class KpiStoreController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = KpiStore::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = TableStore::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = KpiStore::updateItem($model, $post);
+        $result = TableStore::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -74,10 +72,9 @@ class KpiStoreController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = KpiStore::find()
+        $model = TableStore::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
-
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -86,7 +83,7 @@ class KpiStoreController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = KpiStore::find()
+        $model = TableStore::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

@@ -46,6 +46,11 @@ class UserAccess extends \yii\db\ActiveRecord
     const IS_LEADER_FALSE = 0;
 
 
+    const WORK_TYPE_MAIN = 1;
+    const WORK_TYPE_OUT_MAIN = 2;
+    const WORK_TYPE_IN_MAIN = 3;
+
+
     /**
      * {@inheritdoc}
      */
@@ -71,6 +76,7 @@ class UserAccess extends \yii\db\ActiveRecord
                 [
                     'work_rate_id',
                     'job_title_id',
+                    'work_type',
 
                     'user_id',
                     'table_id',
@@ -108,7 +114,8 @@ class UserAccess extends \yii\db\ActiveRecord
             'table_name' => 'Table Name',
             'table_id' => 'Table Id',
             'role_name' => 'Role Name',
-            'user_access_type_id' => 'Type',
+            'user_access_type_id' => 'user_access_type_id',
+            'work_type' => 'work_type',
 
             'work_rate_id' => _e('work_rate_id'),
             'job_title_id' => _e('job_title_id'),

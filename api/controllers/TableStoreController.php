@@ -5,6 +5,8 @@ namespace api\controllers;
 use common\models\model\TableStore;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Holiday;
+use common\models\model\Vocation;
 
 class TableStoreController extends ApiActiveController
 {
@@ -22,8 +24,8 @@ class TableStoreController extends ApiActiveController
     {
         $model = new TableStore();
 
-        $month = Yii::$app->request->get('month');
-        $year = Yii::$app->request->get('year');
+        $month = Yii::$app->request->get('month') ?? (int)date('m');
+        $year = Yii::$app->request->get('year') ?? date('Y');
         $type = Yii::$app->request->get('type');
         $user_access_type_id = Yii::$app->request->get('user_access_type_id');
         $table_id = Yii::$app->request->get('table_id');
@@ -40,7 +42,10 @@ class TableStoreController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data =  $this->getData($query);
+        $data['data'] =  $this->getData($query);
+
+        $data['vocations'] = Vocation::filter($year, $month);
+        $data['holidays'] = Holiday::filter($year, $month);
 
         return $this->response(1, _e('Success'), $data);
     }

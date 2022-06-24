@@ -115,6 +115,14 @@ class Holiday extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public static function filter($year, $month)
+    {
+        return  self::find()
+            ->where(['year' => $year, 'is_deleted' => 0, 'status' => 1])
+            ->andWhere("month(start_date) >= " . $month . "")
+            ->andWhere("month(finish_date) <= " . $month . "")->all();
+    }
+
     public function getInfoRelation()
     {
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');

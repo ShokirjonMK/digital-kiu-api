@@ -249,6 +249,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             }
             /* Audio Yuklash*/
 
+            $model->update();
 
             if (isset($post['order'])) {
                 $lastOrder = SubjectContent::find()

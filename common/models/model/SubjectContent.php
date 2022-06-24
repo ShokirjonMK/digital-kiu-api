@@ -8,15 +8,11 @@ use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "edu_type".
  *
  * @property int $id
  *
  * @property int $name
  * @property int $time
- * @property string $subject_id
- * @property string $lang_id
- * @property int $description
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -24,8 +20,6 @@ use yii\web\UploadedFile;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- *
- * @property EduPlan[] $eduPlans
  */
 class SubjectContent extends \yii\db\ActiveRecord
 {
@@ -54,7 +48,7 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_fileFileMaxSize = 1024 * 1024 * 5; // 3 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 2; // 3 Mb
     public $file_videoFileMaxSize = 1024 * 1024 * 25; // 3 Mb
-    public $file_audioFileMaxSize = 1024 * 1024 * 15; // 3 Mb
+    public $file_audioFileMaxSize = 1024 * 1024 * 8; // 3 Mb
 
 
     public $file_textFileExtentions = 'text';

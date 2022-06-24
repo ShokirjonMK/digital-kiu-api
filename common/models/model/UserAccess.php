@@ -152,6 +152,7 @@ class UserAccess extends \yii\db\ActiveRecord
             'user',
             'userAccessType',
             'profile',
+            'fullName',
 
             'createdBy',
             'updatedBy',

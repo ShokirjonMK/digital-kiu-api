@@ -1123,6 +1123,15 @@ return [
         // 'kpi-category_extra',
 
 
+        'subject-content_create',
+        'subject-content_types',
+        'subject-content_delete',
+        'subject-content_update',
+        'subject-content_index',
+        'subject-content_view',
+        'subject-category_index',
+
+
         // "access-control_roles",
         // "area_view",
         // "citizenship_view",

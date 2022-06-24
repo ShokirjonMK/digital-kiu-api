@@ -151,6 +151,7 @@ class UserAccess extends \yii\db\ActiveRecord
         $extraFields =  [
             'user',
             'userAccessType',
+            'profile',
 
             'createdBy',
             'updatedBy',
@@ -167,6 +168,16 @@ class UserAccess extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
+    }
+
+    public function getFullName()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
     }
 
     /**

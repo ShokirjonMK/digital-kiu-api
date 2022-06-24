@@ -22,11 +22,16 @@ class TableStoreController extends ApiActiveController
     {
         $model = new TableStore();
 
+        $month = Yii::$app->request->get('month');
+        $year = Yii::$app->request->get('year');
+        $type = Yii::$app->request->get('type');
+        $user_access_type_id = Yii::$app->request->get('user_access_type_id');
+        $table_id = Yii::$app->request->get('table_id');
+
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
         ;
-
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -36,6 +41,7 @@ class TableStoreController extends ApiActiveController
 
         // data
         $data =  $this->getData($query);
+
         return $this->response(1, _e('Success'), $data);
     }
 

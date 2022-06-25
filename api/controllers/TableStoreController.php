@@ -26,9 +26,9 @@ class TableStoreController extends ApiActiveController
 
         $month = Yii::$app->request->get('month') ?? (int)date('m');
         $year = Yii::$app->request->get('year') ?? date('Y');
-        $type = Yii::$app->request->get('type');
-        $user_access_type_id = Yii::$app->request->get('user_access_type_id');
-        $table_id = Yii::$app->request->get('table_id');
+        // $type = Yii::$app->request->get('type');
+        // $user_access_type_id = Yii::$app->request->get('user_access_type_id');
+        // $table_id = Yii::$app->request->get('table_id');
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])

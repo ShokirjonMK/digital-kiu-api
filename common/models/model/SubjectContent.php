@@ -280,7 +280,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        $model->type = self::TYPE_TEXT;
+        // $model->type = self::TYPE_TEXT;
 
         /* Fayl Yuklash*/
         $model->file_file = UploadedFile::getInstancesByName('file_file');

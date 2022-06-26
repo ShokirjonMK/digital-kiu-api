@@ -44,6 +44,8 @@ class FacultyStatistic extends Faculty
             'description',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

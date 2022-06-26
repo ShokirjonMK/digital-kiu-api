@@ -56,6 +56,8 @@ class SubjectTopic extends CommonSubjectTopic
             'subject',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

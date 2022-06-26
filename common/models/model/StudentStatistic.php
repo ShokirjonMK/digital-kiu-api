@@ -50,6 +50,8 @@ class StudentStatistic extends Student
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

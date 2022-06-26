@@ -99,6 +99,8 @@ class EduType extends \yii\db\ActiveRecord
             'description',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

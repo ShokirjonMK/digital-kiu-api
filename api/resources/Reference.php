@@ -48,6 +48,8 @@ class Reference extends CommonReference
         $extraFields =  [
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

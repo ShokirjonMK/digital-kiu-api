@@ -73,6 +73,8 @@ class QuestionForChecking extends Question
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

@@ -98,6 +98,8 @@ class StudentCategory extends \yii\db\ActiveRecord
             'description',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

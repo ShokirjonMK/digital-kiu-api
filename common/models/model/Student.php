@@ -273,6 +273,8 @@ class Student extends \yii\db\ActiveRecord
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

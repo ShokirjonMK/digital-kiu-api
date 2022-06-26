@@ -133,6 +133,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             'eduSemestrSubjectCategoryTimes',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

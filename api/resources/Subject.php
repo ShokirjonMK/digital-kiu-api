@@ -48,6 +48,8 @@ class Subject extends CommonSubject
         $extraFields =  [
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

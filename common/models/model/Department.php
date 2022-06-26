@@ -122,6 +122,8 @@ class Department extends \yii\db\ActiveRecord
             'parent',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

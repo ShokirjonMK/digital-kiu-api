@@ -52,6 +52,26 @@ trait ResourceTrait
         return $this->hasOne(User::class, ['id' => 'updated_by']);
     }
 
+    /**
+     * Get created At
+     *
+     * @return void
+     */
+    public function getCreatedAt()
+    {
+        return date('Y-m-d H:i:s', $this->created_at);
+    }
+
+    /**
+     * Get created At
+     *
+     * @return void
+     */
+    public function getUpdatedAt()
+    {
+        return date('Y-m-d H:i:s', $this->updated_at);
+    }
+
 
     public static function createFromTable($nameArr, $table_name, $model_id)
     {

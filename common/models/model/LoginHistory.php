@@ -104,6 +104,8 @@ class LoginHistory extends \yii\db\ActiveRecord
             //            'department',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

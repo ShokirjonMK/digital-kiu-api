@@ -65,6 +65,8 @@ class TeacherAccessStatistic extends TeacherAccess
             'timeTables',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

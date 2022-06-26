@@ -48,6 +48,8 @@ class Job extends CommonJob
             'department',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

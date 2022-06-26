@@ -96,6 +96,8 @@ class Week extends \yii\db\ActiveRecord
             'timeTables',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

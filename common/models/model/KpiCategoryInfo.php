@@ -119,6 +119,8 @@ class KpiCategoryInfo extends \yii\db\ActiveRecord
             'kpiCategory',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

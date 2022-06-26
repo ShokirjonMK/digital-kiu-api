@@ -124,6 +124,8 @@ class ActionLog extends \yii\db\ActiveRecord
         $extraFields =  [
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

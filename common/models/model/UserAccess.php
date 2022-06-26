@@ -160,9 +160,12 @@ class UserAccess extends \yii\db\ActiveRecord
             'userAccessType',
             'profile',
             'fullName',
+            'workRate',
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;
@@ -188,8 +191,14 @@ class UserAccess extends \yii\db\ActiveRecord
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
     }
 
+    public function getWorkRate()
+    {
+        return $this->hasOne(WorkRate::className(), ['id' => 'work_rate_id']);
+    }
+
+
     /**
-     * Gets query for [[user_access_type_id]].
+     * Gets query for [[UserAccessType]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -205,7 +214,7 @@ class UserAccess extends \yii\db\ActiveRecord
      */
     public function getAccess()
     {
-        return $this->hasOne(User::className(), ['id' => 'table_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     public static function createItems($user_access_type_id, $post)

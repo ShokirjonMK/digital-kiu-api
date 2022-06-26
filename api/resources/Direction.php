@@ -49,6 +49,8 @@ class Direction extends CommonDirection
             'department',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

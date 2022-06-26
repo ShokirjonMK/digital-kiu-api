@@ -72,6 +72,8 @@ class StudentExport extends Student
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

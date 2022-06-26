@@ -137,6 +137,8 @@ class EduSemestr extends \yii\db\ActiveRecord
             'eduSemestrSubjects',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

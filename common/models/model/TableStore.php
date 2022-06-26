@@ -165,10 +165,11 @@ class TableStore extends \yii\db\ActiveRecord
 
             'userAccessType',
             'department',
-            'departmentName',
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;
@@ -177,11 +178,6 @@ class TableStore extends \yii\db\ActiveRecord
     public function getDepartment()
     {
         return $this->userAccessType->table_name::findOne(['id' => $this->table_id]);
-    }
-
-    public function getDepartmentName()
-    {
-        return $this->department->name;
     }
 
     public function getUserAccessType()

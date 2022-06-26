@@ -118,6 +118,8 @@ class SubjectAccess extends \yii\db\ActiveRecord
             'subjectTopic',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

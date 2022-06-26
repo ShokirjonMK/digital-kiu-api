@@ -93,6 +93,8 @@ class ExamStudentAnswerForTeacher extends ExamStudentAnswer
 
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

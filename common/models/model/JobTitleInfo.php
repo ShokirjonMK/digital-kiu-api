@@ -89,6 +89,8 @@ class JobTitleInfo extends \yii\db\ActiveRecord
             'JobTitle',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

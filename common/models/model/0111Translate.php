@@ -107,6 +107,8 @@ class Translate11 extends \yii\db\ActiveRecord
             'languages',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

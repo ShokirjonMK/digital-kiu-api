@@ -109,6 +109,8 @@ class Semestr extends \yii\db\ActiveRecord
             'description',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

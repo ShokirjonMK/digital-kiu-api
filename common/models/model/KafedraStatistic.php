@@ -64,6 +64,8 @@ class KafedraStatistic extends Kafedra
             'description',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

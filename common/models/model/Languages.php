@@ -137,6 +137,8 @@ class Languages extends \base\libs\RedisDB
             //            'department',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

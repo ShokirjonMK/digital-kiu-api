@@ -89,6 +89,8 @@ class SurveyQuestionInfo extends \yii\db\ActiveRecord
             'surveyQuestion',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

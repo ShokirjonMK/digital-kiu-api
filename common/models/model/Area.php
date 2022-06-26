@@ -97,6 +97,8 @@ class Area extends \yii\db\ActiveRecord
             'country',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
         return $extraFields;
     }

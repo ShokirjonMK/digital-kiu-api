@@ -41,6 +41,8 @@ class ElectionPass extends Election
             'electionVote',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

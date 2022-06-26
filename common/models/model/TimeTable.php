@@ -155,6 +155,8 @@ class TimeTable extends \yii\db\ActiveRecord
             'teacherAccess',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

@@ -106,6 +106,8 @@ class EduSemestrExamsType extends \yii\db\ActiveRecord
             'examsType',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

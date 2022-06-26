@@ -130,6 +130,8 @@ class ElectionVote extends \yii\db\ActiveRecord
             'electionCondidate',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;

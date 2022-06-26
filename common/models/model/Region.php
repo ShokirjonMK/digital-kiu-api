@@ -111,6 +111,8 @@ class Region extends \yii\db\ActiveRecord
             'country',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
         return $extraFields;
     }

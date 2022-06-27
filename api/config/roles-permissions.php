@@ -1046,6 +1046,10 @@ return [
         ////
 
 
+        "region_index",
+        "region_view",
+
+        
         'department_index',
         'department_types',
         'department_view',

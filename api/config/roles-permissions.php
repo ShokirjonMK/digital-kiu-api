@@ -1039,12 +1039,66 @@ return [
         ////
 
 
-
         'department_index',
-        'department_create',
-        'department_update',
         'department_view',
-        'department_delete',
+        // 'department_create',
+        // 'department_update',
+        // 'department_delete',
+
+        'kafedra_index',
+        'kafedra_view',
+        // 'kafedra_create',
+        // 'kafedra_update',
+        // 'kafedra_delete',
+
+        'faculty_index',
+        'faculty_view',
+        // 'faculty_create',
+        // 'faculty_update',
+        // 'faculty_delete',
+
+        'user-access_index',
+        'user-access_view',
+        'user-access_create',
+        'user-access_update',
+        'user-access_delete',
+
+        'user_index',
+        'user_view',
+        'user_create',
+        'user_update',
+        'user_delete',
+
+        'tabel-store_index',
+        'tabel-store_view',
+        'tabel-store_create',
+        'tabel-store_update',
+        'tabel-store_delete',
+
+        'work-rate_index',
+        'work-rate_view',
+        'work-rate_create',
+        'work-rate_update',
+        'work-rate_delete',
+
+        'job-title_index',
+        'job-title_view',
+        'job-title_create',
+        'job-title_update',
+        'job-title_delete',
+
+        'vocation_index',
+        'vocation_view',
+        'vocation_create',
+        'vocation_update',
+        'vocation_delete',
+
+        'holiday_index',
+        'holiday_view',
+        'holiday_create',
+        'holiday_update',
+        'holiday_delete',
+
     ],
 
     /* Kadr yordamchi */

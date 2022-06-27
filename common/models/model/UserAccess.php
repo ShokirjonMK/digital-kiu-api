@@ -161,6 +161,7 @@ class UserAccess extends \yii\db\ActiveRecord
             'profile',
             'fullName',
             'workRate',
+            'jobTitle',
 
             'createdBy',
             'updatedBy',
@@ -194,6 +195,11 @@ class UserAccess extends \yii\db\ActiveRecord
     public function getWorkRate()
     {
         return $this->hasOne(WorkRate::className(), ['id' => 'work_rate_id']);
+    }
+
+    public function getJobTitle()
+    {
+        return $this->hasOne(JobTitle::className(), ['id' => 'job_title_id']);
     }
 
 

@@ -45,10 +45,10 @@ class SubjectContent extends \yii\db\ActiveRecord
 
     const UPLOADS_FOLDER = 'uploads/content_files';
     public $file_textFileMaxSize = "";
-    public $file_fileFileMaxSize = 1024 * 1024 * 5; // 3 Mb
-    public $file_imageFileMaxSize = 1024 * 1024 * 2; // 3 Mb
-    public $file_videoFileMaxSize = 1024 * 1024 * 25; // 3 Mb
-    public $file_audioFileMaxSize = 1024 * 1024 * 8; // 3 Mb
+    public $file_fileFileMaxSize = 1024 * 1024 * 5; // 5 Mb
+    public $file_imageFileMaxSize = 1024 * 1024 * 2; // 2 Mb
+    public $file_videoFileMaxSize = 1024 * 1024 * 25; // 25 Mb
+    public $file_audioFileMaxSize = 1024 * 1024 * 8; // 8 Mb
 
 
     public $file_textFileExtentions = 'text';

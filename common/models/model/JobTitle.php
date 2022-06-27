@@ -162,6 +162,7 @@ class JobTitle extends \yii\db\ActiveRecord
                         $info->job_title_id = $model->id;
                         $info->lang = $lang;
                         $info->name = $name;
+                        $info->status = 1;
                         $info->description = $post['description'][$lang] ?? null;
                         if (!$info->save()) {
                             $errors[] = $info->getErrorSummary(true);

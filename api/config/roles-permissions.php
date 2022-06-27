@@ -1069,11 +1069,11 @@ return [
         'user_update',
         'user_delete',
 
-        'tabel-store_index',
-        'tabel-store_view',
-        'tabel-store_create',
-        'tabel-store_update',
-        'tabel-store_delete',
+        'table-store_index',
+        'table-store_view',
+        'table-store_create',
+        'table-store_update',
+        'table-store_delete',
 
         'work-rate_index',
         'work-rate_view',

@@ -134,7 +134,7 @@ class UserController extends ApiActiveController
         // }
 
 
-        if (!(isRole('admin')) || !(isRole('hr'))) {
+        if (!(isRole('admin'))) {
             // dd(123);
             $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);

@@ -52,6 +52,10 @@ class ExamStudent extends \yii\db\ActiveRecord
     const IS_PLAGIAT_TRUE = 1;
     const IS_PLAGIAT_FALSE = 0;
 
+
+    const TYPE_IELTS = 1;
+    const TYPE_NOGIRON = 2;
+
     const UPLOADS_FOLDER = 'uploads/plagiat_files/';
     public $plagiatFile;
     public $plagiatFileMaxSize = 1024 * 1024 * 5; // 3 Mb
@@ -100,7 +104,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
-                    'act'
+                    'act',
+                    'type'
                 ], 'integer'
             ],
             [['ball'], 'double'],
@@ -133,6 +138,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'ball' => 'Ball',
             'duration' => 'Duration',
             'start' => 'Start',
+            'type' => 'type',
             'finish' => 'Finish',
             'is_plagiat' => 'Is Plagiat',
             'attempt' => 'Attempt',
@@ -163,6 +169,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'is_plagiat',
             'duration',
             'finish',
+            'type',
 
             'conclusion',
             'plagiat_file',

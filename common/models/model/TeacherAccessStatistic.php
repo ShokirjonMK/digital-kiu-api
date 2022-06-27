@@ -32,6 +32,12 @@ class TeacherAccessStatistic extends TeacherAccess
             'percent' => function ($model) {
                 return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
             },
+            'actCount' => function ($model) {
+                return $model->actCount ?? 0;
+            },
+            'notCount' => function ($model) {
+                return $model->notCount ?? 0;
+            },
             // 'examStudent' => function ($model) {
             //     return $model->examStudent ?? 0;
             // },
@@ -60,6 +66,10 @@ class TeacherAccessStatistic extends TeacherAccess
             'examStudent',
             'checkedCount',
             'checkCount',
+
+
+            'actCount',
+            'notCount',
 
 
             'timeTables',
@@ -97,9 +107,19 @@ class TeacherAccessStatistic extends TeacherAccess
         return $this->hasMany(ExamStudent::className(), ['teacher_access_id' => 'id']);
     }
 
+    public function getExamStudentAct()
+    {
+        return $this->hasMany(ExamStudent::className(), ['teacher_access_id' => 'id'])->onCondition(['act' => 1]);
+    }
+
     public function getExamStudentCount()
     {
         return count($this->examStudent);
+    }
+
+    public function getActCount()
+    {
+        return count($this->examStudentAct);
     }
 
     public function getExam()

@@ -194,12 +194,16 @@ class Department extends \yii\db\ActiveRecord
      * userAccess
      * @return \yii\db\ActiveQuery
      */
+    // public function getUserAccess()
+    // {
+    //     return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
+    //         ->andOnCondition(['user_access_type_id' => self::USER_ACCESS_TYPE_ID]);
+    // }
     public function getUserAccess()
     {
         return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
-            ->andOnCondition(['user_access_type_id' => self::USER_ACCESS_TYPE_ID]);
+            ->andOnCondition(['USER_ACCESS_TYPE_ID' => self::USER_ACCESS_TYPE_ID, 'is_deleted' => 0]);
     }
-
 
     public static function createItem($model, $post)
     {

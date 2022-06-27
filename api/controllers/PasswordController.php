@@ -38,7 +38,7 @@ class PasswordController extends ApiActiveController
         $passwordRe =  $post['re_password'] ?? null;
         $data = new Password();
         $data = $data->decryptThisUser(current_user_id());
-        // if ($data['password'] == $passwordOld) {
+        if ($data['password'] == $passwordOld) {
 
         if (strlen($passwordNew) >= 6) {
 
@@ -60,9 +60,9 @@ class PasswordController extends ApiActiveController
         } else {
             return $this->response(0, _e('The password must be at least 6 characters.'), null, null, ResponseStatus::FORBIDDEN);
         }
-        // } else {
-        //     return $this->response(0, _e('Old password incorrect.'), null, null, ResponseStatus::FORBIDDEN);
-        // }
+        } else {
+            return $this->response(0, _e('Old password incorrect.'), null, null, ResponseStatus::FORBIDDEN);
+        }
 
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
     }

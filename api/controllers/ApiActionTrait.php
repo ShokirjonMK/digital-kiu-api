@@ -357,11 +357,15 @@ trait ApiActionTrait
             }
         }
 
-        if ($userAccess && !(property_exists($roles, 'admin', 'hr'))) {
+        if (property_exists($roles, 'hr')) {
+            return $t;
+        }
+
+        if ($userAccess && !(property_exists($roles, 'admin'))) {
             $t['status'] = 1;
             $t['UserAccess'] = $userAccess;
             return $t;
-        } elseif (!property_exists($roles, 'admin', 'hr')) {
+        } elseif (!property_exists($roles, 'admin')) {
             $t['status'] = 2;
             return $t;
         }

@@ -351,18 +351,17 @@ trait ApiActionTrait
 
         $t['status'] = 3;
 
-
         foreach (_eduRoles() as $eduRole) {
             if (property_exists($roles, $eduRole)) {
                 return $t;
             }
         }
 
-        if ($userAccess && (!(property_exists($roles, 'admin') || !(property_exists($roles, 'hr'))))) {
+        if ($userAccess && !(property_exists($roles, 'admin', 'hr'))) {
             $t['status'] = 1;
             $t['UserAccess'] = $userAccess;
             return $t;
-        } elseif (!property_exists($roles, 'admin') || !property_exists($roles, 'hr')) {
+        } elseif (!property_exists($roles, 'admin', 'hr')) {
             $t['status'] = 2;
             return $t;
         }

@@ -1047,6 +1047,7 @@ return [
 
 
         'department_index',
+        'department_types',
         'department_view',
         // 'department_create',
         // 'department_update',

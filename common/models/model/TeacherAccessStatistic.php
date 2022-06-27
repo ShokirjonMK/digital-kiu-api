@@ -112,6 +112,22 @@ class TeacherAccessStatistic extends TeacherAccess
         return $this->hasMany(ExamStudent::className(), ['teacher_access_id' => 'id'])->onCondition(['act' => 1]);
     }
 
+    public function getExamStudentNot()
+    {
+        $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
+
+        return $query->andWhere([
+            'in', $model->tableName() . '.exam_student_answer_id',
+            ExamStudentAnswer::find()->select('id')->where(['in', 'exam_student_id', ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])])
+        ])->all();
+    }
+
+    public function getNotCount()
+    {
+        return count($this->examStudentNot);
+    }
+
     public function getExamStudentCount()
     {
         return count($this->examStudent);

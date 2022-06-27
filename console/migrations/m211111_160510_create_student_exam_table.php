@@ -17,7 +17,7 @@ class m211111_160510_create_student_exam_table extends Migration
             'student_id' => $this->integer()->notNull(),
             'exam_id' => $this->integer()->notNull(),
             'teacher_access_id' => $this->integer()->Null(),
-            'ball' => $this->double()->defaultValue(0),
+            'ball' => $this->double()->Null(),
             
             'attempt' => $this->integer()->defaultValue(1)->comment("Nechinchi marta topshirayotgani"),
             'act' => $this->integer()->defaultValue(0)->comment("1 act tuzilgan imtihon qodalarini bizgan"),

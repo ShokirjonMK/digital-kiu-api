@@ -1024,8 +1024,15 @@ return [
     'hr' => [
         'password_index',
         'password_update',
-        'notification_approved',
-        'notification_status-list',
+      
+
+        "notification_approved",
+        "notification_index",
+        "notification_my",
+        "notification_status-list",
+        "notification_view",
+
+
         'access-control_roles',
         'access-control_permissions',
         'enum_education-degrees',
@@ -1105,6 +1112,7 @@ return [
 
         "user_status-list",
 
+        
     ],
 
     /* Kadr yordamchi */

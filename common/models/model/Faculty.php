@@ -192,7 +192,7 @@ class Faculty extends \yii\db\ActiveRecord
      * userAccess
      * @return \yii\db\ActiveQuery
      */
-    public function getuserAccess()
+    public function getUserAccess()
     {
         return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
             ->andOnCondition(['USER_ACCESS_TYPE_ID' => self::USER_ACCESS_TYPE_ID, 'is_deleted' => 0]);

@@ -1063,12 +1063,6 @@ return [
         'user-access_update',
         'user-access_delete',
 
-        'user_index',
-        'user_view',
-        'user_create',
-        'user_update',
-        'user_delete',
-
         'table-store_index',
         'table-store_view',
         'table-store_create',
@@ -1098,6 +1092,18 @@ return [
         'holiday_create',
         'holiday_update',
         'holiday_delete',
+
+        "user-access-type_index",
+
+        "user_create",
+        "user_delete",
+        "user_index",
+        "user_logout",
+        "user_me",
+        "user_update",
+        "user_view",
+
+        "user_status-list",
 
     ],
 

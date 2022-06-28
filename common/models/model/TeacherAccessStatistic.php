@@ -29,6 +29,9 @@ class TeacherAccessStatistic extends TeacherAccess
             'checkedCount' => function ($model) {
                 return $model->checkCount ?? 0;
             },
+            'mustCheckCount' => function ($model) {
+                return $model->mustCheckCount ?? 0;
+            },
             // 'percent' => function ($model) {
             //     return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
             // },
@@ -66,6 +69,7 @@ class TeacherAccessStatistic extends TeacherAccess
             'examStudent',
             'checkedCount',
             'checkCount',
+            'mustCheckCount',
 
 
             'actCount',
@@ -101,6 +105,26 @@ class TeacherAccessStatistic extends TeacherAccess
         // return 122;
         return count($query->all());
     }
+
+    public function getMustCheckCount()
+    {
+        $model = new ExamStudent();
+        $query = $model->find();
+        $query = $query->andWhere([$model->tableName() . '.teacher_access_id' => $this->id])
+            ->leftJoin("exam_student_answer", "exam_student_answer.exam_student_id = " . $model->tableName() . ".id ")
+            ->leftJoin("exam_student_answer_sub_question", "exam_student_answer_sub_question.exam_student_answer_id = exam_student_answer.id")
+            // ->andWhere(['not', ['esasq.ball' => null, 'esasq.teacher_conclusion' => null]])
+
+            ->andWhere(['IS', 'exam_student_answer_sub_question.ball', null])
+            ->andWhere(['IS', 'exam_student_answer_sub_question.teacher_conclusion', null])
+            ->groupBy('exam_student.id');
+
+        // dd($query->createCommand()->getRawSql());
+        // dd("qweqwe");
+        // return 122;
+        return count($query->all());
+    }
+
 
     public function getExamStudent()
     {

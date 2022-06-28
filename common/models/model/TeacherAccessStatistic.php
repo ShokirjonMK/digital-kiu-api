@@ -29,9 +29,9 @@ class TeacherAccessStatistic extends TeacherAccess
             'checkedCount' => function ($model) {
                 return $model->checkCount ?? 0;
             },
-            'percent' => function ($model) {
-                return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
-            },
+            // 'percent' => function ($model) {
+            //     return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
+            // },
             'actCount' => function ($model) {
                 return $model->actCount ?? 0;
             },
@@ -119,7 +119,14 @@ class TeacherAccessStatistic extends TeacherAccess
 
         return $query->andWhere([
             'in', $model->tableName() . '.exam_student_answer_id',
-            ExamStudentAnswer::find()->select('id')->where(['in', 'exam_student_id', ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])])
+            ExamStudentAnswer::find()
+                ->select('id')
+                ->where([
+                    'in', 'exam_student_id',
+                    ExamStudent::find()
+                        ->select('id')
+                        ->where(['teacher_access_id' => $this->id])
+                ])
         ])->all();
     }
 

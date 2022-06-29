@@ -141,6 +141,7 @@ $routes = [
     // statistic Kafedra Questions Teachers
     'GET <lang:\w{2}>/statistics/kafedra' => 'statistic/kafedra',
     'GET <lang:\w{2}>/statistics/checking' => 'statistic/checking',
+    'GET <lang:\w{2}>/statistics/exam-checking' => 'statistic/exam-checking',
 
     /* statistics all */
 

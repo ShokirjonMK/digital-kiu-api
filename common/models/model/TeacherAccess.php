@@ -109,6 +109,8 @@ class TeacherAccess extends \yii\db\ActiveRecord
             'languages',
             'subject',
             'teacher',
+            'examStudentCount',
+            'examStudent',
             'user',
             'timeTables',
             'createdBy',
@@ -119,6 +121,17 @@ class TeacherAccess extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getExamStudent()
+    {
+        return $this->hasMany(ExamStudent::className(), ['teacher_access_id' => 'id']);
+    }
+
+    public function getExamStudentCount()
+    {
+        return count($this->examStudent);
+    }
+
 
     /**
      * Gets query for [[Languages]].
@@ -157,7 +170,6 @@ class TeacherAccess extends \yii\db\ActiveRecord
      */
     public function getTeacher()
     {
-
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
     }
 

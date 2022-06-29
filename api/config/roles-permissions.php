@@ -691,7 +691,10 @@ return [
         "user_view",
 
         "week_index",
-        "week_view"
+        "week_view",
+
+        'statistic_checking',
+
 
 
     ],
@@ -1024,7 +1027,7 @@ return [
     'hr' => [
         'password_index',
         'password_update',
-      
+
 
         "notification_approved",
         "notification_index",
@@ -1049,7 +1052,7 @@ return [
         "region_index",
         "region_view",
 
-        
+
         'department_index',
         'department_types',
         'department_view',
@@ -1117,7 +1120,7 @@ return [
 
         "user_status-list",
 
-        
+
     ],
 
     /* Kadr yordamchi */

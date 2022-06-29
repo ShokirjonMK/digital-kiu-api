@@ -200,6 +200,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'answers',
             'hasAnswer',
             'isChecked',
+            'isCheckedFull',
+            'allBall',
 
             'statusName',
             'teacherAccess',
@@ -214,7 +216,41 @@ class ExamStudent extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getAllBall()
+    {
+        $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
+
+        $query = $query->andWhere([
+            'in', $model->tableName() . '.exam_student_answer_id',
+            ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+        ])
+            ->sum('ball');
+
+        return  $query;
+    }
+
     public function getIsChecked()
+    {
+
+        // return $this->examStudentAnswers->examStudentAnswerSubQuestion;
+
+        $model = new ExamStudentAnswer();
+        $query = $model->find()->with('examStudentAnswerSubQuestion');
+
+        $query = $query->andWhere([$model->tableName() . '.exam_student_id' => $this->id])
+            ->leftJoin("exam_student_answer_sub_question esasq", "esasq.exam_student_answer_id = " . $model->tableName() . " .id ")
+            ->andWhere(['esasq.ball' => null, 'esasq.teacher_conclusion' => null])
+            ->andWhere([$model->tableName() . '.teacher_conclusion' => null]);
+
+        if (count($query->all()) > 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public function getIsCheckedFull()
     {
         // return $this->id;
         // return $this->examStudentAnswers->examStudentAnswerSubQuestion;

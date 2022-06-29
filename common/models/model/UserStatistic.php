@@ -26,9 +26,9 @@ class UserStatistic extends User
             'last_name' => function ($model) {
                 return $model->profile->last_name ?? '';
             },
-            // 'teacherAccess' => function ($model) {
-            //     return $model->teacherAccess ?? [];
-            // },
+            'teacherAccess' => function ($model) {
+                return $model->teacherAccess ?? [];
+            },
 
 
             // 'status',

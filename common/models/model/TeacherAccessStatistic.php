@@ -20,12 +20,15 @@ class TeacherAccessStatistic extends TeacherAccess
             'examStudentCount' => function ($model) {
                 return $model->examStudentCount ?? 0;
             },
-            'exam' => function ($model) {
-                return $model->exam->name ?? '';
+            'examName' => function ($model) {
+                return $model->examSemeta->exam->translate->name ?? '';
             },
-            'exams' => function ($model) {
-                return $model->exams->name ?? '';
-            },
+            // 'examSemeta' => function ($model) {
+            //     return $model->examSemeta; //->exam->name ?? '';
+            // },
+            // 'exams' => function ($model) {
+            //     return $model->exams->name ?? '';
+            // },
             'checkedCount' => function ($model) {
                 return $model->checkCount ?? 0;
             },
@@ -38,7 +41,7 @@ class TeacherAccessStatistic extends TeacherAccess
             'actCount' => function ($model) {
                 return $model->actCount ?? 0;
             },
-            'notCount' => function ($model) {
+            'hasAnswerCount' => function ($model) {
                 return $model->notCount ?? 0;
             },
             // 'examStudent' => function ($model) {
@@ -138,19 +141,14 @@ class TeacherAccessStatistic extends TeacherAccess
 
     public function getExamStudentNot()
     {
-        $model = new ExamStudentAnswerSubQuestion();
+        $model = new ExamStudentAnswer();
         $query = $model->find();
 
         return $query->andWhere([
-            'in', $model->tableName() . '.exam_student_answer_id',
-            ExamStudentAnswer::find()
+            'in', 'exam_student_id',
+            ExamStudent::find()
                 ->select('id')
-                ->where([
-                    'in', 'exam_student_id',
-                    ExamStudent::find()
-                        ->select('id')
-                        ->where(['teacher_access_id' => $this->id])
-                ])
+                ->where(['teacher_access_id' => $this->id])
         ])->all();
     }
 
@@ -169,10 +167,11 @@ class TeacherAccessStatistic extends TeacherAccess
         return count($this->examStudentAct);
     }
 
-    public function getExam()
+    public function getExamSemeta()
     {
-        return $this->examStudent[0]->exam;
+        return $this->hasOne(ExamSemeta::className(), ['teacher_access_id' => 'id']);
     }
+
     public function getExams()
     {
         return $this->examStudentOne->exam;

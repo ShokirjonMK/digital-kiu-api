@@ -216,17 +216,32 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getIsChecked()
     {
-
+        // return $this->id;
         // return $this->examStudentAnswers->examStudentAnswerSubQuestion;
 
-        $model = new ExamStudentAnswer();
-        $query = $model->find()->with('examStudentAnswerSubQuestion');
+        $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
 
-        $query = $query->andWhere([$model->tableName() . '.exam_student_id' => $this->id])
-            ->leftJoin("exam_student_answer_sub_question esasq", "esasq.exam_student_answer_id = " . $model->tableName() . " .id ")
-            ->andWhere(['esasq.ball' => null, 'esasq.teacher_conclusion' => null])
+        $query = $query->andWhere([
+            'in', $model->tableName() . '.exam_student_answer_id',
+            ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+        ])
+            ->andWhere([$model->tableName() . '.ball' => null, $model->tableName() . '.teacher_conclusion' => null])
             ->andWhere([$model->tableName() . '.teacher_conclusion' => null]);
 
+
+
+        // $model = new ExamStudentAnswer();
+        // $query = $model->find();
+
+        // $query = $query->andWhere([$model->tableName() . '.exam_student_id' => $this->id])
+        //     ->leftJoin("exam_student_answer_sub_question esasq", "esasq.exam_student_answer_id = " . $model->tableName() . " .id ")
+        //     ->andWhere(['esasq.ball' => null, 'esasq.teacher_conclusion' => null])
+        //     ->andWhere([$model->tableName() . '.teacher_conclusion' => null]);
+
+
+
+        // dd($query->createCommand()->getSql());
         if (count($query->all()) > 0) {
             return 0;
         } else {

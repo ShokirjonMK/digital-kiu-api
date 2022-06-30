@@ -101,7 +101,7 @@ class KpiStore extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
 
-            [['kpi_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->kpiFileMaxSize],
+            [['kpi_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
 
         ];
     }

@@ -96,6 +96,11 @@ class ExamCheckingController extends ApiActiveController
                 }
                 $data = [];
                 if (isset($post['teacher_conclusion'])) {
+
+                    if (($post['teacher_conclusion'][0] == "'") && ($post['teacher_conclusion'][strlen($post['teacher_conclusion']) - 1] == "'")) {
+                        $post['teacher_conclusion'] =  substr($post['teacher_conclusion'], 1, -1);
+                    }
+
                     $data['teacher_conclusion'] = $post['teacher_conclusion'];
                 }
                 if (isset($post['ball'])) {

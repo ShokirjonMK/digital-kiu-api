@@ -542,7 +542,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
         /** subQuestionAnswersChecking */
         if (isset($post['subQuestionAnswersChecking'])) {
-            $post['subQuestionAnswersChecking'] = str_replace("'", "", $post['subQuestionAnswersChecking']);
+            if (($post['subQuestionAnswersChecking'][0] == "'") && ($post['subQuestionAnswersChecking'][strlen($post['subQuestionAnswersChecking']) - 1] == "'")) {
+                $post['subQuestionAnswersChecking'] =  substr($post['subQuestionAnswersChecking'], 1, -1);
+            }
+
             if (!isJsonMK($post['subQuestionAnswersChecking'])) {
                 $errors['subQuestionAnswersChecking'] = [_e('Must be Json')];
                 return simplify_errors($errors);

@@ -47,7 +47,7 @@ class KpiStore extends \yii\db\ActiveRecord
 
     const UPLOADS_FOLDER = 'uploads/kpi_store/';
     public $kpi_file;
-    public $kpiFileMaxSize = 1024 * 1024 * 24; // 24 Mb
+    public $kpiFileMaxSize = 1024 * 1024 * 100; // 24 Mb
 
     /**
      * {@inheritdoc}

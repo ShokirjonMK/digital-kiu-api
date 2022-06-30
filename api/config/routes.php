@@ -109,6 +109,7 @@ $controllers = [
     'work-rate',
 
     'table-store',
+    'instruction',
 
 
 

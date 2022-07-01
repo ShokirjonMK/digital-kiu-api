@@ -181,14 +181,10 @@ class ExamAppeal extends \yii\db\ActiveRecord
         return $this->hasOne(Semestr::className(), ['id' => 'semestr_id']);
     }
 
-    /** */
-
-
     public function getStatusName()
     {
         return   $this->statusList()[$this->status];
     }
-
 
     public static function createItem($model, $post)
     {
@@ -203,11 +199,13 @@ class ExamAppeal extends \yii\db\ActiveRecord
             $errors[] = _e('This is other student\'s exam, you can not appeal');
             return simplify_errors($errors);
         }
+
         $model->student_id = $model->examStudent->student_id;
         if (is_null($model->examStudent->teacher_access_id)) {
             $errors[] = _e('This exam is not checked!');
             return simplify_errors($errors);
         }
+
         $model->teacher_user_id = self::teacher_access_user_id($model->examStudent->teacher_access_id);
 
         // dd($model->examStudent->exam->eduSemestrSubject->subject->id);

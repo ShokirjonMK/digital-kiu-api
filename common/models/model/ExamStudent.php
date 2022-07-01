@@ -55,6 +55,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     const TYPE_IELTS = 1;
     const TYPE_NOGIRON = 2;
+    const TYPE_JAPAN = 3;
 
     const UPLOADS_FOLDER = 'uploads/plagiat_files/';
     public $plagiatFile;

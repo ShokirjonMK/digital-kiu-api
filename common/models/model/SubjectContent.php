@@ -38,17 +38,17 @@ class SubjectContent extends \yii\db\ActiveRecord
     const TYPE_VIDEO = 4;
     const TYPE_AUDIO = 5;
 
-    public $file_file;
-    public $file_image;
-    public $file_video;
-    public $file_audio;
-
+     public $file_file;
+     public $file_image;
+     public $file_video;
+     public $file_audio;
+ 
     const UPLOADS_FOLDER = 'uploads/content_files';
     public $file_textFileMaxSize = "";
     public $file_fileFileMaxSize = 1024 * 1024 * 20; // 5 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 8; // 2 Mb
     public $file_videoFileMaxSize = 1024 * 1024 * 100; // 100 Mb
-    public $file_audioFileMaxSize = 1024 * 1024 * 25; // 8 Mb
+    public $file_audioFileMaxSize = 1024 * 1024 * 100; // 8 Mb
 
 
     public $file_textFileExtentions = 'text';

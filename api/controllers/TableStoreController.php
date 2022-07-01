@@ -18,7 +18,7 @@ class TableStoreController extends ApiActiveController
     }
 
     public $table_name = 'tabel_store';
-    public $controller_name = 'TableStor';
+    public $controller_name = 'TableStore';
 
     public function actionIndex($lang)
     {

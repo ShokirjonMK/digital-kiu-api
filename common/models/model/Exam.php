@@ -262,6 +262,16 @@ class Exam extends \yii\db\ActiveRecord
         return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
     }
 
+    public function getAppeal()
+    {
+        return $this->hasMany(ExamAppeal::className(), ['exam_id' => 'id']);
+    }
+
+    public function getAppealCount()
+    {
+        return count($this->appeal);
+    }
+
     public function getEduPlan()
     {
         return $this->eduSemestrSubject->eduSemestr->eduPlan ?? [];

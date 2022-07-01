@@ -45,6 +45,9 @@ class ExamAppeal extends \yii\db\ActiveRecord
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
+
+    const TYPE_NEW = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -75,11 +78,12 @@ class ExamAppeal extends \yii\db\ActiveRecord
                     'semestr_id',
                     'faculty_id',
                     'exam_id',
+                    'type',
                     'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
                 ], 'integer'
             ],
 
-            [['appeal_text'], 'string'],
+            [['appeal_text', 'teacher_conclusion', 'conclusion'], 'string'],
 
             [['exam_student_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamStudent::className(), 'targetAttribute' => ['exam_student_id' => 'id']],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -108,6 +112,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
             'subject_id' => _e('Subject Id'),
             'edu_year_id' => _e('Edu_year Id'),
             'semestr_id' => _e('Semestr Id'),
+            
+            'type' => _e('type'),
+            'teacher_conclusion' => _e('teacher_conclusion'),
+            'conclusion' => _e('conclusion'),
+
 
             'order' => _e('Order'),
             'status' => _e('Status'),

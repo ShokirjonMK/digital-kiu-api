@@ -192,6 +192,8 @@ class Exam extends \yii\db\ActiveRecord
             'eduPlan',
             'questionCount',
             'question',
+            'appealCount',
+            'appeal',
 
             'key',
             'surveyStatus',
@@ -422,12 +424,10 @@ class Exam extends \yii\db\ActiveRecord
         return $this->hasMany(ExamStudentAnswer::className(), ['exam_id' => 'id']);
     }
 
-
     public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['faculty_id' => 'id']);
     }
-
 
     public function getDirection()
     {
@@ -446,7 +446,6 @@ class Exam extends \yii\db\ActiveRecord
         // }
         return $this->hasMany(ExamSemeta::className(), ['exam_id' => 'id']);
     }
-
 
     public static function generatePasswords($post)
     {

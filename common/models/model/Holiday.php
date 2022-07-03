@@ -53,7 +53,10 @@ class Holiday extends \yii\db\ActiveRecord
                 'finish_date',
             ], 'required'],
 
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [[
+                'year',
+                'month', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
+            ], 'integer'],
             // [['name'], 'string', 'max' => 255],
         ];
     }
@@ -90,6 +93,8 @@ class Holiday extends \yii\db\ActiveRecord
 
             'start_date',
             'finish_date',
+            'year',
+            'month',
 
             'order',
             'status',

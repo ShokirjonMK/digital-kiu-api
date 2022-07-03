@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\ExamAppeal;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\ExamStudentAnswer;
 use common\models\model\Student;
 
 class ExamAppealController extends ApiActiveController
@@ -70,6 +71,48 @@ class ExamAppealController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        // $data = [];
+
+        // if (isRole('teacher')) {
+
+        //     if ($model->teacherAccess->user_id !=  current_user_id()) {
+        //         return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+        //     }
+
+        //     $examStudentAnswer
+        //     if (isset($post['teacher_conclusion'])) {
+        //         $data['teacher_conclusion'] = $post['teacher_conclusion'];
+        //     }
+
+
+        //     if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
+        //         return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+        //     } else {
+        //         $post['teacher_access_id'] = $model->examStudent->teacher_access_id;
+        //     }
+        //     $data = [];
+        //     if (isset($post['teacher_conclusion'])) {
+        //         $data['teacher_conclusion'] = $post['teacher_conclusion'];
+        //     }
+        //     if (isset($post['ball'])) {
+        //         $data['ball'] = $post['ball'];
+        //     }
+        //     if (isset($post['subQuestionAnswersChecking'])) {
+        //         $data['subQuestionAnswersChecking'] = $post['subQuestionAnswersChecking'];
+        //     }
+
+        //     $this->load($model, $data);
+        //     $result = ExamStudentAnswer::updateItemTeacher($model, $data);
+
+        //     if (!is_array($result)) {
+        //         return $this->response(1, _e($this->controller_name . ' successfully saved.'), $model, null, ResponseStatus::OK);
+        //     } else {
+        //         return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        //     }
+        // }
+
+
 
         if (!isRole('student')) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);

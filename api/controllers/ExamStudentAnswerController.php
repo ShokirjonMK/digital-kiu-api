@@ -128,7 +128,7 @@ class ExamStudentAnswerController extends ApiActiveController
         }
 
         $post = Yii::$app->request->post();
-
+// appeal_teacher_conclution bo'lsa $model->old_ball = $model->ball; qilib olish kerak
         if (isRole("teacher")) {
             if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

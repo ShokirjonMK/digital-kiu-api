@@ -73,6 +73,7 @@ class Exam extends \yii\db\ActiveRecord
             [['exam_type_id', 'type', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [
                 [
+                    'status_appeal',
                     'exam_type_id',
                     'faculty_id',
                     'is_protected',
@@ -120,6 +121,7 @@ class Exam extends \yii\db\ActiveRecord
             'type' => 'Type',
             'order' => _e('Order'),
             'status' => _e('Status'),
+            'status_appeal' => _e('Status appeal'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
@@ -150,6 +152,7 @@ class Exam extends \yii\db\ActiveRecord
             'min_ball',
             'order',
             'status',
+            'status_appeal',
             'created_at',
             'updated_at',
             'created_by',

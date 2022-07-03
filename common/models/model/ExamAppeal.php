@@ -79,6 +79,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
                     'faculty_id',
                     'exam_id',
                     'type',
+                    'lang_id',
+                    'teacher_access_id',
                     'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
                 ], 'integer'
             ],
@@ -93,6 +95,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
+            [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
         ];
     }
 
@@ -112,7 +115,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
             'subject_id' => _e('Subject Id'),
             'edu_year_id' => _e('Edu_year Id'),
             'semestr_id' => _e('Semestr Id'),
-            
+
+
+
+            'teacher_access_id' => _e('teacher_access_id'),
+            'lang_id' => _e('lang_id'),
             'type' => _e('type'),
             'teacher_conclusion' => _e('teacher_conclusion'),
             'conclusion' => _e('conclusion'),
@@ -175,6 +182,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'teacher_user_id']);
     }
 
+    public function getTeacherAccess()
+    {
+        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
     public function getSubject()
     {
         return $this->hasOne(Subject::className(), ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
@@ -222,6 +234,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
         $model->exam_id = $model->examStudent->exam->id;
         $model->edu_year_id = $model->examStudent->exam->eduSemestrSubject->eduSemestr->eduYear->id;
         $model->semestr_id =  $model->examStudent->exam->eduSemestrSubject->eduSemestr->semestr->id;
+        $model->lang_id =  $model->examStudent->lang_id;
 
         if ($model->save()) {
             $transaction->commit();

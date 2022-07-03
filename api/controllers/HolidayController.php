@@ -67,7 +67,7 @@ class HolidayController extends ApiActiveController
         $post = Yii::$app->request->post();
 
         $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
-        $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
+        $post['month'] = (int)date('m', strtotime($post['start_date'] ?? time()));
 
         $this->load($model, $post);
         $result = Holiday::updateItem($model, $post);

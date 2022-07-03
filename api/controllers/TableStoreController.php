@@ -35,11 +35,11 @@ class TableStoreController extends ApiActiveController
             // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
         ;
 
-        if (!isNull(Yii::$app->request->get('month'))) {
+        if (Yii::$app->request->get('month') != null) {
             $query->andFilterWhere(['month' => $month]);
         }
 
-        if (!isNull(Yii::$app->request->get('year'))) {
+        if (Yii::$app->request->get('year') != null) {
             $query->andFilterWhere(['year' => $year]);
         }
 

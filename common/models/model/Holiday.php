@@ -90,7 +90,6 @@ class Holiday extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-
             'start_date',
             'finish_date',
             'year',

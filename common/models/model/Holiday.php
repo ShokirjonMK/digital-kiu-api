@@ -55,7 +55,8 @@ class Holiday extends \yii\db\ActiveRecord
 
             [[
                 'year',
-                'month', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
+                'month',
+                'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
             ], 'integer'],
             // [['name'], 'string', 'max' => 255],
         ];

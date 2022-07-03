@@ -53,6 +53,12 @@ class Exam extends \yii\db\ActiveRecord
     const STATUS_DISTRIBUTED = 3;
     const STATUS_ANNOUNCED = 4;
 
+    const STATUS_APPEAL_INACTIVE = 0;
+    const STATUS_APPEAL_ACTIVE = 1;
+    const STATUS_APPEAL_FINISHED = 2;
+    const STATUS_APPEAL_DISTRIBUTED = 3;
+    const STATUS_APPEAL_ANNOUNCED = 4;
+
     const PROTECTED_TURE = 1;
     const PROTECTED_FALSE = 0;
 

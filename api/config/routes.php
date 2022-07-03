@@ -110,7 +110,7 @@ $controllers = [
 
     'table-store',
     'instruction',
-
+    'exam-appeal-semeta',
 
 
 

@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%instruction}}`.
  */
-class m220630_101634_create_inctruction_table extends Migration
+class m220703_093957_create_instruction_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -15,6 +15,11 @@ class m220630_101634_create_inctruction_table extends Migration
         $tableName = Yii::$app->db->tablePrefix . 'instruction';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('instruction');
+        }
+        $tableOptions = null;
+
+        if ($this->db->driverName === 'mysql') {
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
         $this->createTable('{{%instruction}}', [
             'id' => $this->primaryKey(),
@@ -26,7 +31,7 @@ class m220630_101634_create_inctruction_table extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
     }
 
     /**

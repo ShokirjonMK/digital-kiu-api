@@ -35,7 +35,13 @@ class TableStoreController extends ApiActiveController
             // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
         ;
 
-        $query->andFilterWhere(['year' => $year, 'month' => $month]);
+        if (!isNull(Yii::$app->request->get('month'))) {
+            $query->andFilterWhere(['month' => $month]);
+        }
+
+        if (!isNull(Yii::$app->request->get('year'))) {
+            $query->andFilterWhere(['year' => $year]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -91,7 +97,13 @@ class TableStoreController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+
+        $data['data'] = $model;
+
+        $data['vocations'] = Vocation::filter($model->year, $model->month);
+        $data['holidays'] = Holiday::filter($model->year, $model->month);
+
+        return $this->response(1, _e('Success.'), $data, null, ResponseStatus::OK);
     }
 
     public function actionDelete($lang, $id)

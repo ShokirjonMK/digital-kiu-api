@@ -99,7 +99,7 @@ class TableStore extends \yii\db\ActiveRecord
             [['year'], 'default', 'value' => (int)date('Y')],
 
             [['user_access_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserAccessType::className(), 'targetAttribute' => ['user_access_type_id' => 'id']],
-            [['type'], 'unique', 'targetAttribute' => ['user_access_type_id', 'table_id', 'year', 'month', 'type']],
+            [['type'], 'unique', 'targetAttribute' => ['user_access_type_id', 'table_id', 'year', 'month', 'type', 'is_deleted']],
 
         ];
     }

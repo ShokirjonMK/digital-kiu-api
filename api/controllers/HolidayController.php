@@ -45,6 +45,7 @@ class HolidayController extends ApiActiveController
     {
         $model = new Holiday();
         $post = Yii::$app->request->post();
+
         $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
         $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
 
@@ -64,8 +65,10 @@ class HolidayController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
+
         $post['year'] = date('Y', strtotime($post['start_date'] ?? time()));
         $post['month'] = date('m', strtotime($post['start_date'] ?? time()));
+
         $this->load($model, $post);
         $result = Holiday::updateItem($model, $post);
         if (!is_array($result)) {

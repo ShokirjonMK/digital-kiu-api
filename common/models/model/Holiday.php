@@ -127,7 +127,8 @@ class Holiday extends \yii\db\ActiveRecord
         return  self::find()
             ->where(['year' => $year, 'is_deleted' => 0, 'status' => 1])
             ->andWhere("month(start_date) >= " . $month . "")
-            ->andWhere("month(finish_date) <= " . $month . "")->all();
+            ->andWhere("month(finish_date) <= " . $month . "")
+            ->all();
     }
 
     public function getInfoRelation()

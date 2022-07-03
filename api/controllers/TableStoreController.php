@@ -35,6 +35,8 @@ class TableStoreController extends ApiActiveController
             // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
         ;
 
+        $query->andFilterWhere(['year' => $year, 'month' => $month]);
+
         // filter
         $query = $this->filterAll($query, $model);
 

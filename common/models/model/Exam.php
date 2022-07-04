@@ -190,6 +190,11 @@ class Exam extends \yii\db\ActiveRecord
             'examStudentCount',
             'examStudentByLang',
 
+
+            'examAppealByLang',
+            'appealCount',
+            'appeal',
+
             'checkCount',
 
             'teacherAccess',
@@ -201,8 +206,7 @@ class Exam extends \yii\db\ActiveRecord
             'eduPlan',
             'questionCount',
             'question',
-            'appealCount',
-            'appeal',
+
 
             'key',
             'surveyStatus',
@@ -415,6 +419,17 @@ class Exam extends \yii\db\ActiveRecord
     public function getExamSmeta()
     {
         return $this->hasMany(ExamSemeta::className(), ['exam_id' => 'id']);
+    }
+
+    public function getExamAppealByLang()
+    {
+        return (new yii\db\Query())
+            ->from('exam_appeal')
+            ->select(['COUNT(*) AS count', 'lang_id'])
+            ->where(['exam_id' => $this->id])
+            // ->andWhere(['!=', 'status', ExamStudent::STATUS_INACTIVE])
+            ->groupBy(['lang_id'])
+            ->all();
     }
 
     public function getExamStudentByLang()

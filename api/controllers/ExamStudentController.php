@@ -31,7 +31,7 @@ class ExamStudentController extends ApiActiveController
 
         // $model = new ExamStudent();
 
-        $model = ExamStudent::find()->limit(10000)->offset(10000)->all();
+        $model = ExamStudent::find()->limit(10000)->offset(20000)->all();
 
         foreach ($model as $modelOne) {
             $modelOne->ball = $modelOne->allBall;

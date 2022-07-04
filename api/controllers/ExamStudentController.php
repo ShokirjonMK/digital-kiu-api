@@ -20,6 +20,22 @@ class ExamStudentController extends ApiActiveController
     public $table_name = 'exam_student';
     public $controller_name = 'Exam Student';
 
+    public function actionCorrect($lang)
+    {
+        $model = ExamStudent::find()->all();
+
+        foreach ($model as $modelOne) {
+            $modelOne->ball = $modelOne->allBall;
+
+            $modelOne->is_checked = $modelOne->isChecked;
+            $modelOne->is_checked_full = $modelOne->isCheckedFull;
+            $modelOne->has_answer = $modelOne->hasAnswer;
+            $modelOne->update();
+        }
+
+        return "Success";
+    }
+
     public function actionIndex($lang)
     {
         $model = new ExamStudent();

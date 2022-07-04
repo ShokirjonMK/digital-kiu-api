@@ -134,6 +134,10 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
+    /** Code Correctors */
+    'GET <lang:\w{2}>/exam-students/correct' => 'exam-student/correct',
+
+    /** Code Correctors */
 
     /* statistics all */
     // statistic student-count-by-faculty

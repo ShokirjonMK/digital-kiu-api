@@ -87,6 +87,9 @@ class ExamStudent extends \yii\db\ActiveRecord
             [['student_id', 'exam_id'], 'required'],
             [
                 [
+                    'is_checked',
+                    'is_checked_full',
+                    'has_answer',
                     'student_id',
                     'start',
                     'finish',
@@ -109,7 +112,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'type'
                 ], 'integer'
             ],
-            [['ball'], 'double'],
+            [['ball', 'in_ball'], 'double'],
+
             [['plagiat_file'], 'string', 'max' => 255],
             [['password'], 'safe'],
             [['plagiat_percent'], 'double'],
@@ -146,6 +150,14 @@ class ExamStudent extends \yii\db\ActiveRecord
             'order' => _e('Order'),
             'status' => _e('Status'),
             'act' => _e('act'),
+
+
+            'in_ball' => _e('in_ball'),
+            'is_checked' => _e('is_checked'),
+            'is_checked_full' => _e('is_checked_full'),
+            'has_answer' => _e('has_answer'),
+
+
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),

@@ -253,7 +253,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
             $model->update();
 
-            if (isset($post['order'])) {
+            if (!isset($post['order'])) {
                 $lastOrder = SubjectContent::find()
                     ->where(['subject_topic_id' => $model->subject_topic_id])
                     ->orderBy(['order' => SORT_DESC])

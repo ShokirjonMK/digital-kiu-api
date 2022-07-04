@@ -22,7 +22,16 @@ class ExamStudentController extends ApiActiveController
 
     public function actionCorrect($lang)
     {
-        $model = ExamStudent::find()->all();
+
+        // $rows = (new \yii\db\Query())
+        // ->from('user')
+        // ->where(['last_name' => 'Smith'])
+        // ->limit(10)
+        // ->all();
+
+        // $model = new ExamStudent();
+
+        $model = ExamStudent::find()->limit(10000)->offset(10000)->all();
 
         foreach ($model as $modelOne) {
             $modelOne->ball = $modelOne->allBall;

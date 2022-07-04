@@ -38,11 +38,11 @@ class SubjectContent extends \yii\db\ActiveRecord
     const TYPE_VIDEO = 4;
     const TYPE_AUDIO = 5;
 
-     public $file_file;
-     public $file_image;
-     public $file_video;
-     public $file_audio;
- 
+    public $file_file;
+    public $file_image;
+    public $file_video;
+    public $file_audio;
+
     const UPLOADS_FOLDER = 'uploads/content_files';
     public $file_textFileMaxSize = "";
     public $file_fileFileMaxSize = 1024 * 1024 * 20; // 5 Mb
@@ -186,11 +186,11 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         $model->type = self::TYPE_TEXT;
-
-
 
         if ($model->save()) {
 

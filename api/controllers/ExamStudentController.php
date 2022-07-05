@@ -34,12 +34,15 @@ class ExamStudentController extends ApiActiveController
         $model = ExamStudent::find()->limit(10000)->offset(0)->all();
 
         foreach ($model as $modelOne) {
-            $modelOne->ball = $modelOne->allBall;
+            if (!($modelOne->type > 0)) {
 
-            $modelOne->is_checked = $modelOne->isChecked;
-            $modelOne->is_checked_full = $modelOne->isCheckedFull;
-            $modelOne->has_answer = $modelOne->hasAnswer;
-            $modelOne->update();
+                $modelOne->ball = $modelOne->allBall;
+
+                $modelOne->is_checked = $modelOne->isChecked;
+                $modelOne->is_checked_full = $modelOne->isCheckedFull;
+                $modelOne->has_answer = $modelOne->hasAnswer;
+                $modelOne->update();
+            }
         }
 
         return "Success";

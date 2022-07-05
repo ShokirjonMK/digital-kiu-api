@@ -97,8 +97,6 @@ class ExamSemetaController extends ApiActiveController
             /*  is Self  */
         }
 
-
-
         if (isset($post['smetas'])) {
             $result = ExamSemeta::createItems($post);
 

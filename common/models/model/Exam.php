@@ -870,6 +870,50 @@ class Exam extends \yii\db\ActiveRecord
         }
     }
 
+    public static function appealDistribution($exam)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $exam->status_appeal = Exam::STATUS_APPEAL_DISTRIBUTED;
+        if ($exam->save()) {
+
+            $examAppealSmetas = ExamAppealSemeta::findAll(['exam_id' => $exam->id]);
+
+            foreach ($examAppealSmetas as $examAppealSmetaOne) {
+                $mk = 0;
+                while ($mk < $examAppealSmetaOne->count) {
+                    $examAppeal = ExamAppeal::find()
+                        ->where([
+                            'exam_id' => $exam->id,
+                            'teacher_access_id' => null,
+                            'lang_id' => $examAppealSmetaOne->lang_id,
+                            // 'status' => ExamStudent::STATUS_TAKED,
+                        ])
+                        ->orderBy(new Expression('rand()'))
+                        ->one();
+
+                    if ($examAppeal) {
+                        if ($examAppeal->examStudent->teacher_access_id != $examAppealSmetaOne->teacher_access_id) {
+                            $examAppeal->teacher_access_id = $examAppealSmetaOne->teacher_access_id;
+                            if ($examAppeal->update()) {
+                                $mk++;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            $errors[] = _('There is an error occurred on exam');
+        }
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) {

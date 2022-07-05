@@ -415,4 +415,46 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
         return true;
     }
+
+
+    public static function orderCorrector($post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        /** orders */
+        if (!isset($post['subject_topic_id'])) {
+            $errors[] = "subject_topic_id required";
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (isset($post['orders'])) {
+            if (($post['orders'][0] == "'") && ($post['orders'][strlen($post['orders']) - 1] == "'")) {
+                $post['orders'] =  substr($post['orders'], 1, -1);
+            }
+
+            if (!isJsonMK($post['orders'])) {
+                $errors['orders'] = [_e('Must be Json')];
+            } else {
+                foreach ((array)json_decode($post['orders']) as $id => $order) {
+                    $content = self::findOne(['id' => $id, 'subject_topic_id' => $post['subject_topic_id']]);
+                    if ($content) {
+                        $content->order = $order;
+                        $content->update();
+                    }
+                }
+            }
+        } else {
+            $errors[] = "orders required";
+        }
+
+        if (count($errors) > 0) {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        } else {
+            $transaction->commit();
+            return true;
+        }
+    }
 }

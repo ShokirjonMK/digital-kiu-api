@@ -357,6 +357,25 @@ class ExamController extends ApiActiveController
         }
     }
 
+    public function actionAppealDistribution($lang, $id)
+    {
+        $model = Exam::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $result = Exam::appealDistribution($model);
+
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' succesfully distributed.'), null, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
     public function actionAd($lang, $id)
     {
         $model = Exam::find()

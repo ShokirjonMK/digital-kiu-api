@@ -136,6 +136,7 @@ foreach ($controllers as $controller) {
 $routes = [
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct' => 'exam-student/correct',
+    'POST <lang:\w{2}>/subject-contents/order' => 'subject-content/order',
 
     /** Code Correctors */
 
@@ -177,6 +178,8 @@ $routes = [
     'POST <lang:\w{2}>/exams/generate-passwords' => 'exam/generate-passwords',
     // exam Distribution
     'GET <lang:\w{2}>/exams/<id>/distribution' => 'exam/distribution',
+    // exam Appeal Distribution
+    'GET <lang:\w{2}>/exams/<id>/appeal-distribution' => 'exam/appeal-distribution',
     // exam announced // natijani e'lon qilish
     'GET <lang:\w{2}>/exams/<id>/ad' => 'exam/ad',
 

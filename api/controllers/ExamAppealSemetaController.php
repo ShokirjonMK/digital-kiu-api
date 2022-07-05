@@ -84,8 +84,11 @@ class ExamAppealSemetaController extends ApiActiveController
             if ($t['status'] == 1) {
                 $exam = Exam::findOne($post['exam_id'] ?? null);
                 if ($exam) {
-                    if ($exam->faculty_id != $t['UserAccess']->table_id) {
-                        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                    $department = $t['UserAccess']->department;
+                    if ($department['user_access_type_id'] == Kafedra::USER_ACCESS_TYPE_ID) {
+                        if ($exam->faculty_id != $department['model']->faculty_id) {
+                            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+                        }
                     }
                 } else {
                     $errors[] = ['exam_id' => _e('Exam is not found')];

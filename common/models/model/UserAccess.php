@@ -172,6 +172,14 @@ class UserAccess extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getDepartment()
+    {
+        $data = [];
+        $data['user_access_type_id'] = $this->user_access_type_id;
+        $data['model'] = $this->userAccessType->table_name::findOne($this->table_id);
+        return $data;
+    }
+
     /**
      * Gets query for [[User]].
      *
@@ -201,6 +209,8 @@ class UserAccess extends \yii\db\ActiveRecord
     {
         return $this->hasOne(JobTitle::className(), ['id' => 'job_title_id']);
     }
+
+
 
     /**
      * Gets query for [[UserAccessType]].

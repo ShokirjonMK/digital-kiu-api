@@ -97,7 +97,7 @@ class SubjectContentController extends ApiActiveController
     {
         $model = SubjectContent::find()
             ->andWhere(['id' => $id])
-//            ->andWhere(['is_deleted' => 0])
+            //            ->andWhere(['is_deleted' => 0])
             ->one();
 
         if (!$model) {
@@ -144,6 +144,21 @@ class SubjectContentController extends ApiActiveController
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+    }
+
+
+    public function actionOrder($lang)
+    {
+        $post = Yii::$app->request->post();
+
+        $result = SubjectContent::orderCorrector($post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Content successfully ordered.'), null, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 }

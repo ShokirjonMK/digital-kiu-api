@@ -202,7 +202,6 @@ class UserAccess extends \yii\db\ActiveRecord
         return $this->hasOne(JobTitle::className(), ['id' => 'job_title_id']);
     }
 
-
     /**
      * Gets query for [[UserAccessType]].
      *

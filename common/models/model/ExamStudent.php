@@ -599,4 +599,25 @@ class ExamStudent extends \yii\db\ActiveRecord
             self::STATUS_SHARED => _e('STATUS_SHARED'),
         ];
     }
+
+
+    public static function correct($i)
+    {
+        $soni = $i * 10000;
+        $model = ExamStudent::find()->limit(10000)->offset($soni)->all();
+
+        foreach ($model as $modelOne) {
+            if (!($modelOne->type > 0)) {
+
+                $modelOne->ball = $modelOne->allBall;
+
+                $modelOne->is_checked = $modelOne->isChecked;
+                $modelOne->is_checked_full = $modelOne->isCheckedFull;
+                $modelOne->has_answer = $modelOne->hasAnswer;
+                $modelOne->update();
+            }
+        }
+
+        return true;
+    }
 }

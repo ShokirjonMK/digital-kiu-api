@@ -80,7 +80,7 @@ class ExamAppealSemetaController extends ApiActiveController
 
         if (!isRole('mudir')) {
             /*  is Self  */
-            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            $t = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
                 $exam = Exam::findOne($post['exam_id'] ?? null);
                 if ($exam) {

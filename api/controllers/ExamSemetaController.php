@@ -4,13 +4,9 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
-use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
 use common\models\model\ExamSemeta;
 use common\models\model\Faculty;
-use common\models\model\Kafedra;
-use common\models\model\Subject;
-
 class ExamSemetaController extends ApiActiveController
 {
     public $modelClass = 'api\resources\ExamSemeta';

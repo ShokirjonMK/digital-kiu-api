@@ -52,7 +52,6 @@ class ExamStudent extends \yii\db\ActiveRecord
     const IS_PLAGIAT_TRUE = 1;
     const IS_PLAGIAT_FALSE = 0;
 
-
     const TYPE_IELTS = 1;
     const TYPE_NOGIRON = 2;
     const TYPE_JAPAN = 3;
@@ -65,10 +64,8 @@ class ExamStudent extends \yii\db\ActiveRecord
     // plagiat_file
     // plagiat_percent
 
-
     const ACT_FALSE = 0;
     const ACT_TRUE = 1;
-
 
     /**
      * {@inheritdoc}
@@ -557,15 +554,15 @@ class ExamStudent extends \yii\db\ActiveRecord
         }
     }
 
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->created_by = current_user_id();
-        } else {
-            $this->updated_by = current_user_id();
-        }
-        return parent::beforeSave($insert);
-    }
+    // public function beforeSave($insert)
+    // {
+    //     if ($insert) {
+    //         $this->created_by = current_user_id();
+    //     } else {
+    //         $this->updated_by = current_user_id();
+    //     }
+    //     return parent::beforeSave($insert);
+    // }
 
     public function uploadFile()
     {

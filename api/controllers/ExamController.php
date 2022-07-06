@@ -395,7 +395,7 @@ class ExamController extends ApiActiveController
             $model->appeal_finish = time() + 72 * 60 * 60;
         }
 
-        return $model;
+        // return $model;
         if ($model->save()) {
             return $this->response(1, _e($this->controller_name . ' succesfully announced.'), $model, null, ResponseStatus::OK);
         } else {

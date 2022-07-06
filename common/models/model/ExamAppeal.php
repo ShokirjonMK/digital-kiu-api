@@ -227,6 +227,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->examStudent->exam->appeal_finish > time()) {
+            $errors[] = _e('Appeal time is already finished!');
+            return simplify_errors($errors);
+        }
+
         $model->teacher_user_id = self::teacher_access_user_id($model->examStudent->teacher_access_id);
 
         // dd($model->examStudent->exam->eduSemestrSubject->subject->id);

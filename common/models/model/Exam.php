@@ -89,6 +89,8 @@ class Exam extends \yii\db\ActiveRecord
                     'status',
                     'created_at',
                     'updated_at',
+                    'appeal_start',
+                    'appeal_finish',
                     'created_by', 'updated_by', 'is_deleted'
                 ], 'integer'
             ],
@@ -125,6 +127,10 @@ class Exam extends \yii\db\ActiveRecord
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
             'type' => 'Type',
+
+            'appeal_start' => 'appeal_start',
+            'appeal_finish' => 'appeal_finish',
+
             'order' => _e('Order'),
             'status' => _e('Status'),
             'status_appeal' => _e('Status appeal'),
@@ -156,6 +162,9 @@ class Exam extends \yii\db\ActiveRecord
             'is_protected',
             'max_ball',
             'min_ball',
+            'appeal_start',
+            'appeal_finish',
+
             'order',
             'status',
             'status_appeal',

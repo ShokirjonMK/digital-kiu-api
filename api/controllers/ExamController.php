@@ -390,7 +390,12 @@ class ExamController extends ApiActiveController
             $model->status = Exam::STATUS_DISTRIBUTED;
         } else {
             $model->status = Exam::STATUS_ANNOUNCED;
+
+            $model->appeal_start = time();
+            $model->appeal_finish = time() + 72 * 60 * 60;
         }
+
+        return $model;
         if ($model->save()) {
             return $this->response(1, _e($this->controller_name . ' succesfully announced.'), $model, null, ResponseStatus::OK);
         } else {

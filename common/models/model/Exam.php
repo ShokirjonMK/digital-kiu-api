@@ -162,6 +162,7 @@ class Exam extends \yii\db\ActiveRecord
             'is_protected',
             'max_ball',
             'min_ball',
+
             'appeal_start',
             'appeal_finish',
 

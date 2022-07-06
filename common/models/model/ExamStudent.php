@@ -220,6 +220,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'teacherAccess',
             'examSemeta',
 
+            'appeal',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -339,6 +341,12 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getExam()
     {
         return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
+    }
+
+
+    public function getAppeal()
+    {
+        return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
     }
 
     /**

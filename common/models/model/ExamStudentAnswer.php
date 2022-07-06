@@ -654,7 +654,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                     if (strtotime($exam->start) <= $now_second) {
                         if ((strtotime($exam->finish) >= $now_second) || ($examStudent->finish >= $now_second)) {
-                            if (($now_second <= $finishExamStudent)) {
+                            // if (($now_second <= $finishExamStudent)) {
 
                                 // dd('if ichi ');
                                 $model->attempt = $examStudent->attempt;
@@ -720,9 +720,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 if (!($model->validate())) {
                                     $errors[] = $model->errors;
                                 }
-                            } else {
-                                $errors[] = _e("This exam already finished for you!");
-                            }
+                            // } else {
+                            //     $errors[] = _e("This exam already finished for you!");
+                            // }
                         } else {
                             $errors[] = _e("This exam`s time expired");
                         }

@@ -1338,6 +1338,10 @@ return [
         "exams-type_view",
         "exam_index",
         "exam_view",
+
+
+        "exam-appeal_create",
+
         "faculty_view",
         "kafedra_view",
         "languages_view",

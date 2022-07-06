@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\ExamStudentAnswer;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Exam;
 use common\models\model\ExamStudent;
 use common\models\model\ExamStudentAnswerForTeacher;
 use common\models\model\Student;
@@ -88,6 +89,11 @@ class ExamCheckingController extends ApiActiveController
         // if (isRole("teacher")) {
         if (!is_null($model->examStudent)) {
             if (!is_null($model->examStudent->teacherAccess)) {
+
+                if ($model->examStudent->exam->status == Exam::STATUS_ANNOUNCED) {
+                    return $this->response(0, _e('You can not check.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+
 
                 if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
                     return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

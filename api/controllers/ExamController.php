@@ -129,9 +129,9 @@ class ExamController extends ApiActiveController
                     ->select('id')
             ]);
 
-            $query = $query->andWhere([
-                $this->table_name . '.status' => Exam::STATUS_DISTRIBUTED
-            ]);
+            // $query = $query->andWhere([
+            //     $this->table_name . '.status' => Exam::STATUS_DISTRIBUTED
+            // ]);
 
             // filter
             $query = $this->filterAll($query, $model);

@@ -201,13 +201,11 @@ trait ApiActionTrait
         } elseif ($token && in_array($token, $this->token_keys)) {
             return true;
         }
-
         return false;
     }
 
     public function filterAll($query, $model)
     {
-
         $filter = Yii::$app->request->get('filter');
         $queryfilter = Yii::$app->request->get('filter-like');
 

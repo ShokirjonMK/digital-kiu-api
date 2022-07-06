@@ -274,9 +274,16 @@ class ExamStudent extends \yii\db\ActiveRecord
             'in', $model->tableName() . '.exam_student_answer_id',
             ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
         ])
-            ->andWhere([$model->tableName() . '.ball' => null, $model->tableName() . '.teacher_conclusion' => null])
-            ->andWhere([$model->tableName() . '.teacher_conclusion' => null]);
+            // ->andWhere([$model->tableName() . '.ball' => null, $model->tableName() . '.teacher_conclusion' => null])
+            // // ->orWhere([$model->tableName() . '.teacher_conclusion' => null])
+        ;
 
+
+        $query->andWhere([
+            'or',
+            [$model->tableName() . '.ball' => null],
+            [$model->tableName() . '.teacher_conclusion' => null]
+        ]);
 
 
         // $model = new ExamStudentAnswer();

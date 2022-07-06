@@ -94,6 +94,10 @@ class ExamCheckingController extends ApiActiveController
                     return $this->response(0, _e('You can not check.'), null, null, ResponseStatus::FORBIDDEN);
                 }
 
+                if ($model->examStudent->exam->appeal_start > 0) {
+                    return $this->response(0, _e('You can not check.'), null, null, ResponseStatus::FORBIDDEN);
+                }
+
 
                 if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
                     return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

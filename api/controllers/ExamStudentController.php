@@ -32,9 +32,9 @@ class ExamStudentController extends ApiActiveController
         // $model = new ExamStudent();
         $i = 0;
         for ($i = 0; $i <= 4; $i++) {
+            ExamStudent::correct($i);
         }
-        
-        ExamStudent::correct($i);
+
         return "Success";
     }
 
@@ -81,10 +81,6 @@ class ExamStudentController extends ApiActiveController
                 'student_id' => $this->student()
             ]);
         }
-
-        // $query = $query->andWhere([
-        //     'in', 'exam_id', [447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 471, 473, 474, 475, 476, 477]
-        // ]);
 
         // filter
         $query = $this->filterAll($query, $model);

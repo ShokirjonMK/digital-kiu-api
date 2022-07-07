@@ -17,6 +17,7 @@ use common\models\model\Faculty;
 use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
 use common\models\model\TeacherAccess;
+use common\models\model\UserStatistic1;
 use common\models\User;
 
 class StatisticController extends ApiActiveController
@@ -123,6 +124,135 @@ class StatisticController extends ApiActiveController
     public function actionChecking($lang)
     {
         $model = new UserStatistic();
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
+
+        $query = $model->find()
+            ->with(['profile'])
+            ->andWhere(['users.deleted' => 0])
+            ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
+            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->groupBy('users.id')
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+
+        // dd($query->createCommand()->getRawSql());
+        $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+        // $userIds = AuthAssignment::find()->select('user_id')->where([
+        //     'in', 'auth_assignment.item_name',
+        //     AuthChild::find()->select('child')->where([
+        //         'in', 'parent',
+        //         AuthAssignment::find()->select("item_name")->where([
+        //             'user_id' => current_user_id()
+        //         ])
+        //     ])
+        // ]);
+
+        // $query->andFilterWhere([
+        //     'in', 'users.id', $userIds
+        // ]);
+
+        /*  is Self  */
+        // if(isRole('dean')){
+
+        // }
+
+
+        if (!(isRole('admin'))) {
+            // dd(123);
+            $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
+
+            // faculty
+            if ($f['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                        'table_id' => $f['UserAccess']->table_id,
+                        'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                    ])
+                ]);
+            }
+
+            // kafedra
+            if ($k['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                        'table_id' => $k['UserAccess']->table_id,
+                        'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                    ])
+                ]);
+            }
+
+            // department
+            if ($d['status'] == 1) {
+                $query->andFilterWhere([
+                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                        'table_id' => $d['UserAccess']->table_id,
+                        'user_access_type_id' => Department::USER_ACCESS_TYPE_ID,
+                    ])
+                ]);
+            }
+            if ($f['status'] == 2 && $k['status'] == 2 && $d['status'] == 2) {
+                $query->andFilterWhere([
+                    'users.id' => -1
+                ]);
+            }
+        }
+        /*  is Self  */
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $value) {
+                $attributeMinus = explode('-', $attribute);
+                if (isset($attributeMinus[1])) {
+                    if ($attributeMinus[1] == 'role_name') {
+                        if (is_array($value)) {
+                            $query = $query->andWhere(['not in', 'auth_assignment.item_name', $value]);
+                        }
+                    }
+                }
+                if ($attribute == 'role_name') {
+                    if (is_array($value)) {
+                        $query = $query->andWhere(['in', 'auth_assignment.item_name', $value]);
+                    } else {
+                        $query = $query->andFilterWhere(['like', 'auth_assignment.item_name', '%' . $value . '%', false]);
+                    }
+                }
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $value]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // dd($query->createCommand()->getRawSql());
+
+        // data
+        $data = $this->getData($query);
+        // $data = $query->all();
+
+        return $this->response(1, _e('Success'), $data);
+    }
+    public function actionCheckingChala($lang)
+    {
+        $model = new UserStatistic1();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
 

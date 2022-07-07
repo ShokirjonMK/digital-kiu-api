@@ -204,7 +204,7 @@ class TeacherAccessStatistic1 extends TeacherAccess
         $query = $model->find();
         $query->andWhere([
             'in', 'exam_student_id',
-            ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])
+            ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])->andWhere(['!=', 'act', 1])
         ]);
 
         $query->leftJoin('exam_student_answer_sub_question', 'exam_student_answer_sub_question.exam_student_answer_id = ' . $model->tableName() . '.id');

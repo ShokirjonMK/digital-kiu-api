@@ -35,9 +35,6 @@ class TeacherAccessStatistic extends TeacherAccess
             'mustCheckCount' => function ($model) {
                 return $model->mustCheckCount ?? 0;
             },
-            'mustCheck' => function ($model) {
-                return $model->mustCheck ?? [];
-            },
             // 'percent' => function ($model) {
             //     return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
             // },
@@ -76,7 +73,6 @@ class TeacherAccessStatistic extends TeacherAccess
             'checkedCount',
             'checkCount',
             'mustCheckCount',
-            'mustCheck',
 
 
             'actCount',
@@ -112,7 +108,7 @@ class TeacherAccessStatistic extends TeacherAccess
         return count($query->all());
     }
 
-    public function getMustCheck()
+    public function getMustCheckCount()
     {
         $model = new ExamStudent();
         $query = $model->find();
@@ -131,12 +127,7 @@ class TeacherAccessStatistic extends TeacherAccess
         // dd($query->createCommand()->getRawSql());
         // dd("qweqwe");
         // return 122;
-        $query->all();
-    }
-
-    public function getMustCheckCount()
-    {
-        return count($this->mustCheck);
+        return count($query->all());
     }
 
 
@@ -196,14 +187,23 @@ class TeacherAccessStatistic extends TeacherAccess
 
     public function getCheckedCount()
     {
-        $model = new ExamStudent();
+        $model = new ExamStudentAnswer();
 
         $query = $model->find();
-        $query->andWhere([$model->tableName() . 'teacher_access_id' => $this->id]);
-        $query->leftJoin('exam_student_answer esa', 'esa.exam_student_id = ' . $model->tableName() . '.id');
-        $query->andWhere(['>=', 'esa.ball', 0]);
+        $query->andWhere([
+            'in', 'exam_student_id',
+            ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])
+        ]);
 
-        dd($query->createCommand()->rawSql());
+        $query->leftJoin('exam_student_answer_sub_question', 'exam_student_answer_sub_question.exam_student_answer_id = ' . $model->tableName() . '.id');
+        // $query->andWhere(['>=', 'esa.ball', 0]);
+        $query->andWhere([
+            'and',
+            ['exam_student_answer_sub_question.ball' => null],
+            ['exam_student_answer_sub_question.teacher_conclusion' => null]
+        ]);
+
+        // dd($query->createCommand()->rawSql());
         $query->all();
 
         return $query->count();

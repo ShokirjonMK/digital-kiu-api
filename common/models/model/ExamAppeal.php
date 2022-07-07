@@ -227,8 +227,15 @@ class ExamAppeal extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if ($model->examStudent->exam->appeal_finish > time()) {
+
+
+
+        // exam appeal appelatsiya berish vaqti
+        if ($model->examStudent->exam->appeal_finish < time()) {
             $errors[] = _e('Appeal time is already finished!');
+            // $errors['time'] = time();
+            // $errors['appeal_finish'] = $model->examStudent->exam->appeal_finish;
+
             return simplify_errors($errors);
         }
 

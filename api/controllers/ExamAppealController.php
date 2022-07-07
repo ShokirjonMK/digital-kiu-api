@@ -43,6 +43,11 @@ class ExamAppealController extends ApiActiveController
     {
         $model = new ExamAppeal();
 
+        // $errors['time'] = time();
+        // // $errors['appeal_finish'] = $model->examStudent->exam->appeal_finish;
+
+        // return simplify_errors($errors);
+
         if (!isRole('student')) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }

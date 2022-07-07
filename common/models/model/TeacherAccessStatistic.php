@@ -11,48 +11,36 @@ class TeacherAccessStatistic extends TeacherAccess
     {
         $fields =  [
             'id',
-            'subject' => function ($model) {
-                return $model->subject->name ?? '';
-            },
-            // 'examStudent' => function ($model) {
-            //     return $model->examStudent ?? 0;
-            // },
-            'examStudentCount' => function ($model) {
-                return $model->examStudentCount ?? 0;
-            },
             'examName' => function ($model) {
                 return $model->examSemeta->exam->translate->name ?? '';
             },
-            // 'examSemeta' => function ($model) {
-            //     return $model->examSemeta; //->exam->name ?? '';
-            // },
-            // 'exams' => function ($model) {
-            //     return $model->exams->name ?? '';
-            // },
-            'checkedCount' => function ($model) {
-                return $model->checkCount ?? 0;
+            'chalaCount' => function ($model) {
+                return $model->chalaCount ?? 0;
             },
-            'mustCheckCount' => function ($model) {
-                return $model->mustCheckCount ?? 0;
-            },
-            // 'percent' => function ($model) {
-            //     return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
+
+
+            // 'subject' => function ($model) {
+            //     return $model->subject->name ?? '';
             // },
-            'actCount' => function ($model) {
-                return $model->actCount ?? 0;
-            },
-            'hasAnswerCount' => function ($model) {
-                return $model->notCount ?? 0;
-            },
-            // 'examStudent' => function ($model) {
-            //     return $model->examStudent ?? 0;
+
+            // 'examStudentCount' => function ($model) {
+            //     return $model->examStudentCount ?? 0;
             // },
-            // 'language_id',
-            // 'status',
-            // 'created_at',
-            // 'updated_at',
-            // 'created_by',
-            // 'updated_by',
+
+            // 'checkedCount' => function ($model) {
+            //     return $model->checkCount ?? 0;
+            // },
+            // 'mustCheckCount' => function ($model) {
+            //     return $model->mustCheckCount ?? 0;
+            // },
+
+            // 'actCount' => function ($model) {
+            //     return $model->actCount ?? 0;
+            // },
+            // 'hasAnswerCount' => function ($model) {
+            //     return $model->notCount ?? 0;
+            // },
+
 
         ];
 
@@ -199,6 +187,30 @@ class TeacherAccessStatistic extends TeacherAccess
         // $query->andWhere(['>=', 'esa.ball', 0]);
         $query->andWhere([
             'and',
+            ['!=', 'exam_student_answer_sub_question.ball', null],
+            ['!=', 'exam_student_answer_sub_question.teacher_conclusion', null]
+        ]);
+
+        // dd($query->createCommand()->rawSql());
+        $query->all();
+
+        return $query->count();
+    }
+
+    public function getChalaCount()
+    {
+        $model = new ExamStudentAnswer();
+
+        $query = $model->find();
+        $query->andWhere([
+            'in', 'exam_student_id',
+            ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])
+        ]);
+
+        $query->leftJoin('exam_student_answer_sub_question', 'exam_student_answer_sub_question.exam_student_answer_id = ' . $model->tableName() . '.id');
+        // $query->andWhere(['>=', 'esa.ball', 0]);
+        $query->andWhere([
+            'or',
             ['exam_student_answer_sub_question.ball' => null],
             ['exam_student_answer_sub_question.teacher_conclusion' => null]
         ]);

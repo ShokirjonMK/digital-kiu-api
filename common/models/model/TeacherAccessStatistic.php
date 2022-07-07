@@ -35,6 +35,9 @@ class TeacherAccessStatistic extends TeacherAccess
             'mustCheckCount' => function ($model) {
                 return $model->mustCheckCount ?? 0;
             },
+            'mustCheck' => function ($model) {
+                return $model->mustCheck ?? [];
+            },
             // 'percent' => function ($model) {
             //     return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
             // },
@@ -73,6 +76,7 @@ class TeacherAccessStatistic extends TeacherAccess
             'checkedCount',
             'checkCount',
             'mustCheckCount',
+            'mustCheck',
 
 
             'actCount',
@@ -108,7 +112,7 @@ class TeacherAccessStatistic extends TeacherAccess
         return count($query->all());
     }
 
-    public function getMustCheckCount()
+    public function getMustCheck()
     {
         $model = new ExamStudent();
         $query = $model->find();
@@ -127,7 +131,12 @@ class TeacherAccessStatistic extends TeacherAccess
         // dd($query->createCommand()->getRawSql());
         // dd("qweqwe");
         // return 122;
-        return count($query->all());
+        $query->all();
+    }
+
+    public function getMustCheckCount()
+    {
+        return count($this->mustCheck);
     }
 
 

@@ -129,6 +129,7 @@ class ExamAppealController extends ApiActiveController
         }
 
         $post = Yii::$app->request->post();
+        // $this->load($model, $post);
 
         // $this->load($model, $post);
         $result = ExamAppeal::updateItem($model, $post);

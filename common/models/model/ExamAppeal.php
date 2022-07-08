@@ -264,8 +264,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if (isset($post['appeal_teaxt'])) {
-            $model->appeal_teaxt = $post['appeal_teaxt'];
+        if (isset($post['appeal_text'])) {
+            $model->appeal_text = $post['appeal_text'];
         }
 
         if (!($model->validate())) {

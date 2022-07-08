@@ -1341,6 +1341,8 @@ return [
 
 
         "exam-appeal_create",
+        'exam-appeal_delete',
+        'exam-appeal_update',
 
         "faculty_view",
         "kafedra_view",

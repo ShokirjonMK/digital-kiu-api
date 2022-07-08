@@ -77,6 +77,34 @@ class TeacherAccessStatistic1 extends TeacherAccess
         return $extraFields;
     }
 
+
+    public function getChalaCount()
+    {
+        $model = new ExamStudentAnswerSubQuestion();
+
+        $query = $model->find();
+        $query->andWhere([
+            'in', 'exam_student_answer_id', ExamStudentAnswer::find()->select('id')
+                ->where([
+                    'in', 'exam_student_id',
+                    ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])->andWhere(['!=', 'act', 1])
+                ])
+        ]);
+
+        // $query->leftJoin('exam_student_answer_sub_question', 'exam_student_answer_sub_question.exam_student_answer_id = ' . $model->tableName() . '.id');
+        // $query->andWhere(['>=', 'esa.ball', 0]);
+        $query->andWhere([
+            'or',
+            ['ball' => null],
+            ['teacher_conclusion' => null]
+        ]);
+
+        // dd($query->createCommand()->rawSql());
+        $query->all();
+
+        return $query->count();
+    }
+
     public function getCheckCount()
     {
         $model = new ExamStudent();
@@ -189,30 +217,6 @@ class TeacherAccessStatistic1 extends TeacherAccess
             'and',
             ['!=', 'exam_student_answer_sub_question.ball', null],
             ['!=', 'exam_student_answer_sub_question.teacher_conclusion', null]
-        ]);
-
-        // dd($query->createCommand()->rawSql());
-        $query->all();
-
-        return $query->count();
-    }
-
-    public function getChalaCount()
-    {
-        $model = new ExamStudentAnswer();
-
-        $query = $model->find();
-        $query->andWhere([
-            'in', 'exam_student_id',
-            ExamStudent::find()->select('id')->where(['teacher_access_id' => $this->id])->andWhere(['!=', 'act', 1])
-        ]);
-
-        $query->leftJoin('exam_student_answer_sub_question', 'exam_student_answer_sub_question.exam_student_answer_id = ' . $model->tableName() . '.id');
-        // $query->andWhere(['>=', 'esa.ball', 0]);
-        $query->andWhere([
-            'or',
-            ['exam_student_answer_sub_question.ball' => null],
-            ['exam_student_answer_sub_question.teacher_conclusion' => null]
         ]);
 
         // dd($query->createCommand()->rawSql());

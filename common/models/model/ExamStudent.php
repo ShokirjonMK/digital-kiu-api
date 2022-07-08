@@ -109,7 +109,7 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'type'
                 ], 'integer'
             ],
-            [['ball', 'in_ball'], 'double'],
+            [['ball', 'in_ball', 'on1', 'on2'], 'double'],
 
             [['plagiat_file'], 'string', 'max' => 255],
             [['password'], 'safe'],
@@ -147,6 +147,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'order' => _e('Order'),
             'status' => _e('Status'),
             'act' => _e('act'),
+            'on1' => _e('on1'),
+            'on2' => _e('on2'),
 
 
             'in_ball' => _e('in_ball'),
@@ -180,6 +182,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'duration',
             'finish',
             'type',
+            'on1',
+            'on2',
 
             'conclusion',
             'plagiat_file',

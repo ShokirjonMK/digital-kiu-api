@@ -163,8 +163,8 @@ class ExamAppealController extends ApiActiveController
 
         // remove model
         if ($model) {
-            $model->is_deleted = 1;
-            $model->update();
+            // $model->is_deleted = 1;
+            $model->delete();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

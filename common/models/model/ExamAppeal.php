@@ -97,6 +97,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
             [['exam_student_id'], 'unique'],
+            // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
+
 
         ];
     }

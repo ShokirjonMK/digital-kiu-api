@@ -48,7 +48,7 @@ class ExamAppealController extends ApiActiveController
 
         // return simplify_errors($errors);
 
-        if (!isRole('student')) {
+        if (!isRole('student') && !isRole('admin')) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }
 

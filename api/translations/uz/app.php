@@ -5,7 +5,7 @@
 
   'Incorrect password' => 'Parol noto\'g\'ri!',
   'Data not found.' => 'Ma\'lumot topilmadi!',
-  'Student not found' => 'Talab topilmadi!',
+  'Student not found' => 'Talaba topilmadi!',
   'Password required!' => 'Parol talab etiladi!',
   'Not Generated!' => 'Generatsiya qilinmagan!',
   'The question is not specified' => 'Savol biriktirilmagan!',

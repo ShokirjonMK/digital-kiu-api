@@ -34,7 +34,7 @@ class ExamStudentController extends ApiActiveController
         // for ($i = 0; $i <= 4; $i++) {
         // }
 
-        ExamStudent::correct(2);
+        ExamStudent::correct(1);
 
         return "Success";
     }

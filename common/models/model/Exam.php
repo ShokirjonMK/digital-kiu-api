@@ -287,6 +287,13 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getAppeal()
     {
+        if (isRole('teacher') && (!isRole('mudir'))) {
+            return  ExamAppeal::find()
+                ->where(['exam_id' => $this->id])
+                ->andWhere(['in', 'teacher_access_id', self::teacher_access()])
+                ->all();
+        }
+
         return $this->hasMany(ExamAppeal::className(), ['exam_id' => 'id']);
     }
 

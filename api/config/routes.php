@@ -135,7 +135,7 @@ foreach ($controllers as $controller) {
 
 $routes = [
     /** Code Correctors */
-    'GET <lang:\w{2}>/exam-students/correct' => 'exam-student/correct',
+    'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',
     'POST <lang:\w{2}>/subject-contents/order' => 'subject-content/order',
 
     /** Code Correctors */

@@ -20,7 +20,7 @@ class ExamStudentController extends ApiActiveController
     public $table_name = 'exam_student';
     public $controller_name = 'Exam Student';
 
-    public function actionCorrect($lang)
+    public function actionCorrect($lang, $key)
     {
 
         // $rows = (new \yii\db\Query())
@@ -34,7 +34,7 @@ class ExamStudentController extends ApiActiveController
         // for ($i = 0; $i <= 4; $i++) {
         // }
 
-        ExamStudent::correct(1);
+        ExamStudent::correct($key);
 
         return "Success";
     }

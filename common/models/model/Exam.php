@@ -204,6 +204,7 @@ class Exam extends \yii\db\ActiveRecord
             'examAppealByLang',
             'appealCount',
             'appeal',
+            'examAppealSemeta',
 
             'checkCount',
 
@@ -497,6 +498,14 @@ class Exam extends \yii\db\ActiveRecord
 
         // }
         return $this->hasMany(ExamSemeta::className(), ['exam_id' => 'id']);
+    }
+
+    public function getExamAppealSemeta()
+    {
+        // if (isRole('teacher')) {
+
+        // }
+        return $this->hasMany(ExamAppealSemeta::className(), ['exam_id' => 'id']);
     }
 
     public static function generatePasswords($post)

@@ -136,6 +136,8 @@ class Subject extends \yii\db\ActiveRecord
             'questionEngCount',
             'questionRuCount',
 
+            'hasContent',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -180,6 +182,24 @@ class Subject extends \yii\db\ActiveRecord
     {
         return count($this->questionRu);
     }
+
+    public  function getHasContent()
+    {
+        $model = new SubjectContent();
+        $query = $model->find();
+
+        $query = $query->andWhere([
+            'in', $model->tableName() . '.subject_topic_id',
+            SubjectTopic::find()->select('id')->where(['subject_id' => $this->id])
+        ]);
+
+        if (count($query->all()) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
 
     public  function getQuestionUz()
     {

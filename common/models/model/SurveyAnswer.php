@@ -138,7 +138,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
             'exam_id',
             'student_id',
             // 'edu_semestr_subject_id',
-            // 'user_id',
+            'user_id',
 
             'order',
             'status',

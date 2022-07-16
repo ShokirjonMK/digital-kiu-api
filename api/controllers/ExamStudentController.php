@@ -22,7 +22,7 @@ class ExamStudentController extends ApiActiveController
 
     public function actionCorrect($lang, $key)
     {
-
+        return $key;
         // $rows = (new \yii\db\Query())
         // ->from('user')
         // ->where(['last_name' => 'Smith'])

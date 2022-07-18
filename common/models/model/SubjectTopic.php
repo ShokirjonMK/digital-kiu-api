@@ -138,6 +138,9 @@ class SubjectTopic extends \yii\db\ActiveRecord
             'subjectCategory',
             'lang',
 
+
+            'contents',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -145,6 +148,16 @@ class SubjectTopic extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getContents()
+    {
+        return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
+    public function getHasContent()
+    {
+        return count($this->questionUz) > 0 ? 1 : 0;
     }
 
     public function getSubject()

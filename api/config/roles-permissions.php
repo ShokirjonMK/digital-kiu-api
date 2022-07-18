@@ -782,9 +782,17 @@ return [
         "exam-checking_view",
         "exam-question_index",
         "exam-question_view",
+
         "exam-semeta_create",
         "exam-semeta_index",
         "exam-semeta_view",
+
+
+        "exam-appeal-semeta_create",
+        "exam-appeal-semeta_index",
+        "exam-appeal-semeta_view",
+
+
         "exam_index",
         "exam_view",
         "faculty_index",

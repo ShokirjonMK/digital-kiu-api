@@ -158,7 +158,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
     public function getHasContent()
     {
-        return count($this->questionUz) > 0 ? 1 : 0;
+        return count($this->contents) > 0 ? 1 : 0;
     }
 
     public function getSubject()

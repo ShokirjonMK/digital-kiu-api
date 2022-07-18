@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use common\models\SubjectTopic;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -137,6 +138,7 @@ class Subject extends \yii\db\ActiveRecord
             'questionRuCount',
 
             'hasContent',
+            'topics',
 
             'createdBy',
             'updatedBy',
@@ -236,6 +238,11 @@ class Subject extends \yii\db\ActiveRecord
         return $query->all();
     }
 
+
+    public function getTopics()
+    {
+        return $this->hasMany(SubjectTopic::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
 
     public function getQuestions()
     {

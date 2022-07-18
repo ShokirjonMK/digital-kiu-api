@@ -140,6 +140,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
 
             'contents',
+            'hasContent',
 
             'createdBy',
             'updatedBy',

@@ -3,7 +3,8 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
-use common\models\SubjectTopic;
+use common\models\model\SubjectTopic;
+
 use Yii;
 use yii\behaviors\TimestampBehavior;
 

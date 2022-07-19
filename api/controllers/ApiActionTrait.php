@@ -255,8 +255,7 @@ trait ApiActionTrait
         return new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => $perPage,
-                // 'pageSize' => Yii::$app->request->get('per-page') ?? $perPage,
+                'pageSize' => Yii::$app->request->get('per-page') ?? $perPage,
                 'validatePage' => $validatePage
             ],
         ]);

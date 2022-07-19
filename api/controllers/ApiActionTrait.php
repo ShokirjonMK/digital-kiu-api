@@ -73,7 +73,7 @@ trait ApiActionTrait
      * @return void
      */
 
-    /*   public function afterAction($action, $result)
+    public function afterAction($action, $result)
     {
 
         // vdd(Yii::$app->request);
@@ -97,7 +97,7 @@ trait ApiActionTrait
 
         $result = parent::afterAction($action, $result);
         return $result;
-    } */
+    }
 
     /**
      * Before action
@@ -146,6 +146,7 @@ trait ApiActionTrait
             $action_log->save(false);
             Yii::$app->session->set('action_log', $action_log);
 
+            // dd(current_user_id());
             Yii::$app->language = $lang;
             return parent::beforeAction($action);
         }

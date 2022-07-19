@@ -144,7 +144,7 @@ class QuestionController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data = $this->getData($query, 5);
+        $data = $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
 

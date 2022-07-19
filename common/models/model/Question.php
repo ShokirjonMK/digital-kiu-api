@@ -152,7 +152,7 @@ class Question extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
-
+            // 'question',
             'course_id',
             'semestr_id',
             'subject_id',
@@ -167,7 +167,7 @@ class Question extends \yii\db\ActiveRecord
             },
             'file',
             // 'ball',
-            'question',
+
             'lang_id',
             'level',
             'question_type_id',

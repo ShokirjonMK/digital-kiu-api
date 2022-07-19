@@ -152,7 +152,7 @@ class Question extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
-            // 'question',
+            'question',
             'course_id',
             'semestr_id',
             'subject_id',

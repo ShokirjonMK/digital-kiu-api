@@ -153,6 +153,11 @@ class Question extends \yii\db\ActiveRecord
         $fields = [
             'id',
             'question',
+            'question' => function ($model) {
+                return substr($model->question, 0, 111) . '...';
+                // return $model->question ?? [];
+            },
+
             'course_id',
             'semestr_id',
             'subject_id',

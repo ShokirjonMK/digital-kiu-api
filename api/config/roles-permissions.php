@@ -200,7 +200,6 @@ return [
 
         "password_index",
         "password_update",
-        "password_view",
 
         "question-type_create",
         "question-type_index",
@@ -627,7 +626,6 @@ return [
 
         "password_index",
         "password_update",
-        "password_view",
 
         "question_index",
         "question_status-update",
@@ -804,9 +802,10 @@ return [
         "notification_my",
         "notification_status-list",
         "notification_view",
+
         "password_index",
         "password_update",
-        "password_view",
+
         "question-type_index",
         "question-type_view",
         "question_create",
@@ -879,7 +878,6 @@ return [
 
         // "password_index",
         // "password_update",
-        // "password_view",
 
         // "region_index",
         // "region_view",

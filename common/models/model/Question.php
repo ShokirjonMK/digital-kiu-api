@@ -162,9 +162,9 @@ class Question extends \yii\db\ActiveRecord
             'course_id',
             'semestr_id',
             'subject_id',
-            // 'subQuestion' => function ($model) {
-            //     return $model->subQuestions ?? [];
-            // },
+            'subQuestion' => function ($model) {
+                return $model->subQuestions ?? [];
+            },
             'question_file' => function ($model) {
                 return $model->file ?? '';
             },

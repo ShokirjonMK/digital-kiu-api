@@ -85,7 +85,7 @@ trait ApiActionTrait
         $action_log->user_id = current_user_id();
         $action_log->status = isset($result['status']) ? $result['status'] : 'Failed';
         $action_log->message = isset($result['message']) ? $result['message'] : 'Failed';
-        // $action_log->browser = json_encode(getBrowser());
+        $action_log->browser = json_encode(getBrowser());
         // $action_log->ip_address = getIpAddress();
         // $action_log->host = get_host();
         // $action_log->ip_address_data = json_encode(getIpAddressData());

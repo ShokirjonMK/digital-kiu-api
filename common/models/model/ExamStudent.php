@@ -619,7 +619,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public static function correct($i)
     {
-        $soni = $i * 10000;
+        $soni = $i * 5000;
         $model = ExamStudent::find()->limit(10000)->offset($soni)->all();
 
         foreach ($model as $modelOne) {

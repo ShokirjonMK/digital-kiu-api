@@ -154,6 +154,7 @@ class Question extends \yii\db\ActiveRecord
             'id',
             'question',
             // 'question' => function ($model) {
+            //     return strip_tags($model->question);
             //     return substr($model->question, 0, 111) . '...';
             //     // return $model->question ?? [];
             // },

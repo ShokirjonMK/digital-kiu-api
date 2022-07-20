@@ -37,7 +37,7 @@ Yii init qilamiz:
 
 App setup qilamiz va kerakli URL va Database sozlamalari kiritiladi:
 
-`php yii setup` yoki `yii setup` (`php yii setup/create/config` yoki `yii setup/create/config`)
+`php yii setup` yoki `yii setup` (`php yii setup/create-config` yoki `yii setup/create-config`)
 
 
 Endi database migration qilinadi:

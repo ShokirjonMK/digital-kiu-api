@@ -118,15 +118,15 @@ class ExamAppealController extends ApiActiveController
         // }
 
 
-
-        if (!isRole('student')) {
+        // sassdlasl;dkasl;d
+        /* if (!isRole('student')) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
         $student = Student::findOne(['user_id' => current_user_id()]);
         if (!$student) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Student not found'), ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        } */
 
         $post = Yii::$app->request->post();
         // $this->load($model, $post);

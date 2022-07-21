@@ -25,7 +25,7 @@ O'rnatish tartibi:
 -------------------
 GitHubdan nusxa olamiz:
 
-`git clone https://github.com/dacoreit/hopmeuz_web.git`
+`git clone https://github.com/ShokirjonMK/api-digital-university.git`
 
 Composer bilan paketlarni yangilaymiz:
 
@@ -37,7 +37,7 @@ Yii init qilamiz:
 
 App setup qilamiz va kerakli URL va Database sozlamalari kiritiladi:
 
-`php yii setup` yoki `yii setup` (`php yii setup/create/config` yoki `yii setup/create/config`)
+`php yii setup` yoki `yii setup` (`php yii setup/create-config` yoki `yii setup/create-config`)
 
 
 Endi database migration qilinadi:

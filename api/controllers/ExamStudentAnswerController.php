@@ -160,6 +160,53 @@ class ExamStudentAnswerController extends ApiActiveController
         }
 
 
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionAppeal($lang, $id)
+    {
+        $model = ExamStudentAnswer::findOne($id);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $post = Yii::$app->request->post();
+// appeal_teacher_conclution bo'lsa $model->old_ball = $model->ball; qilib olish kerak
+        if (isRole("teacher")) {
+            if ($model->examStudent->teacherAccess->user_id != current_user_id()) {
+                return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+            } else {
+                $post['teacher_access_id'] = $model->examStudent->teacher_access_id;
+            }
+            $data = [];
+            if (isset($post['appeal_teacher_conclusion'])) {
+                $data['appeal_teacher_conclusion'] = $post['appeal_teacher_conclusion'];
+            }
+            if (isset($post['ball'])) {
+                $data['ball'] = $post['ball'];
+            }
+            if (isset($post['subQuestionAnswersAppealChecking'])) {
+                $data['subQuestionAnswersAppealChecking'] = $post['subQuestionAnswersAppealChecking'];
+            }
+
+            $this->load($model, $data);
+            $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $data);
+
+            if (!is_array($result)) {
+                return $this->response(1, _e($this->controller_name . ' successfully saved.'), $model, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        } else {
+            $this->load($model, $post);
+            $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $post);
+
+        }
+
 
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);

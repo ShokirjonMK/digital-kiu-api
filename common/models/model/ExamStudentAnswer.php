@@ -96,7 +96,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['answer'], 'string'],
-            [['teacher_conclusion'], 'string'],
+            [['teacher_conclusion','appeal_teacher_conclusion'], 'string'],
             [['max_ball', 'ball'], 'double'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -122,8 +122,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'question_id' => ' Question ID',
             'student_id' => 'Student ID',
             'option_id' => 'Option ID',
-            'answer' => 'Answer',
             'teacher_conclusion' => 'Еeacher Сonclusion',
+            'appeal_teacher_conclusion' => 'appeal_teacher_conclusion',
+            'answer' => 'Answer',
             'ball' => 'Ball',
             'max_ball' => 'Max Ball',
             'teacher_access_id' => 'Teacher Access ID',
@@ -157,6 +158,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'question_id',
             'exam_student_id',
             'teacher_conclusion',
+            'appeal_teacher_conclusion',
             'student_id',
             'option_id',
             'answer',
@@ -603,6 +605,84 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         }
         //
     }
+
+    public static function appealUpdateItemTeacher($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        /** subQuestionAnswersAppealChecking */
+        if (isset($post['subQuestionAnswersAppealChecking'])) {
+            if (($post['subQuestionAnswersAppealChecking'][0] == "'") && ($post['subQuestionAnswersAppealChecking'][strlen($post['subQuestionAnswersAppealChecking']) - 1] == "'")) {
+                $post['subQuestionAnswersAppealChecking'] =  substr($post['subQuestionAnswersAppealChecking'], 1, -1);
+            }
+
+            if (!isJsonMK($post['subQuestionAnswersAppealChecking'])) {
+                $errors['subQuestionAnswersAppealChecking'] = [_e('Must be Json')];
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            $mainBallForOneQuestion = 0;
+            $subQuestionOneAnswerCount = 0;
+            foreach (((array)json_decode($post['subQuestionAnswersAppealChecking'])) as $subQuestionOneAnswerAppealChecking) {
+                //                dd($subQuestionOneAnswerAppealChecking);
+
+                if (isset($subQuestionOneAnswerAppealChecking->exam_student_answer_sub_question_id)) {
+                    $examStudentAnswerSubQuestion = ExamStudentAnswerSubQuestion::findOne($subQuestionOneAnswerAppealChecking->exam_student_answer_sub_question_id);
+
+                    if ($examStudentAnswerSubQuestion) {
+                        if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
+                            $examStudentAnswerSubQuestion->appeal_teacher_conclusion = $subQuestionOneAnswerAppealChecking->appeal_teacher_conclusion;
+                            if($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball){
+                                $examStudentAnswerSubQuestion->old_ball = $examStudentAnswerSubQuestion->ball;
+                            }
+
+                            $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerAppealChecking->ball;
+
+                            if ($examStudentAnswerSubQuestion->save()) {
+                                $mainBallForOneQuestion += $subQuestionOneAnswerAppealChecking->ball;
+                                $subQuestionOneAnswerCount++;
+                            }
+                        } else {
+                            $errors[] = [$examStudentAnswerSubQuestion->id => _e("This subQuestion Answer is not for this question's answer")];
+                        }
+                    } else {
+                        $errors[] = _e("This subQuestion Answer is not found");
+                    }
+                }
+            }
+
+            if (ExamStudentAnswerSubQuestion::find()->where(['exam_student_answer_id' => $model->id])->count() == $subQuestionOneAnswerCount) {
+                $model->status = self::STATUS_CHECKED;
+            } else {
+                $model->status = self::STATUS_NON_COMPLATED_CHECKING;
+            }
+            $model->ball = $mainBallForOneQuestion;
+        }
+        /** subQuestionAnswersAppealChecking */
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+
+        if (count($errors) == 0) {
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        } else {
+            // $errors[] = count($errors);
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        //
+    }
+
+
     public static function updateItem($model, $post)
     {
         // attemp esdan chiqmasin

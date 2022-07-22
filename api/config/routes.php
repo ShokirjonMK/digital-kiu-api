@@ -189,6 +189,8 @@ $routes = [
 
     // studentga savollarni random tushirish
     'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',
+    // ExamStudentAnswer Appeal checking
+    'PUT <lang:\w{2}>/exam-checkings/<id>/appeal' => 'exam-checking/appeal',
 
     // teacherga studentlarni random tushirish
     'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',

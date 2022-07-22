@@ -78,8 +78,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
                     'semestr_id',
                     'faculty_id',
                     'exam_id',
-                    'type',
                     'lang_id',
+                    'type',
                     'teacher_access_id',
                     'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
                 ], 'integer'
@@ -284,6 +284,28 @@ class ExamAppeal extends \yii\db\ActiveRecord
         }
     }
 
+    public static function teacherUpdateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $model->teacher_conclusion = $post['teacher_conclusion'] ?? null;
+        $model->type = $post['type'] ?? null;
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            return simplify_errors($errors);
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -293,8 +315,6 @@ class ExamAppeal extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-
-
 
     public static function statusList()
     {

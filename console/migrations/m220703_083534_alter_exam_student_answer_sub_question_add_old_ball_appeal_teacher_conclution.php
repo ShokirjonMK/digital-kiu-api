@@ -13,7 +13,7 @@ class m220703_083534_alter_exam_student_answer_sub_question_add_old_ball_appeal_
     public function safeUp()
     {
         $this->execute("ALTER TABLE `exam_student_answer_sub_question` ADD `old_ball` double null COMMENT 'eski ball';");
-        $this->execute("ALTER TABLE `exam_student_answer_sub_question` ADD `appeal_teacher_conclusion` text null COMMENT 'eski ball';");
+        $this->execute("ALTER TABLE `exam_student_answer_sub_question` ADD `appeal_teacher_conclusion` text null COMMENT 'appeal_teacher_conclusion';");
     }
 
     /**

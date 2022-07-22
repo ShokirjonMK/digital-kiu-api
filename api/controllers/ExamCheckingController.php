@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use common\models\model\ExamAppeal;
 use common\models\model\ExamStudentAnswer;
 use Yii;
 use base\ResponseStatus;
@@ -140,6 +141,73 @@ class ExamCheckingController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
+
+    public function actionAppeal($lang, $id)
+    {
+        $model = ExamStudentAnswer::findOne($id);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $errors = [];
+        $post = Yii::$app->request->post();
+        if (!isset($post['exam_appeal_id'])) {
+            $errors[] = 'exam_appeal_id required';
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        $examAppeal = ExamAppeal::findOne($post['exam_appeal_id']);
+        if (!$examAppeal) {
+            $errors[] = 'Exam Appeal not found';
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if ($examAppeal->exam_student_id == $model->exam_student_id) {
+
+            // appeal_teacher_conclution bo'lsa $model->old_ball = $model->ball; qilib olish kerak
+            if (isRole("teacher")) {
+                if ($examAppeal->teacherAccess->user_id != current_user_id()) {
+                    return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);
+                } else {
+                    $post['teacher_access_id'] = $model->examStudent->teacher_access_id;
+                }
+                $data = [];
+                if (isset($post['appeal_teacher_conclusion'])) {
+                    $data['appeal_teacher_conclusion'] = $post['appeal_teacher_conclusion'];
+                }
+                if (isset($post['ball'])) {
+                    $data['ball'] = $post['ball'];
+                }
+                if (isset($post['subQuestionAnswersAppealChecking'])) {
+                    $data['subQuestionAnswersAppealChecking'] = $post['subQuestionAnswersAppealChecking'];
+                }
+
+                $this->load($model, $data);
+                $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $data);
+
+                if (!is_array($result)) {
+                    return $this->response(1, _e($this->controller_name . ' successfully saved.'), $model, null, ResponseStatus::OK);
+                } else {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+                }
+            } else {
+                $this->load($model, $post);
+                $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $post);
+
+            }
+
+
+            if (!is_array($result)) {
+                return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, 'This is other Answer', ResponseStatus::UPROCESSABLE_ENTITY);
+
+        }
+    }
+
 
     public function actionView($lang, $id)
     {

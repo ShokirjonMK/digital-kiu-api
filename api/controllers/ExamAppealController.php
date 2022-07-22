@@ -77,6 +77,21 @@ class ExamAppealController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        $post = Yii::$app->request->post();
+
+
+         if (isRole('teacher')) {
+             if ($model->teacherAccess->user_id == current_user_id()){
+                 $result = ExamAppeal::teacherUpdateItem($model, $post);
+                 if (!is_array($result)) {
+                     return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+                 } else {
+                     return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+                 }
+             }
+
+         }
+
         // $data = [];
 
         // if (isRole('teacher')) {
@@ -128,7 +143,7 @@ class ExamAppealController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Student not found'), ResponseStatus::UPROCESSABLE_ENTITY);
         } */
 
-        $post = Yii::$app->request->post();
+
         // $this->load($model, $post);
 
         $this->load($model, $post);

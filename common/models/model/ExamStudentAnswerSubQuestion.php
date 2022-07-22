@@ -78,7 +78,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['answer'], 'string'],
-            [['teacher_conclusion'], 'string'],
+            [['teacher_conclusion', 'appeal_teacher_conclusion'], 'string'],
             [['max_ball'], 'double'],
             [['ball'], 'double'],
             [['file'], 'string', 'max' => 255],

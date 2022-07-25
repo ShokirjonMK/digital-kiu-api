@@ -168,14 +168,14 @@ class TeacherAccess extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function teacher()
+    public function getTeacher()
     {
-        $data = [];
-        $data['first_name'] = $this->profile->first_name;
-        $data['last_name'] = $this->profile->last_name;
-        $data['middle_name'] = $this->profile->middle_name;
+        // $data = [];
+        // $data['first_name'] = $this->profile->first_name;
+        // $data['last_name'] = $this->profile->last_name;
+        // $data['middle_name'] = $this->profile->middle_name;
 
-        return $data;
+        // return $data;
 
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id']); //->select(['first_name', 'last_name', 'middle_name']);
     }

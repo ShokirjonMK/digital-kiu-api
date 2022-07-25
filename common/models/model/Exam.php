@@ -907,7 +907,8 @@ class Exam extends \yii\db\ActiveRecord
             $examAppealSmetas = ExamAppealSemeta::findAll(['exam_id' => $exam->id]);
 
             foreach ($examAppealSmetas as $examAppealSmetaOne) {
-                $mk = 0;
+
+                /* $mk = 0;
                 while ($mk < $examAppealSmetaOne->count) {
                     $examAppeal = ExamAppeal::find()
                         ->where([
@@ -926,6 +927,32 @@ class Exam extends \yii\db\ActiveRecord
                                 $mk++;
                             }
                         }
+                    }
+                } */
+
+                $examAppeal = ExamAppeal::find()
+                    ->where([
+                        'exam_id' => $exam->id,
+                        'teacher_access_id' => null,
+                        'lang_id' => $examAppealSmetaOne->lang_id,
+                        // 'status' => ExamStudent::STATUS_TAKED,
+                    ])
+                    ->orderBy(new Expression('rand()'))
+                    ->limit($examAppealSmetaOne->count)
+                    ->all();
+
+                $examAppealSmetaOne->status = ExamAppealSemeta::STATUS_IN_CHECKING;
+                if (!$examAppealSmetaOne->save()) {
+                    $errors[] = _('There is an error occurred while distributed');
+                }
+
+                foreach ($examAppeal as $examAppealOne) {
+                    $examAppealOne->teacher_access_id = $examAppealSmetaOne->teacher_access_id;
+                    // $examAppealOne->exam_semeta_id = $examAppealSmetaOne->id;
+                    $examAppealOne->status = ExamAppeal::STATUS_IN_CHECKING;
+
+                    if (!$examAppealOne->save()) {
+                        $errors[] = _('There is an error occurred while distributed');
                     }
                 }
             }

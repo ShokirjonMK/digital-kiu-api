@@ -141,6 +141,8 @@ class Subject extends \yii\db\ActiveRecord
             'hasContent',
             'topics',
 
+            'surveyAnswers',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -203,7 +205,6 @@ class Subject extends \yii\db\ActiveRecord
         }
     }
 
-
     public  function getQuestionUz()
     {
         $model = new Question();
@@ -239,10 +240,14 @@ class Subject extends \yii\db\ActiveRecord
         return $query->all();
     }
 
-
     public function getTopics()
     {
         return $this->hasMany(SubjectTopic::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
+    public function getSurveyAnswers()
+    {
+        return $this->hasMany(SurveyAnswer::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getQuestions()

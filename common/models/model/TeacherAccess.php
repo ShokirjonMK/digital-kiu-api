@@ -168,7 +168,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTeacher()
+    public function teacher()
     {
         $data = [];
         $data['first_name'] = $this->profile->first_name;

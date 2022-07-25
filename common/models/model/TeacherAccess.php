@@ -85,9 +85,9 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            // 'teacher' => function ($model) {
-            //     return $model->teacher ?? null;
-            // },
+            'teacher' => function ($model) {
+                return $model->teacher ?? null;
+            },
             'user_id',
             'subject_id',
             'language_id',
@@ -170,7 +170,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
      */
     public function getTeacher()
     {
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']); //->select(['first_name', 'last_name', 'middle_name']);
     }
 
     /**

@@ -170,7 +170,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
      */
     public function getTeacher()
     {
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']); //->select(['first_name', 'last_name', 'middle_name']);
     }
 
     /**

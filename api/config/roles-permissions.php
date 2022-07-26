@@ -166,6 +166,7 @@ return [
         "exam_index",
         "exam_update",
         "exam_view",
+        "exam_appeal-distribution",
         "exam_distribution",
         "exam_ad",
 

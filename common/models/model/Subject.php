@@ -250,6 +250,11 @@ class Subject extends \yii\db\ActiveRecord
         return $this->hasMany(SurveyAnswer::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
+    public function getSurveyAnswersSum()
+    {
+        return $this->hasMany(SurveyAnswer::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0])->sum('ball');
+    }
+
     public function getQuestions()
     {
         return $this->hasMany(Question::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0]);

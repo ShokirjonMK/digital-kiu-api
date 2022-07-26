@@ -943,7 +943,9 @@ class Exam extends \yii\db\ActiveRecord
 
                 $examAppealSmetaOne->status = ExamAppealSemeta::STATUS_IN_CHECKING;
                 if (!$examAppealSmetaOne->save()) {
-                    $errors[] = _('There is an error occurred while saving examAppealSmetaOne!');
+                    $errors[] = $examAppealSmetaOne->getErrorSummary(true);
+
+                    // $errors[] = _('There is an error occurred while saving examAppealSmetaOne!');
                 }
 
                 foreach ($examAppeal as $examAppealOne) {
@@ -954,7 +956,7 @@ class Exam extends \yii\db\ActiveRecord
                     if (!$examAppealOne->save()) {
 
                         // $errors[] = _('There is an error occurred while saving examAppealOne!');
-                        $errors[] = $examAppealOne->getErrorSummary(true);;
+                        $errors[] = $examAppealOne->getErrorSummary(true);
                     }
                 }
             }

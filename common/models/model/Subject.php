@@ -266,7 +266,9 @@ class Subject extends \yii\db\ActiveRecord
     public function getSurveyAnswerAverage()
     {
         if ($this->surveyAnswersCount > 0) {
-            return (float) $this->surveyAnswersSum / $this->surveyAnswersCount;
+            // return (float) $this->surveyAnswersSum / $this->surveyAnswersCount;
+            return round(((float) $this->surveyAnswersSum / $this->surveyAnswersCount), 2);
+
         }
         return 0;
     }

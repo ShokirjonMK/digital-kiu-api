@@ -213,6 +213,7 @@ class Exam extends \yii\db\ActiveRecord
             'typeName',
 
             'isConfirmed',
+            'isConfirmedAppeal',
 
             'eduPlan',
             'questionCount',
@@ -238,6 +239,19 @@ class Exam extends \yii\db\ActiveRecord
     {
         if (ExamSemeta::findOne(['exam_id' => $this->id])) {
             if (ExamSemeta::findOne(['exam_id' => $this->id, 'status' => ExamSemeta::STATUS_NEW])) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public function getIsConfirmedAppeal()
+    {
+        if (ExamAppealSemeta::findOne(['exam_id' => $this->id])) {
+            if (ExamAppealSemeta::findOne(['exam_id' => $this->id, 'status' => ExamAppealSemeta::STATUS_NEW])) {
                 return 0;
             } else {
                 return 1;

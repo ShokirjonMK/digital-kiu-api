@@ -370,7 +370,7 @@ class ExamController extends ApiActiveController
         $result = Exam::appealDistribution($model);
 
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' succesfully distributed.'), null, null, ResponseStatus::OK);
+            return $this->response(1, _e($this->controller_name . ' Appeals succesfully distributed.'), null, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

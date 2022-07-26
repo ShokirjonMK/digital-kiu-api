@@ -142,6 +142,9 @@ class Subject extends \yii\db\ActiveRecord
             'topics',
 
             'surveyAnswers',
+            'surveyAnswersSum',
+            'surveyAnswersCount',
+            'surveyAnswerAverage',
 
             'createdBy',
             'updatedBy',
@@ -253,6 +256,19 @@ class Subject extends \yii\db\ActiveRecord
     public function getSurveyAnswersSum()
     {
         return $this->hasMany(SurveyAnswer::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0])->sum('ball');
+    }
+
+    public function getSurveyAnswersCount()
+    {
+        return $this->hasMany(SurveyAnswer::className(), ['subject_id' => 'id'])->onCondition(['is_deleted' => 0])->count();
+    }
+
+    public function getSurveyAnswerAverage()
+    {
+        if ($this->surveyAnswersCount > 0) {
+            return (float) $this->surveyAnswersSum / $this->surveyAnswersCount;
+        }
+        return 0;
     }
 
     public function getQuestions()

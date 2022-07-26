@@ -952,7 +952,9 @@ class Exam extends \yii\db\ActiveRecord
                     $examAppealOne->status = ExamAppeal::STATUS_IN_CHECKING;
 
                     if (!$examAppealOne->save()) {
-                        $errors[] = _('There is an error occurred while saving examAppealOne!');
+
+                        // $errors[] = _('There is an error occurred while saving examAppealOne!');
+                        $errors[] = $examAppealOne->getErrorSummary(true);;
                     }
                 }
             }

@@ -28,6 +28,12 @@ class ExamAppealController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->andFilterWhere(['like', $this->table_name . 'appeal_text', Yii::$app->request->get('q')]);
 
+        if (isRole("teacher")) {
+            $query = $query->andWhere([
+                'in', 'teacher_access_id', $this->teacher_access()
+            ]);
+        }
+        
         // filter
         $query = $this->filterAll($query, $model);
 

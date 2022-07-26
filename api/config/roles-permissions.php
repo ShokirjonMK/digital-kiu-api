@@ -1196,6 +1196,8 @@ return [
         'exam-checking_view',
         'exam-checking_update',
 
+        'exam-checking_appeal',
+
         'exam-appeal_index',
         'exam-appeal_view',
         'exam-appeal_update',

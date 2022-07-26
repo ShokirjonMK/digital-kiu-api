@@ -1196,6 +1196,10 @@ return [
         'exam-checking_view',
         'exam-checking_update',
 
+        'exam-appeal_index',
+        'exam-appeal_view',
+        'exam-appeal_update',
+
         'kpi-store_index',
         'kpi-store_create',
         'kpi-store_view',

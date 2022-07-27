@@ -49,6 +49,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
     const TYPE_NEW = 0;
 
+    const TYPE_ASOSLI = 1;
+    const TYPE_ASOSSIZ = 2;
+    const TYPE_TEXNIK = 3;
+    const TYPE_ASOSLI_TEXNIK = 4;
+
     /**
      * {@inheritdoc}
      */

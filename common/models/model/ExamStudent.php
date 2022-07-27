@@ -189,6 +189,11 @@ class ExamStudent extends \yii\db\ActiveRecord
             'plagiat_file',
             'plagiat_percent',
 
+            'in_ball',
+            'is_checked',
+            'is_checked_full',
+            'has_answer',
+            
             'act',
             'order',
             'status',

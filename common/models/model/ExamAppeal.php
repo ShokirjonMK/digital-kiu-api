@@ -149,6 +149,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             'student',
             'teacherUser',
             'subject',
+            'exam',
             'eduYear',
             'semestr',
 
@@ -175,6 +176,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
     public function getExamStudent()
     {
         return $this->hasOne(ExamStudent::className(), ['id' => 'exam_student_id']);
+    }
+
+    public function getExam()
+    {
+        return $this->hasOne(Exam::className(), ['id' => 'exam_id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getStudent()

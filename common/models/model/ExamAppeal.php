@@ -182,7 +182,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
     public function getAccessKey()
     {
-        return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
+        return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->exam_student_id);
     }
 
     public function getExamStudent()

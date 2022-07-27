@@ -153,6 +153,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             'eduYear',
             'semestr',
 
+            'teacherAccess',
             'statusName',
 
 

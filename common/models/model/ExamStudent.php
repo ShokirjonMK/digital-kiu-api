@@ -193,7 +193,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'is_checked',
             'is_checked_full',
             'has_answer',
-            
+
             'act',
             'order',
             'status',
@@ -226,6 +226,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'teacherAccess',
             'examSemeta',
 
+            'accessKey',
+
             'appeal',
 
             'createdBy',
@@ -249,6 +251,11 @@ class ExamStudent extends \yii\db\ActiveRecord
             ->sum('ball');
 
         return  $query;
+    }
+
+    public function getAccessKey()
+    {
+        return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
     }
 
     public function getIsChecked()

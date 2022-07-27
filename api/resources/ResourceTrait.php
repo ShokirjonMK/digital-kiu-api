@@ -148,4 +148,15 @@ trait ResourceTrait
                 ->all();
         }
     }
+
+    public static function encodeMK($key)
+    {
+        $str = '';
+        foreach (str_split((string) $key) as $one) {
+
+            $symKey = (int)$one + 97;
+            $str .= chr($symKey);
+        }
+        return $str;
+    }
 }

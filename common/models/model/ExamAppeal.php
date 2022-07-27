@@ -161,6 +161,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             'teacherAccess',
             'statusName',
 
+            'accessKey',
 
             'createdBy',
             'updatedBy',
@@ -178,6 +179,11 @@ class ExamAppeal extends \yii\db\ActiveRecord
     // subject_id
     // edu_year_id
     // semestr_id
+
+    public function getAccessKey()
+    {
+        return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
+    }
 
     public function getExamStudent()
     {

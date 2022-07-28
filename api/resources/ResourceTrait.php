@@ -159,4 +159,20 @@ trait ResourceTrait
         }
         return $str;
     }
+
+
+    public static function decodeMK($string)
+    {
+        // return $string;
+        $string = "ejdg-biebc";
+        $num = '';
+        foreach (str_split((string) $string) as $one) {
+            if ($one == "-") {
+                $num .= $one;
+            } else {
+                $num .= ((int)ord($one) - 97);
+            }
+        }
+        return $num;
+    }
 }

@@ -395,6 +395,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             }
 
                             $ExamStudent->exam_id = $exam_id;
+                            $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+
                             $ExamStudent->student_id = $student_id;
                             $ExamStudent->start = time();
                             $ExamStudent->lang_id = $student_lang_id;

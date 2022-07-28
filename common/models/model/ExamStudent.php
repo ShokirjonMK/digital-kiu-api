@@ -230,6 +230,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
             'appeal',
 
+            'startedAt',
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -237,6 +238,11 @@ class ExamStudent extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getStartedAt()
+    {
+        return $this->start ? date('Y-m-d H:i:s', $this->start) : '';
     }
 
     public function getAllBall()

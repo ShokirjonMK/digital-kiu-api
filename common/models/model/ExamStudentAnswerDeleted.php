@@ -411,6 +411,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                                 $ExamStudent = new ExamStudent();
                             }
 
+                            $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
                             $ExamStudent->exam_id = $exam_id;
                             $ExamStudent->student_id = $student_id;
                             $ExamStudent->start = time();

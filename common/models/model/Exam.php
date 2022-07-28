@@ -80,6 +80,7 @@ class Exam extends \yii\db\ActiveRecord
             [
                 [
                     'status_appeal',
+                    'edu_year_id',
                     'exam_type_id',
                     'faculty_id',
                     'is_protected',
@@ -102,6 +103,7 @@ class Exam extends \yii\db\ActiveRecord
             [['exam_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExamsType::className(), 'targetAttribute' => ['exam_type_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
         ];
     }
 
@@ -127,6 +129,7 @@ class Exam extends \yii\db\ActiveRecord
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
             'type' => 'Type',
+            'edu_year_id' => 'Edu Year',
 
             'appeal_start' => 'appeal_start',
             'appeal_finish' => 'appeal_finish',
@@ -561,6 +564,7 @@ class Exam extends \yii\db\ActiveRecord
                     //     }
 
                     //     $ExamStudent->exam_id = $examId;
+                    //     $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
                     //     $ExamStudent->student_id = $student_id;
                     //     $ExamStudent->lang_id = $langId;
                     //     $ExamStudent->password = _random_string('numeric', 4);
@@ -599,6 +603,9 @@ class Exam extends \yii\db\ActiveRecord
                         }
 
                         $ExamStudent->exam_id = $examId;
+                        $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+
+                        $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
                         $ExamStudent->student_id = $student_id;
                         $ExamStudent->lang_id = $langId;
                         // $ExamStudent->password = _random_string('numeric', 4);
@@ -687,15 +694,17 @@ class Exam extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
 
         if ($model->start > $model->finish) {
             $errors[] = _e("Start of exam can not be greater than finish");
         }
 
         $model->type = $model->eduSemestr->type ?? 1;
+        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
 
         /** question_count_by_type_with_ball */
         if (isset($post['question_count_by_type_with_ball'])) {
@@ -780,6 +789,9 @@ class Exam extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

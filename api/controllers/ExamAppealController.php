@@ -6,6 +6,7 @@ use common\models\model\ExamAppeal;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamStudentAnswer;
+use common\models\model\Profile;
 use common\models\model\Student;
 
 class ExamAppealController extends ApiActiveController
@@ -28,12 +29,41 @@ class ExamAppealController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->andFilterWhere(['like', $this->table_name . 'appeal_text', Yii::$app->request->get('q')]);
 
+
+        $query ->join('INNER JOIN', 'student', 'student.id = exam_appeal.student_id')
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
+
+     
+        
         if (isRole("teacher")) {
             $query = $query->andWhere([
                 'in', 'teacher_access_id', $this->teacher_access()
             ]);
         }
-        
+
         // filter
         $query = $this->filterAll($query, $model);
 

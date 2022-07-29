@@ -573,8 +573,6 @@ class Exam extends \yii\db\ActiveRecord
                     //     $ExamStudent->save(false);
                     // }
 
-
-
                     /** Student generate Password and create ExamStudent begin */
 
                     $eduPlan_id = $exam->eduSemestrSubject->eduSemestr->edu_plan_id;

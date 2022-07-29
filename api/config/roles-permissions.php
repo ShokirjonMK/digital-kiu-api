@@ -270,7 +270,11 @@ return [
         "user_status-list",
 
         "week_index",
-        "week_view"
+        "week_view",
+
+        'subject-content_index',
+        'subject-content_view',
+        'subject-content_types',
     ],
 
     /* O'quv bo'limi kontenthisi */

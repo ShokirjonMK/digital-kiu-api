@@ -116,6 +116,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'teacher_access_id',
             'room_id',
             'para_id',
+            'week_id',
             'course_id',
             'semester_id',
             'parent_id',

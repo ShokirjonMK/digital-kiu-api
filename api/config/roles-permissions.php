@@ -127,7 +127,6 @@ return [
 
         "edu-type_index",
 
-
         "edu-semestr-subject_create",
         "edu-semestr-subject_delete",
         "edu-semestr-subject_index",

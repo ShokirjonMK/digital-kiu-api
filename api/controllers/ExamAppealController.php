@@ -64,9 +64,7 @@ class ExamAppealController extends ApiActiveController
         }
 
         if (isRole("student")) {
-            $query = $query->andWhere([
-                'created_by' => current_user_id()
-            ]);
+            $query = $query->andWhere(['created_by' => current_user_id()]);
         }
 
         // filter

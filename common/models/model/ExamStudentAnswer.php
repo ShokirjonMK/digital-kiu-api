@@ -96,7 +96,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
             [['answer'], 'string'],
-            [['teacher_conclusion','appeal_teacher_conclusion'], 'string'],
+            [['teacher_conclusion', 'appeal_teacher_conclusion'], 'string'],
             [['max_ball', 'ball'], 'double'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -608,7 +608,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         //
     }
 
-    public static function appealUpdateItemTeacher($model, $post)
+    public static function appealUpdateItemTeacher($model, $post, $examAppeal)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -636,8 +636,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     if ($examStudentAnswerSubQuestion) {
                         if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
                             $examStudentAnswerSubQuestion->appeal_teacher_conclusion = $subQuestionOneAnswerAppealChecking->appeal_teacher_conclusion;
-                            if($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball){
+                            if ($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball) {
                                 $examStudentAnswerSubQuestion->old_ball = $examStudentAnswerSubQuestion->ball;
+                                $examAppeal->is_changed = ExamAppeal::IS_CHANGED_TRUE;
+                                $examAppeal->update();
                             }
 
                             $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerAppealChecking->ball;
@@ -670,7 +672,12 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
         if (count($errors) == 0) {
             if ($model->save()) {
+                $examStudent = ExamStudent::findOne(2487);
+                $examStudent->ball = $model->examStudent->allBall;
+                $examStudent->save();
+
                 $transaction->commit();
+                // dd($examStudent);
                 return true;
             } else {
                 $transaction->rollBack();

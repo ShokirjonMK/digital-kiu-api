@@ -54,6 +54,9 @@ class ExamAppeal extends \yii\db\ActiveRecord
     const TYPE_TEXNIK = 3;
     const TYPE_ASOSLI_TEXNIK = 4;
 
+    const IS_CHANGED_TRUE = 1;
+    const IS_CHANGED_FALSE = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -76,6 +79,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             ],
             [
                 [
+                    'is_changed',
                     'exam_student_id',
                     'student_id',
                     'teacher_user_id',
@@ -125,6 +129,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
             'subject_id' => _e('Subject Id'),
             'edu_year_id' => _e('Edu_year Id'),
             'semestr_id' => _e('Semestr Id'),
+            'is_changed' => _e('is_changed'),
 
 
 
@@ -185,7 +190,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
     {
         return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->exam_student_id);
     }
-   
+
     // public function getDeKey()
     // {
     //     return $this->decodeMK($this->accessKey);

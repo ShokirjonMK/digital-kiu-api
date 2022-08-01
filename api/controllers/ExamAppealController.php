@@ -29,7 +29,7 @@ class ExamAppealController extends ApiActiveController
             ->andFilterWhere(['like', $this->table_name . 'appeal_text', Yii::$app->request->get('q')]);
 
 
-        $query ->join('INNER JOIN', 'student', 'student.id = exam_appeal.student_id')
+        $query->join('INNER JOIN', 'student', 'student.id = exam_appeal.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
 
@@ -55,11 +55,17 @@ class ExamAppealController extends ApiActiveController
         }
         // ***
 
-     
-        
+
+
         if (isRole("teacher")) {
             $query = $query->andWhere([
                 'in', 'teacher_access_id', $this->teacher_access()
+            ]);
+        }
+
+        if (isRole("student")) {
+            $query = $query->andWhere([
+                'created_by' => current_user_id()
             ]);
         }
 
@@ -115,17 +121,16 @@ class ExamAppealController extends ApiActiveController
         $post = Yii::$app->request->post();
 
 
-         if (isRole('teacher')) {
-             if ($model->teacherAccess->user_id == current_user_id()){
-                 $result = ExamAppeal::teacherUpdateItem($model, $post);
-                 if (!is_array($result)) {
-                     return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
-                 } else {
-                     return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-                 }
-             }
-
-         }
+        if (isRole('teacher')) {
+            if ($model->teacherAccess->user_id == current_user_id()) {
+                $result = ExamAppeal::teacherUpdateItem($model, $post);
+                if (!is_array($result)) {
+                    return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+                } else {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+                }
+            }
+        }
 
         // $data = [];
 

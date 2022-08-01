@@ -183,7 +183,7 @@ class ExamCheckingController extends ApiActiveController
                 }
 
                 $this->load($model, $data);
-                $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $data);
+                $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $data, $examAppeal);
 
                 if (!is_array($result)) {
                     return $this->response(1, _e($this->controller_name . ' successfully saved.'), $model, null, ResponseStatus::OK);
@@ -192,8 +192,7 @@ class ExamCheckingController extends ApiActiveController
                 }
             } else {
                 $this->load($model, $post);
-                $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $post);
-
+                $result = ExamStudentAnswer::appealUpdateItemTeacher($model, $post, $examAppeal);
             }
 
 
@@ -204,10 +203,8 @@ class ExamCheckingController extends ApiActiveController
             }
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, 'This is other Answer', ResponseStatus::UPROCESSABLE_ENTITY);
-
         }
     }
-
 
     public function actionView($lang, $id)
     {

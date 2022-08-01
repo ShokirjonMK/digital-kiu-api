@@ -188,6 +188,9 @@ class ExamStudentController extends ApiActiveController
             $model = ExamStudent::find()
                 ->andWhere(['id' => $id, 'is_deleted' => 0])
                 ->one();
+
+            $model->ball = $model->allBall;
+            $model->update();
         }
 
         if (!$model) {

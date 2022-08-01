@@ -5,7 +5,6 @@ namespace api\controllers;
 use common\models\model\ExamAppeal;
 use Yii;
 use base\ResponseStatus;
-use common\models\model\ExamStudentAnswer;
 use common\models\model\Profile;
 use common\models\model\Student;
 

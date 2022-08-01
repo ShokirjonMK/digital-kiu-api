@@ -221,6 +221,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'isChecked',
             'isCheckedFull',
             'allBall',
+            'oldAllBall',
 
             'statusName',
             'teacherAccess',
@@ -246,6 +247,21 @@ class ExamStudent extends \yii\db\ActiveRecord
     }
 
     public function getAllBall()
+    {
+        $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
+
+        $query = $query->andWhere([
+            'in', $model->tableName() . '.exam_student_answer_id',
+            ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+        ])
+            ->sum('ball');
+
+        return  $query;
+    }
+
+
+    public function getOldAllBall()
     {
         $model = new ExamStudentAnswerSubQuestion();
         $query = $model->find();

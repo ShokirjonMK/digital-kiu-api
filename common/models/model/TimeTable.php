@@ -172,7 +172,7 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         return $this->hasOne(SubjectCategory::className(), ['id' => 'subject_category_id']);
     }
-
+// o'quv yili id qo'shish kk
     /**
      * Gets query for [[Course]].
      *

@@ -270,7 +270,6 @@ return [
 
         "week_index",
         "week_view",
-
         'subject-content_index',
         'subject-content_view',
         'subject-content_types',

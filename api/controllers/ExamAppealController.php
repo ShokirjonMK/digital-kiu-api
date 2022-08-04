@@ -59,12 +59,12 @@ class ExamAppealController extends ApiActiveController
 
         if (isRole("teacher")) {
             $query = $query->andWhere([
-                'in', 'teacher_access_id', $this->teacher_access()
+                'in', $this->table_name . 'teacher_access_id', $this->teacher_access()
             ]);
         }
 
         if (isRole("student")) {
-            $query = $query->andWhere(['created_by' => current_user_id()]);
+            $query = $query->andWhere([$this->table_name . 'created_by' => current_user_id()]);
         }
 
         // filter

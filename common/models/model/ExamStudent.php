@@ -270,7 +270,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'in', $model->tableName() . '.exam_student_answer_id',
             ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
         ])
-            ->sum('ball');
+            ->sum('old_ball');
 
         return  $query;
     }

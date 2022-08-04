@@ -1163,7 +1163,7 @@ return [
         'question_status-list',
         'course_index',
         'languages_index',
-
+        'password_update',
         'notification_index',
         'notification_approved',
 

@@ -23,6 +23,9 @@ class TeacherAccessStatistic extends TeacherAccess
             'examName' => function ($model) {
                 return $model->examSemeta->exam->translate->name ?? '';
             },
+            'examId' => function ($model) {
+                return $model->examSemeta->exam->id ?? '';
+            },
             // 'examSemeta' => function ($model) {
             //     return $model->examSemeta; //->exam->name ?? '';
             // },

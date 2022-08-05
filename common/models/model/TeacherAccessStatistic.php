@@ -11,9 +11,9 @@ class TeacherAccessStatistic extends TeacherAccess
     {
         $fields =  [
             'id',
-            'subject' => function ($model) {
-                return $model->subject->name ?? '';
-            },
+            // 'subject' => function ($model) {
+            //     return $model->subject->name ?? '';
+            // },
             // 'examStudent' => function ($model) {
             //     return $model->examStudent ?? 0;
             // },

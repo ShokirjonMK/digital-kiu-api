@@ -34,24 +34,14 @@ class m220806_125712_create_kpi_data_table extends Migration
             'subject_category_id' => $this->integer()->Null(),
             'event_type' => $this->integer()->Null(),
             'event_form' => $this->integer()->Null(),
-
             'number' => $this->string(255)->null(),
-
-
-
-count
-level
-name
-name1
-name2
-name3
-authors
-
-
+            'level' => $this->string(255)->null(),
+            'name' => $this->string(255)->null(),
+            'name1' => $this->string(255)->null(),
+            'name2' => $this->string(255)->null(),
+            'name3' => $this->string(255)->null(),
+            'authors' => $this->string(255)->null(),
             'count_of_copyright' => $this->integer()->defaultValue(0),
-
-
-
             'user_id' => $this->integer()->notNull(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),

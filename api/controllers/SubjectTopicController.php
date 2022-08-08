@@ -28,9 +28,9 @@ class SubjectTopicController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
-        if (isRole('teacher') && !isRole('mudir')) {
-            $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
-        }
+        // if (isRole('teacher') && !isRole('mudir')) {
+        //     $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
+        // }
 
         // filter
         $query = $this->filterAll($query, $model);

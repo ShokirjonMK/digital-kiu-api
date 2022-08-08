@@ -22,7 +22,7 @@ class m220806_125712_create_kpi_data_table extends Migration
             'id' => $this->primaryKey(),
             'kpi_category_id' => $this->integer()->notNull(),
             'date' => $this->date()->Null(),
-            'file' => $this->string(255)->null(),
+            'file1' => $this->string(255)->null(),
             'file2' => $this->string(255)->null(),
             'file3' => $this->string(255)->null(),
             'start_date' => $this->date()->Null(),

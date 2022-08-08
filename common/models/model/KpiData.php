@@ -45,9 +45,11 @@ class KpiData extends \yii\db\ActiveRecord
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
 
-    const UPLOADS_FOLDER = 'uploads/kpi_store/';
+    const UPLOADS_FOLDER = 'uploads/kpi_data/';
     public $kpi_file;
-    public $kpiFileMaxSize = 1024 * 1024 * 100; // 24 Mb
+    public $kpi_file2;
+    public $kpi_file3;
+    public $kpiFileMaxSize = 1024 * 1024 * 100; // 100 Mb
 
     /**
      * {@inheritdoc}
@@ -116,7 +118,7 @@ class KpiData extends \yii\db\ActiveRecord
 
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
-            
+
             [['kpi_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => KpiCategory::className(), 'targetAttribute' => ['kpi_category_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
@@ -174,7 +176,7 @@ class KpiData extends \yii\db\ActiveRecord
             'id',
             'kpi_category_id',
             'date',
-            'file',
+            'file1',
             'file2',
             'file3',
             'start_date',

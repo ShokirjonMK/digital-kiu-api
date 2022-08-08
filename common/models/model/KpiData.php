@@ -46,7 +46,7 @@ class KpiData extends \yii\db\ActiveRecord
     const STATUS_INACTIVE = 0;
 
     const UPLOADS_FOLDER = 'uploads/kpi_data/';
-    public $kpi_file;
+    public $kpi_file1;
     public $kpi_file2;
     public $kpi_file3;
     public $kpiFileMaxSize = 1024 * 1024 * 100; // 100 Mb
@@ -97,7 +97,7 @@ class KpiData extends \yii\db\ActiveRecord
             ],
             [
                 [
-                    'file',
+                    'file1',
                     'file2',
                     'file3',
                     'link',
@@ -123,7 +123,9 @@ class KpiData extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
 
-            [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
+            [['file1'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
+            [['file2'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
+            [['file3'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
 
         ];
     }
@@ -139,7 +141,7 @@ class KpiData extends \yii\db\ActiveRecord
 
             'kpi_category_id' => _e('kpi_category_id'),
             'date' => _e('date'),
-            'file' => _e('file'),
+            'file1' => _e('file'),
             'file2' => _e('file2'),
             'file3' => _e('file3'),
             'start_date' => _e('start_date'),
@@ -259,12 +261,38 @@ class KpiData extends \yii\db\ActiveRecord
 
         if ($model->save()) {
             // kpi file saqlaymiz
-            $model->kpi_file = UploadedFile::getInstancesByName('kpi_file');
-            if ($model->kpi_file) {
-                $model->kpi_file = $model->kpi_file[0];
-                $kpiFileUrl = $model->uploadFile();
+            $model->kpi_file1 = UploadedFile::getInstancesByName('kpi_file1');
+            if ($model->kpi_file1) {
+                $model->kpi_file1 = $model->kpi_file1[0];
+                $kpiFileUrl = $model->uploadFile($model->kpi_file1);
                 if ($kpiFileUrl) {
-                    $model->file = $kpiFileUrl;
+                    $model->file1 = $kpiFileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
+
+            // kpi file saqlaymiz
+            $model->kpi_file2 = UploadedFile::getInstancesByName('kpi_file2');
+            if ($model->kpi_file2) {
+                $model->kpi_file2 = $model->kpi_file2[0];
+                $kpiFileUrl = $model->uploadFile($model->kpi_file2);
+                if ($kpiFileUrl) {
+                    $model->file2 = $kpiFileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
+
+            // kpi file saqlaymiz
+            $model->kpi_file3 = UploadedFile::getInstancesByName('kpi_file3');
+            if ($model->kpi_file3) {
+                $model->kpi_file3 = $model->kpi_file3[0];
+                $kpiFileUrl = $model->uploadFile($model->kpi_file3);
+                if ($kpiFileUrl) {
+                    $model->file3 = $kpiFileUrl;
                 } else {
                     $errors[] = $model->errors;
                 }
@@ -292,17 +320,45 @@ class KpiData extends \yii\db\ActiveRecord
         $errors = [];
 
         // kpi file saqlaymiz
-        $model->kpi_file = UploadedFile::getInstancesByName('kpi_file');
-        if ($model->kpi_file) {
-            $model->kpi_file = $model->kpi_file[0];
-            $kpiFileUrl = $model->uploadFile();
+        $model->kpi_file1 = UploadedFile::getInstancesByName('kpi_file1');
+        if ($model->kpi_file1) {
+            $model->kpi_file1 = $model->kpi_file1[0];
+            $kpiFileUrl = $model->uploadFile($model->kpi_file1);
             if ($kpiFileUrl) {
-                $model->file = $kpiFileUrl;
+                $model->file1 = $kpiFileUrl;
             } else {
                 $errors[] = $model->errors;
             }
         }
         // ***
+
+        // kpi file saqlaymiz
+        $model->kpi_file2 = UploadedFile::getInstancesByName('kpi_file2');
+        if ($model->kpi_file2) {
+            $model->kpi_file2 = $model->kpi_file2[0];
+            $kpiFileUrl = $model->uploadFile($model->kpi_file2);
+            if ($kpiFileUrl) {
+                $model->file2 = $kpiFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
+        // kpi file saqlaymiz
+        $model->kpi_file3 = UploadedFile::getInstancesByName('kpi_file3');
+        if ($model->kpi_file3) {
+            $model->kpi_file3 = $model->kpi_file3[0];
+            $kpiFileUrl = $model->uploadFile($model->kpi_file3);
+            if ($kpiFileUrl) {
+                $model->file3 = $kpiFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
+
         if (!isset($post['user_id'])) {
             $model->user_id = current_user_id();
         }
@@ -330,18 +386,19 @@ class KpiData extends \yii\db\ActiveRecord
     }
 
 
-    public function uploadFile()
+    public function uploadFile($thisIsFile)
     {
         if ($this->validate()) {
-            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
-                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            $fileDir = self::UPLOADS_FOLDER . $this->user_id  . '/';
+            if (!file_exists(STORAGE_PATH  . $fileDir)) {
+                mkdir(STORAGE_PATH  . $fileDir, 0777, true);
             }
 
-            $fileName = $this->user_id . "_" . $this->kpi_category_id . "_" . time() . '.' . $this->kpi_file->extension;
+            $fileName = $this->kpi_category_id . "_" . time() . '.' . $thisIsFile->extension;
 
-            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $miniUrl = $fileDir . $fileName;
             $url = STORAGE_PATH . $miniUrl;
-            $this->kpi_file->saveAs($url, false);
+            $thisIsFile->saveAs($url, false);
             return "storage/" . $miniUrl;
         } else {
             return false;

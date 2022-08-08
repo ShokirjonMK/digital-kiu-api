@@ -95,6 +95,7 @@ $controllers = [
     'election-vote',
     'kpi-category',
     'kpi-store',
+    'kpi-data',
 
 
     'partiya',

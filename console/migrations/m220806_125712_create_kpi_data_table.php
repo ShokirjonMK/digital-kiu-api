@@ -43,6 +43,10 @@ class m220806_125712_create_kpi_data_table extends Migration
             'authors' => $this->string(255)->null(),
             'count_of_copyright' => $this->integer()->defaultValue(0),
             'user_id' => $this->integer()->notNull(),
+            'a1' => $this->string(255)->null(),
+            'a2' => $this->string(255)->null(),
+            'a3' => $this->string(255)->null(),
+            'a4' => $this->string(255)->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

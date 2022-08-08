@@ -71,23 +71,23 @@ class KpiData extends \yii\db\ActiveRecord
             ],
             [
                 [
-                   'kpi_category_id',
-'count',
-'subject_category_id',
-'event_type',
-'event_form',
-'count_of_copyright',
-'user_id',
-'status',
-'order',
-'created_at',
-'updated_at',
-'created_by',
-'updated_by',
-'is_deleted',
+                    'kpi_category_id',
+                    'count',
+                    'subject_category_id',
+                    'event_type',
+                    'event_form',
+                    'count_of_copyright',
+                    'user_id',
+
                 ], 'integer'
             ],
-            [['date'], 'date', 'format' => 'php:Y-m-d'],
+            [
+                [
+                    'date',
+                    'start_date',
+                    'end_date',
+                ], 'date', 'format' => 'php:Y-m-d'
+            ],
             [
                 [
                     'ball',
@@ -96,22 +96,32 @@ class KpiData extends \yii\db\ActiveRecord
             [
                 [
                     'file',
+                    'file2',
+                    'file3',
                     'link',
+                    'link2',
+                    'number',
+                    'level',
+                    'name',
+                    'name1',
+                    'name2',
+                    'name3',
+                    'authors',
+                    'a1',
+                    'a2',
+                    'a3',
+                    'a4'
                 ], 'string', 'max' => 255
             ],
 
-            // [
-            //     [
-            //         'fields',
-            //     ], 'json'
-            // ],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
+            
             [['kpi_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => KpiCategory::className(), 'targetAttribute' => ['kpi_category_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
 
-            [['kpi_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
+            [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
 
         ];
     }
@@ -128,11 +138,25 @@ class KpiData extends \yii\db\ActiveRecord
             'kpi_category_id' => _e('kpi_category_id'),
             'date' => _e('date'),
             'file' => _e('file'),
-            'subject_category_id' => _e('subject_category_id'),
-            'count_of_copyright' => _e('count_of_copyright'),
+            'file2' => _e('file2'),
+            'file3' => _e('file3'),
+            'start_date' => _e('start_date'),
+            'end_date' => _e('end_date'),
             'link' => _e('link'),
+            'link2' => _e('link2'),
             'ball' => _e('ball'),
-            'user_id' => _e('user_id'),
+            'count' => _e('count'),
+            'subject_category_id' => _e('subject_category_id'),
+            'event_type' => _e('event_type'),
+            'event_form' => _e('event_form'),
+            'number' => _e('number'),
+            'level' => _e('level'),
+            'name' => _e('name'),
+            'name1' => _e('name1'),
+            'name2' => _e('name2'),
+            'name3' => _e('name3'),
+            'authors' => _e('authors'),
+            'count_of_copyright' => _e('count_of_copyright'),
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -148,14 +172,28 @@ class KpiData extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'user_id',
             'kpi_category_id',
-            'subject_category_id',
             'date',
             'file',
-            'count_of_copyright',
+            'file2',
+            'file3',
+            'start_date',
+            'end_date',
             'link',
+            'link2',
             'ball',
+            'count',
+            'subject_category_id',
+            'event_type',
+            'event_form',
+            'number',
+            'level',
+            'name',
+            'name1',
+            'name2',
+            'name3',
+            'authors',
+            'count_of_copyright',
 
             'order',
             'status',

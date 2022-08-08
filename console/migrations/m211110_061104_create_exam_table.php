@@ -21,6 +21,8 @@ class m211110_061104_create_exam_table extends Migration
             'finish' => $this->dateTime()->notNull(),
             'max_ball' => $this->double()->defaultValue(0),
             'min_ball' => $this->double()->defaultValue(0),
+            'category' => $this->integer()->Null(),
+            'subject_id' => $this->integer()->Null(),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

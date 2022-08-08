@@ -85,6 +85,7 @@ class Exam extends \yii\db\ActiveRecord
                     'faculty_id',
                     'is_protected',
                     'duration',
+                    'subject_id',
                     'edu_semestr_subject_id',
                     'order',
                     'status',
@@ -699,6 +700,7 @@ class Exam extends \yii\db\ActiveRecord
 
         $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->eduSemestrSubject->subject_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -788,7 +790,9 @@ class Exam extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->eduSemestrSubject->subject_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

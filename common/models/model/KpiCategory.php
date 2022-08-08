@@ -194,7 +194,7 @@ class KpiCategory extends \yii\db\ActiveRecord
      */
     public function getKpiData()
     {
-        return $this->hasMany(KpiData::class, 'id', 'kpi_category_id')->onCondition(['user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
+        return $this->hasMany(KpiData::className(), ['id', 'kpi_category_id'])->onCondition(['user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
     }
 
 

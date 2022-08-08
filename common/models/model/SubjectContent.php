@@ -84,6 +84,7 @@ class SubjectContent extends \yii\db\ActiveRecord
                 [
                     'type',
                     'subject_topic_id',
+                    'teacher_access_id',
                 ],
                 'integer'
             ],
@@ -96,6 +97,7 @@ class SubjectContent extends \yii\db\ActiveRecord
                 'string'
             ],
             [['subject_topic_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectTopic::className(), 'targetAttribute' => ['subject_topic_id' => 'id']],
+            [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
             [['file_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,ppt,pptx,zip', 'maxSize' => $this->file_fileFileMaxSize],
             [['file_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg,gimp,bmp,jpeg', 'maxSize' => $this->file_imageFileMaxSize],
             [['file_video'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp4,avi', 'maxSize' => $this->file_videoFileMaxSize],
@@ -114,6 +116,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'content' => 'Content',
             'type' => 'Type',
             'subject_topic_id' => 'subject_topic_id',
+            'teacher_access_id' => 'teacher_access_id',
             'description' => 'description',
             'file_url' => "File Url",
             'order' => _e('Order'),
@@ -135,6 +138,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'subject_topic_id',
             'description',
             'file_url',
+            'teacher_access_id',
 
             'order',
             'status',
@@ -155,6 +159,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'subjectTopic',
             'subjectCategory',
 
+            'teacherAccess',
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -172,6 +177,11 @@ class SubjectContent extends \yii\db\ActiveRecord
     public function getSubjectTopic()
     {
         return $this->hasOne(SubjectTopic::className(), ['id' => 'subject_topic_id']);
+    }
+
+    public function getTeacherAccess()
+    {
+        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
     }
 
     public function getSubjectCategory()
@@ -192,6 +202,10 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         $model->type = self::TYPE_TEXT;
 
+        if (isRole('teacher')) {
+            $model->teacher_access_id = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()])->id;
+        }
+
         if ($model->save()) {
 
             /* Fayl Yuklash*/
@@ -199,7 +213,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
             if ($model->file_file) {
                 $model->file_file = $model->file_file[0];
-                $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
+                $fileUrl = $model->uploadFile("file_file", $model->subject->id);
                 if ($fileUrl) {
                     $model->file_url = $fileUrl;
                     $model->type = self::TYPE_FILE;

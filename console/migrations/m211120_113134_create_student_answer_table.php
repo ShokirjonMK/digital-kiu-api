@@ -22,8 +22,8 @@ class m211120_113134_create_student_answer_table extends Migration
             'answer' => $this->text()->Null(),
             'ball' => $this->double()->Null(),
             'teacher_access_id' => $this->integer()->Null(),
-            'attempt' => $this->integer()->defaultValue(1)->comment("Nechinchi marta topshirayotgani"),
-            'type' => $this->tinyInteger(1)->notNull()->comment("1-savol, 2-test, 3-another"),
+            'attempt' => $this->integer()->defaultValue(1),
+            'type' => $this->tinyInteger(1)->notNull(),
             
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

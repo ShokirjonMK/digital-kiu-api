@@ -2,7 +2,6 @@
 
 $controllers = [
     'get-teacher',
-
     'student',
     'employee',
     'user',
@@ -113,9 +112,17 @@ $controllers = [
     'instruction',
     'exam-appeal-semeta',
 
-
-
-
+    'student-order',
+    'order-type',
+    'parent-info',
+    'other-certificate',
+    'other-certificate-type',
+    'olympic-certificate',
+    'sport-certificate',
+    'lang-centificate',
+    'lang-certificate-type',
+    'military',
+    'cantract',
     'telegram',
     'test-get-data',
 ];

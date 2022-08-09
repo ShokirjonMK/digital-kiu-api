@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%lang_certificate}}`.
  */
-class m220805_101746_create_lang_certificate_table extends Migration
+class m220805_101746_create_lang_certificates_table extends Migration
 {
     /**
      * {@inheritdoc}

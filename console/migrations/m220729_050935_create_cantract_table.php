@@ -14,7 +14,7 @@ class m220729_050935_create_cantract_table extends Migration
     {
         $tableName = Yii::$app->db->tablePrefix . 'cantract';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
-            $this->dropTable('military');
+            $this->dropTable('cantract');
         }
 
         $this->createTable('{{%cantract}}', [

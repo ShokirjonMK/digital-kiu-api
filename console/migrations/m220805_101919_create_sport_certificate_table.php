@@ -20,15 +20,15 @@ class m220805_101919_create_sport_certificate_table extends Migration
 
         $this->createTable('{{%sport_certificate}}', [
             'id' => $this->primaryKey(),
+
             'type' => $this->integer(11)->Null(),
             'date' => $this->date()->notNull(),
             'year' => $this->string(11)->Null(),
             'address' => $this->string(255)->Null(),
-            'file' => $this->string(255)->notNull(),
-            'student_id'=>$this->integer(11)->notNull(),
-            'user_id'=>$this->integer(11)->notNull(),
-            
-            
+            'file' => $this->string(255),
+            'student_id' => $this->integer(11)->Null(),
+            'user_id' => $this->integer(11)->notNull(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),
@@ -37,10 +37,9 @@ class m220805_101919_create_sport_certificate_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
         ]);
         // Student
-        $this->addForeignKey('sport_certificate-student_id', 'sport_certificate', 'student_id', 'student', 'id');
+        $this->addForeignKey('sport_certificate_student_id', 'sport_certificate', 'student_id', 'student', 'id');
         // User
-        $this->addForeignKey('sport_certificate-user_id', 'sport_certificate', 'user_id', 'users', 'id');
-
+        $this->addForeignKey('sport_certificate_user_id', 'sport_certificate', 'user_id', 'users', 'id');
     }
 
     /**
@@ -49,10 +48,10 @@ class m220805_101919_create_sport_certificate_table extends Migration
     public function safeDown()
     {
         // student
-        $this->dropForeignKey('sport_certificate-student_id', 'sport_certificate');
+        $this->dropForeignKey('sport_certificate_student_id', 'sport_certificate');
 
         // user
-        $this->dropForeignKey('sport_certificate-user_id', 'sport_certificate');
+        $this->dropForeignKey('sport_certificate_user_id', 'sport_certificate');
 
 
         $this->dropTable('{{%sport_certificate}}');

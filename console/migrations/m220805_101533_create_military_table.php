@@ -16,14 +16,17 @@ class m220805_101533_create_military_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('military');
         }
+
         $this->createTable('{{%military}}', [
             'id' => $this->primaryKey(),
+          
             'joy' => $this->string(255)->Null(),
             'chas_raqami' => $this->string(10)->Null(),
             'year' => $this->string(11)->Null(),
             'seria_raqami'=>$this->string(33)->Null(),
             'student_id'=>$this->integer(11)->notNull(),
             'user_id'=>$this->integer(11)->notNull(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

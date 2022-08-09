@@ -16,10 +16,13 @@ class m220805_102207_create_order_type_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('order_type');
         }
+
         $this->createTable('{{%order_type}}', [
             'id' => $this->primaryKey(),
+
             'name'=>$this->string(255)->null(),
             'lang' => $this->string(2)->notNull(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

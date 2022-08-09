@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -22,12 +23,12 @@ use yii\behaviors\TimestampBehavior;
  */
 class LangCertificateType extends \yii\db\ActiveRecord
 {
+    use ResourceTrait;
     public static $selected_language = 'uz';
 
     public function behaviors()
     {
         return [
-            BlameableBehavior::class,
             TimestampBehavior::class,
         ];
     }
@@ -48,8 +49,8 @@ class LangCertificateType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name','lang'],'required'],
-            [['name','lang'], 'string', 'max' => 255],
+            [['lang'],'required'],
+            [['lang'], 'string', 'max' => 255],
         ];
     }
 
@@ -61,7 +62,6 @@ class LangCertificateType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name'=>'Name',
             'lang'=>'Lang',
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
@@ -74,7 +74,10 @@ class LangCertificateType extends \yii\db\ActiveRecord
     public function fields()
     {
         $fields = [
-            'name',
+            'id',
+            'name' => function ($model) {
+                return $model->translate->name ?? '';
+            },
             'lang',
             'status',
             'is_deleted',
@@ -86,6 +89,40 @@ class LangCertificateType extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'description',
+            'createdBy',
+            'updatedBy',
+        ];
+
+        return $extraFields;
+    }
+
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
+    public function getInfoRelation()
+    {
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+    }
+
+    public function getInfoRelationDefaultLanguage()
+    {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
+        return $this->hasMany(Translate::class, ['model_id' => 'id'])
+            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -93,14 +130,28 @@ class LangCertificateType extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
+
+        $has_error = Translate::checkingAll($post);
+
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['description'])) {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                } else {
+                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
+                }
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
-            return simplify_errors($errors);
+            return double_errors($errors, $has_error['errors']);
         }
     }
+
 
     public static function updateItem($model, $post)
     {
@@ -109,14 +160,29 @@ class LangCertificateType extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
+        $has_error = Translate::checkingUpdate($post);
+        if ($has_error['status']) {
+            if ($model->save()) {
+                if (isset($post['name'])) {
+                    if (isset($post['description'])) {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
+                    } else {
+                        Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
+                    }
+                }
+                $transaction->commit();
+
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
-            return simplify_errors($errors);
+            return double_errors($errors, $has_error['errors']);
         }
     }
+
 
 
     public function beforeSave($insert)

@@ -19,12 +19,14 @@ class m220805_102020_create_other_certificate_table extends Migration
 
         $this->createTable('{{%other_certificate}}', [
             'id' => $this->primaryKey(),
+
             'other_certificate_type_id' => $this->integer(11)->null(),
             'address' => $this->string(255)->null(),
             'year' => $this->string(11)->null(),
             'file' => $this->string(255)->null(),
-            'student_id'=>$this->integer(11)->notNull(),
+            'student_id'=>$this->integer(11)->Null(),
             'user_id'=>$this->integer(11)->notNull(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

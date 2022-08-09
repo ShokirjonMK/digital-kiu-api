@@ -3,27 +3,27 @@
 namespace api\controllers;
 
 use base\ResponseStatus;
-use common\models\model\ParentInfo;
+use common\models\model\LangCertificate;
 use Yii;
 
-class ParentInfoController extends ApiActiveController
+class LangCertificateController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\ParentInfo';
+    public $modelClass = 'api\resources\LangCertificate';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'parent_info';
-    public $controller_name = 'ParentInfo';
+    public $table_name = 'lang_certificate';
+    public $controller_name = 'LangCertificate';
 
     public function actionCreate($lang)
     {
-        $model = new ParentInfo();
+        $model = new LangCertificate();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = ParentInfo::createItem($model, $post);
+        $result = LangCertificate::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -33,13 +33,13 @@ class ParentInfoController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = ParentInfo::findOne($id);
+        $model = LangCertificate::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = ParentInfo::updateItem($model, $post);
+        $result = LangCertificate::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -49,7 +49,7 @@ class ParentInfoController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = ParentInfo::find()
+        $model = LangCertificate::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -61,7 +61,7 @@ class ParentInfoController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = ParentInfo::find()
+        $model = LangCertificate::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         $model->delete();

@@ -12,6 +12,7 @@ class m220805_101725_create_lang_certificate_type_table extends Migration
      */
     public function safeUp()
     {
+
         $tableName = Yii::$app->db->tablePrefix . 'lang_certificate_type';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('lang_certificate_type');
@@ -19,8 +20,10 @@ class m220805_101725_create_lang_certificate_type_table extends Migration
 
         $this->createTable('{{%lang_certificate_type}}', [
             'id' => $this->primaryKey(),
+
             'name' => $this->string(255)->null(),
             'lang' => $this->string(2)->null(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

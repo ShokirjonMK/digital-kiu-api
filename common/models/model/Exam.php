@@ -130,6 +130,7 @@ class Exam extends \yii\db\ActiveRecord
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
             'type' => 'Type',
+            'subject_id' => 'subject_id',
             'edu_year_id' => 'Edu Year',
 
             'appeal_start' => 'appeal_start',
@@ -1007,6 +1008,7 @@ class Exam extends \yii\db\ActiveRecord
         } else {
             $this->updated_by = Current_user_id();
         }
+
         return parent::beforeSave($insert);
     }
 

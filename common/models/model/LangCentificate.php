@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -25,22 +26,19 @@ use yii\web\UploadedFile;
  * @property int $created_by
  * @property int $updated_by
  */
-class LangCentificate extends \yii\db\ActiveRecord
+class LangCertificate extends \yii\db\ActiveRecord
 {
-
-    public $img;
-    const UPLOADS_FOLDER = 'filePdf';
-    public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
-
     public static $selected_language = 'uz';
 
-    public function behaviors()
-    {
-        return [
-            BlameableBehavior::class,
-            TimestampBehavior::class,
-        ];
-    }
+    use ResourceTrait;
+
+    public $uploadFile;
+    const UPLOADS_FOLDER = 'lang_certificate';
+    public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
+
+    const USER_TYPE_STUDENT = 1;
+    const USER_TYPE_TEACHER = 2;
+    const USER_TYPE_STAFF = 3;
 
     /**
      * {@inheritdoc}
@@ -48,7 +46,7 @@ class LangCentificate extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'lang_centificates';
+        return 'lang_certificate';
     }
 
     /**
@@ -58,14 +56,14 @@ class LangCentificate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lang','user_id','certificate_type_id'],'required'],
-            [['user_id','certificate_type_id', 'student_id'], 'integer'],
-            [['ball','lang'], 'string', 'max' => 255],
+            [['user_id', 'certificate_type_id'], 'required'],
+            [['user_id', 'certificate_type_id', 'user_type'], 'integer'],
+            [['ball', 'lang'], 'string', 'max' => 255],
             [['file'], 'string', 'max' => 255],
-            [['img'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\Student::class, 'targetAttribute' => ['student_id' => 'id']],
+            [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
+            // [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['certificate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\LangCertificateType::class, 'targetAttribute' => ['certificate_type_id' => 'id']],
+            [['certificate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => LangCertificateType::class, 'targetAttribute' => ['certificate_type_id' => 'id']],
         ];
     }
 
@@ -77,10 +75,10 @@ class LangCentificate extends \yii\db\ActiveRecord
     {
         return [
             'id' => _e('ID'),
-            'file'=>_e('File'),
-            'lang'=>_e('Lang'),
-            'student_id'=>_e('Student Id'),
-            'certificate_type_id'=>_e('Certificate Type Id'),
+            'file' => _e('File'),
+            'lang' => _e('Lang'),
+            'user_type' => _e('user_type'),
+            'certificate_type_id' => _e('Certificate Type Id'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -96,6 +94,7 @@ class LangCentificate extends \yii\db\ActiveRecord
             'certificate_type_id',
             'file',
             'user_id',
+            'user_type',
             'lang',
             'status',
             'is_deleted',
@@ -116,9 +115,9 @@ class LangCentificate extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
         if ($model->save()) {
-            $model->img = UploadedFile::getInstancesByName('img');
-            if ($model->img) {
-                $model->img = $model->img[0];
+            $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
+            if ($model->uploadFile) {
+                $model->uploadFile = $model->uploadFile[0];
                 $imgFile = $model->uploadFile();
                 if ($imgFile) {
                     $model->file = $imgFile;
@@ -167,19 +166,30 @@ class LangCentificate extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
     public function uploadFile()
     {
+        $fileUploadUrl = self::UPLOADS_FOLDER;
+        if ($this->user_type == self::USER_TYPE_STUDENT) {
+            $fileUploadUrl  = self::UPLOADS_FOLDER . "student/";
+        }
+
+        if ($this->user_type == self::USER_TYPE_TEACHER) {
+            $fileUploadUrl  = self::UPLOADS_FOLDER . "teacher/";
+        }
+        if ($this->user_type == self::USER_TYPE_STAFF) {
+            $fileUploadUrl  = self::UPLOADS_FOLDER . "staff/";
+        }
+
         if ($this->validate()) {
-            if (!file_exists(UPLOADS_PATH  . self::UPLOADS_FOLDER)) {
-                mkdir(UPLOADS_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            if (!file_exists(UPLOADS_PATH  . $fileUploadUrl)) {
+                mkdir(UPLOADS_PATH  . $fileUploadUrl, 0777, true);
             }
-            $fileName = $this->id . '_' . \Yii::$app->security->generateRandomString() . '.' . $this->img->extension;
-            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $fileName = time() . $this->uploadFile->extension;
+            $miniUrl = $fileUploadUrl . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
-            $this->img->saveAs($url, false);
+            $this->uploadFile->saveAs($url, false);
             return "storage/" . $miniUrl;
         } else {
             return false;
@@ -189,30 +199,22 @@ class LangCentificate extends \yii\db\ActiveRecord
     public function deleteFile($oldFile = NULL)
     {
         if (isset($oldFile)) {
-            if (file_exists( $oldFile)) {
+            if (file_exists($oldFile)) {
                 unlink($oldFile);
             }
         }
         return true;
     }
 
-
-    #region rel
     public function getUsers()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
-    public function getStudents()
-    {
-        return $this->hasOne(\common\models\model\Student::class, ['id' => 'student_id']);
-    }
 
     public function getType()
     {
-        return $this->hasOne(\common\models\model\LangCertificateType::class, ['id' => 'certificate_type_id']);
+        return $this->hasOne(LangCertificateType::class, ['id' => 'certificate_type_id']);
     }
-    #endregion
-
 
     public function beforeSave($insert)
     {
@@ -224,4 +226,3 @@ class LangCentificate extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

@@ -35,13 +35,6 @@ class KpiStore extends \yii\db\ActiveRecord
 
     use ResourceTrait;
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
-
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
 

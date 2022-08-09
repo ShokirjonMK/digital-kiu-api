@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -20,17 +21,16 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  */
-class ParentInfo extends \yii\db\ActiveRecord
+class RelativeInfo extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
-    public function behaviors()
-    {
-        return [
-            BlameableBehavior::class,
-            TimestampBehavior::class,
-        ];
-    }
+    use ResourceTrait;
+
+    const TYPE_FATHER = 1;
+    const TYPE_MOTHER = 2;
+    const TYPE_BROTHER = 3;
+    const TYPE_SISTER = 4;
 
     /**
      * {@inheritdoc}
@@ -38,7 +38,7 @@ class ParentInfo extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'parent_info';
+        return 'relative_info';
     }
 
     /**
@@ -48,10 +48,10 @@ class ParentInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['last_name', 'user_id','student_id'],'required'],
-            [['user_id','student_id','type'], 'integer'],
-            [['last_name', 'first_name','middle_name', 'description'], 'string', 'max' => 255],
-            [['phone'], 'string', 'max'=> 55],
+            [['user_id'], 'required'],
+            [['user_id', 'student_id', 'type'], 'integer'],
+            [['last_name', 'first_name', 'middle_name', 'description'], 'string', 'max' => 255],
+            [['phone'], 'string', 'max' => 55],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\Student::class, 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -72,7 +72,7 @@ class ParentInfo extends \yii\db\ActiveRecord
             'first_name' => _e('First Name'),
             'middle_name' => _e('Middle Name'),
             'description' => _e('Description'),
-             'phone' => _e('Phone'),
+            'phone' => _e('Phone'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -145,4 +145,3 @@ class ParentInfo extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

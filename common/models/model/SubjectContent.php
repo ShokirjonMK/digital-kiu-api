@@ -47,7 +47,7 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_textFileMaxSize = "";
     public $file_fileFileMaxSize = 1024 * 1024 * 20; // 5 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 8; // 2 Mb
-    public $file_videoFileMaxSize = 1024 * 1024 * 100; // 100 Mb
+    public $file_videoFileMaxSize = 1024 * 1024 * 160; // 160 Mb
     public $file_audioFileMaxSize = 1024 * 1024 * 100; // 8 Mb
 
 
@@ -82,6 +82,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [
                 [
+                    'user_id',
                     'type',
                     'subject_topic_id',
                     'teacher_access_id',
@@ -115,6 +116,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => 'Content',
             'type' => 'Type',
+            'user_id' => 'user_id',
             'subject_topic_id' => 'subject_topic_id',
             'teacher_access_id' => 'teacher_access_id',
             'description' => 'description',
@@ -138,6 +140,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'subject_topic_id',
             'description',
             'file_url',
+            'user_id',
             'teacher_access_id',
 
             'order',
@@ -204,6 +207,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         if (isRole('teacher')) {
             $model->teacher_access_id = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()])->id;
+            $model->user_id = current_user_id();
         }
 
         if ($model->save()) {

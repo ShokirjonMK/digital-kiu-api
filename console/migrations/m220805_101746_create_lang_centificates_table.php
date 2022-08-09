@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%lang_certificate}}`.
  */
-class m220805_101746_create_lang_certificates_table extends Migration
+class m220805_101746_create_lang_centificates_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -32,8 +32,8 @@ class m220805_101746_create_lang_certificates_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
         ]);
-        // Student
-        $this->addForeignKey('lang_certificate_student_id', 'lang_certificate', 'student_id', 'student', 'id');
+        // // Student
+        // $this->addForeignKey('lang_certificate_student_id', 'lang_certificate', 'student_id', 'student', 'id');
         // User
         $this->addForeignKey('lang_certificate_user_id', 'lang_certificate', 'user_id', 'users', 'id');
 
@@ -47,8 +47,8 @@ class m220805_101746_create_lang_certificates_table extends Migration
      */
     public function safeDown()
     {
-        // student
-        $this->dropForeignKey('lang_certificate_student_id', 'lang_certificate');
+        // // student
+        // $this->dropForeignKey('lang_certificate_student_id', 'lang_certificate');
         // user
         $this->dropForeignKey('lang_certificate_user_id', 'lang_certificate');
 //         Certificate_type

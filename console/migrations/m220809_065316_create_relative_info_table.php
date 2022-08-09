@@ -19,6 +19,7 @@ class m220809_065316_create_relative_info_table extends Migration
 
         $this->createTable('{{%relative_info}}', [
             'id' => $this->primaryKey(),
+
             'r_last_name' => $this->string(255)->null(),
             'r_first_name' => $this->string(255)->null(),
             'r_middle_name' => $this->string(255)->null(),
@@ -27,20 +28,24 @@ class m220809_065316_create_relative_info_table extends Migration
             'r_birth_address' => $this->srting(255)->null(),
             'r_address' => $this->srting(255)->null(),
             'r_work_place' => $this->srting(255)->null(),
-            'r_work_position' => $this->srting(255)->null(),
+            'r_work_position' => $this->string(255)->null(),
             'r_phone' => $this->string(55)->null(),
             'user_type' => $this->integer()->defaultValue(1)->comment('1-student, 2-teacher, 3-xodim'),
-            'user_id' => $this->integer(11)->notNull(),
+            'user_id' => $this->integer()->notNull(),
             'r_description' => $this->text()->null(),
 
-            'status' => $this->tinyInteger(1)->defaultValue(1),
-            'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+
+            'status' => $this->tinyInteger(1)->defaultValue(0),
+            'order' => $this->tinyInteger(1)->defaultValue(1),
+            'created_at' => $this->integer()->Null(),
+            'updated_at' => $this->integer()->Null(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
+            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
 
         ]);
+
+
 
         // User
         $this->addForeignKey('relative_info_user_id', 'relative_info', 'user_id', 'users', 'id');

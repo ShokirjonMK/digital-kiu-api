@@ -85,6 +85,7 @@ class SubjectContent extends \yii\db\ActiveRecord
                     'user_id',
                     'type',
                     'subject_topic_id',
+                    'subject_id',
                     'teacher_access_id',
                 ],
                 'integer'
@@ -116,6 +117,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => 'Content',
             'type' => 'Type',
+            'subject_id' => 'subject_id',
             'user_id' => 'user_id',
             'subject_topic_id' => 'subject_topic_id',
             'teacher_access_id' => 'teacher_access_id',

@@ -51,6 +51,7 @@ class KpiData extends \yii\db\ActiveRecord
     public $kpi_file3;
     public $kpiFileMaxSize = 1024 * 1024 * 100; // 100 Mb
 
+
     /**
      * {@inheritdoc}
      */
@@ -385,6 +386,56 @@ class KpiData extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
+
+    public function varTypes()
+    {
+        $hujjat_turi = [
+            1 => 'Sertifikat',
+            2 => 'Diplom',
+            3 => 'Guvohnoma',
+            4 => 'Dastur',
+            5 => 'Boshqa',
+        ];
+
+        $tadbir_turi = [
+            1 => 'Konferensiya',
+            2 => 'Seminar',
+            3 => 'Taʼlim loyihalari',
+        ];
+
+        $tadbirda_ishtirok_etish_shakli = [
+            1 => 'Moderator',
+            2 => 'Maʼruzachi',
+        ];
+
+        $sport_tadbir_shakli = [
+            1 => 'Olimpiada',
+            2 => 'Musobaqa',
+            3 => 'Boshqa',
+        ];
+
+        $ilmiy_tadbir_shakli = [
+            1 => 'Oʻquv kontentlarni tayyorlashda metodik yordam',
+            2 => 'master-klass darslari yoki seminar-treninglar oʻtkazish',
+        ];
+
+        $ishtirok_etgan_loyiha_yoki_tadbir_turi = [
+            1 => 'Toʻgarak',
+            2 => 'Ilmiy maktab',
+            3 => 'Klublar',
+            4 => 'Yuridik klinika',
+            5 => 'Boshqa',
+        ];
+
+        return [
+            $hujjat_turi,
+            $tadbir_turi,
+            $tadbirda_ishtirok_etish_shakli,
+            $sport_tadbir_shakli,
+            $ilmiy_tadbir_shakli,
+            $ishtirok_etgan_loyiha_yoki_tadbir_turi
+        ];
+    }
 
     public function uploadFile($thisIsFile)
     {

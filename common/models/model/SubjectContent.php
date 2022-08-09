@@ -206,11 +206,12 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
 
         $model->type = self::TYPE_TEXT;
+        $model->subject_id = $model->subjectTopic->subject_id;
 
         if (isRole('teacher')) {
 
             $teacherAccess = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()]);
-            $model->teacher_access_id = $teacherAccess->id;
+            $model->teacher_access_id =  $teacherAccess ? $teacherAccess->id : 0;
             $model->user_id = current_user_id();
         }
 

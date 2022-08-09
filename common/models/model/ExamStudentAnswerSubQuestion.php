@@ -68,6 +68,10 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                 [
                     'exam_student_answer_id',
                     'sub_question_id',
+
+                    'exam_student_id',
+                    'student_id',
+
                     'order',
                     'status',
                     'created_at',
@@ -104,6 +108,9 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             'ball' => 'Ball',
             'max_ball' => 'Max Ball',
             'teacher_conclusion' => 'Еeacher Сonclusion',
+
+            'exam_student_id' => _e('exam_student_id'),
+            'student_id' => _e('student_id'),
 
             'old_ball' => _e('old_ball'),
             'appeal_teacher_conclusion' => _e('appeal_teacher_conclusion'),
@@ -202,7 +209,6 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
     {
         return $this->hasOne(SubQuestion::className(), ['id' => 'sub_question_id']);
     }
-
 
     public static function createItem($model, $post)
     {

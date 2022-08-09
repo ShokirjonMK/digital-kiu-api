@@ -102,6 +102,7 @@ class RelativeInfo extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    ///
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();

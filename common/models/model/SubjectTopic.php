@@ -57,7 +57,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
                     'hours',
                     'subject_id',
                     'lang_id',
-                    'teacher_access_id',
+                    // 'teacher_access_id',
                 ],
                 'required'
             ],

@@ -20,15 +20,14 @@ class m220805_102226_create_student_order_table extends Migration
 
         $this->createTable('{{%student_order}}', [
             'id' => $this->primaryKey(),
-            
+
             'order_type_id' => $this->integer()->notNull(),
             'date' => $this->string(11)->notNull(),
             'file' => $this->string(255)->notNull(),
             'student_id' => $this->integer(11)->notNull(),
             'user_id' => $this->integer(11)->notNull(),
             'description' => $this->text()->null(),
-            
-            
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),
@@ -40,7 +39,6 @@ class m220805_102226_create_student_order_table extends Migration
         $this->addForeignKey('sos_student_order_student_id', 'student_order', 'student_id', 'student', 'id');
         // User
         $this->addForeignKey('sou_student_order_user_id', 'student_order', 'user_id', 'users', 'id');
-
     }
 
     /**

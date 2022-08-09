@@ -1223,9 +1223,9 @@ return [
         'subject-content_view',
         'subject-category_index',
 
-        'subject-topic_create',
-        'subject-topic_delete',
-        'subject-topic_update',
+        // 'subject-topic_create',
+        // 'subject-topic_delete',
+        // 'subject-topic_update',
         'subject-topic_index',
         'subject-topic_view',
 

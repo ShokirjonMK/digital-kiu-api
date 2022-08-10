@@ -2,35 +2,38 @@
 
 namespace api\controllers;
 
-
-use common\models\model\SubjectTopic;
+use common\models\model\KpiData;
 use Yii;
 use base\ResponseStatus;
 
-
-class SubjectTopicController extends ApiActiveController
+class KpiDataController extends ApiActiveController
 {
-
-    public $modelClass = 'api\resources\SubjectTopic';
+    public $modelClass = 'api\resources\KpiData';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'subject_topic';
-    public $controller_name = 'SubjectTopic';
+    public $table_name = 'kpi_data';
+    public $controller_name = 'KpiData';
 
     public function actionIndex($lang)
     {
-        $model = new SubjectTopic();
+        $model = new KpiData();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
 
-        // if (isRole('teacher') && !isRole('mudir')) {
-        //     $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
-        // }
+            ->andFilterWhere(['like', 'link', Yii::$app->request->get('q')]);
+
+        if (isRole('teacher') && !isRole('mudir')) {
+            $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);
+        }
+
+        if (Yii::$app->request->get('user_id') != null) {
+            $query->andWhere([$this->table_name . '.created_by' => Yii::$app->request->get('sort')]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -39,18 +42,17 @@ class SubjectTopicController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
-        $data = $this->getData($query);
+        $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }
 
     public function actionCreate($lang)
     {
-        $model = new SubjectTopic();
+        $model = new KpiData();
         $post = Yii::$app->request->post();
-
         $this->load($model, $post);
 
-        $result = SubjectTopic::createItem($model, $post);
+        $result = KpiData::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -60,14 +62,13 @@ class SubjectTopicController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = SubjectTopic::findOne($id);
+        $model = KpiData::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = SubjectTopic::updateItem($model, $post);
+        $result = KpiData::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -77,20 +78,19 @@ class SubjectTopicController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = SubjectTopic::find()
+        $model = KpiData::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-
-
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
     public function actionDelete($lang, $id)
     {
-        $model = SubjectTopic::find()
+        $model = KpiData::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
@@ -100,6 +100,12 @@ class SubjectTopicController extends ApiActiveController
 
         // remove model
         if ($model) {
+
+            if (isRole('teacher') && !isRole('mudir') && !($model->user_id == current_user_id())) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::BAD_REQUEST);
+            }
+
+            // Translate::deleteTranslate($this->table_name, $model->id);
             $model->is_deleted = 1;
             $model->update();
 

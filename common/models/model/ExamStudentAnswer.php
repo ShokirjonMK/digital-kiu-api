@@ -788,6 +788,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                                     if (!$examStudentAnswerSubQuestion) {
                                                         $examStudentAnswerSubQuestion = new ExamStudentAnswerSubQuestion();
                                                         $examStudentAnswerSubQuestion->exam_student_answer_id = $model->id;
+                                                        $examStudentAnswerSubQuestion->exam_student_id = $model->exam_student_id;
+                                                        $examStudentAnswerSubQuestion->student_id = $model->examStudent->student_id;
                                                         $examStudentAnswerSubQuestion->sub_question_id = $subQuestionOneAnswer->sub_question_id;
                                                     }
 

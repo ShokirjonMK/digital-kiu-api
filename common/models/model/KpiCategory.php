@@ -138,6 +138,8 @@ class KpiCategory extends \yii\db\ActiveRecord
             'tabName',
             'extra',
 
+            'kpiData',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -183,6 +185,17 @@ class KpiCategory extends \yii\db\ActiveRecord
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(KpiCategoryInfo::class, ['kpi_category_id' => 'id'])
             ->andOnCondition(['lang' => self::$selected_language]);
+    }
+
+    /**
+     * Get all of the getKpiData for the KpiCategory
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getKpiData()
+    {
+        // return 1;
+        return $this->hasMany(KpiData::className(), ['kpi_category_id'=> 'id']); //->onCondition(['user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
     }
 
 
@@ -309,8 +322,26 @@ class KpiCategory extends \yii\db\ActiveRecord
     public static function categoryFields()
     {
         return [
-            "date", "file", "subject_category", "count_of_copyright", "link"
+            "date",
+            "file",
+            // "subject_category",
+            // "count_of_copyright",
+            "link",
+            "input",
+
         ];
+
+        /*  return
+            [
+                "input"=> ,
+                "link",
+                "number",
+                "file",
+                "date",
+                "double_date",
+                "select",
+                "nimadir"
+            ]; */
     }
 
     public static function term()

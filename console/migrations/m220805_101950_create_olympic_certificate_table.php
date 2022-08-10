@@ -23,8 +23,8 @@ class m220805_101950_create_olympic_certificate_table extends Migration
             'type' => $this->integer(11)->Null(),
             'address' => $this->string(255)->notNull(),
             'year' => $this->string(11)->notNull(),
-            'file' => $this->string(255),
-            'student_id'=>$this->integer(11)->notNull(),
+            'file' => $this->string(255)->Null(),
+            'student_id'=>$this->integer(11)->Null(),
             'user_id'=>$this->integer(11)->notNull(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
@@ -35,9 +35,9 @@ class m220805_101950_create_olympic_certificate_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
         ]);
         // Student
-        $this->addForeignKey('olympic_certificate-student_id', 'olympic_certificate', 'student_id', 'student', 'id');
+        $this->addForeignKey('olympic_certificate_student_id', 'olympic_certificate', 'student_id', 'student', 'id');
         // User
-        $this->addForeignKey('olympic_certificate-user_id', 'olympic_certificate', 'user_id', 'users', 'id');
+        $this->addForeignKey('olympic_certificate_user_id', 'olympic_certificate', 'user_id', 'users', 'id');
 
     }
 
@@ -47,10 +47,10 @@ class m220805_101950_create_olympic_certificate_table extends Migration
     public function safeDown()
     {
         // student
-        $this->dropForeignKey('olympic_certificate-student_id', 'sport_certificate');
+        $this->dropForeignKey('olympic_certificate_student_id', 'sport_certificate');
 
         // user
-        $this->dropForeignKey('olympic_certificate-user_id', 'sport_certificate');
+        $this->dropForeignKey('olympic_certificate_user_id', 'sport_certificate');
 
 
 

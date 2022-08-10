@@ -85,6 +85,7 @@ class Exam extends \yii\db\ActiveRecord
                     'faculty_id',
                     'is_protected',
                     'duration',
+                    'subject_id',
                     'edu_semestr_subject_id',
                     'order',
                     'status',
@@ -129,6 +130,7 @@ class Exam extends \yii\db\ActiveRecord
             'max_ball' => 'Max Ball',
             'min_ball' => 'Min Ball',
             'type' => 'Type',
+            'subject_id' => 'subject_id',
             'edu_year_id' => 'Edu Year',
 
             'appeal_start' => 'appeal_start',
@@ -699,6 +701,7 @@ class Exam extends \yii\db\ActiveRecord
 
         $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->eduSemestrSubject->subject_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -788,7 +791,9 @@ class Exam extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->eduSemestrSubject->subject_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -1003,11 +1008,13 @@ class Exam extends \yii\db\ActiveRecord
         } else {
             $this->updated_by = Current_user_id();
         }
+
         return parent::beforeSave($insert);
     }
 
     public static function statusList()
     {
+        
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),

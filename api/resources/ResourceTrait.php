@@ -164,7 +164,7 @@ trait ResourceTrait
     public static function decodeMK($string)
     {
         // return $string;
-        $string = "ejdg-biebc";
+        // $string = "ejdg-biebc";
         $num = '';
         foreach (str_split((string) $string) as $one) {
             if ($one == "-") {

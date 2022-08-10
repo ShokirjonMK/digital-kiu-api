@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%lang_centificates}}`.
+ * Handles the creation of table `{{%lang_certificate}}`.
  */
 class m220805_101746_create_lang_certificate_table extends Migration
 {
@@ -34,7 +34,8 @@ class m220805_101746_create_lang_certificate_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
         ]);
-
+        // // Student
+        // $this->addForeignKey('lang_certificate_student_id', 'lang_certificate', 'student_id', 'student', 'id');
         // User
         $this->addForeignKey('lang_certificate_user_id', 'lang_certificate', 'user_id', 'users', 'id');
 
@@ -48,7 +49,9 @@ class m220805_101746_create_lang_certificate_table extends Migration
      */
     public function safeDown()
     {
-         // user
+        // // student
+        // $this->dropForeignKey('lang_certificate_student_id', 'lang_certificate');
+        // user
         $this->dropForeignKey('lang_certificate_user_id', 'lang_certificate');
 //         Certificate_type
         $this->dropForeignKey('lang_certificate_certificate_type_id', 'lang_certificate');

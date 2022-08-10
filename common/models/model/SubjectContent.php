@@ -47,7 +47,7 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_textFileMaxSize = "";
     public $file_fileFileMaxSize = 1024 * 1024 * 20; // 5 Mb
     public $file_imageFileMaxSize = 1024 * 1024 * 8; // 2 Mb
-    public $file_videoFileMaxSize = 1024 * 1024 * 100; // 100 Mb
+    public $file_videoFileMaxSize = 1024 * 1024 * 160; // 160 Mb
     public $file_audioFileMaxSize = 1024 * 1024 * 100; // 8 Mb
 
 
@@ -82,8 +82,11 @@ class SubjectContent extends \yii\db\ActiveRecord
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [
                 [
+                    'user_id',
                     'type',
                     'subject_topic_id',
+                    'subject_id',
+                    'teacher_access_id',
                 ],
                 'integer'
             ],
@@ -96,6 +99,7 @@ class SubjectContent extends \yii\db\ActiveRecord
                 'string'
             ],
             [['subject_topic_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectTopic::className(), 'targetAttribute' => ['subject_topic_id' => 'id']],
+            [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
             [['file_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,ppt,pptx,zip', 'maxSize' => $this->file_fileFileMaxSize],
             [['file_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg,gimp,bmp,jpeg', 'maxSize' => $this->file_imageFileMaxSize],
             [['file_video'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp4,avi', 'maxSize' => $this->file_videoFileMaxSize],
@@ -113,7 +117,10 @@ class SubjectContent extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => 'Content',
             'type' => 'Type',
+            'subject_id' => 'subject_id',
+            'user_id' => 'user_id',
             'subject_topic_id' => 'subject_topic_id',
+            'teacher_access_id' => 'teacher_access_id',
             'description' => 'description',
             'file_url' => "File Url",
             'order' => _e('Order'),
@@ -135,6 +142,8 @@ class SubjectContent extends \yii\db\ActiveRecord
             'subject_topic_id',
             'description',
             'file_url',
+            'user_id',
+            'teacher_access_id',
 
             'order',
             'status',
@@ -155,6 +164,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'subjectTopic',
             'subjectCategory',
 
+            'teacherAccess',
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -174,6 +184,11 @@ class SubjectContent extends \yii\db\ActiveRecord
         return $this->hasOne(SubjectTopic::className(), ['id' => 'subject_topic_id']);
     }
 
+    public function getTeacherAccess()
+    {
+        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+    }
+
     public function getSubjectCategory()
     {
         return $this->subjectTopic->subjectCategory;
@@ -191,6 +206,14 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
 
         $model->type = self::TYPE_TEXT;
+        $model->subject_id = $model->subjectTopic->subject_id;
+
+        if (isRole('teacher')) {
+
+            $teacherAccess = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()]);
+            $model->teacher_access_id =  $teacherAccess ? $teacherAccess->id : 0;
+            $model->user_id = current_user_id();
+        }
 
         if ($model->save()) {
 
@@ -199,7 +222,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
             if ($model->file_file) {
                 $model->file_file = $model->file_file[0];
-                $fileUrl = $model->uploadFile("file_file", $model->subject_topic_id);
+                $fileUrl = $model->uploadFile("file_file", $model->subject->id);
                 if ($fileUrl) {
                     $model->file_url = $fileUrl;
                     $model->type = self::TYPE_FILE;

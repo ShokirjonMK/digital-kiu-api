@@ -27,12 +27,12 @@ class RelativeInfo extends \yii\db\ActiveRecord
     use ResourceTrait;
     public static $selected_language = 'uz';
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
+    use ResourceTrait;
+
+    const TYPE_FATHER = 1;
+    const TYPE_MOTHER = 2;
+    const TYPE_BROTHER = 3;
+    const TYPE_SISTER = 4;
 
     /**
      * {@inheritdoc}
@@ -121,6 +121,7 @@ class RelativeInfo extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    ///
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -164,4 +165,3 @@ class RelativeInfo extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

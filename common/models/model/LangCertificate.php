@@ -5,8 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
@@ -41,16 +39,6 @@ class LangCertificate extends \yii\db\ActiveRecord
     const USER_TYPE_TEACHER = 2;
     const USER_TYPE_STAFF = 3;
 
-
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
-    /**
-     * {@inheritdoc}
-     */
 
     public static function tableName()
     {

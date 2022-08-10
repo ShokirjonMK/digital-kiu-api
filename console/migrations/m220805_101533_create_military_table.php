@@ -40,11 +40,11 @@ class m220805_101533_create_military_table extends Migration
 //        $this->addForeignKey('sasq_survey_answer_survey_question', 'survey_answer', 'survey_question_id', 'survey_question', 'id');
 
         // Student
-        $this->createIndex('idx-rel_student-student_id', 'military', 'student_id');
-        $this->addForeignKey('fk-rel_student-student_id', 'military', 'student_id', 'student', 'id', 'CASCADE');
+        $this->createIndex('idx_rel_student_student_id', 'military', 'student_id');
+        $this->addForeignKey('fk_rel_student_student_id', 'military', 'student_id', 'student', 'id');
         // User
-        $this->createIndex('idx-rel_user-user_id', 'military', 'user_id');
-        $this->addForeignKey('fk-rel_user-user_id', 'military', 'user_id', 'users', 'id', 'CASCADE');
+        $this->createIndex('idx_rel_user_user_id', 'military', 'user_id');
+        $this->addForeignKey('fk_rel_user_user_id', 'military', 'user_id', 'users', 'id');
 
     }
 
@@ -54,11 +54,11 @@ class m220805_101533_create_military_table extends Migration
     public function safeDown()
     {
         // Edu_year
-        $this->dropForeignKey('fk-rel_student-student_id', 'military');
-        $this->dropIndex('idx-rel_student-student_id', 'military');
+        $this->dropForeignKey('fk_rel_student_student_id', 'military');
+        $this->dropIndex('idx_rel_student_student_id', 'military');
         // Edu_type
-        $this->dropForeignKey('fk-rel_user-user_id', 'military');
-        $this->dropIndex('idx-rel_user-user_id', 'military');
+        $this->dropForeignKey('fk_rel_user_user_id', 'military');
+        $this->dropIndex('idx_rel_user_user_id', 'military');
 
 
         $this->dropTable('{{%military}}');

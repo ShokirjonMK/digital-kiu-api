@@ -19,9 +19,10 @@ class m220805_102207_create_order_type_table extends Migration
 
         $this->createTable('{{%order_type}}', [
             'id' => $this->primaryKey(),
-
+            
             'name'=>$this->string(255)->null(),
-            'lang' => $this->string(2)->notNull(),
+            'lang' => $this->string(2)->Null(),
+            // translate ga yozilishi kk nomlari 3 ta tilda
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),

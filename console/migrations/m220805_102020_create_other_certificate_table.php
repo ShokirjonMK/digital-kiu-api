@@ -37,7 +37,7 @@ class m220805_102020_create_other_certificate_table extends Migration
 //        // Student
 //        $this->addForeignKey('other_certificate-student_id', 'sport_certificate', 'student_id', 'student', 'id');
 //        // User
-//        $this->addForeignKey('other_certificate-user_id', 'sport_certificate', 'user_id', 'users', 'id');
+       $this->addForeignKey('ocu_other_certificate_user_id', 'other_certificate', 'user_id', 'users', 'id');
 
     }
 
@@ -50,7 +50,7 @@ class m220805_102020_create_other_certificate_table extends Migration
 //        $this->dropForeignKey('other_certificate-student_id', 'sport_certificate');
 //
 //        // user
-//        $this->dropForeignKey('other_certificate-user_id', 'sport_certificate');
+       $this->dropForeignKey('ocu_other_certificate_user_id', 'other_certificate');
 //
 
         $this->dropTable('{{%other_certificate}}');

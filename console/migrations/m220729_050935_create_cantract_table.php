@@ -32,14 +32,14 @@ class m220729_050935_create_cantract_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
         ]);
         // Edu_year
-        $this->createIndex('index_cey_comtract_edu__year_id', 'cantract', 'edu_year_id');
-        $this->addForeignKey('cey_comtract_edu__year_id', 'cantract', 'edu_year_id', 'edu_year', 'id', 'RESTRICT');
+        $this->createIndex('index_cey_comtract_edu_year_id', 'cantract', 'edu_year_id');
+        $this->addForeignKey('cey_comtract_edu_year_id', 'cantract', 'edu_year_id', 'edu_year', 'id');
         // Edu_type
-        $this->createIndex('index_cet_comtract_edu__type_id', 'cantract', 'edu_type_id');
-        $this->addForeignKey('cet_comtract_edu__type_id', 'cantract', 'edu_type_id', 'edu_type', 'id', 'RESTRICT');
+        $this->createIndex('index_cet_comtract_edu_type_id', 'cantract', 'edu_type_id');
+        $this->addForeignKey('cet_comtract_edu_type_id', 'cantract', 'edu_type_id', 'edu_type', 'id');
         // Edu_form
-        $this->createIndex('index_cef_comtract_edu__form_id', 'cantract', 'edu_form_id');
-        $this->addForeignKey('cef_comtract_edu__form_id', 'cantract', 'edu_form_id', 'edu_form', 'id', 'RESTRICT');
+        $this->createIndex('index_cef_comtract_edu_form_id', 'cantract', 'edu_form_id');
+        $this->addForeignKey('cef_comtract_edu_form_id', 'cantract', 'edu_form_id', 'edu_form', 'id');
     }
 
 
@@ -50,14 +50,14 @@ class m220729_050935_create_cantract_table extends Migration
     public function safeDown()
     {
         // Edu_year
-        $this->dropForeignKey('cey_comtract_edu__year_id', 'cantract');
-        $this->dropIndex('idindex_cey_comtract_edu__year_idd', 'cantract');
+        $this->dropForeignKey('cey_comtract_edu_year_id', 'cantract');
+        $this->dropIndex('idindex_cey_comtract_edu_year_idd', 'cantract');
         // Edu_type
-        $this->dropForeignKey('cet_comtract_edu__type_id', 'cantract');
-        $this->dropIndex('index_cet_comtract_edu__type_id', 'cantract');
+        $this->dropForeignKey('cet_comtract_edu_type_id', 'cantract');
+        $this->dropIndex('index_cet_comtract_edu_type_id', 'cantract');
         // Edu_form
-        $this->dropForeignKey('cef_comtract_edu__form_id', 'cantract');
-        $this->dropIndex('index_cef_comtract_edu__form_id', 'cantract');
+        $this->dropForeignKey('cef_comtract_edu_form_id', 'cantract');
+        $this->dropIndex('index_cef_comtract_edu_form_id', 'cantract');
 
         $this->dropTable('{{%cantract}}');
     }

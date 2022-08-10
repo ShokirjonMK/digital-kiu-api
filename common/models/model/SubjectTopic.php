@@ -57,6 +57,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
                     'hours',
                     'subject_id',
                     'lang_id',
+                    // 'teacher_access_id',
                 ],
                 'required'
             ],
@@ -67,6 +68,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
                     'subject_id',
                     'lang_id',
                     'subject_category_id',
+                    'teacher_access_id',
                 ],
                 'integer'
             ],
@@ -80,6 +82,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
+            [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
 
         ];
     }
@@ -97,6 +100,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             'subject_category_id' => 'Subject Category Id',
             'lang_id' => 'Lang Id',
             'description' => 'Description',
+            'teacher_access_id' => 'teacher_access_id',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -118,6 +122,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             'subject_category_id',
             'lang_id',
             'description',
+            'teacher_access_id',
 
             'order',
             'status',
@@ -166,6 +171,11 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $this->hasOne(Subject::className(), ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
+    public function getTeacherAccess()
+    {
+        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id'])->onCondition(['is_deleted' => 0]);
+    }
+
     public function getSubjectCategory()
     {
         return $this->hasOne(SubjectCategory::className(), ['id' => 'subject_category_id']);
@@ -183,6 +193,10 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+        }
+
+        if (isRole('teacher')) {
+            $model->teacher_access_id = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()])->id;
         }
 
         if ($model->save()) {

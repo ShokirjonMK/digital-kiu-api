@@ -1205,14 +1205,22 @@ return [
         'exam-appeal_view',
         'exam-appeal_update',
 
-        'kpi-store_index',
-        'kpi-store_create',
-        'kpi-store_view',
-        'kpi-store_update',
-        'kpi-store_delete',
+        // 'kpi-store_index',
+        // 'kpi-store_create',
+        // 'kpi-store_view',
+        // 'kpi-store_update',
+        // 'kpi-store_delete',
         'kpi-category_index',
         'kpi-category_extra',
         // 'kpi-category_extra',
+
+
+        // 'kpi-data_index',
+        // 'kpi-data_create',
+        // 'kpi-data_view',
+        // 'kpi-data_update',
+        // 'kpi-data_delete',
+
 
 
         'subject-content_create',
@@ -1223,9 +1231,9 @@ return [
         'subject-content_view',
         'subject-category_index',
 
-        'subject-topic_create',
-        'subject-topic_delete',
-        'subject-topic_update',
+        // 'subject-topic_create',
+        // 'subject-topic_delete',
+        // 'subject-topic_update',
         'subject-topic_index',
         'subject-topic_view',
 

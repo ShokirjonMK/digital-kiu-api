@@ -11,6 +11,7 @@ class EncryptPass extends Model
     protected $options = 0;
     public function encrypt($string, $encryption_key)
     {
+        
         $encryption = openssl_encrypt($string, $this->ciphering, $encryption_key, $this->options, $this->encryption_iv);
         return $encryption;
     }

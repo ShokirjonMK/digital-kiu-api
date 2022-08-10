@@ -1014,6 +1014,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function statusList()
     {
+        
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),

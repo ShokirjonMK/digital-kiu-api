@@ -265,13 +265,13 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
 
         // exam appeal appelatsiya berish vaqti
-        // if ($model->examStudent->exam->appeal_finish < time()) {
-        //     $errors[] = _e('Appeal time is already finished!');
-        //     // $errors['time'] = time();
-        //     // $errors['appeal_finish'] = $model->examStudent->exam->appeal_finish;
+        if ($model->examStudent->exam->appeal_finish < time()) {
+            $errors[] = _e('Appeal time is already finished!');
+            // $errors['time'] = time();
+            // $errors['appeal_finish'] = $model->examStudent->exam->appeal_finish;
 
-        //     return simplify_errors($errors);
-        // }
+            return simplify_errors($errors);
+        }
 
         $model->teacher_user_id = self::teacher_access_user_id($model->examStudent->teacher_access_id);
 

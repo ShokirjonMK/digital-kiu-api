@@ -8,27 +8,6 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
-/**
- * This is the model class for table "direction".
- *
- * @property int $id
- * @property string $name
- * @property int $kpi_category_id
- * @property string $date
- * @property string $file
- * @property int $subject_category_id
- * @property string $count_of_copyright
- * @property string $link
- * @property string $ball
- * @property int $user_id
- * @property int|null $order
- * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
- * @property int $created_by
- * @property int $updated_by
- * @property int $is_deleted
- */
 class KpiData extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
@@ -390,41 +369,41 @@ class KpiData extends \yii\db\ActiveRecord
     public function varTypes()
     {
         $hujjat_turi = [
-            1 => 'Sertifikat',
-            2 => 'Diplom',
-            3 => 'Guvohnoma',
-            4 => 'Dastur',
-            5 => 'Boshqa',
+            1 => _e('Sertifikat'),
+            2 => _e('Diplom'),
+            3 => _e('Guvohnoma'),
+            4 => _e('Dastur'),
+            5 => _e('Boshqa'),
         ];
 
         $tadbir_turi = [
-            1 => 'Konferensiya',
-            2 => 'Seminar',
-            3 => 'Taʼlim loyihalari',
+            1 => _e('Konferensiya'),
+            2 => _e('Seminar'),
+            3 => _e('Taʼlim loyihalari'),
         ];
 
         $tadbirda_ishtirok_etish_shakli = [
-            1 => 'Moderator',
-            2 => 'Maʼruzachi',
+            1 => _e('Moderator'),
+            2 => _e('Maʼruzachi'),
         ];
 
         $sport_tadbir_shakli = [
-            1 => 'Olimpiada',
-            2 => 'Musobaqa',
-            3 => 'Boshqa',
+            1 => _e('Olimpiada'),
+            2 => _e('Musobaqa'),
+            3 => _e('Boshqa'),
         ];
 
         $ilmiy_tadbir_shakli = [
-            1 => 'Oʻquv kontentlarni tayyorlashda metodik yordam',
-            2 => 'master-klass darslari yoki seminar-treninglar oʻtkazish',
+            1 => _e('Oʻquv kontentlarni tayyorlashda metodik yordam'),
+            2 => _e('master-klass darslari yoki seminar-treninglar oʻtkazish'),
         ];
 
         $ishtirok_etgan_loyiha_yoki_tadbir_turi = [
-            1 => 'Toʻgarak',
-            2 => 'Ilmiy maktab',
-            3 => 'Klublar',
-            4 => 'Yuridik klinika',
-            5 => 'Boshqa',
+            1 => _e('Toʻgarak'),
+            2 => _e('Ilmiy maktab'),
+            3 => _e('Klublar'),
+            4 => _e('Yuridik klinika'),
+            5 => _e('Boshqa'),
         ];
 
         return [

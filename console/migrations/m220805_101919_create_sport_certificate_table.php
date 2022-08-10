@@ -20,11 +20,12 @@ class m220805_101919_create_sport_certificate_table extends Migration
 
         $this->createTable('{{%sport_certificate}}', [
             'id' => $this->primaryKey(),
+
             'type' => $this->integer(11)->Null(),
             'date' => $this->date()->notNull(),
             'year' => $this->string(11)->Null(),
             'address' => $this->string(255)->Null(),
-            'file' => $this->string(255)->notNull(),
+            'file' => $this->string(255)->Null(),
             'student_id' => $this->integer(11)->Null(),
             'user_id' => $this->integer(11)->notNull(),
 

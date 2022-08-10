@@ -19,12 +19,14 @@ class m220805_101950_create_olympic_certificate_table extends Migration
 
         $this->createTable('{{%olympic_certificate}}', [
             'id' => $this->primaryKey(),
+
             'type' => $this->integer(11)->Null(),
             'address' => $this->string(255)->notNull(),
             'year' => $this->string(11)->notNull(),
-            'file' => $this->string(255)->notNull(),
+            'file' => $this->string(255)->Null(),
             'student_id'=>$this->integer(11)->Null(),
             'user_id'=>$this->integer(11)->notNull(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

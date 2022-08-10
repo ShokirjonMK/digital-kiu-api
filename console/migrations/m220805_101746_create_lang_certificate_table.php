@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%lang_certificate}}`.
  */
-class m220805_101746_create_lang_centificates_table extends Migration
+class m220805_101746_create_lang_certificate_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -19,12 +19,14 @@ class m220805_101746_create_lang_centificates_table extends Migration
 
         $this->createTable('{{%lang_certificate}}', [
             'id' => $this->primaryKey(),
+
             'certificate_type_id' => $this->integer(11)->notNull(),
             'ball' => $this->string(11)->notNull(),
-            'file' => $this->string()->notNull(),
+            'file' => $this->string(255),
             'lang' => $this->string(2)->notNull(),
             'user_type' => $this->integer()->defaultValue(1)->comment('1-student, 2-teacher, 3-xodim'),
             'user_id'=>$this->integer()->notNull(),
+
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

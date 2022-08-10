@@ -24,7 +24,7 @@ class m220805_102226_create_student_order_table extends Migration
             'order_type_id' => $this->integer()->notNull(),
             'date' => $this->string(11)->notNull(),
             'file' => $this->string(255)->notNull(),
-            'student_id' => $this->integer(11)->notNull(),
+            'student_id' => $this->integer(11)->Null(),
             'user_id' => $this->integer(11)->notNull(),
             'description' => $this->text()->null(),
 
@@ -35,8 +35,8 @@ class m220805_102226_create_student_order_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
         ]);
-        // Student
-        $this->addForeignKey('sos_student_order_student_id', 'student_order', 'student_id', 'student', 'id');
+//        // Student
+//        $this->addForeignKey('sos_student_order_student_id', 'student_order', 'student_id', 'student', 'id');
         // User
         $this->addForeignKey('sou_student_order_user_id', 'student_order', 'user_id', 'users', 'id');
     }
@@ -46,8 +46,8 @@ class m220805_102226_create_student_order_table extends Migration
      */
     public function safeDown()
     {
-        // student
-        $this->dropForeignKey('sos_student_order_student_id', 'sport_certificate');
+//        // student
+//        $this->dropForeignKey('sos_student_order_student_id', 'sport_certificate');
 
         // user
         $this->dropForeignKey('sou_student_order_user_id', 'sport_certificate');

@@ -23,6 +23,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class RelativeInfo extends \yii\db\ActiveRecord
 {
+
+    use ResourceTrait;
     public static $selected_language = 'uz';
 
     use ResourceTrait;
@@ -48,11 +50,17 @@ class RelativeInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id'], 'required'],
-            [['user_id', 'student_id', 'type'], 'integer'],
-            [['last_name', 'first_name', 'middle_name', 'description'], 'string', 'max' => 255],
-            [['phone'], 'string', 'max' => 55],
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\Student::class, 'targetAttribute' => ['student_id' => 'id']],
+            [['user_id',],'required'],
+            [['r_birthday',], 'date', 'format' => 'php:Y-m-d'],
+            [['r_type', 'user_type', 'user_id'], 'integer'],
+            [['r_last_name',
+                'r_first_name',
+                'r_middle_name',
+                'r_birth_address',
+                'r_address',
+                'r_work_place',
+                'r_work_position',
+                'r_phone','r_description'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -65,14 +73,19 @@ class RelativeInfo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => _e('User Id'),
-            'student_id' => _e('Student Id'),
-            'type' => _e('Type'),
-            'last_name' => _e('Last Name'),
-            'first_name' => _e('First Name'),
-            'middle_name' => _e('Middle Name'),
-            'description' => _e('Description'),
-            'phone' => _e('Phone'),
+            'r_birthday',
+            'r_type',
+            'user_type',
+            'user_id',
+            'r_last_name',
+            'r_first_name',
+            'r_middle_name',
+            'r_birth_address',
+            'r_address',
+            'r_work_place',
+            'r_work_position',
+            'r_phone',
+            'r_description',
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -84,14 +97,20 @@ class RelativeInfo extends \yii\db\ActiveRecord
     public function fields()
     {
         $fields = [
-            'last_name',
-            'first_name',
-            'middle_name',
-            'description',
+            'id',
+            'r_birthday',
+            'r_type',
+            'user_type',
             'user_id',
-            'student_id',
-            'phone',
-            'type',
+            'r_last_name',
+            'r_first_name',
+            'r_middle_name',
+            'r_birth_address',
+            'r_address',
+            'r_work_place',
+            'r_work_position',
+            'r_phone',
+            'r_description',
             'status',
             'is_deleted',
             'created_at',

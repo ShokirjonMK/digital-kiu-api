@@ -3,27 +3,27 @@
 namespace api\controllers;
 
 use base\ResponseStatus;
-use common\models\model\LangCentificate;
+use common\models\model\RelativeInfo;
 use Yii;
 
-class LangCentificateController extends ApiActiveController
+class RelativeInfoController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\LangCentificate';
+    public $modelClass = 'api\resources\RelativeInfo';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'lang_centificates';
-    public $controller_name = 'LangCentificate';
+    public $table_name = 'relative_info';
+    public $controller_name = 'RelativeInfo';
 
     public function actionCreate($lang)
     {
-        $model = new LangCentificate();
+        $model = new RelativeInfo();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = LangCentificate::createItem($model, $post);
+        $result = RelativeInfo::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -33,13 +33,13 @@ class LangCentificateController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = LangCentificate::findOne($id);
+        $model = RelativeInfo::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = LangCentificate::updateItem($model, $post);
+        $result = RelativeInfo::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -49,7 +49,7 @@ class LangCentificateController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = LangCentificate::find()
+        $model = RelativeInfo::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -61,7 +61,7 @@ class LangCentificateController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = LangCentificate::find()
+        $model = RelativeInfo::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         $model->delete();

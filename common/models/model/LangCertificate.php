@@ -5,8 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
@@ -18,6 +16,7 @@ use yii\web\UploadedFile;
  * @property string $lang
  * @property int $certificate_type_id
  * @property int $student_id
+ * @property int $user_type
  * @property int $user_id
  * @property int $status
  * @property int $is_deleted
@@ -40,9 +39,6 @@ class LangCertificate extends \yii\db\ActiveRecord
     const USER_TYPE_TEACHER = 2;
     const USER_TYPE_STAFF = 3;
 
-    /**
-     * {@inheritdoc}
-     */
 
     public static function tableName()
     {
@@ -90,6 +86,7 @@ class LangCertificate extends \yii\db\ActiveRecord
     public function fields()
     {
         $fields = [
+            'id',
             'ball',
             'certificate_type_id',
             'file',

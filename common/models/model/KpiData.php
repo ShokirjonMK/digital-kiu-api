@@ -28,6 +28,7 @@ class KpiData extends \yii\db\ActiveRecord
     public $kpi_file1;
     public $kpi_file2;
     public $kpi_file3;
+    public $kpi_file4;
     public $kpiFileMaxSize = 1024 * 1024 * 100; // 100 Mb
 
 
@@ -80,6 +81,7 @@ class KpiData extends \yii\db\ActiveRecord
                     'file1',
                     'file2',
                     'file3',
+                    'file4',
                     'link',
                     'link2',
                     'number',
@@ -106,6 +108,7 @@ class KpiData extends \yii\db\ActiveRecord
             [['file1'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
             [['file2'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
             [['file3'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
+            [['file4'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
 
         ];
     }
@@ -124,6 +127,8 @@ class KpiData extends \yii\db\ActiveRecord
             'file1' => _e('file'),
             'file2' => _e('file2'),
             'file3' => _e('file3'),
+            'file4' => _e('file4'),
+
             'start_date' => _e('start_date'),
             'end_date' => _e('end_date'),
             'link' => _e('link'),
@@ -161,6 +166,7 @@ class KpiData extends \yii\db\ActiveRecord
             'file1',
             'file2',
             'file3',
+            'file4',
             'start_date',
             'end_date',
             'link',
@@ -279,6 +285,19 @@ class KpiData extends \yii\db\ActiveRecord
             }
             // ***
 
+            // kpi file saqlaymiz
+            $model->kpi_file4 = UploadedFile::getInstancesByName('kpi_file4');
+            if ($model->kpi_file4) {
+                $model->kpi_file4 = $model->kpi_file4[0];
+                $kpiFileUrl = $model->uploadFile($model->kpi_file4);
+                if ($kpiFileUrl) {
+                    $model->file4 = $kpiFileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
+
         }
         if (count($errors) == 0) {
             if ($model->save()) {
@@ -337,6 +356,21 @@ class KpiData extends \yii\db\ActiveRecord
             }
         }
         // ***
+
+
+        // kpi file saqlaymiz
+        $model->kpi_file4 = UploadedFile::getInstancesByName('kpi_file4');
+        if ($model->kpi_file4) {
+            $model->kpi_file4 = $model->kpi_file4[0];
+            $kpiFileUrl = $model->uploadFile($model->kpi_file4);
+            if ($kpiFileUrl) {
+                $model->file4 = $kpiFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
 
 
         if (!isset($post['user_id'])) {

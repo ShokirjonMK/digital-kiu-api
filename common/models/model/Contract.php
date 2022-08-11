@@ -24,7 +24,7 @@ use api\resources\ResourceTrait;
  * @property int $created_by
  * @property int $updated_by
  */
-class Cantract extends \yii\db\ActiveRecord
+class Contract extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -43,7 +43,7 @@ class Cantract extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'cantract';
+        return 'contract';
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 namespace api\controllers;
+
 use base\ResponseStatus;
 use common\models\model\OlympicCertificate;
 use Yii;
@@ -16,6 +17,24 @@ class OlympicCertificateController extends ApiActiveController
 
     public $table_name = 'olympic_certificate';
     public $controller_name = 'OlympicCertificate';
+
+    public function actionIndex($lang)
+    {
+        $model = new OlympicCertificate();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
 
     public function actionCreate($lang)
     {
@@ -60,7 +79,7 @@ class OlympicCertificateController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = LangCentificate::find()
+        $model = OlympicCertificate::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         $model->delete();
@@ -69,5 +88,4 @@ class OlympicCertificateController extends ApiActiveController
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
-
 }

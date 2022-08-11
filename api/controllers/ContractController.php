@@ -3,27 +3,46 @@
 namespace api\controllers;
 
 use base\ResponseStatus;
-use common\models\model\Cantract;
+use common\models\model\Contract;
 use Yii;
 
-class  CantractController extends ApiActiveController
+class  ContractController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Cantract';
+    public $modelClass = 'api\resources\Contract';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'cantract';
-    public $controller_name = 'Cantract';
+    public $table_name = 'contract';
+    public $controller_name = 'Contract';
+
+
+    public function actionIndex($lang)
+    {
+        $model = new Contract();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
 
     public function actionCreate($lang)
     {
-        $model = new Cantract();
+        $model = new Contract();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Cantract::createItem($model, $post);
+        $result = Contract::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -33,13 +52,13 @@ class  CantractController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Cantract::findOne($id);
+        $model = Contract::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Cantract::updateItem($model, $post);
+        $result = Contract::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -49,7 +68,7 @@ class  CantractController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Cantract::find()
+        $model = Contract::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -60,7 +79,7 @@ class  CantractController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Cantract::find()
+        $model = Contract::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         $model->delete();

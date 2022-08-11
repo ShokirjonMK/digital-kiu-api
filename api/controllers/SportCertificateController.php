@@ -17,6 +17,24 @@ class SportCertificateController extends ApiActiveController
     public $table_name = 'sport_certificate';
     public $controller_name = 'SportCertificate';
 
+    public function actionIndex($lang)
+    {
+        $model = new SportCertificate();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionCreate($lang)
     {
         $model = new SportCertificate();

@@ -18,6 +18,26 @@ class LangCertificateTypeController extends ApiActiveController
     public $table_name = 'lang_certificate_type';
     public $controller_name = 'LangCertificateType';
 
+
+
+    public function actionIndex($lang)
+    {
+        $model = new LangCertificateType();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionCreate($lang)
     {
         $model = new LangCertificateType();

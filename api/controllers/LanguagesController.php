@@ -4,9 +4,7 @@ namespace api\controllers;
 
 use common\models\Languages;
 use Yii;
-use api\resources\Job;
 use base\ResponseStatus;
-use common\models\JobInfo;
 
 class LanguagesController extends ApiActiveController
 {

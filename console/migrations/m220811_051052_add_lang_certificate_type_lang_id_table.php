@@ -12,7 +12,7 @@ class m220811_051052_add_lang_certificate_type_lang_id_table extends Migration
      */
     public function safeUp()
     {
-        //   addColumn('')
+         $this->addColumn('lang_certificate_type', 'lang_id', $this->integer(11)->after('lang')->notNull());
     }
 
     /**

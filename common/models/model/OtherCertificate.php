@@ -5,6 +5,7 @@ namespace common\models\model;
 use common\models\User;
 use Yii;
 use yii\web\UploadedFile;
+use api\resources\ResourceTrait;
 
 /**
  * This is the model class for table "olympic_certificate".
@@ -33,6 +34,14 @@ class OtherCertificate extends \yii\db\ActiveRecord
     public static $selected_language = 'uz';
 
 
+    use ResourceTrait;
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
     /**
      * {@inheritdoc}
      */

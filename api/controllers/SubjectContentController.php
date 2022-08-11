@@ -58,6 +58,10 @@ class SubjectContentController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
+        if (isRole('teacher') && !isRole('mudir')) {
+            $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
+        }
+
         if (Yii::$app->request->get('user_id') != null) {
             $query->andWhere([$this->table_name . '.created_by' => Yii::$app->request->get('sort')]);
         }

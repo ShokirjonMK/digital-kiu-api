@@ -5,9 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
-
 /**
  * This is the model class for table "military ".
  *
@@ -26,13 +23,6 @@ class LangCertificateType extends \yii\db\ActiveRecord
     use ResourceTrait;
     public static $selected_language = 'uz';
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -50,7 +40,7 @@ class LangCertificateType extends \yii\db\ActiveRecord
     {
         return [
             [['lang'],'required'],
-            [['lang'], 'string', 'max' => 255],
+            [['lang'], 'string', 'max' => 2],
         ];
     }
 

@@ -123,6 +123,8 @@ $controllers = [
     'lang-certificate-type',
     'military',
     'cantract',
+
+    
     'telegram',
     'test-get-data',
 ];

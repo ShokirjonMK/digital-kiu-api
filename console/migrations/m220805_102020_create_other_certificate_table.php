@@ -23,7 +23,7 @@ class m220805_102020_create_other_certificate_table extends Migration
             'other_certificate_type_id' => $this->integer(11)->null(),
             'address' => $this->string(255)->null(),
             'year' => $this->string(11)->null(),
-            'file' => $this->string(255)->null(),
+            'file' => $this->string(255),
             'student_id'=>$this->integer(11)->Null(),
             'user_id'=>$this->integer(11)->notNull(),
 

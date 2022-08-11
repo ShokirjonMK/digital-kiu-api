@@ -2,10 +2,11 @@
 
 namespace common\models\model;
 
+use yii\behaviors\TimestampBehavior;
+use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
+
 
 /**
  * This is the model class for table "military ".
@@ -28,10 +29,11 @@ class Military extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
+    use ResourceTrait;
+
     public function behaviors()
     {
         return [
-            BlameableBehavior::class,
             TimestampBehavior::class,
         ];
     }

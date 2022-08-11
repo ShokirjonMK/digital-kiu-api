@@ -4,10 +4,10 @@ namespace common\models\model;
 
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
+use yii\behaviors\TimestampBehavior;
 
+use api\resources\ResourceTrait;
 /**
  * This is the model class for table "test_98".
  *
@@ -28,10 +28,11 @@ class Cantract extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
+    use ResourceTrait;
+
     public function behaviors()
     {
         return [
-            BlameableBehavior::class,
             TimestampBehavior::class,
         ];
     }

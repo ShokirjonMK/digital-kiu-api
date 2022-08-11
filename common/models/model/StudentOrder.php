@@ -5,7 +5,8 @@ namespace common\models\model;
 use common\models\User;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Date;
 use Yii;
-use yii\behaviors\BlameableBehavior;
+
+use api\resources\ResourceTrait;
 use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
@@ -30,16 +31,17 @@ use yii\web\UploadedFile;
 class StudentOrder extends \yii\db\ActiveRecord
 {
 
-    public $img;
-    const UPLOADS_FOLDER = 'fileStOrd';
+    public $uploadFile;
+    const UPLOADS_FOLDER = 'student_order/';
     public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
 
     public static $selected_language = 'uz';
 
+    use ResourceTrait;
+
     public function behaviors()
     {
         return [
-            BlameableBehavior::class,
             TimestampBehavior::class,
         ];
     }
@@ -65,7 +67,7 @@ class StudentOrder extends \yii\db\ActiveRecord
             [['date',], 'date', 'format' => 'php:Y-m-d'],
             [['date'], 'default', 'value' => date('Y-m-d')],
             [['file'], 'string', 'max' => 255],
-            [['img'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
+            [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\Student::class, 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['order_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\OrderType::class, 'targetAttribute' => ['order_type_id' => 'id']],
@@ -117,10 +119,10 @@ class StudentOrder extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
-            $model->img = UploadedFile::getInstancesByName('img');
+            $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
 
-            if ($model->img) {
-                $model->img = $model->img[0];
+            if ($model->uploadFile) {
+                $model->uploadFile = $model->uploadFile[0];
                 $imgFile = $model->uploadFile();
                 if ($imgFile) {
                     $model->file = $imgFile;
@@ -129,15 +131,13 @@ class StudentOrder extends \yii\db\ActiveRecord
                 }
             }
 
-            if ($model->save()) {
-                $model->deleteFile();
+                $model->save();
                 $transaction->commit();
                 return true;
             } else {
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-        }
     }
 
 
@@ -148,10 +148,11 @@ class StudentOrder extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
         $oldFile = $model->file;
-        $model->img = UploadedFile::getInstancesByName('img');
-        if ($model->img) {
-            $model->img = $model->img[0];
+        $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
+        if ($model->uploadFile) {
+            $model->uploadFile = $model->uploadFile[0];
             $questionFileUrl = $model->uploadFile();
             if ($questionFileUrl) {
                 $model->deleteFile($oldFile);
@@ -174,14 +175,16 @@ class StudentOrder extends \yii\db\ActiveRecord
 
     public function uploadFile()
     {
+
         if ($this->validate()) {
             if (!file_exists(UPLOADS_PATH  . self::UPLOADS_FOLDER)) {
                 mkdir(UPLOADS_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
-            $fileName = $this->id . '_' . \Yii::$app->security->generateRandomString() . '.' . $this->img->extension;
+
+            $fileName = $this->id . '_' . time() . '.' . $this->uploadFile->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
-            $this->img->saveAs($url, false);
+            $this->uploadFile->saveAs($url, false);
             return "storage/" . $miniUrl;
         } else {
             return false;

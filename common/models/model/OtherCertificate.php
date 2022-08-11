@@ -4,8 +4,6 @@ namespace common\models\model;
 
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
@@ -28,19 +26,12 @@ use yii\web\UploadedFile;
 class OtherCertificate extends \yii\db\ActiveRecord
 {
 
-    public $img;
-    const UPLOADS_FOLDER = 'fileOliympic';
+    public $uploadFile;
+    const UPLOADS_FOLDER = 'other_certificate/';
     public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
 
     public static $selected_language = 'uz';
 
-    public function behaviors()
-    {
-        return [
-            BlameableBehavior::class,
-            TimestampBehavior::class,
-        ];
-    }
 
     /**
      * {@inheritdoc}
@@ -58,12 +49,12 @@ class OtherCertificate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['address','other_certificate_type_id', 'user_id','student_id'],'required'],
-            [['user_id','student_id'], 'integer'],
+            [['address', 'other_certificate_type_id', 'user_id', 'student_id'], 'required'],
+            [['user_id', 'student_id'], 'integer'],
             [['address'], 'string', 'max' => 255],
-            [['year'], 'string', 'max'=> 4],
+            [['year'], 'string', 'max' => 4],
             [['file'], 'string', 'max' => 255],
-            [['img'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
+            [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\Student::class, 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['other_certificate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\OtherCertificateType::class, 'targetAttribute' => ['other_certificate_type_id' => 'id']],
@@ -74,14 +65,16 @@ class OtherCertificate extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
 
+
+
     public function attributeLabels()
     {
         return [
             'id' => _e('ID'),
-            'file'=>_e('File'),
-            'address'=>_e('Address'),
-            'other_certificate_type_id'=>_e('Other Certificate Type Id'),
-            'year'=>_e('Year'),
+            'file' => _e('File'),
+            'address' => _e('Address'),
+            'other_certificate_type_id' => _e('Other Certificate Type Id'),
+            'year' => _e('Year'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -95,6 +88,7 @@ class OtherCertificate extends \yii\db\ActiveRecord
         $fields = [
             'file',
             'user_id',
+            'student_id',
             'other_certificate_type_id',
             'address',
             'year',
@@ -113,15 +107,16 @@ class OtherCertificate extends \yii\db\ActiveRecord
 
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
 
         if ($model->save()) {
-            $model->img = UploadedFile::getInstancesByName('img');
+            $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
 
-            if ($model->img) {
-                $model->img = $model->img[0];
+            if ($model->uploadFile) {
+                $model->uploadFile = $model->uploadFile[0];
                 $imgFile = $model->uploadFile();
                 if ($imgFile) {
                     $model->file = $imgFile;
@@ -130,16 +125,16 @@ class OtherCertificate extends \yii\db\ActiveRecord
                 }
             }
 
-            if ($model->save()) {
-                $model->deleteFile();
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+
+            $model->save();
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
     }
+
 
 
     public static function updateItem($model, $post)
@@ -150,9 +145,9 @@ class OtherCertificate extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
         $oldFile = $model->file;
-        $model->img = UploadedFile::getInstancesByName('img');
-        if ($model->img) {
-            $model->img = $model->img[0];
+        $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
+        if ($model->uploadFile) {
+            $model->uploadFile = $model->uploadFile[0];
             $questionFileUrl = $model->uploadFile();
             if ($questionFileUrl) {
                 $model->deleteFile($oldFile);
@@ -170,37 +165,8 @@ class OtherCertificate extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
-    public function uploadFile()
-    {
-        if ($this->validate()) {
-            if (!file_exists(UPLOADS_PATH  . self::UPLOADS_FOLDER)) {
-                mkdir(UPLOADS_PATH  . self::UPLOADS_FOLDER, 0777, true);
-            }
-            $fileName = $this->id . '_' . \Yii::$app->security->generateRandomString() . '.' . $this->img->extension;
-            $miniUrl = self::UPLOADS_FOLDER . $fileName;
-            $url = UPLOADS_PATH . $miniUrl;
-            $this->img->saveAs($url, false);
-            return "storage/" . $miniUrl;
-        } else {
-            return false;
-        }
-    }
-
-    public function deleteFile($oldFile = NULL)
-    {
-        if (isset($oldFile)) {
-            if (file_exists( $oldFile)) {
-                unlink($oldFile);
-            }
-        }
-        return true;
-    }
-
-
-    #region rel
     public function getUsers()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
@@ -215,9 +181,6 @@ class OtherCertificate extends \yii\db\ActiveRecord
         return $this->hasOne(\common\models\model\OtherCertificateType::class, ['id' => 'other_certificate_type_id']);
     }
 
-    #endregion
-
-
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -227,5 +190,30 @@ class OtherCertificate extends \yii\db\ActiveRecord
         }
         return parent::beforeSave($insert);
     }
-}
 
+    public function uploadFile()
+    {
+        if ($this->validate()) {
+            if (!file_exists(UPLOADS_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(UPLOADS_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+            $fileName = $this->id . '_' . time() . '.' . $this->uploadFile->extension;
+            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $url = UPLOADS_PATH . $miniUrl;
+            $this->uploadFile->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteFile($oldFile = NULL)
+    {
+        if (isset($oldFile)) {
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+        }
+        return true;
+    }
+}

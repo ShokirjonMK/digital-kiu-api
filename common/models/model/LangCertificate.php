@@ -32,7 +32,7 @@ class LangCertificate extends \yii\db\ActiveRecord
     use ResourceTrait;
 
     public $uploadFile;
-    const UPLOADS_FOLDER = 'lang_certificate';
+    const UPLOADS_FOLDER = 'lang_certificate/';
     public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
 
     const USER_TYPE_STUDENT = 1;
@@ -123,15 +123,14 @@ class LangCertificate extends \yii\db\ActiveRecord
                 }
             }
 
-            if ($model->save()) {
-                $model->deleteFile();
+                $model->save();
                 $transaction->commit();
                 return true;
             } else {
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-        }
+        
     }
 
 
@@ -143,9 +142,9 @@ class LangCertificate extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
         $oldFile = $model->file;
-        $model->img = UploadedFile::getInstancesByName('img');
-        if ($model->img) {
-            $model->img = $model->img[0];
+        $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
+        if ($model->uploadFile) {
+            $model->uploadFile = $model->uploadFile[0];
             $questionFileUrl = $model->uploadFile();
             if ($questionFileUrl) {
                 $model->deleteFile($oldFile);
@@ -183,7 +182,7 @@ class LangCertificate extends \yii\db\ActiveRecord
             if (!file_exists(UPLOADS_PATH  . $fileUploadUrl)) {
                 mkdir(UPLOADS_PATH  . $fileUploadUrl, 0777, true);
             }
-            $fileName = time() . $this->uploadFile->extension;
+            $fileName =  time() . $this->uploadFile->extension;
             $miniUrl = $fileUploadUrl . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
             $this->uploadFile->saveAs($url, false);

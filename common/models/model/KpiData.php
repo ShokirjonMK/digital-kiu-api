@@ -458,7 +458,7 @@ class KpiData extends \yii\db\ActiveRecord
                 mkdir(STORAGE_PATH  . $fileDir, 0777, true);
             }
 
-            $fileName = $this->kpi_category_id . "_" . time() . \Yii::$app->security->generateRandomString(8) . '.' . $thisIsFile->extension;
+            $fileName = $this->kpi_category_id . "_" . time() . "_" . \Yii::$app->security->generateRandomString(8) . '.' . $thisIsFile->extension;
 
             $miniUrl = $fileDir . $fileName;
             $url = STORAGE_PATH . $miniUrl;

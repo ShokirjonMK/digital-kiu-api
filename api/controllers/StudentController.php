@@ -215,6 +215,7 @@ class  StudentController extends ApiActiveController
             ->with(['profile'])
             ->where(['student.is_deleted' => 0])
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            ->join('INNER JOIN', 'users', 'users.id = student.user_id')
             // ->groupBy('student.id')
         ;
 
@@ -240,10 +241,14 @@ class  StudentController extends ApiActiveController
 
         //  Filter from Profile 
         $profile = new Profile();
+        $user = new User();
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {
                     $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $user->attributes())) {
+                    $query = $query->andFilterWhere(['users.' . $attribute => $id]);
                 }
             }
         }
@@ -254,6 +259,9 @@ class  StudentController extends ApiActiveController
             foreach ($queryfilter as $attributeq => $word) {
                 if (in_array($attributeq, $profile->attributes())) {
                     $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+                if (in_array($attributeq, $user->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'users.' . $attributeq, '%' . $word . '%', false]);
                 }
             }
         }

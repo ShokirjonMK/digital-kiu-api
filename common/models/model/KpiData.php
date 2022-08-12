@@ -185,6 +185,9 @@ class KpiData extends \yii\db\ActiveRecord
             'authors',
             'count_of_copyright',
 
+            'user_id',
+
+
             'order',
             'status',
             'created_at',

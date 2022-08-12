@@ -196,8 +196,11 @@ class SubjectTopic extends \yii\db\ActiveRecord
         }
 
         if (isRole('teacher')) {
-            $model->teacher_access_id = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()])->id;
+            $teacherAccess = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()]);
+            $model->teacher_access_id =  $teacherAccess ? $teacherAccess->id : 0;
+            $model->user_id = current_user_id();
         }
+
 
         if ($model->save()) {
             $transaction->commit();

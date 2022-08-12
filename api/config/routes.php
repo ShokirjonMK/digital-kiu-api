@@ -123,6 +123,7 @@ $controllers = [
     'lang-certificate-type',
     'military',
     'cantract',
+    'subject-topic-reference',
 
     
     'telegram',

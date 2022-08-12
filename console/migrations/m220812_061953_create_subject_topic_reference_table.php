@@ -22,7 +22,7 @@ class m220812_061953_create_subject_topic_reference_table extends Migration
             'subject_id' => $this->integer()->notNull(),
             'subject_topic_id' => $this->integer()->notNull(),
             'user_id' => $this->integer()->notNull(),
-            'teacher_access_id' => $this->integer()->notNull(),
+            'teacher_access_id' => $this->integer()->null(),
 
             'link' => $this->string(255)->notNull(),
             'name' => $this->text()->notNull(),

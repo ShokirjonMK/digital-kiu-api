@@ -190,6 +190,10 @@ class ExamStudentController extends ApiActiveController
                 ->one();
 
             $model->ball = $model->allBall;
+            $model->is_checked = $model->isChecked;
+            $model->is_checked_full = $model->isCheckedFull;
+            $model->has_answer = $model->hasAnswer;
+
             $model->update();
         }
 

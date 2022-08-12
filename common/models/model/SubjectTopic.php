@@ -195,7 +195,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('mudir')) {
             $teacherAccess = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()]);
             $model->teacher_access_id =  $teacherAccess ? $teacherAccess->id : 0;
             $model->user_id = current_user_id();

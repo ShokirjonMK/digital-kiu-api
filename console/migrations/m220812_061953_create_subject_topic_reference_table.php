@@ -28,6 +28,7 @@ class m220812_061953_create_subject_topic_reference_table extends Migration
             'name' => $this->text()->notNull(),
             'start_page' => $this->integer()->notNull(),
             'end_page' => $this->integer()->notNull(),
+            'type' => $this->tinyInteger(1)->defaultValue(1),
 
 
             'status' => $this->tinyInteger(1)->defaultValue(0),

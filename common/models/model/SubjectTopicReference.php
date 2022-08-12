@@ -26,6 +26,10 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
+
+    const TYPE_1 = 'O‘qilishi tavsiya etiladigan asosiy adabiyotlar';
+    const TYPE_2 = 'O‘qilishi tavsiya etiladigan qo‘shimcha adabiyotlar';
+
     /**
      * {@inheritdoc}
      */
@@ -60,6 +64,7 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
                     'teacher_access_id',
                     'start_page',
                     'end_page',
+                    'type',
                     'status',
                     'order',
                     'created_at',
@@ -96,6 +101,7 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
             'name' => _e('name'),
             'start_page' => _e('start_page'),
             'end_page' => _e('end_page'),
+            'type' => _e('type'),
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -120,6 +126,7 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
             'name',
             'start_page',
             'end_page',
+            'type',
 
             'order',
             'status',

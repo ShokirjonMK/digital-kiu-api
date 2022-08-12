@@ -1112,9 +1112,9 @@ return [
 
         'exam-checking_index',
         'exam-checking_view',
-        // 'exam-checking_update',
+        'exam-checking_update',
 
-        // 'exam-checking_appeal',
+        'exam-checking_appeal',
 
         'exam-appeal_index',
         'exam-appeal_view',

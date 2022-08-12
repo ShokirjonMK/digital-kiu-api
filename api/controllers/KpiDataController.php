@@ -101,7 +101,7 @@ class KpiDataController extends ApiActiveController
         // remove model
         if ($model) {
 
-            if (isRole('teacher') && !isRole('mudir') && !($model->user_id == current_user_id())) {
+            if (isRole('teacher') && !($model->user_id == current_user_id())) {
                 return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::BAD_REQUEST);
             }
 

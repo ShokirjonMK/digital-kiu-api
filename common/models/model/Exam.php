@@ -84,6 +84,7 @@ class Exam extends \yii\db\ActiveRecord
             [
                 [
                     'old_exam_id',
+                    'category',
                     'status_appeal',
                     'edu_year_id',
                     'exam_type_id',
@@ -142,6 +143,7 @@ class Exam extends \yii\db\ActiveRecord
 
             'appeal_start' => 'appeal_start',
             'appeal_finish' => 'appeal_finish',
+            'category' => 'category',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -175,6 +177,7 @@ class Exam extends \yii\db\ActiveRecord
             'max_ball',
             'min_ball',
 
+            'category',
             'appeal_start',
             'appeal_finish',
             'old_exam_id',
@@ -601,7 +604,7 @@ class Exam extends \yii\db\ActiveRecord
                             ->orderBy('id desc')
                             ->one();
 
-                        if ($exam->type == self::CATEGORY_INTENSIV) {
+                        if ($exam->category == self::CATEGORY_INTENSIV) {
                             $oldExamStudentHas = ExamStudent::find()->where([
                                 'exam_id' => $exam->old_exam_id,
                                 'student_id' => $student_id,
@@ -628,8 +631,7 @@ class Exam extends \yii\db\ActiveRecord
 
                         $ExamStudent->exam_id = $examId;
                         $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
-
-                        $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                        // $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
                         $ExamStudent->student_id = $student_id;
                         $ExamStudent->lang_id = $langId;
                         // $ExamStudent->password = _random_string('numeric', 4);

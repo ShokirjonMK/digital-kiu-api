@@ -747,7 +747,6 @@ class Exam extends \yii\db\ActiveRecord
         $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
         $model->subject_id = $model->eduSemestrSubject->subject_id;
-        $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball ?? null;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -781,6 +780,11 @@ class Exam extends \yii\db\ActiveRecord
 
             $model->question_count_by_type_with_ball = json_encode(((array)json_decode($post['question_count_by_type_with_ball'])));
         }
+
+        if ($model->question_count_by_type_with_ball != null) {
+            $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball;
+        }
+
         /** question_count_by_type_with_ball */
 
         /*  if (isset($post['question_count_by_type'])) {

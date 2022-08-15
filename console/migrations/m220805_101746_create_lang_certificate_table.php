@@ -21,9 +21,9 @@ class m220805_101746_create_lang_certificate_table extends Migration
             'id' => $this->primaryKey(),
 
             'certificate_type_id' => $this->integer(11)->notNull(),
-            'ball' => $this->string(11)->notNull(),
+            'ball' => $this->double(11)->Null(),
             'file' => $this->string(255),
-            'lang' => $this->string(2)->notNull(),
+            'lang' => $this->string(2)->Null(),
             'user_type' => $this->integer()->defaultValue(1)->comment('1-student, 2-teacher, 3-xodim'),
             'user_id'=>$this->integer()->notNull(),
 

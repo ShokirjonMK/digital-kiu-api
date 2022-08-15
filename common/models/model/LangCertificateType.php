@@ -42,7 +42,9 @@ class LangCertificateType extends \yii\db\ActiveRecord
         return [
             [['lang_id'], 'required'],
             [['lang'], 'string', 'max' => 2],
+            // [['name'], 'string', 'max' => 255],
             [['lang_id'], 'integer'],
+            // [['name'], 'unique'],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::class, 'targetAttribute' => ['lang_id' => 'id']],
 
         ];

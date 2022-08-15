@@ -57,7 +57,6 @@ class LangCertificate extends \yii\db\ActiveRecord
             [['ball', 'lang'], 'string', 'max' => 255],
             [['file'], 'string', 'max' => 255],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
-            // [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['certificate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => LangCertificateType::class, 'targetAttribute' => ['certificate_type_id' => 'id']],
         ];
@@ -87,6 +86,9 @@ class LangCertificate extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
+            'certificate_type' => function ($model) {
+                return $model->certificateType->translate->name ?? '';
+            },
             'ball',
             'certificate_type_id',
             'file',
@@ -103,11 +105,40 @@ class LangCertificate extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'certificateType',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
+    }
+
+    public function getCertificateType()
+    {
+        return $this->hasOne(LangCertificateType::className(), ['id' => 'certificate_type_id']);
+    }
+
+
     public static function createItem($model, $post)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        if (isRole('student', $model->user_id)) {
+            $model->user_type = self::USER_TYPE_STUDENT;
+        } elseif (isRole('teacher', $model->user_id)) {
+            $model->user_type = self::USER_TYPE_TEACHER;
+        } else {
+            $model->user_type = self::USER_TYPE_STAFF;
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -123,14 +154,13 @@ class LangCertificate extends \yii\db\ActiveRecord
                 }
             }
 
-                $model->save();
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-        
+            $model->save();
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
     }
 
 

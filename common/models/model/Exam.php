@@ -62,6 +62,10 @@ class Exam extends \yii\db\ActiveRecord
     const PROTECTED_TURE = 1;
     const PROTECTED_FALSE = 0;
 
+    // 1-oddiy 2-intensiv
+    const CATEGORY_MAIN = 1;
+    const CATEGORY_INTENSIV = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -79,6 +83,7 @@ class Exam extends \yii\db\ActiveRecord
             [['exam_type_id', 'type', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [
                 [
+                    'old_exam_id',
                     'status_appeal',
                     'edu_year_id',
                     'exam_type_id',
@@ -93,7 +98,9 @@ class Exam extends \yii\db\ActiveRecord
                     'updated_at',
                     'appeal_start',
                     'appeal_finish',
-                    'created_by', 'updated_by', 'is_deleted'
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
                 ], 'integer'
             ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
@@ -170,6 +177,7 @@ class Exam extends \yii\db\ActiveRecord
 
             'appeal_start',
             'appeal_finish',
+            'old_exam_id',
 
             'order',
             'status',
@@ -198,13 +206,10 @@ class Exam extends \yii\db\ActiveRecord
             'examQuestions',
             'examStudentAnswers',
 
-
-
             'examStudent',
             'examStudentMain',
             'examStudentCount',
             'examStudentByLang',
-
 
             'examAppealByLang',
             'appealCount',
@@ -596,10 +601,29 @@ class Exam extends \yii\db\ActiveRecord
                             ->orderBy('id desc')
                             ->one();
 
-                        if (isset($ExamStudentHas)) {
-                            $ExamStudent = $ExamStudentHas;
+                        if ($exam->type == self::CATEGORY_INTENSIV) {
+                            $oldExamStudentHas = ExamStudent::find()->where([
+                                'exam_id' => $exam->old_exam_id,
+                                'student_id' => $student_id,
+                            ])
+                                ->orderBy('id desc')
+                                ->one();
+                        }
+
+                        if ($oldExamStudentHas) {
+                            if ($oldExamStudentHas->allBall < 56) {
+                                if (isset($ExamStudentHas)) {
+                                    $ExamStudent = $ExamStudentHas;
+                                } else {
+                                    $ExamStudent = new ExamStudent();
+                                }
+                            }
                         } else {
-                            $ExamStudent = new ExamStudent();
+                            if (isset($ExamStudentHas)) {
+                                $ExamStudent = $ExamStudentHas;
+                            } else {
+                                $ExamStudent = new ExamStudent();
+                            }
                         }
 
                         $ExamStudent->exam_id = $examId;
@@ -1014,7 +1038,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function statusList()
     {
-        
+
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),

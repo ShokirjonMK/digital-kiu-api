@@ -168,6 +168,11 @@ class LangCertificateType extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
+        $model->lang = $model->language->lang_code;
+
+        $model->name = $post['name']['uz'] ?? null;
+
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {

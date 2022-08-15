@@ -611,27 +611,26 @@ class Exam extends \yii\db\ActiveRecord
                             ])
                                 ->orderBy('id desc')
                                 ->one();
-                        }
+                            if ($oldExamStudentHas) {
 
-                        if ($oldExamStudentHas) {
-
-                            dd($oldExamStudentHas->allBall);
-                            if ($oldExamStudentHas->allBall < 56) {
-                                if (isset($ExamStudentHas)) {
-                                    $ExamStudent = $ExamStudentHas;
-                                } else {
-                                    $ExamStudent = new ExamStudent();
+                                // dd($oldExamStudentHas->allBall);
+                                if ($oldExamStudentHas->allBall < 56) {
+                                    if (isset($ExamStudentHas)) {
+                                        $ExamStudent = $ExamStudentHas;
+                                    } else {
+                                        $ExamStudent = new ExamStudent();
+                                    }
+                                    $ExamStudent->exam_id = $examId;
+                                    $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                                    // $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                                    $ExamStudent->student_id = $student_id;
+                                    $ExamStudent->lang_id = $langId;
+                                    // $ExamStudent->password = _random_string('numeric', 4);
+                                    $ExamStudent->password = $examPassword;
+                                    // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                                    // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
+                                    $ExamStudent->save(false);
                                 }
-                                $ExamStudent->exam_id = $examId;
-                                $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
-                                // $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
-                                $ExamStudent->student_id = $student_id;
-                                $ExamStudent->lang_id = $langId;
-                                // $ExamStudent->password = _random_string('numeric', 4);
-                                $ExamStudent->password = $examPassword;
-                                // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
-                                // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
-                                $ExamStudent->save(false);
                             }
                         } else {
                             if (isset($ExamStudentHas)) {
@@ -650,8 +649,6 @@ class Exam extends \yii\db\ActiveRecord
                             // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
                             $ExamStudent->save(false);
                         }
-
-                        
                     }
                     /** Student generate Password and create ExamStudent end */
 

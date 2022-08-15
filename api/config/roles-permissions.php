@@ -1118,7 +1118,7 @@ return [
 
         'exam-appeal_index',
         'exam-appeal_view',
-        // 'exam-appeal_update',
+        'exam-appeal_update',
 
         // 'kpi-store_index',
         // 'kpi-store_create',

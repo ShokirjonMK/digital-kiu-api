@@ -735,6 +735,8 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function createItem($model, $post)
     {
+
+        dd($model->oldExam);
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -745,7 +747,7 @@ class Exam extends \yii\db\ActiveRecord
         $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
         $model->subject_id = $model->eduSemestrSubject->subject_id;
-        $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball;
+        $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball ?? null;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

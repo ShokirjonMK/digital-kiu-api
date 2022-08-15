@@ -614,7 +614,7 @@ class Exam extends \yii\db\ActiveRecord
                             if ($oldExamStudentHas) {
 
                                 // dd($oldExamStudentHas->allBall);
-                                if ($oldExamStudentHas->allBall < 56) {
+                                if (($oldExamStudentHas->allBall + $oldExamStudentHas->in_all)  < 56) {
                                     if (isset($ExamStudentHas)) {
                                         $ExamStudent = $ExamStudentHas;
                                     } else {

@@ -537,7 +537,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getOldExam()
     {
-        return $this->hasMany(Exam::className(), ['id' => 'old_exam_id']);
+        return $this->hasOne(Exam::className(), ['id' => 'old_exam_id']);
     }
 
     public static function generatePasswords($post)
@@ -736,7 +736,7 @@ class Exam extends \yii\db\ActiveRecord
     public static function createItem($model, $post)
     {
 
-        dd($model->oldExam->question_count_by_type_with_ball);
+        // dd($model->oldExam->question_count_by_type_with_ball);
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -781,8 +781,10 @@ class Exam extends \yii\db\ActiveRecord
             $model->question_count_by_type_with_ball = json_encode(((array)json_decode($post['question_count_by_type_with_ball'])));
         }
 
-        /*  if ($model->oldExam->category == self::CATEGORY_INTENSIV) {
-        } */
+        if ($model->oldExam->category == self::CATEGORY_INTENSIV) {
+
+            $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball ?? null;
+        }
 
 
         /** question_count_by_type_with_ball */

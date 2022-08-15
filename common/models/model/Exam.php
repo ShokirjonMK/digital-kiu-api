@@ -736,7 +736,7 @@ class Exam extends \yii\db\ActiveRecord
     public static function createItem($model, $post)
     {
 
-        dd($model->oldExam);
+        dd($model->oldExam->question_count_by_type_with_ball);
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 

@@ -535,6 +535,11 @@ class Exam extends \yii\db\ActiveRecord
         return $this->hasMany(ExamAppealSemeta::className(), ['exam_id' => 'id']);
     }
 
+    public function getOldExam()
+    {
+        return $this->hasMany(Exam::className(), ['id' => 'old_exam_id']);
+    }
+
     public static function generatePasswords($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -740,6 +745,7 @@ class Exam extends \yii\db\ActiveRecord
         $model->type = $model->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
         $model->subject_id = $model->eduSemestrSubject->subject_id;
+        $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

@@ -205,6 +205,8 @@ class Exam extends \yii\db\ActiveRecord
             'subjectName',
 
             'statusName',
+            'oldExam',
+            'relExam',
 
             'examQuestions',
             'examStudentAnswers',
@@ -538,6 +540,11 @@ class Exam extends \yii\db\ActiveRecord
     public function getOldExam()
     {
         return $this->hasOne(Exam::className(), ['id' => 'old_exam_id']);
+    }
+
+    public function getRelExam()
+    {
+        return $this->hasOne(Exam::className(), ['old_exam_id' => 'id']);
     }
 
     public static function generatePasswords($post)

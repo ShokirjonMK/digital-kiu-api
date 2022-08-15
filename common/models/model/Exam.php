@@ -736,7 +736,7 @@ class Exam extends \yii\db\ActiveRecord
     public static function createItem($model, $post)
     {
 
-        // dd($model->oldExam);
+        dd($model->oldExam->question_count_by_type_with_ball);
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -781,9 +781,9 @@ class Exam extends \yii\db\ActiveRecord
             $model->question_count_by_type_with_ball = json_encode(((array)json_decode($post['question_count_by_type_with_ball'])));
         }
 
-        if ($model->question_count_by_type_with_ball == null) {
-            $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball;
-        }
+        /*  if ($model->oldExam->category == self::CATEGORY_INTENSIV) {
+        } */
+
 
         /** question_count_by_type_with_ball */
 

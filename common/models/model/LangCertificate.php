@@ -54,8 +54,9 @@ class LangCertificate extends \yii\db\ActiveRecord
         return [
             [['user_id', 'certificate_type_id'], 'required'],
             [['user_id', 'certificate_type_id', 'user_type'], 'integer'],
-            [['ball', 'lang'], 'string', 'max' => 255],
+            [['lang'], 'string', 'max' => 255],
             [['file'], 'string', 'max' => 255],
+            [['ball'], 'double'],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['certificate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => LangCertificateType::class, 'targetAttribute' => ['certificate_type_id' => 'id']],

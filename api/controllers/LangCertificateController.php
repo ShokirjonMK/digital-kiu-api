@@ -18,6 +18,32 @@ class LangCertificateController extends ApiActiveController
     public $table_name = 'lang_certificate';
     public $controller_name = 'LangCertificate';
 
+
+    public function actionIndex($lang)
+    {
+        $model = new LangCertificate();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+
+            ->andFilterWhere(['like', 'link', Yii::$app->request->get('q')]);
+
+
+        if (Yii::$app->request->get('user_id') != null) {
+            $query->andWhere([$this->table_name . '.user_id' => Yii::$app->request->get('sort')]);
+        }
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionCreate($lang)
     {
         $model = new LangCertificate();

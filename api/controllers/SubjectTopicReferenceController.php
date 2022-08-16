@@ -27,11 +27,11 @@ class SubjectTopicReferenceController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
         if (isRole('teacher') && !isRole('mudir')) {
-            $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
+            $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);
         }
 
         if (Yii::$app->request->get('user_id') != null) {
-            $query->andWhere([$this->table_name . '.created_by' => Yii::$app->request->get('user_id')]);
+            $query->andWhere([$this->table_name . '.user_id' => Yii::$app->request->get('user_id')]);
         }
 
         // filter

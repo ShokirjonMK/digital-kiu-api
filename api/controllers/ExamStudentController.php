@@ -44,10 +44,10 @@ class ExamStudentController extends ApiActiveController
         $model = new ExamStudent();
 
         $query = $model->find()
-            ->andWhere(['exam_student.is_deleted' => 0])
-            ->join('INNER JOIN', 'student', 'student.id = exam_student.student_id')
-            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
-            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+            ->andWhere(['exam_student.is_deleted' => 0]);
+            // ->join('INNER JOIN', 'student', 'student.id = exam_student.student_id')
+            // ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            // ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
 
 
         //  Filter from Profile 
@@ -82,6 +82,9 @@ class ExamStudentController extends ApiActiveController
                 'student_id' => $this->student()
             ]);
         }
+
+        $query = $query->andWhere(['>', 'exam_id', 446 ]);
+
 
         // filter
         $query = $this->filterAll($query, $model);

@@ -189,7 +189,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
     public function getReference()
     {
-        return $this->hasMany(SubjectTopicReference::className(), ['id' => 'subject_topic_id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
+        return $this->hasMany(SubjectTopicReference::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
     }
 
     public static function createItem($model, $post)

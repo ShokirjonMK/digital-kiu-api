@@ -651,7 +651,7 @@ class Exam extends \yii\db\ActiveRecord
                                 $ExamStudent = new ExamStudent();
                             }
 
-                            dd("sdsd");
+                            // dd("sdsd");
                             $ExamStudent->exam_id = $examId;
                             $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
                             // $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;

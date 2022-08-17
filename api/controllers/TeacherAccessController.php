@@ -19,6 +19,26 @@ class TeacherAccessController extends ApiActiveController
         return [];
     }
 
+    public function actionContent($lang)
+    {
+        $model = new TeacherAccess();
+
+        $query = $model->find()
+            ->with(['teacher'])
+            ->andWhere(['is_deleted' => 0]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionFree($lang)
     {
         $get = Yii::$app->request->get();
@@ -80,13 +100,12 @@ class TeacherAccessController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-
     public function actionIndex($lang)
     {
         $model = new TeacherAccess();
 
         $query = $model->find()
-            ->with(['teacher'])
+            // ->with(['teacher'])
             ->andWhere(['is_deleted' => 0]);
 
         // filter

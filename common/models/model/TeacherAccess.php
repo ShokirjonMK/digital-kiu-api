@@ -85,9 +85,9 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'teacher' => function ($model) {
-                return $model->teacher ?? null;
-            },
+            // 'teacher' => function ($model) {
+            //     return $model->teacher ?? null;
+            // },
             'user_id',
             'subject_id',
             'language_id',
@@ -112,6 +112,11 @@ class TeacherAccess extends \yii\db\ActiveRecord
             'examStudentCount',
             'examStudent',
             'user',
+
+            'hasContent',
+            'profile',
+
+
             'timeTables',
             'createdBy',
             'updatedBy',
@@ -179,10 +184,30 @@ class TeacherAccess extends \yii\db\ActiveRecord
 
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id']); //->select(['first_name', 'last_name', 'middle_name']);
     }
+
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
     }
+
+    public function getHasContent()
+    {
+        $model = new SubjectContent();
+
+        $query = $model->find()
+            ->andWhere(
+                ['user_id' => $this->user_id]
+            )
+            ->andWhere([
+                'in', 'subject_topic_id',
+                SubjectTopic::find()->select('id')->where(['subject_id' => $this->subject_id, 'lang_id' => $this->language_id])
+            ]);
+
+        $data = $query->all();
+
+        return count($data);
+    }
+
 
     /**
      * Gets query for [[TimeTables]].

@@ -97,7 +97,7 @@ trait ApiActionTrait
             $action_log->result = json_encode($result['data']);
         }
 
-        $action_log->data = (string)$result;
+        $action_log->data = json_encode($result);
 
 
 

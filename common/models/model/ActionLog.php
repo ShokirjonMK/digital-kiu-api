@@ -92,12 +92,13 @@ class ActionLog extends \yii\db\ActiveRecord
             'data' => 'data',
             'get_data' => 'get_data',
             'post_data' => 'post_data',
-
+            
             'message' => 'message',
-
+            
             'browser' => 'browser',
             'ip_address' => 'ip_address',
-
+            
+            'created_on' => 'created_on',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -172,6 +173,7 @@ class ActionLog extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = current_user_id();
+            $this->created_on = date("Y-m-d H:i:s");
             $this->user_id   = current_user_id();
         } else {
             $this->updated_by = current_user_id();

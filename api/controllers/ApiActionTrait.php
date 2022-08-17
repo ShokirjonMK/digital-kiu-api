@@ -103,7 +103,7 @@ trait ApiActionTrait
 
         $result = parent::afterAction($action, $result);
 
-        $action_log->data = json_encode($result);
+        $action_log->data = json_encode($result['data']);
         $action_log->save(false);
         // dd(json_encode($result));
         return $result;

@@ -93,6 +93,11 @@ trait ApiActionTrait
         if (isset($result['errors'])) {
             $action_log->errors = json_encode($result['errors']);
         }
+        if (isset($result['data'])) {
+            $action_log->result = json_encode($result['data']);
+        }
+
+
         $action_log->save(false);
 
         $result = parent::afterAction($action, $result);

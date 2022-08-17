@@ -705,7 +705,7 @@ class Exam extends \yii\db\ActiveRecord
                 foreach ($examStudents as $examStudentOne) {
                     $oneStd = [];
                     $oneStd['full_name'] = Profile::getFullname($examStudentOne->student->profile);
-                    $oneStd['direction'] = $examStudentOne->student->direction->translate->name;
+                    $oneStd['direction'] = $examStudentOne->student->direction->translate->name ?? null;
                     $oneStd['password'] = $examStudentOne->password;
                     $data['students'][] = $oneStd;
                 }

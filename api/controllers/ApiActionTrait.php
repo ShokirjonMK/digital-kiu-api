@@ -99,6 +99,7 @@ trait ApiActionTrait
             $action_log->data = json_encode($result['data']);
         }
 
+        $action_log->created_on = date("Y-m-d H:i:s");
         $action_log->save(false);
         // dd(json_encode($result));
         return $result;

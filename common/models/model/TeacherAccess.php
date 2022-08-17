@@ -85,9 +85,9 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            // 'teacher' => function ($model) {
-            //     return $model->teacher ?? null;
-            // },
+            'teacher' => function ($model) {
+                return $model->teacher ?? null;
+            },
             'user_id',
             'subject_id',
             'language_id',

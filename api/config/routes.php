@@ -126,6 +126,7 @@ $controllers = [
     'subject-topic-reference',
     'hostel-category',
     'hostel-category-type',
+    'hostel-app',
 
 
     'telegram',

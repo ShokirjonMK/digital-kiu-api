@@ -100,6 +100,21 @@ trait ResourceTrait
             ->user_id ?? null;
     }
 
+    public static function student_now($type = null, $user_id = null)
+    {
+        if ($user_id == null) {
+            $user_id = current_user_id();
+        }
+        if ($type == null) {
+            $type = 1;
+        }
+        $student = Student::findOne(['user_id' => $user_id]);
+        if ($type == 1) {
+            return  $student->id ?? null;
+        } elseif ($type == 2) {
+            return  $student ?? null;
+        }
+    }
     public static function student($type = null, $user_id = null)
     {
         if ($user_id == null) {

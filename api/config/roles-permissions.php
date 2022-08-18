@@ -762,6 +762,9 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
+
+        "academic-degree_index",
+        "academic-degree_view",
         "access-control_permissions",
         "access-control_roles",
         "area_index",
@@ -771,7 +774,13 @@ return [
         "country_view",
         "course_index",
         "course_view",
+        "degree-info_index",
+        "degree-info_view",
+        "degree_index",
+        "degree_view",
         "department_index",
+        "diploma-type_index",
+        "diploma-type_view",
         "enum_education-degrees",
         "enum_education-types",
         "enum_educations",
@@ -780,22 +789,17 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
+        "exam-appeal-semeta_create",
+        "exam-appeal-semeta_index",
+        "exam-appeal-semeta_view",
         "exam-checking_index",
         "exam-checking_update",
         "exam-checking_view",
         "exam-question_index",
         "exam-question_view",
-
         "exam-semeta_create",
         "exam-semeta_index",
         "exam-semeta_view",
-
-
-        "exam-appeal-semeta_create",
-        "exam-appeal-semeta_index",
-        "exam-appeal-semeta_view",
-
-
         "exam_index",
         "exam_view",
         "faculty_index",
@@ -807,10 +811,10 @@ return [
         "notification_my",
         "notification_status-list",
         "notification_view",
-
+        "partiya_index",
+        "partiya_view",
         "password_index",
         "password_update",
-
         "question-type_index",
         "question-type_view",
         "question_create",
@@ -831,6 +835,11 @@ return [
         "subject-sillabus_index",
         "subject-sillabus_update",
         "subject-sillabus_view",
+        "subject-topic_create",
+        "subject-topic_delete",
+        "subject-topic_index",
+        "subject-topic_update",
+        "subject-topic_view",
         "subject-type_index",
         "subject-type_view",
         "subject_create",
@@ -852,13 +861,8 @@ return [
         "user_me",
         "user_status-list",
         "user_update",
-        "user_view",
+        "user_view"
 
-        'subject-topic_view',
-        'subject-topic_update',
-        'subject-topic_index',
-        'subject-topic_delete',
-        'subject-topic_create',
     ],
 
 
@@ -1343,6 +1347,11 @@ return [
         'election_index',
         'election-vote_create',
         'election-vote_update',
+
+
+        'hostel-app_create',
+        'hostel-app_index',
+        'hostel-app_view',
     ],
 
 ];

@@ -2,37 +2,35 @@
 
 namespace api\controllers;
 
-use common\models\model\ElectionVote;
+use common\models\model\HostelApp;
 use Yii;
 use base\ResponseStatus;
 
-class ElectionVoteController extends ApiActiveController
+class HostelAppController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\ElectionVote';
+    public $modelClass = 'api\resources\HostelApp';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'election_vote';
-    public $controller_name = 'ElectionVote';
+    public $table_name = 'hostel_app';
+    public $controller_name = 'HostelApp';
 
     public function actionIndex($lang)
     {
-        $model = new ElectionVote();
+        $model = new HostelApp();
 
         $query = $model->find()
-            // ->with(['info'])
-            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->leftJoin("election_candidate_info eci", "eci.election_candidate_id = $this->table_name.id")
-            // ->groupBy($this->table_name . '.id')
-            // ->andWhere(['eci.language' => Yii::$app->request->get('lang')])
-            // ->andWhere(['eci.tabel_name' => 'faculty'])
-            // ->andFilterWhere(['like', 'eci.name', Yii::$app->request->get('q')])
-        ;
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
+
+        if (isRole("student")) {
+            $query = $query->andWhere([
+                'student_id' => $this->student()
+            ]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -47,12 +45,25 @@ class ElectionVoteController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new ElectionVote();
+        $model = new HostelApp();
         $post = Yii::$app->request->post();
         $post['user_id'] = current_user_id();
 
+        if (!isRole("student")) {
+            return $this->response(0, _e('This action is only for students.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        $student = $this->student(2);
+        if (!$student) {
+            return $this->response(0, _e('Student not found.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        // return $student;
+        $post['student_id'] = $student->id;
+        $post['faculty_id'] = $student->faculty_id;
+
+
         $this->load($model, $post);
-        $result = ElectionVote::createItem($model, $post);
+        $result = HostelApp::createItem($model, $post);
 
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
@@ -63,18 +74,14 @@ class ElectionVoteController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = ElectionVote::findOne($id);
+        $model = HostelApp::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
 
-        if ($model->user_id != current_user_id()) {
-            return $this->response(0, _e('This is not your vote.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
-
         $this->load($model, $post);
-        $result = ElectionVote::updateItem($model, $post);
+        $result = HostelApp::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -84,7 +91,7 @@ class ElectionVoteController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = ElectionVote::find()
+        $model = HostelApp::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -98,7 +105,7 @@ class ElectionVoteController extends ApiActiveController
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
 
 
-        $model = ElectionVote::find()
+        $model = HostelApp::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

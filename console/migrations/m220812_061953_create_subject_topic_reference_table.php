@@ -24,10 +24,10 @@ class m220812_061953_create_subject_topic_reference_table extends Migration
             'user_id' => $this->integer()->notNull(),
             'teacher_access_id' => $this->integer()->null(),
 
-            'link' => $this->string(255)->notNull(),
-            'name' => $this->text()->notNull(),
-            'start_page' => $this->integer()->notNull(),
-            'end_page' => $this->integer()->notNull(),
+            'link' => $this->string(255)->Null(),
+            'name' => $this->text()->Null(),
+            'start_page' => $this->integer()->Null(),
+            'end_page' => $this->integer()->Null(),
             'type' => $this->tinyInteger(1)->defaultValue(1),
 
 

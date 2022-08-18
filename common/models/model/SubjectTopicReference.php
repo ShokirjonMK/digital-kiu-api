@@ -30,6 +30,11 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
     const TYPE_1 = 'O‘qilishi tavsiya etiladigan asosiy adabiyotlar';
     const TYPE_2 = 'O‘qilishi tavsiya etiladigan qo‘shimcha adabiyotlar';
 
+    const TYPE_3 = 'Muhokama uchun savollar: ';
+    const TYPE_4 = 'Muhokama uchun kazus yoki muammoli savol:  ';
+    
+    const TYPE_5 = 'Asosiy maqsad va vazifalar, talabalar qanday bilim va ko‘nikmaga ega bo‘lishi kutilmoqda: ';
+
     /**
      * {@inheritdoc}
      */
@@ -50,10 +55,10 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
                     // 'subject_id',
                     // 'user_id',
                     // 'teacher_access_id',
-                    'link',
+                    // 'link',
                     'name',
-                    'start_page',
-                    'end_page',
+                    // 'start_page',
+                    // 'end_page',
                 ], 'required'
             ],
             [

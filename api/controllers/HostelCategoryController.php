@@ -44,7 +44,7 @@ class HostelCategoryController extends ApiActiveController
         $model = new HostelCategory();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-
+        // return $post;
         $result = HostelCategory::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);

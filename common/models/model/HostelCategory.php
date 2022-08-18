@@ -78,7 +78,7 @@ class HostelCategory extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'name' => function ($model) {
-                return $model->info->name ?? '';
+                return $model->translate->name ?? '';
             },
             'types' => function ($model) {
                 return $model->hostelCategoryType ?? '';
@@ -146,10 +146,6 @@ class HostelCategory extends \yii\db\ActiveRecord
         return $this->translate->description ?? '';
     }
 
-    public function getHostelCategoryType()
-    {
-        return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']); //->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
-    }
 
     public static function createItem($model, $post)
     {
@@ -218,6 +214,7 @@ class HostelCategory extends \yii\db\ActiveRecord
             return double_errors($errors, $has_error['errors']);
         }
     }
+
 
     public function beforeSave($insert)
     {

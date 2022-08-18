@@ -238,6 +238,7 @@ return [
         "subject_index",
         "subject_update",
         "subject_view",
+        "subject_create",
 
         "subject-sillabus_create",
         "subject-sillabus_delete",

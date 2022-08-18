@@ -4,6 +4,7 @@ namespace common\models\model;
 
 use api\resources\ResourceTrait;
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 class HostelCategory extends \yii\db\ActiveRecord
 {

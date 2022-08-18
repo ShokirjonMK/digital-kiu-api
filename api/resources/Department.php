@@ -10,6 +10,13 @@ class Department extends CommonDepartment
 {
     use ResourceTrait;
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * Fields
      *

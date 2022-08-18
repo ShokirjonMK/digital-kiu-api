@@ -124,8 +124,10 @@ $controllers = [
     'military',
     'cantract',
     'subject-topic-reference',
+    'hostel-category',
+    'hostel-category-type',
 
-    
+
     'telegram',
     'test-get-data',
 ];

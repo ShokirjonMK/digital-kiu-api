@@ -5,10 +5,9 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 
-class HostelCategory extends \yii\db\ActiveRecord
+class HostelCategoryType extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
-
     use ResourceTrait;
 
     public function behaviors()
@@ -18,15 +17,13 @@ class HostelCategory extends \yii\db\ActiveRecord
         ];
     }
 
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 0;
-
+    
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'hostel_category';
+        return 'hostel_category_type';
     }
 
     /**
@@ -35,17 +32,16 @@ class HostelCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-
             [
                 [
-                    'ball',
-                ], 'double'
+                    'hostel_category_id',
+                ], 'required'
             ],
+            [['hostel_category_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
 
-            [['key'], 'string', 'max' => 255],
-
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
+
+            [['hostel_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => HostelCategory::className(), 'targetAttribute' => ['hostel_category_id' => 'id']],
 
         ];
     }
@@ -53,15 +49,11 @@ class HostelCategory extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-
-            'ball',
-            'key',
-
+            'hostel_category_id',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -77,14 +69,10 @@ class HostelCategory extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'name' => function ($model) {
-                return $model->info->name ?? '';
+                return $model->translate->name ?? '';
             },
-            'types' => function ($model) {
-                return $model->hostelCategoryType ?? '';
-            },
-            'key',
-
-            'order',
+            'hostel_category_id',
+            // 'order',
             'status',
             'created_at',
             'updated_at',
@@ -101,7 +89,7 @@ class HostelCategory extends \yii\db\ActiveRecord
         $extraFields =  [
 
             'description',
-            'hostelCategoryType',
+
 
             'createdBy',
             'updatedBy',
@@ -145,10 +133,6 @@ class HostelCategory extends \yii\db\ActiveRecord
         return $this->translate->description ?? '';
     }
 
-    public function getHostelCategoryType()
-    {
-        return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']); //->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
-    }
 
     public static function createItem($model, $post)
     {
@@ -218,12 +202,13 @@ class HostelCategory extends \yii\db\ActiveRecord
         }
     }
 
+
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = current_user_id();
+            $this->created_by = Current_user_id();
         } else {
-            $this->updated_by = current_user_id();
+            $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
     }

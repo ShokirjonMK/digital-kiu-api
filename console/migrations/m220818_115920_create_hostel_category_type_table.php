@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%hostel_category}}`.
+ * Handles the creation of table `{{%hostel_category_type}}`.
  */
-class m220818_114510_create_hostel_category_table extends Migration
+class m220818_115920_create_hostel_category_type_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -13,18 +13,15 @@ class m220818_114510_create_hostel_category_table extends Migration
     public function safeUp()
     {
 
-        $tableName = Yii::$app->db->tablePrefix . 'hostel_category';
+        $tableName = Yii::$app->db->tablePrefix . 'hostel_category_type';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
-            $this->dropTable('hostel_category');
+            $this->dropTable('hostel_category_type');
         }
 
-        $this->createTable('{{%hostel_category}}', [
-            'id' => $this->primaryKey(),
 
-            // 'types' => $this->json()->Null()->comment('["date", "file", "subject_category", "count_of_copyright", "link"]'),
-            'ball' => $this->double()->defaultValue(0),
-            'a1' => $this->text()->null(),
-            'key' => $this->string(255)->null(),
+        $this->createTable('{{%hostel_category_type}}', [
+            'id' => $this->primaryKey(),
+            'hostel_category_id' => $this->integer()->notNull(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -34,6 +31,8 @@ class m220818_114510_create_hostel_category_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
+
+        $this->addForeignKey('hostel_category_type_hostel_category_id', 'hostel_category_type', 'hostel_category_id', 'hostel_category', 'id');
     }
 
     /**
@@ -41,6 +40,8 @@ class m220818_114510_create_hostel_category_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%hostel_category}}');
+        $this->dropForeignKey('hostel_category_type_hostel_category_id', 'hostel_category_type');
+
+        $this->dropTable('{{%hostel_category_type}}');
     }
 }

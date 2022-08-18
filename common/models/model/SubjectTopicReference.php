@@ -5,35 +5,20 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\web\UploadedFile;
 
-/**
- * This is the model class for table "exam_student".
- *
- * @property int $id
- * @property int|null $order
- * @property int|null $status
- * @property int|null $created_at
- * @property int|null $updated_at
- * @property int $created_by
- * @property int $updated_by
- * @property int $is_deleted
- */
 class SubjectTopicReference extends \yii\db\ActiveRecord
 {
     use ResourceTrait;
 
-    const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
 
 
-    const TYPE_1 = 'O‘qilishi tavsiya etiladigan asosiy adabiyotlar';
-    const TYPE_2 = 'O‘qilishi tavsiya etiladigan qo‘shimcha adabiyotlar';
-
-    const TYPE_3 = 'Muhokama uchun savollar: ';
-    const TYPE_4 = 'Muhokama uchun kazus yoki muammoli savol:  ';
-    
-    const TYPE_5 = 'Asosiy maqsad va vazifalar, talabalar qanday bilim va ko‘nikmaga ega bo‘lishi kutilmoqda: ';
+    const TYPE_1 = 1;
+    const TYPE_2 = 2;
+    const TYPE_3 = 3;
+    const TYPE_4 = 4;
+    const TYPE_5 = 5;
 
     /**
      * {@inheritdoc}
@@ -154,6 +139,7 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
             'user',
             'teacherAccess',
 
+            'typeName',
             'startedAt',
             'createdBy',
             'updatedBy',
@@ -192,6 +178,11 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
     public function getSubjectTopic()
     {
         return $this->hasOne(SubjectTopic::className(), ['id' => 'subject_topic_id']);
+    }
+
+    public function getTypeName()
+    {
+        return $this->typeList()[$this->type];
     }
 
     /**
@@ -259,6 +250,16 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
         }
     }
 
+    public static function typeList()
+    {
+        return [
+            self::TYPE_1 => _e('Asosiy maqsad va vazifalar, talabalar qanday bilim va ko‘nikmaga ega bo‘lishi kutilmoqda: '),
+            self::TYPE_2 => _e('O‘qilishi tavsiya etiladigan asosiy adabiyotlar'),
+            self::TYPE_3 => _e('O‘qilishi tavsiya etiladigan qo‘shimcha adabiyotlar'),
+            self::TYPE_4 => _e('Muhokama uchun savollar: '),
+            self::TYPE_5 => _e('Muhokama uchun kazus yoki muammoli savol: '),
+        ];
+    }
 
     public function beforeSave($insert)
     {

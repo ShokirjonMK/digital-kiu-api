@@ -1339,7 +1339,6 @@ return [
         "week_index",
         "week_view",
 
-
         'survey-answer_create',
         'survey-answer_update',
         'survey-question_index',
@@ -1347,7 +1346,6 @@ return [
         'election_index',
         'election-vote_create',
         'election-vote_update',
-
 
         'hostel-app_index',
         'hostel-app_create',

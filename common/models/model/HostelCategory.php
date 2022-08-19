@@ -80,9 +80,7 @@ class HostelCategory extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'types' => function ($model) {
-                return $model->hostelCategoryType ?? [];
-            },
+
             'key',
 
             'order',
@@ -103,7 +101,7 @@ class HostelCategory extends \yii\db\ActiveRecord
 
             'description',
             'hostelCategoryType',
-
+            'types',
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -145,7 +143,10 @@ class HostelCategory extends \yii\db\ActiveRecord
     {
         return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
     }
-
+    public function getTypes()
+    {
+        return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
+    }
 
     public function getDescription()
     {

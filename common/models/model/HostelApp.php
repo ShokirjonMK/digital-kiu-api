@@ -128,15 +128,12 @@ class HostelApp extends \yii\db\ActiveRecord
         return $fields;
     }
 
-
-
     public function extraFields()
     {
         $extraFields =  [
             'student',
             'eduYear',
-
-
+            'hostelDoc',
 
             'createdBy',
             'updatedBy',
@@ -150,6 +147,11 @@ class HostelApp extends \yii\db\ActiveRecord
     public function getStudent()
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    public function getHostelDoc()
+    {
+        return $this->hasMany(HostelDoc::className(), ['hostel_app_id' => 'id'])->onCondition(['student_id' => $this->student_id]);
     }
 
     public function getEduYear()

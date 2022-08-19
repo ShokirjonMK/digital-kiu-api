@@ -22,6 +22,7 @@ class m220818_115920_create_hostel_category_type_table extends Migration
         $this->createTable('{{%hostel_category_type}}', [
             'id' => $this->primaryKey(),
             'hostel_category_id' => $this->integer()->notNull(),
+            'ball' => $this->double()->defaultValue(0),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

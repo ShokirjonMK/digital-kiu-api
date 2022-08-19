@@ -73,6 +73,7 @@ class HostelApp extends \yii\db\ActiveRecord
 
 
             // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
+            [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id']],
 
 
         ];
@@ -146,8 +147,6 @@ class HostelApp extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-
-
     public function getStudent()
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
@@ -169,7 +168,7 @@ class HostelApp extends \yii\db\ActiveRecord
         $errors = [];
 
         $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
-        
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             return simplify_errors($errors);

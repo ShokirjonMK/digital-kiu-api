@@ -81,7 +81,7 @@ class HostelCategory extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'types' => function ($model) {
-                return $model->hostelCategoryType ?? '';
+                return $model->hostelCategoryType ?? [];
             },
             'key',
 
@@ -140,6 +140,12 @@ class HostelCategory extends \yii\db\ActiveRecord
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
+
+    public function getHostelCategoryType()
+    {
+        return $this->hasOne(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
+    }
+
 
     public function getDescription()
     {

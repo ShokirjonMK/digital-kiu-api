@@ -1352,6 +1352,9 @@ return [
         'hostel-app_create',
         'hostel-app_index',
         'hostel-app_view',
+
+        'hostel-category-type_index',
+        'hostel-category_index',
     ],
 
 ];

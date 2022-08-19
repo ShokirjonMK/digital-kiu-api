@@ -18,7 +18,7 @@ class HostelCategoryType extends \yii\db\ActiveRecord
         ];
     }
 
-    
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +38,11 @@ class HostelCategoryType extends \yii\db\ActiveRecord
                     'hostel_category_id',
                 ], 'required'
             ],
+            [
+                [
+                    'ball',
+                ], 'double'
+            ],
             [['hostel_category_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
 
             [['status'], 'default', 'value' => 1],
@@ -55,6 +60,7 @@ class HostelCategoryType extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'hostel_category_id',
+            'ball',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -73,6 +79,7 @@ class HostelCategoryType extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'hostel_category_id',
+            'ball',
             // 'order',
             'status',
             'created_at',

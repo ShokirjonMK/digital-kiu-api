@@ -21,7 +21,7 @@ class m220819_035027_create_hostel_doc_table extends Migration
         $this->createTable('{{%hostel_doc}}', [
             'id' => $this->primaryKey(),
 
-            'is_checked' => $this->tinyInteger(1)->defaultValue(0),
+            'is_checked' => $this->tinyInteger(1)->Null(),
             'student_id' => $this->integer()->notNull(),
             'hostel_app_id' => $this->integer()->notNull(),
             'hostel_category_id' => $this->integer()->notNull(),

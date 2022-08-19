@@ -148,6 +148,10 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
+
+    /** Hostel Yotoqxona */
+    'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
+
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',
     'POST <lang:\w{2}>/subject-contents/order' => 'subject-content/order',

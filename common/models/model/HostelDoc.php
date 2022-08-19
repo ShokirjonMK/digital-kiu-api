@@ -28,7 +28,7 @@ class HostelDoc extends \yii\db\ActiveRecord
 
 
     const UPLOADS_FOLDER = 'uploads/hostel_doc/';
-    public $hotel_file;
+    public $hostel_file;
     public $hostelFileMaxSize = 1024 * 1024 * 10; // 10 Mb
 
 

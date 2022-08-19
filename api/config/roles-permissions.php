@@ -1349,9 +1349,14 @@ return [
         'election-vote_update',
 
 
-        'hostel-app_create',
         'hostel-app_index',
+        'hostel-app_create',
         'hostel-app_view',
+
+        'hostel-doc_index',
+        'hostel-doc_create',
+        'hostel-doc_update',
+        'hostel-doc_view',
 
         'hostel-category-type_index',
         'hostel-category_index',

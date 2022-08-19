@@ -86,6 +86,13 @@ class HostelDocController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if (!isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
         $post = Yii::$app->request->post();
 
         $this->load($model, $post);
@@ -105,7 +112,35 @@ class HostelDocController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        if (!isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+    }
+
+    public function actionCheck($lang, $id)
+    {
+        $model = HostelDoc::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if ($model->hostel_category_id > 0) {
+            $model->ball = $model->hostelCategoryType->ball;
+        } else {
+            $model->ball = $model->hostelCategory->ball;
+        }
+
+        $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
+
+        $model->update();
+
+        return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);
     }
 
     public function actionDelete($lang, $id)

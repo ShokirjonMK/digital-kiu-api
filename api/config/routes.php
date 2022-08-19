@@ -124,7 +124,7 @@ $controllers = [
     'military',
     'cantract',
 
-    'content',
+    'subject-content-mark',
     'kpi-marking',
     'subject-topic-reference',
     'hostel-category',

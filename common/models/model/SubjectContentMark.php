@@ -175,19 +175,20 @@ class SubjectContentMark extends \yii\db\ActiveRecord
         return $this->hasOne(TeacherAccess::class, ['id' => 'teacher_access_id']);
     }
 
-
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-
-        
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
+
+        $model->subject_id = $model->subjectTopic->subject_id;
+
+
         if ($model->save()) {
             $transaction->commit();
             return true;

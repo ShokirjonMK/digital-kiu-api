@@ -145,9 +145,6 @@ class HostelDocController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-
-
         $model = HostelDoc::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
@@ -158,9 +155,14 @@ class HostelDocController extends ApiActiveController
 
         // remove model
         if ($model) {
+            if (!isRole("student")) {
+                if ($model->user_id != current_user_id()) {
+                    return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+                }
+            }
+
             // Translate::deleteTranslate($this->table_name, $model->id);
-            $model->is_deleted = 1;
-            $model->update();
+            $model->delete();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

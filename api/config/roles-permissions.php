@@ -1357,6 +1357,7 @@ return [
         'hostel-doc_create',
         'hostel-doc_update',
         'hostel-doc_view',
+        'hostel-doc_delete',
 
         'hostel-category-type_index',
         'hostel-category_index',

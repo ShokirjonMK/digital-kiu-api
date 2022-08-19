@@ -5,7 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -24,7 +23,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  */
-class Content extends \yii\db\ActiveRecord
+class SubjectContentMark extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -43,7 +42,7 @@ class Content extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'content';
+        return 'subject_content_mark';
     }
 
     /**

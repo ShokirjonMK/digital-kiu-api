@@ -46,7 +46,7 @@ class m220819_035027_create_hostel_doc_table extends Migration
 
         $this->addForeignKey('hostel_doc_hostel_student_id', 'hostel_doc', 'student_id', 'student', 'id');
         $this->addForeignKey('hostel_doc_hostel_hostel_app_id', 'hostel_doc', 'hostel_app_id', 'hostel_app', 'id');
-        $this->addForeignKey('hostel_doc_hostel_hostel_category_id', 'hostel_doc', 'hostel_category_id', 'hostel_category', 'id');
+        $this->addForeignKey('hostel_doc_hostel_hostel_category_id', 'hostel_doc', 'hostel_category_id', 'hostel_category', 'id', 'CASCADE');
         $this->addForeignKey('hostel_doc_hostel_hostel_category_type_id', 'hostel_doc', 'hostel_category_type_id', 'hostel_category_type', 'id');
     }
 

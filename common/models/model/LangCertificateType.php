@@ -5,8 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "military ".
@@ -26,13 +24,6 @@ class LangCertificateType extends \yii\db\ActiveRecord
     use ResourceTrait;
     public static $selected_language = 'uz';
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -49,8 +40,13 @@ class LangCertificateType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lang'],'required'],
-            [['lang'], 'string', 'max' => 255],
+            [['lang_id'], 'required'],
+            [['lang'], 'string', 'max' => 2],
+            // [['name'], 'string', 'max' => 255],
+            [['lang_id'], 'integer'],
+            // [['name'], 'unique'],
+            [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::class, 'targetAttribute' => ['lang_id' => 'id']],
+
         ];
     }
 
@@ -62,7 +58,7 @@ class LangCertificateType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lang'=>'Lang',
+            'lang' => 'Lang',
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -123,13 +119,25 @@ class LangCertificateType extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
+    public function getLanguage()
+    {
+        return $this->hasOne(Languages::className(), ['id' => 'lang_id']);
+    }
+
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
+        // dd($model->language);
+        $model->lang = $model->language->lang_code;
+
+        $model->name = $post['name']['uz'] ?? null;
 
         $has_error = Translate::checkingAll($post);
 
@@ -160,6 +168,11 @@ class LangCertificateType extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
+        $model->lang = $model->language->lang_code;
+
+        $model->name = $post['name']['uz'] ?? null;
+
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
@@ -195,4 +208,3 @@ class LangCertificateType extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

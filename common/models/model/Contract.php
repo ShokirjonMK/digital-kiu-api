@@ -4,15 +4,19 @@ namespace common\models\model;
 
 use common\models\User;
 use Yii;
+use yii\web\UploadedFile;
 use yii\behaviors\TimestampBehavior;
-use api\resources\ResourceTrait;
 
+use api\resources\ResourceTrait;
 /**
- * This is the model class for table "military ".
+ * This is the model class for table "test_98".
  *
  * @property int $id
- * @property string $name
- * @property string $lang
+ * @property string $amount
+ * @property int $edu_form_id
+ * @property int $edu_year_id
+ * @property int $edu_type_id
+ * @property int $type
  * @property int $status
  * @property int $is_deleted
  * @property int $created_at
@@ -20,7 +24,7 @@ use api\resources\ResourceTrait;
  * @property int $created_by
  * @property int $updated_by
  */
-class OrderType extends \yii\db\ActiveRecord
+class Contract extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -32,13 +36,14 @@ class OrderType extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
+
     /**
      * {@inheritdoc}
      */
 
     public static function tableName()
     {
-        return 'order_type';
+        return 'contract';
     }
 
     /**
@@ -48,8 +53,12 @@ class OrderType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lang'],'required'],
-            [['lang'], 'string', 'max' => 255],
+            [['edu_year_id', 'edu_type_id', 'edu_form_id',], 'required'],
+            [['status', 'edu_year_id', 'edu_type_id', 'edu_form_id', 'type',], 'integer'],
+            [['amount'], 'string', 'max' => 255],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\EduYear::class, 'targetAttribute' => ['edu_year_id' => 'id']],
+            [['edu_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\EduType::class, 'targetAttribute' => ['edu_type_id' => 'id']],
+            [['edu_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\EduForm::class, 'targetAttribute' => ['edu_form_id' => 'id']],
         ];
     }
 
@@ -61,7 +70,11 @@ class OrderType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lang'=>'Lang',
+            'edu_year_id' => _e('Edu Year Id'),
+            'edu_type_id' => _e('Finish Date'),
+            'edu_form_id' => _e('Edu Form Id'),
+            'type' => _e('Type'),
+            'amount' => _e('Amount'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -77,7 +90,11 @@ class OrderType extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'lang',
+            'edu_year_id',
+            'edu_type_id',
+            'edu_form_id',
+            'type',
+            'amount',
             'status',
             'is_deleted',
             'created_at',
@@ -90,7 +107,7 @@ class OrderType extends \yii\db\ActiveRecord
 
     public function extraFields()
     {
-        $extraFields =  [
+        $extraFields = [
 
             'description',
             'createdBy',
@@ -183,7 +200,28 @@ class OrderType extends \yii\db\ActiveRecord
     }
 
 
-
+    #region rel
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'updated_by']);
+    }
+    public function getEduYear()
+    {
+        return $this->hasOne(\common\models\model\EduYear::className(), ['id' => 'edu_year_id']);
+    }
+    public function getEduType()
+    {
+        return $this->hasOne(\common\models\model\EduType::className(), ['id' => 'edu_type_id']);
+    }
+    public function getEduForm()
+    {
+        return $this->hasOne(\common\models\model\EduForm::className(), ['id' => 'edu_form_id']);
+    }
+    #endregion
 
     public function beforeSave($insert)
     {

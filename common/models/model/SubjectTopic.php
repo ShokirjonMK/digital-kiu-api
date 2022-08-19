@@ -143,6 +143,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
             'subjectCategory',
             'lang',
 
+            'reference',
 
             'contents',
             'hasContent',
@@ -186,6 +187,11 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $this->hasOne(Languages::className(), ['id' => 'lang_id'])->select(['id', 'name']);
     }
 
+    public function getReference()
+    {
+        return $this->hasMany(SubjectTopicReference::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
+    }
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -195,8 +201,10 @@ class SubjectTopic extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
 
-        if (isRole('teacher')) {
-            $model->teacher_access_id = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()])->id;
+        if (isRole('teacher') && !isRole('mudir')) {
+            $teacherAccess = TeacherAccess::findOne(['subject_id' => $model->subject_id, 'user_id' => current_user_id()]);
+            $model->teacher_access_id =  $teacherAccess ? $teacherAccess->id : 0;
+            $model->user_id = current_user_id();
         }
 
         if ($model->save()) {

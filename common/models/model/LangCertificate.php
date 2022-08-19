@@ -32,7 +32,7 @@ class LangCertificate extends \yii\db\ActiveRecord
     use ResourceTrait;
 
     public $uploadFile;
-    const UPLOADS_FOLDER = 'lang_certificate';
+    const UPLOADS_FOLDER = 'lang_certificate/';
     public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
 
     const USER_TYPE_STUDENT = 1;
@@ -54,10 +54,10 @@ class LangCertificate extends \yii\db\ActiveRecord
         return [
             [['user_id', 'certificate_type_id'], 'required'],
             [['user_id', 'certificate_type_id', 'user_type'], 'integer'],
-            [['ball', 'lang'], 'string', 'max' => 255],
+            [['lang'], 'string', 'max' => 255],
             [['file'], 'string', 'max' => 255],
+            [['ball'], 'double'],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
-            // [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::class, 'targetAttribute' => ['student_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['certificate_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => LangCertificateType::class, 'targetAttribute' => ['certificate_type_id' => 'id']],
         ];
@@ -87,6 +87,9 @@ class LangCertificate extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
+            'certificate_type' => function ($model) {
+                return $model->certificateType->translate->name ?? '';
+            },
             'ball',
             'certificate_type_id',
             'file',
@@ -103,11 +106,40 @@ class LangCertificate extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'certificateType',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
+    }
+
+    public function getCertificateType()
+    {
+        return $this->hasOne(LangCertificateType::className(), ['id' => 'certificate_type_id']);
+    }
+
+
     public static function createItem($model, $post)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        if (isRole('student', $model->user_id)) {
+            $model->user_type = self::USER_TYPE_STUDENT;
+        } elseif (isRole('teacher', $model->user_id)) {
+            $model->user_type = self::USER_TYPE_TEACHER;
+        } else {
+            $model->user_type = self::USER_TYPE_STAFF;
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -123,14 +155,12 @@ class LangCertificate extends \yii\db\ActiveRecord
                 }
             }
 
-            if ($model->save()) {
-                $model->deleteFile();
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $model->save();
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
     }
 
@@ -143,9 +173,9 @@ class LangCertificate extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
         }
         $oldFile = $model->file;
-        $model->img = UploadedFile::getInstancesByName('img');
-        if ($model->img) {
-            $model->img = $model->img[0];
+        $model->uploadFile = UploadedFile::getInstancesByName('uploadFile');
+        if ($model->uploadFile) {
+            $model->uploadFile = $model->uploadFile[0];
             $questionFileUrl = $model->uploadFile();
             if ($questionFileUrl) {
                 $model->deleteFile($oldFile);
@@ -183,7 +213,7 @@ class LangCertificate extends \yii\db\ActiveRecord
             if (!file_exists(UPLOADS_PATH  . $fileUploadUrl)) {
                 mkdir(UPLOADS_PATH  . $fileUploadUrl, 0777, true);
             }
-            $fileName = time() . $this->uploadFile->extension;
+            $fileName =  time() . $this->uploadFile->extension;
             $miniUrl = $fileUploadUrl . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
             $this->uploadFile->saveAs($url, false);

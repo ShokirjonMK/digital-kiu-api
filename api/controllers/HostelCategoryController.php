@@ -2,28 +2,50 @@
 
 namespace api\controllers;
 
-use base\ResponseStatus;
-use common\models\model\Cantract;
+use common\models\model\HostelCategory;
 use Yii;
+use base\ResponseStatus;
 
-class  CantractController extends ApiActiveController
+class HostelCategoryController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Cantract';
+    public $modelClass = 'api\resources\HostelCategory';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'cantract';
-    public $controller_name = 'Cantract';
+    public $table_name = 'hostel_category';
+    public $controller_name = 'HostelCategory';
+
+    public function actionIndex($lang)
+    {
+        $model = new HostelCategory();
+
+        $query = $model->find()
+            ->with(['infoRelation'])
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
 
     public function actionCreate($lang)
     {
-        $model = new Cantract();
+        $model = new HostelCategory();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Cantract::createItem($model, $post);
+        // return $post;
+        $result = HostelCategory::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -33,13 +55,13 @@ class  CantractController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Cantract::findOne($id);
+        $model = HostelCategory::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Cantract::updateItem($model, $post);
+        $result = HostelCategory::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -49,7 +71,7 @@ class  CantractController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Cantract::find()
+        $model = HostelCategory::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -60,15 +82,22 @@ class  CantractController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Cantract::find()
+        $model = HostelCategory::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
-        $model->delete();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+
+        // remove model
+        if ($model) {
+            // Translate::deleteTranslate($this->table_name, $model->id);
+            $model->is_deleted = 1;
+            $model->update();
+
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
 }

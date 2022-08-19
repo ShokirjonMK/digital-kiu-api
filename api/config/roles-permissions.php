@@ -238,6 +238,7 @@ return [
         "subject_index",
         "subject_update",
         "subject_view",
+        "subject_create",
 
         "subject-sillabus_create",
         "subject-sillabus_delete",
@@ -761,6 +762,9 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
+
+        "academic-degree_index",
+        "academic-degree_view",
         "access-control_permissions",
         "access-control_roles",
         "area_index",
@@ -770,7 +774,13 @@ return [
         "country_view",
         "course_index",
         "course_view",
+        "degree-info_index",
+        "degree-info_view",
+        "degree_index",
+        "degree_view",
         "department_index",
+        "diploma-type_index",
+        "diploma-type_view",
         "enum_education-degrees",
         "enum_education-types",
         "enum_educations",
@@ -779,22 +789,17 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
+        "exam-appeal-semeta_create",
+        "exam-appeal-semeta_index",
+        "exam-appeal-semeta_view",
         "exam-checking_index",
         "exam-checking_update",
         "exam-checking_view",
         "exam-question_index",
         "exam-question_view",
-
         "exam-semeta_create",
         "exam-semeta_index",
         "exam-semeta_view",
-
-
-        "exam-appeal-semeta_create",
-        "exam-appeal-semeta_index",
-        "exam-appeal-semeta_view",
-
-
         "exam_index",
         "exam_view",
         "faculty_index",
@@ -806,10 +811,10 @@ return [
         "notification_my",
         "notification_status-list",
         "notification_view",
-
+        "partiya_index",
+        "partiya_view",
         "password_index",
         "password_update",
-
         "question-type_index",
         "question-type_view",
         "question_create",
@@ -830,6 +835,11 @@ return [
         "subject-sillabus_index",
         "subject-sillabus_update",
         "subject-sillabus_view",
+        "subject-topic_create",
+        "subject-topic_delete",
+        "subject-topic_index",
+        "subject-topic_update",
+        "subject-topic_view",
         "subject-type_index",
         "subject-type_view",
         "subject_create",
@@ -852,96 +862,6 @@ return [
         "user_status-list",
         "user_update",
         "user_view"
-
-        // "access-control_permissions",
-        // "access-control_roles",
-        // "area_index",
-        // "area_view",
-        // "citizenship_view",
-        // "country_index",
-        // "country_view",
-        // "department_index",
-        // "enum_education-degrees",
-        // "enum_education-types",
-        // "enum_educations",
-        // "enum_family-statuses",
-        // "enum_genders",
-        // "enum_rates",
-        // "enum_topic-types",
-        // "enum_yesno",
-        // "faculty_index",
-        // "kafedra_index",
-        // "kafedra_view",
-        // "languages_index",
-
-        // "notification_approved",
-        // "notification_index",
-        // "notification_my",
-        // "notification_status-list",
-        // "notification_view",
-
-        // "password_index",
-        // "password_update",
-
-        // "region_index",
-        // "region_view",
-
-        // "semestr_index",
-
-        // 'course_index',
-        // 'course_view',
-
-        // "subject-category_index",
-        // "subject-category_view",
-        // "subject-sillabus_create",
-        // "subject-sillabus_delete",
-        // "subject-sillabus_index",
-        // "subject-sillabus_update",
-        // "subject-sillabus_view",
-        // "subject-type_index",
-        // "subject-type_view",
-        // "subject_create",
-        // "subject_delete",
-        // "subject_index",
-        // "subject_update",
-        // "subject_view",
-
-        // "user-access-type_index",
-        // "user_create",
-        // "user_delete",
-        // "user_index",
-        // "user_logout",
-        // "user_me",
-        // "user_status-list",
-        // "user_update",
-        // "user_view",
-
-        // "question_view",
-        // "question_create",
-        // "question_index",
-        // "question_update",
-        // "question_delete",
-        // 'question_status-list',
-
-        // "question-type_index",
-        // "question-type_view",
-        // 'question_status-update',
-
-        // "teacher-access_index",
-        // 'user-access_create',
-        // 'user-access_delete',
-        // 'user-access_index',
-        // 'user-access_update',
-        // 'user-access_view',
-
-
-        // 'exam_view',
-        // 'exam_index',
-        // 'exam-semeta_create',
-        // 'exam-semeta_index',
-        // 'exam-semeta_view',
-        // 'exam-question_index',
-        // 'exam-question_view',
 
     ],
 
@@ -1210,6 +1130,17 @@ return [
         // 'kpi-store_view',
         // 'kpi-store_update',
         // 'kpi-store_delete',
+
+        'kpi-data_create',
+        'kpi-data_delete',
+        'kpi-data_index',
+        'kpi-data_update',
+        'kpi-data_view',
+        'lang-certificate-type_index',
+        'lang-certificate-type_view',
+        'lang-certificate_index',
+        'lang-certificate_view',
+
         'kpi-category_index',
         'kpi-category_extra',
         // 'kpi-category_extra',
@@ -1364,9 +1295,9 @@ return [
         "exam_view",
 
         'exam-appeal_view',
-        // "exam-appeal_create",
-        // 'exam-appeal_delete',
-        // 'exam-appeal_update',
+        "exam-appeal_create",
+        'exam-appeal_delete',
+        'exam-appeal_update',
 
         "faculty_view",
         "kafedra_view",
@@ -1408,7 +1339,6 @@ return [
         "week_index",
         "week_view",
 
-
         'survey-answer_create',
         'survey-answer_update',
         'survey-question_index',
@@ -1416,6 +1346,20 @@ return [
         'election_index',
         'election-vote_create',
         'election-vote_update',
+
+        'hostel-app_index',
+        'hostel-app_create',
+        'hostel-app_view',
+        'hostel-app_delete',
+
+        'hostel-doc_index',
+        'hostel-doc_create',
+        'hostel-doc_update',
+        'hostel-doc_view',
+        'hostel-doc_delete',
+
+        'hostel-category-type_index',
+        'hostel-category_index',
     ],
 
 ];

@@ -18,6 +18,25 @@ class RelativeInfoController extends ApiActiveController
     public $table_name = 'relative_info';
     public $controller_name = 'RelativeInfo';
 
+
+    public function actionIndex($lang)
+    {
+        $model = new RelativeInfo();
+
+        $query = $model->find();
+
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionCreate($lang)
     {
         $model = new RelativeInfo();
@@ -57,7 +76,6 @@ class RelativeInfoController extends ApiActiveController
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
-
 
     public function actionDelete($lang, $id)
     {

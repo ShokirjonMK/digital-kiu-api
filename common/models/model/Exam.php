@@ -62,6 +62,10 @@ class Exam extends \yii\db\ActiveRecord
     const PROTECTED_TURE = 1;
     const PROTECTED_FALSE = 0;
 
+    // 1-oddiy 2-intensiv
+    const CATEGORY_MAIN = 1;
+    const CATEGORY_INTENSIV = 2;
+
     /**
      * {@inheritdoc}
      */
@@ -79,6 +83,8 @@ class Exam extends \yii\db\ActiveRecord
             [['exam_type_id', 'type', 'edu_semestr_subject_id', 'start', 'finish'], 'required'],
             [
                 [
+                    'old_exam_id',
+                    'category',
                     'status_appeal',
                     'edu_year_id',
                     'exam_type_id',
@@ -93,7 +99,9 @@ class Exam extends \yii\db\ActiveRecord
                     'updated_at',
                     'appeal_start',
                     'appeal_finish',
-                    'created_by', 'updated_by', 'is_deleted'
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
                 ], 'integer'
             ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
@@ -135,6 +143,7 @@ class Exam extends \yii\db\ActiveRecord
 
             'appeal_start' => 'appeal_start',
             'appeal_finish' => 'appeal_finish',
+            'category' => 'category',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -168,8 +177,10 @@ class Exam extends \yii\db\ActiveRecord
             'max_ball',
             'min_ball',
 
+            'category',
             'appeal_start',
             'appeal_finish',
+            'old_exam_id',
 
             'order',
             'status',
@@ -194,17 +205,16 @@ class Exam extends \yii\db\ActiveRecord
             'subjectName',
 
             'statusName',
+            'oldExam',
+            'relExam',
 
             'examQuestions',
             'examStudentAnswers',
-
-
 
             'examStudent',
             'examStudentMain',
             'examStudentCount',
             'examStudentByLang',
-
 
             'examAppealByLang',
             'appealCount',
@@ -527,6 +537,16 @@ class Exam extends \yii\db\ActiveRecord
         return $this->hasMany(ExamAppealSemeta::className(), ['exam_id' => 'id']);
     }
 
+    public function getOldExam()
+    {
+        return $this->hasOne(Exam::className(), ['id' => 'old_exam_id']);
+    }
+
+    public function getRelExam()
+    {
+        return $this->hasOne(Exam::className(), ['old_exam_id' => 'id']);
+    }
+
     public static function generatePasswords($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -596,23 +616,53 @@ class Exam extends \yii\db\ActiveRecord
                             ->orderBy('id desc')
                             ->one();
 
-                        if (isset($ExamStudentHas)) {
-                            $ExamStudent = $ExamStudentHas;
+                        if ($exam->category == self::CATEGORY_INTENSIV) {
+                            $oldExamStudentHas = ExamStudent::find()->where([
+                                'exam_id' => $exam->old_exam_id,
+                                'student_id' => $student_id,
+                            ])
+                                ->orderBy('id desc')
+                                ->one();
+                            if ($oldExamStudentHas) {
+
+                                // dd($oldExamStudentHas->allBall);
+                                if (($oldExamStudentHas->allBall + $oldExamStudentHas->in_ball)  < 56) {
+                                    if (isset($ExamStudentHas)) {
+                                        $ExamStudent = $ExamStudentHas;
+                                    } else {
+                                        $ExamStudent = new ExamStudent();
+                                    }
+                                    $ExamStudent->exam_id = $examId;
+                                    $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                                    // $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                                    $ExamStudent->student_id = $student_id;
+                                    $ExamStudent->lang_id = $langId;
+                                    // $ExamStudent->password = _random_string('numeric', 4);
+                                    $ExamStudent->password = $examPassword;
+                                    // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                                    // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
+                                    $ExamStudent->save(false);
+                                }
+                            }
                         } else {
-                            $ExamStudent = new ExamStudent();
+                            if (isset($ExamStudentHas)) {
+                                $ExamStudent = $ExamStudentHas;
+                            } else {
+                                $ExamStudent = new ExamStudent();
+                            }
+
+                            // dd("sdsd");
+                            $ExamStudent->exam_id = $examId;
+                            $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                            // $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                            $ExamStudent->student_id = $student_id;
+                            $ExamStudent->lang_id = $langId;
+                            // $ExamStudent->password = _random_string('numeric', 4);
+                            $ExamStudent->password = $examPassword;
+                            // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
+                            // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
+                            $ExamStudent->save(false);
                         }
-
-                        $ExamStudent->exam_id = $examId;
-                        $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
-
-                        $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
-                        $ExamStudent->student_id = $student_id;
-                        $ExamStudent->lang_id = $langId;
-                        // $ExamStudent->password = _random_string('numeric', 4);
-                        $ExamStudent->password = $examPassword;
-                        // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
-                        // $ExamStudent->status = ExamStudent::STATUS_INACTIVE;
-                        $ExamStudent->save(false);
                     }
                     /** Student generate Password and create ExamStudent end */
 
@@ -655,7 +705,7 @@ class Exam extends \yii\db\ActiveRecord
                 foreach ($examStudents as $examStudentOne) {
                     $oneStd = [];
                     $oneStd['full_name'] = Profile::getFullname($examStudentOne->student->profile);
-                    $oneStd['direction'] = $examStudentOne->student->direction->translate->name;
+                    $oneStd['direction'] = $examStudentOne->student->direction->translate->name ?? null;
                     $oneStd['password'] = $examStudentOne->password;
                     $data['students'][] = $oneStd;
                 }
@@ -692,6 +742,8 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function createItem($model, $post)
     {
+
+        // dd($model->oldExam->question_count_by_type_with_ball);
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -735,6 +787,12 @@ class Exam extends \yii\db\ActiveRecord
 
             $model->question_count_by_type_with_ball = json_encode(((array)json_decode($post['question_count_by_type_with_ball'])));
         }
+
+        if ($model->category == self::CATEGORY_INTENSIV) {
+            $model->question_count_by_type_with_ball = $model->oldExam->question_count_by_type_with_ball;
+        }
+
+
         /** question_count_by_type_with_ball */
 
         /*  if (isset($post['question_count_by_type'])) {
@@ -1014,7 +1072,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function statusList()
     {
-        
+
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),

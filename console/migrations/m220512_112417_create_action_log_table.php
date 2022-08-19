@@ -44,6 +44,7 @@ class m220512_112417_create_action_log_table extends Migration
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
+            'created_on' => $this->dateTime()->Null(),
             'updated_at' => $this->integer()->Null(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),

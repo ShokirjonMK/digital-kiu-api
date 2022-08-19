@@ -2,25 +2,11 @@
 
 namespace common\models\model;
 
-use common\models\User;
+use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use api\resources\ResourceTrait;
 
-/**
- * This is the model class for table "military ".
- *
- * @property int $id
- * @property string $name
- * @property string $lang
- * @property int $status
- * @property int $is_deleted
- * @property int $created_at
- * @property int $updated_at
- * @property int $created_by
- * @property int $updated_by
- */
-class OrderType extends \yii\db\ActiveRecord
+class HostelCategory extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -32,24 +18,36 @@ class OrderType extends \yii\db\ActiveRecord
             TimestampBehavior::class,
         ];
     }
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
+
     /**
      * {@inheritdoc}
      */
-
     public static function tableName()
     {
-        return 'order_type';
+        return 'hostel_category';
     }
 
     /**
      * {@inheritdoc}
      */
-
     public function rules()
     {
         return [
-            [['lang'],'required'],
-            [['lang'], 'string', 'max' => 255],
+
+            [
+                [
+                    'ball',
+                ], 'double'
+            ],
+
+            [['key'], 'string', 'max' => 255],
+
+            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['status'], 'default', 'value' => 1],
+
         ];
     }
 
@@ -61,28 +59,37 @@ class OrderType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lang'=>'Lang',
+
+            'ball',
+            'key',
+
+            'order' => _e('Order'),
             'status' => _e('Status'),
-            'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 
     public function fields()
     {
-        $fields = [
+        $fields =  [
             'id',
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'lang',
+
+            'key',
+
+            'order',
             'status',
-            'is_deleted',
             'created_at',
             'updated_at',
             'created_by',
+            'updated_by',
+
         ];
 
         return $fields;
@@ -93,13 +100,22 @@ class OrderType extends \yii\db\ActiveRecord
         $extraFields =  [
 
             'description',
+            'hostelCategoryType',
+            'types',
             'createdBy',
             'updatedBy',
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;
     }
 
+    /**
+     * Get Translate
+     *
+     * @return void
+     */
     public function getTranslate()
     {
         if (Yii::$app->request->get('self') == 1) {
@@ -111,6 +127,7 @@ class OrderType extends \yii\db\ActiveRecord
 
     public function getInfoRelation()
     {
+        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
     }
@@ -122,10 +139,26 @@ class OrderType extends \yii\db\ActiveRecord
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
     }
 
+    public function getHostelCategoryType()
+    {
+        return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
+    }
+    public function getTypes()
+    {
+        return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -133,35 +166,40 @@ class OrderType extends \yii\db\ActiveRecord
         $has_error = Translate::checkingAll($post);
 
         if ($has_error['status']) {
+
             if ($model->save()) {
+
                 if (isset($post['description'])) {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
+
                 $transaction->commit();
                 return true;
             } else {
+
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }
 
-
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
+
         $has_error = Translate::checkingUpdate($post);
+
         if ($has_error['status']) {
+
             if ($model->save()) {
+
                 if (isset($post['name'])) {
                     if (isset($post['description'])) {
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
@@ -169,30 +207,29 @@ class OrderType extends \yii\db\ActiveRecord
                         Translate::updateTranslate($post['name'], $model->tableName(), $model->id);
                     }
                 }
-                $transaction->commit();
 
+                $transaction->commit();
                 return true;
             } else {
+
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
         } else {
+
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
     }
 
 
-
-
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }
 }
-

@@ -27,7 +27,7 @@ class ElectionVoteController extends ApiActiveController
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             // ->leftJoin("election_candidate_info eci", "eci.election_candidate_id = $this->table_name.id")
-            ->groupBy($this->table_name . '.id')
+            // ->groupBy($this->table_name . '.id')
             // ->andWhere(['eci.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['eci.tabel_name' => 'faculty'])
             // ->andFilterWhere(['like', 'eci.name', Yii::$app->request->get('q')])

@@ -30,7 +30,7 @@ class OlympicCertificate extends \yii\db\ActiveRecord
 {
     use ResourceTrait;
     public $uploadFile;
-    const UPLOADS_FOLDER = 'olympic_certificate';
+    const UPLOADS_FOLDER = 'olympic_certificate/';
     public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
 
     public static $selected_language = 'uz';
@@ -130,14 +130,12 @@ class OlympicCertificate extends \yii\db\ActiveRecord
                 }
             }
 
-            if ($model->save()) {
-                $model->deleteFile();
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $model->save();
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
     }
 
@@ -179,7 +177,7 @@ class OlympicCertificate extends \yii\db\ActiveRecord
             if (!file_exists(UPLOADS_PATH  . self::UPLOADS_FOLDER)) {
                 mkdir(UPLOADS_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
-            $fileName = $this->id . '_' . \Yii::$app->security->generateRandomString() . '.' . $this->uploadFile->extension;
+            $fileName = $this->id . '_' . time() . '.' . $this->uploadFile->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
             $this->uploadFile->saveAs($url, false);

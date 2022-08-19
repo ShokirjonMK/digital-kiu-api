@@ -18,6 +18,25 @@ class OtherCertificateController extends ApiActiveController
     public $table_name = 'other_certificate';
     public $controller_name = 'OtherCertificate';
 
+
+    public function actionIndex($lang)
+    {
+        $model = new OtherCertificate();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
     public function actionCreate($lang)
     {
         $model = new OtherCertificate();

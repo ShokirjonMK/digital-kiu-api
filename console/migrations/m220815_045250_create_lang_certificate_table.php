@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%lang_certificate}}`.
  */
-class m220805_101746_create_lang_certificate_table extends Migration
+class m220815_045250_create_lang_certificate_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -21,11 +21,11 @@ class m220805_101746_create_lang_certificate_table extends Migration
             'id' => $this->primaryKey(),
 
             'certificate_type_id' => $this->integer(11)->notNull(),
-            'ball' => $this->string(11)->notNull(),
+            'ball' => $this->double(11)->Null(),
             'file' => $this->string(255),
-            'lang' => $this->string(2)->notNull(),
+            'lang' => $this->string(2)->Null(),
             'user_type' => $this->integer()->defaultValue(1)->comment('1-student, 2-teacher, 3-xodim'),
-            'user_id'=>$this->integer()->notNull(),
+            'user_id' => $this->integer()->notNull(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
@@ -41,7 +41,6 @@ class m220805_101746_create_lang_certificate_table extends Migration
 
         // Certificate_type
         $this->addForeignKey('lang_certificate_certificate_type_id', 'lang_certificate', 'certificate_type_id', 'lang_certificate_type', 'id');
-
     }
 
     /**
@@ -49,13 +48,9 @@ class m220805_101746_create_lang_certificate_table extends Migration
      */
     public function safeDown()
     {
-        // // student
-        // $this->dropForeignKey('lang_certificate_student_id', 'lang_certificate');
-        // user
         $this->dropForeignKey('lang_certificate_user_id', 'lang_certificate');
-//         Certificate_type
-        $this->dropForeignKey('lang_certificate_certificate_type_id', 'lang_certificate');
 
+        $this->dropForeignKey('lang_certificate_certificate_type_id', 'lang_certificate');
 
         $this->dropTable('{{%lang_certificate}}');
     }

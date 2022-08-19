@@ -28,6 +28,7 @@ class KpiData extends \yii\db\ActiveRecord
     public $kpi_file1;
     public $kpi_file2;
     public $kpi_file3;
+    public $kpi_file4;
     public $kpiFileMaxSize = 1024 * 1024 * 100; // 100 Mb
 
 
@@ -80,6 +81,7 @@ class KpiData extends \yii\db\ActiveRecord
                     'file1',
                     'file2',
                     'file3',
+                    'file4',
                     'link',
                     'link2',
                     'number',
@@ -106,6 +108,7 @@ class KpiData extends \yii\db\ActiveRecord
             [['file1'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
             [['file2'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
             [['file3'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
+            [['file4'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg,mp3,ogg,dsd,aac,alac,wma,flac,mp4,mov,wmv,flv,avi,mkv', 'maxSize' => $this->kpiFileMaxSize],
 
         ];
     }
@@ -124,6 +127,8 @@ class KpiData extends \yii\db\ActiveRecord
             'file1' => _e('file'),
             'file2' => _e('file2'),
             'file3' => _e('file3'),
+            'file4' => _e('file4'),
+
             'start_date' => _e('start_date'),
             'end_date' => _e('end_date'),
             'link' => _e('link'),
@@ -161,6 +166,7 @@ class KpiData extends \yii\db\ActiveRecord
             'file1',
             'file2',
             'file3',
+            'file4',
             'start_date',
             'end_date',
             'link',
@@ -178,6 +184,9 @@ class KpiData extends \yii\db\ActiveRecord
             'name3',
             'authors',
             'count_of_copyright',
+
+            'user_id',
+
 
             'order',
             'status',
@@ -244,9 +253,9 @@ class KpiData extends \yii\db\ActiveRecord
             $model->kpi_file1 = UploadedFile::getInstancesByName('kpi_file1');
             if ($model->kpi_file1) {
                 $model->kpi_file1 = $model->kpi_file1[0];
-                $kpiFileUrl = $model->uploadFile($model->kpi_file1);
-                if ($kpiFileUrl) {
-                    $model->file1 = $kpiFileUrl;
+                $kpiFileUrl1 = $model->uploadFile($model->kpi_file1);
+                if ($kpiFileUrl1) {
+                    $model->file1 = $kpiFileUrl1;
                 } else {
                     $errors[] = $model->errors;
                 }
@@ -257,9 +266,9 @@ class KpiData extends \yii\db\ActiveRecord
             $model->kpi_file2 = UploadedFile::getInstancesByName('kpi_file2');
             if ($model->kpi_file2) {
                 $model->kpi_file2 = $model->kpi_file2[0];
-                $kpiFileUrl = $model->uploadFile($model->kpi_file2);
-                if ($kpiFileUrl) {
-                    $model->file2 = $kpiFileUrl;
+                $kpiFileUrl2 = $model->uploadFile($model->kpi_file2);
+                if ($kpiFileUrl2) {
+                    $model->file2 = $kpiFileUrl2;
                 } else {
                     $errors[] = $model->errors;
                 }
@@ -270,9 +279,22 @@ class KpiData extends \yii\db\ActiveRecord
             $model->kpi_file3 = UploadedFile::getInstancesByName('kpi_file3');
             if ($model->kpi_file3) {
                 $model->kpi_file3 = $model->kpi_file3[0];
-                $kpiFileUrl = $model->uploadFile($model->kpi_file3);
-                if ($kpiFileUrl) {
-                    $model->file3 = $kpiFileUrl;
+                $kpiFileUrl3 = $model->uploadFile($model->kpi_file3);
+                if ($kpiFileUrl3) {
+                    $model->file3 = $kpiFileUrl3;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+            // ***
+
+            // kpi file saqlaymiz
+            $model->kpi_file4 = UploadedFile::getInstancesByName('kpi_file4');
+            if ($model->kpi_file4) {
+                $model->kpi_file4 = $model->kpi_file4[0];
+                $kpiFileUrl4 = $model->uploadFile($model->kpi_file4);
+                if ($kpiFileUrl4) {
+                    $model->file4 = $kpiFileUrl4;
                 } else {
                     $errors[] = $model->errors;
                 }
@@ -337,6 +359,21 @@ class KpiData extends \yii\db\ActiveRecord
             }
         }
         // ***
+
+
+        // kpi file saqlaymiz
+        $model->kpi_file4 = UploadedFile::getInstancesByName('kpi_file4');
+        if ($model->kpi_file4) {
+            $model->kpi_file4 = $model->kpi_file4[0];
+            $kpiFileUrl = $model->uploadFile($model->kpi_file4);
+            if ($kpiFileUrl) {
+                $model->file4 = $kpiFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // ***
+
 
 
         if (!isset($post['user_id'])) {
@@ -424,7 +461,7 @@ class KpiData extends \yii\db\ActiveRecord
                 mkdir(STORAGE_PATH  . $fileDir, 0777, true);
             }
 
-            $fileName = $this->kpi_category_id . "_" . time() . '.' . $thisIsFile->extension;
+            $fileName = $this->kpi_category_id . "_" . time() . "_" . \Yii::$app->security->generateRandomString(8) . '.' . $thisIsFile->extension;
 
             $miniUrl = $fileDir . $fileName;
             $url = STORAGE_PATH . $miniUrl;

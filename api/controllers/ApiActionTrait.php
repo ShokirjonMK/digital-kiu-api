@@ -73,7 +73,7 @@ trait ApiActionTrait
      * @return void
      */
 
-    public function afterAction($action, $result)
+ /*    public function afterAction($action, $result)
     {
 
         // vdd(Yii::$app->request);
@@ -93,11 +93,17 @@ trait ApiActionTrait
         if (isset($result['errors'])) {
             $action_log->errors = json_encode($result['errors']);
         }
-        $action_log->save(false);
-
         $result = parent::afterAction($action, $result);
+
+        if (isset($result['data'])) {
+            $action_log->data = json_encode($result['data']);
+        }
+
+        $action_log->created_on = date("Y-m-d H:i:s");
+        $action_log->save(false);
+        // dd(json_encode($result));
         return $result;
-    }
+    } */
 
     /**
      * Before action
@@ -304,6 +310,7 @@ trait ApiActionTrait
         if (empty($select)) {
             $select = ['id'];
         }
+
         if ($type == 1) {
             return TeacherAccess::find()
                 ->where(['user_id' => $user_id, 'is_deleted' => 0])
@@ -323,7 +330,6 @@ trait ApiActionTrait
                 ->all();
         }
     }
-
 
     public function isSelf($userAccessTypeId, $type = null)
     {

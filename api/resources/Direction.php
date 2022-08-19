@@ -10,6 +10,13 @@ class Direction extends CommonDirection
 {
     use ResourceTrait;
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * Fields
      *

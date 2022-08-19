@@ -1352,6 +1352,7 @@ return [
         'hostel-app_index',
         'hostel-app_create',
         'hostel-app_view',
+        'hostel-app_delete',
 
         'hostel-doc_index',
         'hostel-doc_create',

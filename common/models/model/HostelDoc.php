@@ -52,8 +52,7 @@ class HostelDoc extends \yii\db\ActiveRecord
                     'student_id',
                     'hostel_app_id',
                     'hostel_category_id',
-                    'hostel_category_type_id',
-
+                    // 'hostel_category_type_id',
                 ], 'required'
             ],
             [

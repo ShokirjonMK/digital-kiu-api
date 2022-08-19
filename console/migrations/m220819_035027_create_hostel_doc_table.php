@@ -25,7 +25,7 @@ class m220819_035027_create_hostel_doc_table extends Migration
             'student_id' => $this->integer()->notNull(),
             'hostel_app_id' => $this->integer()->notNull(),
             'hostel_category_id' => $this->integer()->notNull(),
-            'hostel_category_type_id' => $this->integer()->notNull(),
+            'hostel_category_type_id' => $this->integer()->Null(),
             'type' => $this->integer()->Null(),
 
             'file' => $this->string(255)->Null(),

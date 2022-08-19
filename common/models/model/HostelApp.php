@@ -121,6 +121,7 @@ class HostelApp extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
+            'is_deleted',
 
         ];
 

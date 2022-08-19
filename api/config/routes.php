@@ -123,6 +123,9 @@ $controllers = [
     'lang-certificate-type',
     'military',
     'cantract',
+
+    'content',
+    'kpi-marking',
     'subject-topic-reference',
     'hostel-category',
     'hostel-category-type',

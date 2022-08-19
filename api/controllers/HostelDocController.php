@@ -47,7 +47,7 @@ class HostelDocController extends ApiActiveController
     {
         $model = new HostelDoc();
         $post = Yii::$app->request->post();
-        $post['user_id'] = current_user_id();
+
 
         if (!isRole("student")) {
             return $this->response(0, _e('This action is only for students.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);

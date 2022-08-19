@@ -3,25 +3,25 @@
 namespace api\controllers;
 
 use base\ResponseStatus;
-use common\models\model\Content;
+use common\models\model\SubjectContentMark;
 use Yii;
 
-class ContentController extends ApiActiveController
+class SubjectContentMarkController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Content';
+    public $modelClass = 'api\resources\SubjectContentMark';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'content';
-    public $controller_name = 'Content';
+    public $table_name = 'subject_content_mark';
+    public $controller_name = 'SubjectContentMark';
 
 
     public function actionIndex($lang)
     {
-        $model = new Content();
+        $model = new SubjectContentMark();
 
         $query = $model->find();
 
@@ -38,10 +38,10 @@ class ContentController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new Content();
+        $model = new SubjectContentMark();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Content::createItem($model, $post);
+        $result = SubjectContentMark::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -51,13 +51,13 @@ class ContentController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = Content::findOne($id);
+        $model = SubjectContentMark::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = Content::updateItem($model, $post);
+        $result = SubjectContentMark::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -67,7 +67,7 @@ class ContentController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = Content::find()
+        $model = SubjectContentMark::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -79,9 +79,10 @@ class ContentController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Content::find()
+        $model = SubjectContentMark::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
+
         $model->delete();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

@@ -162,6 +162,11 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
+    public function getSubjectContentMark()
+    {
+        return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
     public function getHasContent()
     {
         return count($this->contents) > 0 ? 1 : 0;

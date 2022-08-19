@@ -52,13 +52,44 @@ class SubjectContentMark extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'subject_topic_id', 'teacher_access_id',],'required'],
-            [['description'],'string'],
-            [['ball'],'double', 'max'=>10],
-            [['user_id', 'subject_topic_id', 'teacher_access_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['subject_topic_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectTopic::class, 'targetAttribute' => ['subject_topic_id' => 'id']],
-            [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::class, 'targetAttribute' => ['teacher_access_id' => 'id']],
+            [[
+                'user_id',
+                'subject_topic_id',
+                'teacher_access_id',
+            ], 'required'],
+            [['description'], 'string'],
+            [
+                ['ball'], 'double',
+                'max' => 10
+            ],
+            [[
+                'user_id',
+                'subject_id',
+                'subject_topic_id',
+                'teacher_access_id',
+                'status',
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by',
+                'is_deleted'
+            ], 'integer'],
+            [
+                ['user_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']
+            ],
+            [
+                ['subject_topic_id'],
+                'exist', 'skipOnError' => true, 'targetClass' => SubjectTopic::class, 'targetAttribute' => ['subject_topic_id' => 'id']
+            ],
+            [
+                ['teacher_access_id'],
+                'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::class, 'targetAttribute' => ['teacher_access_id' => 'id']
+            ],
+            [
+                ['subject_id'],
+                'exist', 'skipOnError' => true, 'targetClass' => Subject::class, 'targetAttribute' => ['subject_id' => 'id']
+            ],
 
         ];
     }
@@ -75,7 +106,8 @@ class SubjectContentMark extends \yii\db\ActiveRecord
             'subject_topic_id' => 'Subject Topic Id',
             'teacher_access_id' => 'Teacher Access Id',
             'description' => 'Description',
-            'ball'=>'Ball',
+            'ball' => 'Ball',
+            'subject_id' => 'subject_id',
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -92,6 +124,7 @@ class SubjectContentMark extends \yii\db\ActiveRecord
             'subject_topic_id',
             'teacher_access_id',
             'description',
+            'subject_id',
             'ball',
             'status',
             'is_deleted',
@@ -103,11 +136,54 @@ class SubjectContentMark extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields = [
+            'subject',
+            'subjectType',
+
+            'user',
+            'subjectTopic',
+            'teacherAccess',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public function getSubject()
+    {
+        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
+    }
+
+    public function getSubjectTopic()
+    {
+        return $this->hasOne(SubjectTopic::class, ['id' => 'subject_topic_id']);
+    }
+
+    public function getTeacherAccess()
+    {
+        return $this->hasOne(TeacherAccess::class, ['id' => 'teacher_access_id']);
+    }
+
+
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+
+        
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -137,23 +213,6 @@ class SubjectContentMark extends \yii\db\ActiveRecord
         }
     }
 
-
-    public function getUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-
-    public function getSubjectTopic()
-    {
-        return $this->hasOne(SubjectTopic::class, ['id' => 'subject_topic_id']);
-    }
-
-    public function getTeacherAccess()
-    {
-        return $this->hasOne(TeacherAccess::class, ['id' => 'teacher_access_id']);
-    }
-
-
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -164,4 +223,3 @@ class SubjectContentMark extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

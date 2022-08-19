@@ -19,10 +19,11 @@ class m220818_133001_create_subject_content_mark_table extends Migration
         $this->createTable('{{%subject_content_mark}}', [
             'id' => $this->primaryKey(),
 
-            'ball' => $this->double()->notNull(),
-            'user_id' => $this->integer(11)->notNull(),
-            'teacher_access_id' => $this->integer(11)->notNull(),
+            'ball' => $this->double()->Null(),
+            'user_id' => $this->integer(11)->Null(),
+            'teacher_access_id' => $this->integer(11)->Null(),
             'subject_topic_id' => $this->integer(11)->notNull(),
+            'subject_id' => $this->integer(11)->Null(),
             'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
@@ -37,6 +38,7 @@ class m220818_133001_create_subject_content_mark_table extends Migration
         $this->addForeignKey('subject_content_mark_user_id', 'subject_content_mark', 'user_id', 'users', 'id');
         $this->addForeignKey('subject_content_mark_teacher_access_id', 'subject_content_mark', 'teacher_access_id', 'teacher_access', 'id');
         $this->addForeignKey('subject_content_mark_subject_topic_id', 'subject_content_mark', 'subject_topic_id', 'subject_topic', 'id');
+        $this->addForeignKey('subject_content_mark_subject_id', 'subject_content_mark', 'subject_id', 'subject', 'id');
     }
 
     /**
@@ -47,6 +49,7 @@ class m220818_133001_create_subject_content_mark_table extends Migration
         $this->dropForeignKey('subject_content_mark_user_id', 'subject_content_mark');
         $this->dropForeignKey('subject_content_mark_teacher_access_id', 'subject_content_mark');
         $this->dropForeignKey('subject_content_mark_subject_topic_id', 'subject_content_mark');
+        $this->dropForeignKey('subject_content_mark_subject_id', 'subject_content_mark');
 
         $this->dropTable('{{%subject_content_mark}}');
     }

@@ -143,7 +143,7 @@ class HostelCategory extends \yii\db\ActiveRecord
 
     public function getHostelCategoryType()
     {
-        return $this->hasOne(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
+        return $this->hasMany(HostelCategoryType::className(), ['hostel_category_id' => 'id']);
     }
 
 

@@ -102,9 +102,6 @@ class HostelAppController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-
-
         $model = HostelApp::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();

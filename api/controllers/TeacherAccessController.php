@@ -138,11 +138,14 @@ class TeacherAccessController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = TeacherAccess::findOne($id);
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
+
         $result = TeacherAccess::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e('TeacherAccess successfully updated.'), $model, null, ResponseStatus::OK);
@@ -156,9 +159,11 @@ class TeacherAccessController extends ApiActiveController
         $model = TeacherAccess::find()
             ->andWhere(['id' => $id])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

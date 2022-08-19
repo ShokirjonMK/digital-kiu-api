@@ -73,8 +73,7 @@ class HostelApp extends \yii\db\ActiveRecord
 
 
             // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
-            [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id']],
-
+            [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'is_deleted']],
 
         ];
     }

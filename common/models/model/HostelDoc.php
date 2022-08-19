@@ -220,7 +220,7 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
         // ***
 
-
+        $model->user_id = current_user_id();
         if ($model->save()) {
             $transaction->commit();
             return true;

@@ -80,6 +80,11 @@ class HostelAppController extends ApiActiveController
         }
         $post = Yii::$app->request->post();
 
+        if (!isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
         $this->load($model, $post);
         $result = HostelApp::updateItem($model, $post);
         if (!is_array($result)) {
@@ -97,6 +102,12 @@ class HostelAppController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if (!isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -108,6 +119,12 @@ class HostelAppController extends ApiActiveController
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if (!isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
         }
 
         // remove model

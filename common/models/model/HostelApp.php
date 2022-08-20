@@ -64,13 +64,12 @@ class HostelApp extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
 
-            [['description'], 'string'],
+            [['description', 'conclution'], 'string'],
 
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => ModelsUser::className(), 'targetAttribute' => ['user_id' => 'id']],
-
 
             // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
             [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'is_deleted']],
@@ -86,12 +85,13 @@ class HostelApp extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
 
-            'student_id',
-            'user_id',
-            'faculty_id',
-            'edu_year_id',
-            'ball',
-            'description',
+            'student_id' => _e('student_id'),
+            'user_id' => _e('user_id'),
+            'faculty_id' => _e('faculty_id'),
+            'edu_year_id' => _e('edu_year_id'),
+            'ball' => _e('ball'),
+            'description' => _e('description'),
+            'conclution' => _e('conclution'),
 
             'status' => _e('Status'),
             'order' => _e('Order'),
@@ -114,6 +114,7 @@ class HostelApp extends \yii\db\ActiveRecord
             'edu_year_id',
             'ball',
             'description',
+            'conclution',
 
             'order',
             'status',

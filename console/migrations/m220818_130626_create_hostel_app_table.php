@@ -27,6 +27,7 @@ class m220818_130626_create_hostel_app_table extends Migration
             'edu_year_id' => $this->integer()->Null(),
             'ball' => $this->double()->Null(),
             'description' => $this->text()->Null(),
+            'conclution' => $this->text()->Null(),
 
             'building_id' => $this->integer()->Null(),
             'room_id' => $this->integer()->Null(),

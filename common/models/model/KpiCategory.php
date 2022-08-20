@@ -200,6 +200,10 @@ class KpiCategory extends \yii\db\ActiveRecord
     }
 
 
+    public function getKpiCategory()
+    {
+        return $this->hasMany(KpiMark::class, ['kpi_category_id' => 'id']);
+    }
 
     public static function createItem($model, $post)
     {

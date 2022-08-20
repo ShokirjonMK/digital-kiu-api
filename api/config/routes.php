@@ -125,7 +125,7 @@ $controllers = [
     'cantract',
 
     'subject-content-mark',
-    'kpi-marking',
+    'kpi-mark',
     'subject-topic-reference',
     'hostel-category',
     'hostel-category-type',

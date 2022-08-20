@@ -3,27 +3,28 @@
 namespace api\controllers;
 
 use base\ResponseStatus;
-use common\models\model\KpiMarking;
+use common\models\model\KpiMark;
 use Yii;
 
-class KpiMarkingController extends ApiActiveController
+class KpiMarkController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\KpiMarking';
+    public $modelClass = 'api\resources\KpiMark';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'kpi_marking';
-    public $controller_name = 'KpiMarking';
+    public $table_name = 'kpi_mark';
+    public $controller_name = 'KpiMark';
 
 
     public function actionIndex($lang)
     {
-        $model = new KpiMarking();
+        $model = new KpiMark();
 
-        $query = $model->find();
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -38,10 +39,10 @@ class KpiMarkingController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new KpiMarking();
+        $model = new KpiMark();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = KpiMarking::createItem($model, $post);
+        $result = KpiMark::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
@@ -51,13 +52,13 @@ class KpiMarkingController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $model = KpiMarking::findOne($id);
+        $model = KpiMark::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = KpiMarking::updateItem($model, $post);
+        $result = KpiMark::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -67,7 +68,7 @@ class KpiMarkingController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = KpiMarking::find()
+        $model = KpiMark::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -79,13 +80,17 @@ class KpiMarkingController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = KpiMarking::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
+        $model = KpiMark::find()
+            ->andWhere(['id' => $id])
             ->one();
-        $model->delete();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if ($model->delete()) {
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+        }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 }

@@ -5,7 +5,6 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use common\models\User;
 use Yii;
-use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -22,7 +21,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  */
-class KpiMarking extends \yii\db\ActiveRecord
+class KpiMark extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -41,7 +40,7 @@ class KpiMarking extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'kpi_marking';
+        return 'kpi_mark';
     }
 
     /**
@@ -51,11 +50,15 @@ class KpiMarking extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'kpi_category_id',],'required'],
-            [['ball'],'double', 'max'=>10],
-            [['user_id','kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['user_id', 'kpi_category_id',], 'required'],
+            [['ball'], 'double',],
+            [['user_id', 'type', 'edu_year_id', 'kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['kpi_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => KpiCategory::class, 'targetAttribute' => ['kpi_category_id' => 'id']],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::class, 'targetAttribute' => ['edu_year_id' => 'id']],
+
+
+            [['kpi_category_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'user_id']],
 
         ];
     }
@@ -70,7 +73,9 @@ class KpiMarking extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User Id',
             'kpi_category_id' => 'Kpi Category Id',
-            'ball'=>'Ball',
+            'type' => 'type',
+            'edu_year_id' => 'edu_year_id',
+            'ball' => 'Ball',
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -84,6 +89,8 @@ class KpiMarking extends \yii\db\ActiveRecord
         $fields = [
             'id',
             'user_id',
+            'type',
+            'edu_year_id',
             'kpi_category_id',
             'ball',
             'status',
@@ -96,41 +103,6 @@ class KpiMarking extends \yii\db\ActiveRecord
         return $fields;
     }
 
-
-    public static function createItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-    }
-
-    public static function updateItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-        }
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-    }
-
-
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
@@ -139,6 +111,66 @@ class KpiMarking extends \yii\db\ActiveRecord
     public function getKpiCategory()
     {
         return $this->hasOne(KpiCategory::class, ['id' => 'kpi_category_id']);
+    }
+
+
+    public function getEduYear()
+    {
+        return $this->hasOne(EduYear::class, ['id' => 'edu_year_id']);
+    }
+
+
+    public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->ball > $model->kpiCategory->max_ball) {
+            $errors[] = _e('Ushbu tur uchun max ball ' . $model->kpiCategory->max_ball);
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+
+        if ($model->ball > $model->kpiCategory->max_ball) {
+            $errors[] = _e('Ushbu tur uchun max ball ' . $model->kpiCategory->max_ball);
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
     }
 
     public function beforeSave($insert)
@@ -151,4 +183,3 @@ class KpiMarking extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

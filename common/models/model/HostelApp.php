@@ -72,7 +72,7 @@ class HostelApp extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => ModelsUser::className(), 'targetAttribute' => ['user_id' => 'id']],
 
             // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
-            [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'is_deleted']],
+            // [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'is_deleted']],
 
         ];
     }

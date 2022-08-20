@@ -1349,6 +1349,7 @@ return [
 
         'hostel-app_index',
         'hostel-app_create',
+        'hostel-app_update',
         'hostel-app_view',
         'hostel-app_delete',
 

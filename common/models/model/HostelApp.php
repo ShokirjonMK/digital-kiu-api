@@ -172,6 +172,19 @@ class HostelApp extends \yii\db\ActiveRecord
 
         $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
 
+        $has = self::findOne(['user_id' => $model->user_id, 'edu_year_id' => $model->edu_year_id]);
+
+        if ($has) {
+            if ($has->is_deleted == 1) {
+                $has->is_deleted = 0;
+            }
+            $has->description = $model->description;
+            if ($has->update()) {
+                $transaction->commit();
+                return true;
+            }
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             return simplify_errors($errors);

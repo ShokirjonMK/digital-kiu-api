@@ -134,6 +134,7 @@ class HostelApp extends \yii\db\ActiveRecord
         $extraFields =  [
             'student',
             'eduYear',
+            'profile',
             'hostelDoc',
 
             'createdBy',
@@ -148,6 +149,11 @@ class HostelApp extends \yii\db\ActiveRecord
     public function getStudent()
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
 
     public function getHostelDoc()

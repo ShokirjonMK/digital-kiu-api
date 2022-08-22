@@ -131,9 +131,9 @@ class HostelDocController extends ApiActiveController
         }
 
         if ($model->hostel_category_id > 0) {
-            $model->ball = $model->hostelCategoryType->ball;
+            $model->ball = $model->hostelCategoryType->ball ?? 0;
         } else {
-            $model->ball = $model->hostelCategory->ball;
+            $model->ball = $model->hostelCategory->ball ?? 0;
         }
 
         $model->is_checked = HostelDoc::IS_CHECKED_TRUE;

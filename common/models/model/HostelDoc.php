@@ -74,6 +74,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             ],
 
             [['description', 'conclution'], 'string'],
+            [['ball'], 'double'],
             [['file'], 'string', 'max' => 255],
 
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
@@ -106,6 +107,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             'file',
             'description',
             'user_id',
+            'ball',
 
             'start',
             'finish',
@@ -136,6 +138,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             'file',
             'description',
             'user_id',
+            'ball',
 
             'order',
             'status',

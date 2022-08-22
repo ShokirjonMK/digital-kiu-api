@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\HostelApp;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Profile;
 
 class HostelAppController extends ApiActiveController
 {
@@ -24,6 +25,32 @@ class HostelAppController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        $query->join('INNER JOIN', 'student', 'student.id = exam_appeal.student_id')
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
 
         if (isRole("student")) {

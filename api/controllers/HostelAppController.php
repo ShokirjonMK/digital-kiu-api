@@ -106,7 +106,7 @@ class HostelAppController extends ApiActiveController
         }
         $post = Yii::$app->request->post();
 
-        if (!isRole("student")) {
+        if (isRole("student")) {
             if ($model->user_id != current_user_id()) {
                 return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }

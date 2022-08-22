@@ -73,6 +73,12 @@ class KpiData extends \yii\db\ActiveRecord
             ],
             [
                 [
+                    'link',
+                    'link2',
+                ], 'double'
+            ],
+            [
+                [
                     'ball',
                 ], 'double'
             ],
@@ -82,8 +88,7 @@ class KpiData extends \yii\db\ActiveRecord
                     'file2',
                     'file3',
                     'file4',
-                    'link',
-                    'link2',
+
                     'number',
                     'level',
                     'name',

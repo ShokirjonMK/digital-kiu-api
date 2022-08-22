@@ -55,7 +55,7 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_fileFileExtentions = 'pdf,doc,docx,ppt,pptx,zip';
     public $file_imageFileExtentions = 'png,jpg,gimp,bmp,jpeg';
     public $file_videoFileExtentions = 'mp4,avi,mov,mkv,wmv';
-    public $file_audioFileExtentions = 'mp3,ogg';
+    public $file_audioFileExtentions = 'mp3,ogg,m4a';
 
     /**
      * {@inheritdoc}

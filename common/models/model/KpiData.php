@@ -75,7 +75,7 @@ class KpiData extends \yii\db\ActiveRecord
                 [
                     'link',
                     'link2',
-                ], 'double'
+                ], 'string'
             ],
             [
                 [

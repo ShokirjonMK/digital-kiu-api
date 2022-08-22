@@ -103,7 +103,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             [['file_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,ppt,pptx,zip', 'maxSize' => $this->file_fileFileMaxSize],
             [['file_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg,gimp,bmp,jpeg', 'maxSize' => $this->file_imageFileMaxSize],
             [['file_video'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp4,avi', 'maxSize' => $this->file_videoFileMaxSize],
-            [['file_audio'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp3,ogg', 'maxSize' => $this->file_audioFileMaxSize],
+            [['file_audio'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp3,ogg,m4a', 'maxSize' => $this->file_audioFileMaxSize],
 
         ];
     }

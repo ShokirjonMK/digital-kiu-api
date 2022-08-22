@@ -255,6 +255,17 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
         // ***
 
+        if ($model->is_checked = HostelDoc::IS_CHECKED_TRUE) {
+            if ($model->hostel_category_id > 0) {
+                $model->ball = $model->hostelCategoryType->ball ?? 0;
+            } else {
+                $model->ball = $model->hostelCategory->ball ?? 0;
+            }
+        }
+
+
+
+
         if ($model->save()) {
             $transaction->commit();
             return true;

@@ -1367,6 +1367,7 @@ return [
         'access-control_roles',
         'area_index',
         'area_view',
+        'region_index',
         'kafedra_index',
         'kafedra_user-access',
         'kafedra_view',

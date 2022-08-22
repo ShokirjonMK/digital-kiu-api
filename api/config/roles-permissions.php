@@ -1364,6 +1364,12 @@ return [
     ],
 
     'contenter' => [
+        'access-control_roles',
+        'area_index',
+        'area_view',
+        'kafedra_index',
+        'kafedra_user-access',
+        'kafedra_view',
         'subject-content-mark_create',
         'subject-content-mark_delete',
         'subject-content-mark_index',

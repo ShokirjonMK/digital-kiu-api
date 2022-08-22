@@ -96,7 +96,9 @@ class HostelDocController extends ApiActiveController
         $post = Yii::$app->request->post();
 
         $this->load($model, $post);
+
         $result = HostelDoc::updateItem($model, $post);
+
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {

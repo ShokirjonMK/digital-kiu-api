@@ -1368,6 +1368,8 @@ return [
         'area_index',
         'area_view',
         'region_index',
+        "user-access-type_index",
+        "teacher-access-_index",
         'kafedra_index',
         'kafedra_user-access',
         'kafedra_view',

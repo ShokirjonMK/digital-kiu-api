@@ -115,6 +115,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
             'user',
 
             'hasContent',
+            'content',
             'profile',
 
             'timeTables',
@@ -188,6 +189,24 @@ class TeacherAccess extends \yii\db\ActiveRecord
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+    }
+
+    public function getContent()
+    {
+        $model = new SubjectContent();
+
+        $query = $model->find()
+            ->andWhere(
+                ['user_id' => $this->user_id]
+            )
+            ->andWhere([
+                'in', 'subject_topic_id',
+                SubjectTopic::find()->select('id')->where(['subject_id' => $this->subject_id, 'lang_id' => $this->language_id])
+            ]);
+
+        $data = $query->all();
+
+        return count($data);
     }
 
     public function getHasContent()

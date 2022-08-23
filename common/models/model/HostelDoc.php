@@ -204,7 +204,6 @@ class HostelDoc extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-
         // hostel file saqlaymiz
         $model->hostel_file = UploadedFile::getInstancesByName('hostel_file');
         if ($model->hostel_file) {
@@ -259,9 +258,6 @@ class HostelDoc extends \yii\db\ActiveRecord
                 $model->ball = $model->hostelCategory->ball ?? 0;
             }
         }
-
-
-
 
         if ($model->save()) {
             $transaction->commit();

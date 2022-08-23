@@ -133,7 +133,7 @@ class HostelDocController extends ApiActiveController
 
         $is_checked = Yii::$app->request->get('is_checked');
 
-        if ($is_checked === 0) {
+        if ($is_checked == 0) {
             $model->is_checked = HostelDoc::IS_CHECKED_FALSE;
             $model->ball = 0;
         } else {

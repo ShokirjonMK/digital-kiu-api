@@ -204,7 +204,7 @@ class KpiCategory extends \yii\db\ActiveRecord
     {
         $edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
 
-        return $this->hasMany(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'edu_year_id' => $edu_year_id, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
+        return $this->hasOne(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'edu_year_id' => $edu_year_id, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
     }
 
 

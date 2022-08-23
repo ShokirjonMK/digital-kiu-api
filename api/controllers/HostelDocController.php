@@ -132,7 +132,6 @@ class HostelDocController extends ApiActiveController
         }
 
         if ($model->hostel_category_id > 0) {
-            return $model->hostelCategoryType;
             $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
         } else {
             $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;

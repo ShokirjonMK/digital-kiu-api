@@ -194,13 +194,10 @@ class HostelDoc extends \yii\db\ActiveRecord
         return $this->hasOne(HostelCategoryType::className(), ['id' => 'hostelCategoryType']);
     }
 
-
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

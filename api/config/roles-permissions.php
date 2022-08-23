@@ -1078,7 +1078,7 @@ return [
     ],
 
     /* Teacher */
-    'teacher' => [
+    /* 'teacher' => [
         'question_status-list',
         'course_index',
         'languages_index',
@@ -1252,6 +1252,69 @@ return [
         // "user_logout",
         // "user_me",
         // "user_view"
+    ], */
+
+
+    /* Teacher */
+    'teacher' => [
+        "course_index",
+        "exam-appeal_index",
+        "exam-appeal_update",
+        "exam-appeal_view",
+        "exam-checking_appeal",
+        "exam-checking_index",
+        "exam-checking_update",
+        "exam-checking_view",
+        "exam-semeta_index",
+        "exam-student_index",
+        "exam-student_update",
+        "exam-student_view",
+        "exam-teacher-check_index",
+        "exam-teacher-check_view",
+        "exam_index",
+        "exam_view",
+        "kpi-category_extra",
+        "kpi-category_index",
+        "kpi-data_create",
+        "kpi-data_delete",
+        "kpi-data_index",
+        "kpi-data_update",
+        "kpi-data_view",
+        "lang-certificate-type_index",
+        "lang-certificate-type_view",
+        "lang-certificate_index",
+        "lang-certificate_view",
+        "languages_index",
+        "notification_approved",
+        "notification_index",
+        "password_update",
+        "question-type_index",
+        "question_create",
+        "question_delete",
+        "question_index",
+        "question_status-list",
+        "question_status-update",
+        "question_update",
+        "question_view",
+        "semestr_index",
+        "subject-category_index",
+        "subject-content_create",
+        "subject-content_delete",
+        "subject-content_index",
+        "subject-content_types",
+        "subject-content_update",
+        "subject-content_view",
+        "subject-sillabus_index",
+        "subject-topic-reference_create",
+        "subject-topic-reference_delete",
+        "subject-topic-reference_index",
+        "subject-topic-reference_update",
+        "subject-topic-reference_view",
+        "subject-topic_index",
+        "subject-topic_view",
+        "subject_index",
+        "user_logout",
+        "user_me"
     ],
 
     /* Student  */

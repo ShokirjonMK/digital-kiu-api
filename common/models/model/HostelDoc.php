@@ -179,19 +179,19 @@ class HostelDoc extends \yii\db\ActiveRecord
     // hostelApp
     public function getHostelApp()
     {
-        return $this->hasOne(HostelApp::className(), ['id' => 'hostelApp']);
+        return $this->hasOne(HostelApp::className(), ['id' => 'hostel_app_id']);
     }
 
     // hostelCategory
     public function getHostelCategory()
     {
-        return $this->hasOne(HostelCategory::className(), ['id' => 'hostelCategory']);
+        return $this->hasOne(HostelCategory::className(), ['id' => 'hostel_category_id']);
     }
 
     // hostelCategoryType
     public function getHostelCategoryType()
     {
-        return $this->hasOne(HostelCategoryType::className(), ['id' => 'hostelCategoryType']);
+        return $this->hasOne(HostelCategoryType::className(), ['id' => 'hostel_category_type_id']);
     }
 
     public static function createItem($model, $post)

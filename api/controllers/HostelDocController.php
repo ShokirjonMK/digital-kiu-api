@@ -131,13 +131,19 @@ class HostelDocController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if ($model->hostel_category_id > 0) {
-            $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
-        } else {
-            $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
-        }
+        $is_checked = Yii::$app->request->get('is_checked');
 
-        $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
+        if ($is_checked === 0) {
+            $model->is_checked = HostelDoc::IS_CHECKED_FALSE;
+            $model->ball = 0;
+        } else {
+            if ($model->hostel_category_id > 0) {
+                $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+            } else {
+                $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+            }
+            $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
+        }
 
         if ($model->save()) {
             return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);

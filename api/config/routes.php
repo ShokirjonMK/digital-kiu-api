@@ -151,6 +151,8 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
+    /** Student from Hemis via pinfl */
+    'GET <lang:\w{2}>/students/get/' => 'student/get',
 
     /** Hostel Yotoqxona */
     'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',

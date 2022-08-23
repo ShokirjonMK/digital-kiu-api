@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\components\HemisMK;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -205,6 +206,19 @@ class  StudentController extends ApiActiveController
         var_dump($dd, $data);
         die();
     } */
+
+    public function actionGet($pinfl)
+    {
+        $hemis = new HemisMK();
+
+        $data = $hemis->getHemis($pinfl);
+        // return $data;
+        if ($data->success) {
+            return $this->response(1, _e('Success'), $data->data);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $data->data, ResponseStatus::FORBIDDEN);
+        }
+    }
 
     public function actionIndex($lang)
     {

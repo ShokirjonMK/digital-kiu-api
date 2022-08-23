@@ -2,10 +2,10 @@
 
 namespace api\controllers;
 
+use api\components\HemisMK;
 use api\components\MipService;
 use api\components\PersonDataHelper;
-use common\models\model\TeacherAccess;
-use Yii;
+
 use base\ResponseStatus;
 
 class TestGetDataController extends ApiActiveController
@@ -17,9 +17,23 @@ class TestGetDataController extends ApiActiveController
         return [];
     }
 
-    public function actionIndex($passport = null, $jshir = null)
+    public function actionIndex($pinfl)
+    {
+        $hemis = new HemisMK();
+
+        $data = $hemis->getHemis($pinfl);
+        // return $data;
+        if ($data->success) {
+            return $this->response(1, _e('Success'), $data->data);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $data->data, ResponseStatus::FORBIDDEN);
+        }
+    }
+
+    public function actionIndex1($passport = null, $jshir = null)
     {
 
+        return 1;
         $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";
@@ -29,7 +43,7 @@ class TestGetDataController extends ApiActiveController
         // $array = json_decode($json, TRUE);
 
 
-       /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
+        /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
 
         //Encode the SimpleXMLElement object into a JSON string.
         $jsonString = json_encode($xmlObject);
@@ -47,7 +61,7 @@ class TestGetDataController extends ApiActiveController
 
         $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
 
-        return $rrrr ;
+        return $rrrr;
         return simplexml_load_file($rrrr);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

@@ -130,7 +130,7 @@ class HostelDocController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        return $model;
+
         if ($model->hostel_category_id > 0) {
             $model->ball = $model->hostelCategoryType->ball ?? 0;
         } else {
@@ -139,9 +139,11 @@ class HostelDocController extends ApiActiveController
 
         $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
 
-        $model->update();
-
-        return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);
+        if ($model->update()) {
+            return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $model->errors, ResponseStatus::BAD_REQUEST);
+        }
     }
 
     public function actionDelete($lang, $id)

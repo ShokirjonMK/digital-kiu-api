@@ -130,7 +130,7 @@ class HostelDocController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-
+        return $model;
         if ($model->hostel_category_id > 0) {
             $model->ball = $model->hostelCategoryType->ball ?? 0;
         } else {

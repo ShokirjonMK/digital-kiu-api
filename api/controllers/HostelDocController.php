@@ -131,11 +131,11 @@ class HostelDocController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-      /*   if ($model->hostel_category_id > 0) {
-            $model->ball = $model->hostelCategoryType->ball ?? 0;
+        if ($model->hostel_category_id > 0) {
+            $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
         } else {
-            $model->ball = $model->hostelCategory->ball ?? 0;
-        } */
+            $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+        }
 
         $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
 

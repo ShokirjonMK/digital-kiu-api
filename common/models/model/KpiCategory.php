@@ -202,8 +202,6 @@ class KpiCategory extends \yii\db\ActiveRecord
 
     public function getKpiMark()
     {
-        // return 1;
-
         return $this->hasMany(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
     }
 

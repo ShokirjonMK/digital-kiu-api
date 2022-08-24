@@ -15,7 +15,7 @@ class TeacherContentController extends ApiActiveController
         return [];
     }
 
-    public $table_name = 'teacher_content';
+    public $table_name = 'teacher_subject_content';
     public $controller_name = 'TeacherContent';
 
 

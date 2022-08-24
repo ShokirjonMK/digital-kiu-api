@@ -136,6 +136,7 @@ class HostelApp extends \yii\db\ActiveRecord
             'eduYear',
             'profile',
             'hostelDoc',
+            'isChecked',
 
             'createdBy',
             'updatedBy',
@@ -145,6 +146,23 @@ class HostelApp extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getIsChecked()
+    {
+        $model = new HostelDoc();
+
+        $query = $model->find();
+        $query->andWhere(['not', ['is_checked' => null]]);
+
+        if (count($query->all()) > 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+
+        return $this->hasMany(HostelDoc::className(), ['hostel_app_id' => 'id'])->onCondition(['student_id' => $this->student_id]);
+    }
+
 
     public function getStudent()
     {

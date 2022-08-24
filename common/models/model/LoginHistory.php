@@ -190,6 +190,7 @@ class LoginHistory extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = Current_user_id();
+            $this->created_on = date("Y-m-d H:i:s");
         } else {
             $this->updated_by = Current_user_id();
         }

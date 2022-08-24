@@ -30,6 +30,7 @@ class m220609_112318_create_login_history_table extends Migration
             'data' => $this->text()->null(),
             'host' => $this->text()->null(),
 
+            'created_on' => $this->dateTime()->Null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),

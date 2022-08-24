@@ -861,7 +861,10 @@ return [
         "user_me",
         "user_status-list",
         "user_update",
-        "user_view"
+        "user_view",
+
+        "exams-type_index",
+        "exams-type_view",
 
     ],
 

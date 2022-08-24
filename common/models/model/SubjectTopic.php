@@ -160,12 +160,18 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
     public function getContent()
     {
-        return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        if (Yii::$app->request->get('user_id') != null) {
+            return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        }
+        return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getSubjectContentMark()
     {
-        return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        if (Yii::$app->request->get('user_id') != null) {
+            return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        }
+        return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getContentCount()

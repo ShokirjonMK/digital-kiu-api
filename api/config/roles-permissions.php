@@ -762,7 +762,7 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
-
+        "password_view",
         "academic-degree_index",
         "academic-degree_view",
         "access-control_permissions",

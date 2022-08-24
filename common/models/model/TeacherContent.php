@@ -41,7 +41,7 @@ class TeacherContent extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'teacher_content';
+        return 'teacher_subject_content';
     }
 
     /**
@@ -51,10 +51,10 @@ class TeacherContent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'subject_id', 'lang_id'], 'required'],
+            [['user_id', 'subject_id'], 'required'],
             [['langs'], 'safe'],
             ['subject_list', 'safe'],
-            [['user_id', 'subject_id','lang_id', 'type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['user_id', 'subject_id', 'lang_id', 'type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::class, 'targetAttribute' => ['subject_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::class, 'targetAttribute' => ['lang_id' => 'id']],
@@ -71,9 +71,9 @@ class TeacherContent extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User Id',
             'type' => 'type',
-            'langs'=> 'langs',
-            'subject_id'=>_e( 'subject_id',),
-            'lang_id'=>_e('lang_id'),
+            'langs' => 'langs',
+            'subject_id' => _e('subject_id',),
+            'lang_id' => _e('lang_id'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -127,8 +127,8 @@ class TeacherContent extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-    
-    
+
+
         if ($model->save()) {
             $transaction->commit();
             return true;

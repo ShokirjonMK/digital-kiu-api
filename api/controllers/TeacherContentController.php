@@ -26,6 +26,9 @@ class TeacherContentController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
+        if (isRole('contenter')) {
+            $query->andWhere(['in', 'user_id', current_user_id()]);
+        }
         // filter
         $query = $this->filterAll($query, $model);
 

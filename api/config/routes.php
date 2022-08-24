@@ -156,6 +156,7 @@ $routes = [
 
     /** Hostel Yotoqxona */
     'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
+    'GET <lang:\w{2}>/hostel-docs/not/<id>/' => 'hostel-doc/not',
 
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',

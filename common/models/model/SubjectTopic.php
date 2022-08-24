@@ -168,7 +168,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
     }
 
-    public function getHasContentCount()
+    public function getContentCount()
     {
         return count($this->content);
     }

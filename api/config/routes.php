@@ -131,7 +131,7 @@ $controllers = [
     'hostel-category-type',
     'hostel-app',
     'hostel-doc',
-
+    'teacher-content',
     'telegram',
     'test-get-data',
 ];

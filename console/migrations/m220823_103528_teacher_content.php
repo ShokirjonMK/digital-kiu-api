@@ -33,11 +33,9 @@ class m220823_103528_teacher_content extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
 
         ]);
-        $this->createIndex('teacher_content__user_id', 'teacher_content', 'user_id');
+        
         $this->addForeignKey('teacher_content__user_id', 'teacher_content', 'user_id', 'users', 'id');
-        $this->createIndex('teacher_content__subject_id', 'teacher_content', 'subject_id');
         $this->addForeignKey('teacher_content__subject_id', 'teacher_content', 'subject_id', 'subject', 'id');
-        $this->createIndex('teacher_content__lang_id', 'teacher_content', 'lang_id');
         $this->addForeignKey('teacher_content__lang_id', 'teacher_content', 'lang_id', 'languages', 'id');
     }
 

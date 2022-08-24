@@ -145,7 +145,8 @@ class SubjectTopic extends \yii\db\ActiveRecord
 
             'reference',
 
-            'contents',
+            'contentCount',
+            'content',
             'hasContent',
 
             'createdBy',
@@ -157,7 +158,7 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getContents()
+    public function getContent()
     {
         return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
@@ -165,6 +166,11 @@ class SubjectTopic extends \yii\db\ActiveRecord
     public function getSubjectContentMark()
     {
         return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
+    public function getHasContentCount()
+    {
+        return count($this->contents);
     }
 
     public function getHasContent()

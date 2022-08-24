@@ -30,7 +30,7 @@ class LangCertificateController extends ApiActiveController
 
 
         if (Yii::$app->request->get('user_id') != null) {
-            $query->andWhere([$this->table_name . '.user_id' => Yii::$app->request->get('sort')]);
+            $query->andWhere([$this->table_name . '.user_id' => Yii::$app->request->get('user_id')]);
         }
 
         // filter

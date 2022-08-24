@@ -101,6 +101,23 @@ class TeacherContent extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'subject',
+            'user',
+            'profile',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
+    }
+
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
@@ -108,16 +125,23 @@ class TeacherContent extends \yii\db\ActiveRecord
 
     public function getSubject()
     {
-        return $this->hasOne(Subject::class, ['id' => 'subject_id']);
+        return $this->hasOne(Subject::class, ['id' => 'subject_id'])->onCondition(['is_deleted' => 0]);
     }
 
+    /**
+     * Gets query for [[profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
+    }
 
     public function getLanguages()
     {
         return $this->hasOne(Languages::class, ['id' => 'lang_id']);
     }
-
-
 
     public static function createItem($model, $post)
     {

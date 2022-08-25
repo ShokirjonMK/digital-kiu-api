@@ -136,9 +136,6 @@ class TeacherAccessController extends ApiActiveController
                 if (in_array($attributeq, $profile->attributes())) {
                     $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
                 }
-                if (in_array($attributeq, $user->attributes())) {
-                    $query = $query->andFilterWhere(['like', 'users.' . $attributeq, '%' . $word . '%', false]);
-                }
             }
         }
         // ***

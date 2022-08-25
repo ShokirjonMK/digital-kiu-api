@@ -83,66 +83,47 @@ return [
 
     /* O'quv bo'limi Admin */
     'edu_admin' => [
-
-        'statistic_checking',
-
         "access-control_permissions",
         "access-control_roles",
-        'statistic_student-count-by-faculty',
         "area_index",
         "area_view",
-
         "building_create",
         "building_index",
         "building_update",
         "building_view",
-
         "citizenship_index",
-
         "country_index",
         "country_view",
-
         "course_index",
-        'course_view',
-        'semestr_index',
-        'semestr_view',
-
+        "course_view",
         "department_index",
-
         "direction_create",
         "direction_index",
         "direction_update",
         "direction_view",
-
         "edu-form_create",
         "edu-form_index",
         "edu-form_update",
         "edu-form_view",
-
         "edu-plan_create",
         "edu-plan_delete",
         "edu-plan_index",
         "edu-plan_update",
         "edu-plan_view",
-
-        "edu-type_index",
-
         "edu-semestr-subject_create",
         "edu-semestr-subject_delete",
         "edu-semestr-subject_index",
         "edu-semestr-subject_update",
         "edu-semestr-subject_view",
-
         "edu-semestr_create",
         "edu-semestr_index",
         "edu-semestr_update",
         "edu-semestr_view",
-
+        "edu-type_index",
         "edu-year_create",
         "edu-year_index",
         "edu-year_update",
         "edu-year_view",
-
         "enum_education-degrees",
         "enum_education-types",
         "enum_educations",
@@ -151,129 +132,110 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
-
         "exam-semeta_index",
+        "exam-student_index",
+        "exam-student_update",
         "exams-type_create",
         "exams-type_index",
         "exams-type_update",
         "exams-type_view",
-
-        'exam_generate-passwords',
-
-        'exam_get-passwords',
+        "exam_ad",
+        "exam_appeal-distribution",
         "exam_create",
+        "exam_distribution",
+        "exam_generate-passwords",
+        "exam_get-passwords",
         "exam_index",
         "exam_update",
         "exam_view",
-        "exam_appeal-distribution",
-        "exam_distribution",
-        "exam_ad",
-
-        "exam-student_index",
-        "exam-student_update",
-        // "exam-student_view",
-
         "faculty_create",
         "faculty_index",
         "faculty_update",
         "faculty_view",
-
+        "hostel-app_index",
+        "hostel-category-type_index",
+        "hostel-category_index",
         "kafedra_create",
         "kafedra_index",
         "kafedra_update",
         "kafedra_view",
-
         "languages_index",
-
         "nationality_index",
-
         "notification_approved",
         "notification_index",
         "notification_my",
         "notification_status-list",
         "notification_view",
-
         "para_create",
         "para_index",
         "para_update",
         "para_view",
-
         "password_index",
         "password_update",
         "password_view",
-
         "question-type_create",
         "question-type_index",
         "question-type_update",
         "question-type_view",
         "question_index",
+        "question_status-list",
         "question_status-update",
         "question_view",
-        'question_status-list',
-
         "region_index",
         "region_view",
-
         "room_create",
         "room_free",
         "room_index",
         "room_update",
         "room_view",
-
+        "semestr_index",
+        "semestr_view",
+        "statistic_checking",
+        "statistic_student-count-by-faculty",
         "student_create",
         "student_index",
         "student_update",
         "student_view",
-
         "subject-category_create",
         "subject-category_index",
         "subject-category_update",
         "subject-category_view",
-
-        "subject-type_create",
-        "subject-type_index",
-        "subject-type_update",
-        "subject-type_view",
-
-        "subject_index",
-        "subject_update",
-        "subject_view",
-        "subject_create",
-
+        "subject-content_index",
+        "subject-content_types",
+        "subject-content_view",
         "subject-sillabus_create",
         "subject-sillabus_delete",
         "subject-sillabus_index",
         "subject-sillabus_update",
         "subject-sillabus_view",
-
+        "subject-type_create",
+        "subject-type_index",
+        "subject-type_update",
+        "subject-type_view",
+        "subject_create",
+        "subject_index",
+        "subject_update",
+        "subject_view",
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",
-
         "time-table_create",
         "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
         "time-table_update",
         "time-table_view",
-
         "user-access-type_index",
-
         "user_create",
         "user_delete",
         "user_index",
         "user_logout",
         "user_me",
+        "user_status-list",
         "user_update",
         "user_view",
-
-        "user_status-list",
-
         "week_index",
-        "week_view",
-        'subject-content_index',
-        'subject-content_view',
-        'subject-content_types',
+        "week_view"
     ],
 
     /* O'quv bo'limi kontenthisi */
@@ -1374,8 +1336,8 @@ return [
         "notification_status-list",
         "notification_view",
         "para_view",
-        "password_index", 
-        
+        "password_index",
+
         "password_update",
         "region_view",
         "room_view",
@@ -1492,4 +1454,37 @@ return [
         'user_status-list',
         'user_view',
     ],
+
+    'hostel' => [
+        "course_index",
+        "faculty_index",
+        "hostel-app_index",
+        "hostel-app_view",
+        "hostel-category-type_create",
+        "hostel-category-type_delete",
+        "hostel-category-type_index",
+        "hostel-category-type_update",
+        "hostel-category-type_view",
+        "hostel-category_create",
+        "hostel-category_delete",
+        "hostel-category_index",
+        "hostel-category_update",
+        "hostel-category_view",
+        "hostel-doc_check",
+        "hostel-doc_index",
+        "hostel-doc_not",
+        "hostel-doc_view",
+        "notification_approved",
+        "notification_create",
+        "notification_delete",
+        "notification_index",
+        "notification_my",
+        "notification_status-list",
+        "notification_update",
+        "notification_view",
+        "student_view",
+        "system_language",
+        "user_logout",
+        "user_me"
+    ]
 ];

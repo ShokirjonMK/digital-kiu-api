@@ -1374,7 +1374,8 @@ return [
         "notification_status-list",
         "notification_view",
         "para_view",
-        "password_index",
+        "password_index", 
+        
         "password_update",
         "region_view",
         "room_view",

@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use api\components\HemisMK;
 use api\components\MipService;
+use api\components\MipTokenGen;
 use api\components\PersonDataHelper;
 
 use base\ResponseStatus;
@@ -17,7 +18,7 @@ class TestGetDataController extends ApiActiveController
         return [];
     }
 
-    public function actionIndex($pinfl)
+    public function actionHemis($pinfl)
     {
         $hemis = new HemisMK();
 
@@ -30,9 +31,10 @@ class TestGetDataController extends ApiActiveController
         }
     }
 
-    public function actionIndex1($passport = null, $jshir = null)
+    public function actionIndex($passport = null, $jshir = null)
     {
 
+        return MipTokenGen::getToken();
         return 1;
         $mk = new MipService();
         $pinpp = "30111975890051";

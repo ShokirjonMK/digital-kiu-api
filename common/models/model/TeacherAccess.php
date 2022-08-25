@@ -109,6 +109,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
         $extraFields =  [
             'language',
             'subject',
+            'subjectAll',
             'teacher',
             'examStudentCount',
             'examStudent',
@@ -148,6 +149,15 @@ class TeacherAccess extends \yii\db\ActiveRecord
         return $this->hasOne(Languages::className(), ['id' => 'language_id']);
     }
 
+    /**
+     * Gets query for [[Subject]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubjectAll()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
     /**
      * Gets query for [[Subject]].
      *

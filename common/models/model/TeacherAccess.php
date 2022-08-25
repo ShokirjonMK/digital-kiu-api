@@ -107,7 +107,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'languages',
+            'language',
             'subject',
             'teacher',
             'examStudentCount',

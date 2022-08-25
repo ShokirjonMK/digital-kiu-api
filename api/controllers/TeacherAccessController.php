@@ -7,8 +7,10 @@ use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
 use common\models\JobInfo;
+use common\models\model\Profile;
 use common\models\model\Semestr;
 use common\models\model\TimeTable;
+use common\models\User;
 
 class TeacherAccessController extends ApiActiveController
 {
@@ -18,6 +20,10 @@ class TeacherAccessController extends ApiActiveController
     {
         return [];
     }
+
+
+    public $table_name = 'TeacherAccess';
+    public $controller_name = 'teacher_access';
 
     public function actionContent($lang)
     {
@@ -107,6 +113,35 @@ class TeacherAccessController extends ApiActiveController
         $query = $model->find()
             // ->with(['teacher'])
             ->andWhere(['is_deleted' => 0]);
+
+        $query = $model->find()
+            ->where([$this->table_name . '.is_deleted' => 0])
+            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $this->table_name . '.user_id');
+
+        //  Filter from Profile 
+        $profile = new Profile();
+
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+                if (in_array($attributeq, $user->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'users.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
         // filter
         $query = $this->filterAll($query, $model);

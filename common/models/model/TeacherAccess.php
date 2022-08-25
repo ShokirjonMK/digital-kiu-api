@@ -138,7 +138,6 @@ class TeacherAccess extends \yii\db\ActiveRecord
         return count($this->examStudent);
     }
 
-
     /**
      * Gets query for [[Languages]].
      *

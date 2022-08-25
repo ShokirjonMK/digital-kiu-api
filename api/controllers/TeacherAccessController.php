@@ -22,8 +22,8 @@ class TeacherAccessController extends ApiActiveController
     }
 
 
-    public $table_name = 'TeacherAccess';
-    public $controller_name = 'teacher_access';
+    public $table_name = 'teacher_access';
+    public $controller_name = 'TeacherAccess';
 
     public function actionContent($lang)
     {

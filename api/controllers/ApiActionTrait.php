@@ -355,6 +355,8 @@ trait ApiActionTrait
 
         $t['status'] = 3;
 
+
+
         foreach (_eduRoles() as $eduRole) {
             if (property_exists($roles, $eduRole)) {
                 return $t;
@@ -362,6 +364,10 @@ trait ApiActionTrait
         }
 
         if (property_exists($roles, 'hr')) {
+            return $t;
+        }
+
+        if (property_exists($roles, 'hostel')) {
             return $t;
         }
 

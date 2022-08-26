@@ -33,7 +33,8 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-        return getIpAddressData();
+        $data = getIpAddressData();
+return $data['regionName'];
 
         return 1;
         return MipTokenGen::getToken();

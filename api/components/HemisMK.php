@@ -12,7 +12,7 @@ class HemisMK
         curl_setopt($mk_curl, CURLOPT_URL, $url);
 
         // $token = MipTokenGen::getToken('token');
-        $token = 'gi58N1x6pJXylNje_7In06QHpu0';
+        $token = '_75yS4E2bKFGFeSmZJtdHgXIcgE';
         // headers
         $headers = array(
             "Authorization: Bearer $token",

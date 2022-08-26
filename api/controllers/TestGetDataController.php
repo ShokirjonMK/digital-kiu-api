@@ -34,7 +34,7 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-        LoginHistory::createItemLogin();
+       return LoginHistory::createItemLogin();
 
         return getIpAddressData();
 

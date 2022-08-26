@@ -1459,6 +1459,9 @@ return [
         'user_me',
         'user_status-list',
         'user_view',
+        'teacher-content_index',
+        'teacher-content_view'
+
     ],
 
     'kpi_check' => [

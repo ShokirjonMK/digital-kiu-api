@@ -57,7 +57,7 @@ class LoginHistory extends \yii\db\ActiveRecord
         return [
             [['user_id'], 'required'],
             [['ip_data'], 'safe'],
-            [['data', 'host', 'ip_data'], 'string'],
+            [['data', 'host'], 'string'],
             [['user_id', 'log_in_out', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['ip', 'device', 'device_id', 'type', 'model_device'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

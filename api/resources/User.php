@@ -335,10 +335,6 @@ class User extends CommonUser
         return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
     }
 
-
-
-
-
     public static function createItem($model, $profile, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -490,6 +486,61 @@ class User extends CommonUser
                     } else {
                         $errors[] = ['role' => [_e('Role is invalid')]];
                     }
+                }
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function selfUpdateItem($model, $profile, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (!$post) {
+            $errors[] = ['all' => [_e('Please send data.')]];
+        }
+
+        if (count($errors) == 0) {
+
+            if ($model->save()) {
+                // avatarni saqlaymiz
+                $model->avatar = UploadedFile::getInstancesByName('avatar');
+                if ($model->avatar) {
+                    $model->avatar = $model->avatar[0];
+                    $avatarUrl = $model->upload();
+                    if ($avatarUrl) {
+                        $profile->image = $avatarUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                // passport file saqlaymiz
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                if (!$profile->save()) {
+                    $errors[] = $profile->errors;
                 }
             } else {
                 $errors[] = $model->errors;

@@ -187,8 +187,12 @@ $routes = [
     // KpiCategory Extra fields, term, tab, status
     'GET <lang:\w{2}>/kpi-categories/extra' => 'kpi-category/extra',
 
+
+
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
+    // User Self update data
+    'PUT <lang:\w{2}>/users/self' => 'user/self',
     // Get me
     'GET <lang:\w{2}>/users/me' => 'user/me',
     // Log out

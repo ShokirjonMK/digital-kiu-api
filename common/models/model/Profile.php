@@ -151,6 +151,11 @@ class Profile extends \yii\db\ActiveRecord
                     'phone_secondary'
                 ], 'string', 'max' => 50
             ],
+            [
+                [
+                    'description'
+                ], 'string'
+            ],
 
             [['passport_pin'], 'unique'],
 
@@ -200,6 +205,7 @@ class Profile extends \yii\db\ActiveRecord
             'area_id' => 'Area ID',
             'address' => 'Address',
             'gender' => 'Gender',
+            'description' => 'Description',
 
             'diploma_type_id' => _e('diploma_type'),
             'degree_id' => _e('degree'),

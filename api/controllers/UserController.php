@@ -261,6 +261,47 @@ class UserController extends ApiActiveController
         }
     }
 
+    public function actionSelf()
+    {
+        $model = User::findOne(current_user_id());
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        $profile = $model->profile;
+        $post = Yii::$app->request->post();
+
+        if (isset($post['username'])) {
+            unset($post['username']);
+        }
+        if (isset($post['access_token'])) {
+            unset($post['access_token']);
+        }
+        if (isset($post['access_token_time'])) {
+            unset($post['access_token_time']);
+        }
+        if (isset($post['password_reset_token'])) {
+            unset($post['password_reset_token']);
+        }
+        if (isset($post['status'])) {
+            unset($post['status']);
+        }
+        if (isset($post['deleted'])) {
+            unset($post['deleted']);
+        }
+        if (isset($post['password_hash'])) {
+            unset($post['password_hash']);
+        }
+
+        $this->load($model, $post);
+        $this->load($profile, $post);
+        $result = User::selfUpdateItem($model, $profile, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Your data successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
     public function actionView($id)
     {
         $model = User::find()

@@ -56,7 +56,7 @@ class LoginHistory extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['data', 'host'], 'string'],
+            [['data', 'host', 'ip_data'], 'string'],
             [['user_id', 'log_in_out', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['ip', 'device', 'device_id', 'type', 'model_device'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -71,6 +71,7 @@ class LoginHistory extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'ip' => 'Ip',
+            'ip_data' => 'ip_data',
             'user_id' => 'User ID',
             'device' => 'Device',
             'device_id' => 'Device ID',
@@ -119,23 +120,13 @@ class LoginHistory extends \yii\db\ActiveRecord
         $errors = [];
 
         $model->user_id = $user_id;
-        $model->ip = getIpAddress();
+        $model->ip = getIpMK();
         $model->data = json_encode(getBrowser());
         $model->host = get_host();
         $model->log_in_out = $log_in_out;
-
-        // vdd(Yii::$app->request);
-        // vdd(get_host());
-        // vdd(getIpAddressData());
-
-        // ip
-        // user_id
-        // device
-        // device_id
-        // type
-        // model_device
-        // data
-
+        if ($ipData = getIpAddressData()) {
+            $model->ip_data = $ipData;
+        }
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

@@ -124,8 +124,8 @@ class LoginHistory extends \yii\db\ActiveRecord
         $model->ip = getIpMK();
         $browser = getBrowser();
 
-        $model->device_id = $browser['device_id'];
-        $model->device = $browser['device'];
+        $model->device_id = $browser['device'];
+        $model->device = $browser['platform'];
         $model->data = json_encode($browser);
         $model->host = get_host();
         $model->log_in_out = $log_in_out;

@@ -150,7 +150,7 @@ trait ApiActionTrait
             $action_log->browser = json_encode(getBrowser());
             $action_log->ip_address = getIpMK();
             $action_log->host = get_host();
-            $action_log->ip_address_data = json_encode(getIpAddressData());
+            // $action_log->ip_address_data = json_encode(getIpAddressData());
 
             $action_log->save(false);
             Yii::$app->session->set('action_log', $action_log);

@@ -8,6 +8,7 @@ use api\components\MipTokenGen;
 use api\components\PersonDataHelper;
 
 use base\ResponseStatus;
+use common\models\model\LoginHistory;
 
 class TestGetDataController extends ApiActiveController
 {
@@ -33,6 +34,8 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
+        LoginHistory::createItemLogin();
+
         return getIpAddressData();
 
         return 1;

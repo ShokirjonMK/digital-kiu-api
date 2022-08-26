@@ -112,14 +112,14 @@ class LoginHistory extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public static function createItemLogin($user_id, $log_in_out = self::LOGIN)
+    public static function createItemLogin($user_id = null, $log_in_out = self::LOGIN)
     {
         // dd($log_in_out);
         $model = new self;
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model->user_id = $user_id;
+        $model->user_id = $user_id ?? current_user_id();
         $model->ip = getIpMK();
         $model->data = json_encode(getBrowser());
         $model->host = get_host();

@@ -73,7 +73,7 @@ trait ApiActionTrait
      * @return void
      */
 
-    public function afterAction($action, $result)
+/*     public function afterAction($action, $result)
     {
 
         // vdd(Yii::$app->request);
@@ -104,7 +104,7 @@ trait ApiActionTrait
         // dd(json_encode($result));
         return $result;
     }
-
+ */
     /**
      * Before action
      *

@@ -427,7 +427,7 @@ function getIpAddressData($ip_address = null)
     }
 
     if ($ip_address != '127.0.0.1') {
-        $url = 'https://apps.eurosoft.dev/geo/?ip=' . $ip_address;
+        $url = 'http://demo.ip-api.com/json/' . $ip_address . '?fields=66842623';
         $data = file_get_contents($url);
 
         return json_decode($data, true);

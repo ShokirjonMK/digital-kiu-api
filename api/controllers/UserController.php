@@ -261,6 +261,18 @@ class UserController extends ApiActiveController
         }
     }
 
+    public function actionSelfget()
+    {
+        $model = User::findOne(current_user_id());
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+    }
+
     public function actionSelf()
     {
         $model = User::findOne(current_user_id());

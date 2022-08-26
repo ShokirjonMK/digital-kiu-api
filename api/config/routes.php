@@ -193,6 +193,8 @@ $routes = [
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
     // User Self update data
     'PUT <lang:\w{2}>/users/self' => 'user/self',
+    // User Get Self data
+    'GET <lang:\w{2}>/users/self' => 'user/selfget',
     // Get me
     'GET <lang:\w{2}>/users/me' => 'user/me',
     // Log out

@@ -82,7 +82,7 @@ trait ApiActionTrait
 
 
         $action_log = Yii::$app->session->get('action_log');
-      
+        $action_log->user_id = current_user_id();
         $action_log->status = isset($result['status']) ? $result['status'] : 'Failed';
         $action_log->message = isset($result['message']) ? $result['message'] : 'Failed';
         $action_log->browser = json_encode(getBrowser());
@@ -149,7 +149,6 @@ trait ApiActionTrait
             $action_log->method = $_SERVER['REQUEST_METHOD'];
             $action_log->get_data = json_encode(Yii::$app->request->get());
             $action_log->post_data = json_encode(Yii::$app->request->post());
-            $action_log->user_id = current_user_id();
             $action_log->save(false);
             Yii::$app->session->set('action_log', $action_log);
 

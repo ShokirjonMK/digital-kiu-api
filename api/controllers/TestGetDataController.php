@@ -8,9 +8,12 @@ use api\components\MipTokenGen;
 use api\components\PersonDataHelper;
 
 use base\ResponseStatus;
+use yii\rest\ActiveController;
 
-class TestGetDataController extends ApiActiveController
+class TestGetDataController extends ActiveController
 {
+    use ApiOpen;
+
     public $modelClass = 'api\resources\TestGetData';
 
     public function actions()

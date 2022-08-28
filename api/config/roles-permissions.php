@@ -740,9 +740,6 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
-        "user_self",
-
-        "password_view",
         "academic-degree_index",
         "academic-degree_view",
         "access-control_permissions",
@@ -780,6 +777,8 @@ return [
         "exam-semeta_create",
         "exam-semeta_index",
         "exam-semeta_view",
+        "exams-type_index",
+        "exams-type_view",
         "exam_index",
         "exam_view",
         "faculty_index",
@@ -795,6 +794,7 @@ return [
         "partiya_view",
         "password_index",
         "password_update",
+        "password_view",
         "question-type_index",
         "question-type_view",
         "question_create",
@@ -823,11 +823,11 @@ return [
         "subject-type_index",
         "subject-type_view",
         "subject_create",
-        "subject_delete",
         "subject_index",
         "subject_update",
         "subject_view",
         "teacher-access_index",
+        "teacher-access_update",
         "user-access-type_index",
         "user-access_create",
         "user-access_delete",
@@ -839,12 +839,10 @@ return [
         "user_index",
         "user_logout",
         "user_me",
+        "user_self",
         "user_status-list",
         "user_update",
         "user_view",
-
-        "exams-type_index",
-        "exams-type_view",
 
     ],
 

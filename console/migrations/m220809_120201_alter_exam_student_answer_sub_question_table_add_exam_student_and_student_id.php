@@ -14,6 +14,7 @@ class m220809_120201_alter_exam_student_answer_sub_question_table_add_exam_stude
     {
         $this->addColumn('exam_student_answer_sub_question', 'exam_student_id', $this->integer(1)->after('id'));
         $this->addColumn('exam_student_answer_sub_question', 'student_id', $this->integer(1)->after('id'));
+        $this->addColumn('exam_student_answer_sub_question', 'is_cheked', $this->integer(1)->after('id'));
     }
 
     /**

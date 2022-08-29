@@ -643,6 +643,11 @@ return [
         "subject_index",
         "subject_view",
 
+        "subject-content_index",
+        "subject-topic_index",
+        "subject-content_view",
+        "subject-topic_view",
+
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",

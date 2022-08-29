@@ -22,7 +22,9 @@ class HostelApp extends \yii\db\ActiveRecord
     }
 
     const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_ACCEPTED = 1;
+    const STATUS_REJECTED = 2;
+    const STATUS_REVISION = 3;
 
     const STATUS_IN_CHECKING = 2;
 
@@ -278,7 +280,9 @@ class HostelApp extends \yii\db\ActiveRecord
     {
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
-            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_ACCEPTED => _e('STATUS_ACCEPTED'),
+            self::STATUS_REJECTED => _e('STATUS_REJECTED'),
+            self::STATUS_REVISION => _e('STATUS_REVISION'),
 
         ];
     }

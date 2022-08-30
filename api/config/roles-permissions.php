@@ -1340,6 +1340,7 @@ return [
         "user_selfget",
         "course_index",
         "faculty_index",
+        "hostel-app_update",
         "hostel-app_index",
         "hostel-app_view",
         "hostel-category-type_create",

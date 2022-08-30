@@ -116,7 +116,11 @@ class TeacherAccessController extends ApiActiveController
 
         $query = $model->find()
             ->where([$this->table_name . '.is_deleted' => 0])
-            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $this->table_name . '.user_id');
+            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $this->table_name . '.user_id')
+            ->join('INNER JOIN', 'users', 'users.id = ' . $this->table_name . '.user_id');
+
+        $query->andWhere(['users.status' => User::STATUS_ACTIVE, 'deleted' => 0]);
+
 
         //  Filter from Profile 
         $profile = new Profile();

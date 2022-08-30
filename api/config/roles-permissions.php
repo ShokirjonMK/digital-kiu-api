@@ -5,6 +5,7 @@ return [
     /* Rector */
     'rector' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -57,6 +58,7 @@ return [
     /* Pro rektor */
     'prorector' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -88,6 +90,7 @@ return [
     /* O'quv bo'limi Admin */
     'edu_admin' => [
         "user_self",
+        "user_selfget",
 
         "access-control_permissions",
         "access-control_roles",
@@ -247,6 +250,7 @@ return [
     /* O'quv bo'limi kontenthisi */
     'edu_moderator' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -273,6 +277,7 @@ return [
     /* O'quv bo'limi nazoratchi */
     'edu_editor' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -408,6 +413,7 @@ return [
     /* O'quv bo'limi yordamchi */
     'edu_viewer' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -535,6 +541,7 @@ return [
     /* Dekan huquqlari */
     'dean' => [
         "user_self",
+        "user_selfget",
 
         "access-control_permissions",
         "access-control_roles",
@@ -687,6 +694,7 @@ return [
     /* Zam Dekan huquqlari */
     'dean_deputy' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -845,6 +853,7 @@ return [
         "user_logout",
         "user_me",
         "user_self",
+        "user_selfget",
         "user_status-list",
         "user_update",
         "user_view",
@@ -855,6 +864,7 @@ return [
     /* tutor tarbiyachi huquqlari */
     'tutor' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -911,6 +921,7 @@ return [
     /* Bo'lim boshlig'i */
     'dep_lead' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -946,6 +957,7 @@ return [
     /* Kadr */
     'hr' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -1048,6 +1060,7 @@ return [
     /* Kadr yordamchi */
     'hr_viewer' => [
         "user_self",
+        "user_selfget",
 
         'password_index',
         'password_update',
@@ -1074,6 +1087,7 @@ return [
     /* Teacher */
     'teacher' => [
         "user_self",
+        "user_selfget",
 
         "course_index",
         "exam-appeal_index",
@@ -1138,6 +1152,7 @@ return [
     /* Student  */
     'student' => [
         "user_self",
+        "user_selfget",
 
         'student_me',
 
@@ -1249,6 +1264,7 @@ return [
 
     'contenter' => [
         "user_self",
+        "user_selfget",
 
         'access-control_roles',
         'area_index',
@@ -1289,6 +1305,7 @@ return [
 
     'kpi_check' => [
         "user_self",
+        "user_selfget",
 
         'kpi-category_extra',
         'kpi-category_index',
@@ -1320,6 +1337,7 @@ return [
     'hostel' => [
 
         "user_self",
+        "user_selfget",
         "course_index",
         "faculty_index",
         "hostel-app_index",

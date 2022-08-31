@@ -318,7 +318,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
         $query->andWhere([
-            'or',
+            'and',
             [$model->tableName() . '.ball' => null],
             [$model->tableName() . '.teacher_conclusion' => null]
         ]);

@@ -655,7 +655,7 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         $soni = $i * 5000;
         $model = ExamStudent::find()
-            ->where(['not', 'type', null])
+            ->where(['type' => null])
             ->andWhere(['is_checked_full' => 0])
             ->limit(10000)->offset($soni)->all();
 

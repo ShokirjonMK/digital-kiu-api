@@ -1341,6 +1341,7 @@ return [
         'kpi-category_view',
         'kpi-data_index',
         'kpi-data_update',
+        'kpi-data_create',
         'kpi-data_view',
     ],
 

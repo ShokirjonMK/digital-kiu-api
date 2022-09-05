@@ -1334,6 +1334,16 @@ return [
         'user_view',
     ],
 
+    'kpi_plus' => [
+
+        'kpi-category_extra',
+        'kpi-category_index',
+        'kpi-category_view',
+        'kpi-data_index',
+        'kpi-data_update',
+        'kpi-data_view',
+    ],
+
     'hostel' => [
 
         "user_self",

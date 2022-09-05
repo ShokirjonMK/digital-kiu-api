@@ -270,19 +270,28 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
-            /*
+
             // Student child larini yozish
             $timeTables = TimeTable::findAll(['parent_id' => $model->time_table_id]);
             if (isset($timeTables)) {
                 foreach ($timeTables as $timeTable) {
+
                     $newModel = new StudentTimeTable();
                     $newModel->student_id = $model->student_id;
                     $newModel->time_table_id = $timeTable->id;
-                    $newModel->save();
+                    if (!$newModel->save()) {
+                        $errors[] = _e('Child can not added!');
+                    }
                 }
-            } */
-            $transaction->commit();
-            return true;
+            }
+
+            if (count($errors) == 0) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
             return simplify_errors($errors);
@@ -353,11 +362,20 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     $newModel = new StudentTimeTable();
                     $newModel->student_id = $model->student_id;
                     $newModel->time_table_id = $timeTable->id;
-                    $newModel->save();
+
+                    if (!$newModel->save()) {
+                        $errors[] = _e('Child can not added!');
+                    }
                 }
             }
-            $transaction->commit();
-            return true;
+
+            if (count($errors) == 0) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
             return simplify_errors($errors);

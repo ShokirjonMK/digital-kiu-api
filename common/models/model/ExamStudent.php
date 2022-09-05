@@ -654,7 +654,10 @@ class ExamStudent extends \yii\db\ActiveRecord
     public static function correct($i)
     {
         $soni = $i * 5000;
-        $model = ExamStudent::find()->limit(10000)->offset($soni)->all();
+        $model = ExamStudent::find()
+            ->where(['not', 'type', null])
+            ->andWhere(['is_checked_full' => 0])
+            ->limit(10000)->offset($soni)->all();
 
         foreach ($model as $modelOne) {
             if (!($modelOne->type > 0)) {

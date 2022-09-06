@@ -45,7 +45,7 @@ class TelegramController extends ActiveController
         if ($telegram) {
             $telegram->sendMessage([
                 'chat_id' => 813225336,
-                'text' =>  $telegram
+                'text' => "asd asd"
 
             ]);
 

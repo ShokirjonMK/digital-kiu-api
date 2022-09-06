@@ -1303,6 +1303,23 @@ return [
 
     ],
 
+    'content_assign' => [
+
+        "user_self",
+        "user_selfget",
+        "user_logout",
+        "user_me",
+        'user_index',
+        'teacher-content_index',
+        'teacher-content_view',
+        'teacher-content_update',
+        'teacher-content_create',
+        'teacher-content_delete',
+        'subject_index',
+        'subject_view',
+
+    ],
+
     'kpi_check' => [
         "user_self",
         "user_selfget",

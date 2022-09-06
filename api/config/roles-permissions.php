@@ -753,6 +753,25 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
+
+        "time-table_index",
+        "time-table_parent-null",
+        "time-table_view",
+        "time-table_create",
+        "time-table_update",
+        "time-table_delete",
+
+        "building_index",
+        "room_index",
+        "room_free",
+        "teacher-access_free",
+        "para_index",
+        "week_index",
+        "edu-plan_index",
+        "edu-semestr_index",
+        "edu-semestr-subject_index",
+
+
         "academic-degree_index",
         "academic-degree_view",
         "access-control_permissions",

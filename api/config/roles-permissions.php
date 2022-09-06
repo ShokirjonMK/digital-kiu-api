@@ -1132,7 +1132,7 @@ return [
         "subject-category_index",
         "subject-content_index",
         "subject-content_types",
-        // "subject-content_create",
+        "subject-content_create",
         "subject-content_update",
         "subject-content_delete",
         "subject-content_view",

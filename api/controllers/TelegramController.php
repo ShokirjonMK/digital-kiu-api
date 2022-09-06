@@ -43,7 +43,7 @@ class TelegramController extends ActiveController
         $telegram = Yii::$app->telegram;
         // return $telegram;
         if ($telegram) {
-            
+
             // $telegram->setWebhook([
             //     'chat_id' => 813225336,
             //     'text' =>  json_encode($telegram)
@@ -51,7 +51,7 @@ class TelegramController extends ActiveController
             // ]);
 
 
-            
+
             $telegram->sendMessage([
                 'chat_id' => 813225336,
                 'text' =>  json_encode($telegram)
@@ -59,7 +59,7 @@ class TelegramController extends ActiveController
 
             ]);
 
-            $text = $telegram->input->message->text;
+            /*      $text = $telegram->input->message->text;
             $username = $telegram->input->message->chat->username;
             $telegram_id = $telegram->input->message->chat->id;
 
@@ -146,7 +146,7 @@ class TelegramController extends ActiveController
 
                     ]);
                 }
-            }
+            } */
         }
     }
 }

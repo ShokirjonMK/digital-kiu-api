@@ -6,7 +6,9 @@ use common\models\model\TimeTable;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\EduSemestr;
+use common\models\model\Kafedra;
 use common\models\model\Student;
+use common\models\model\Subject;
 
 class TimeTableController extends ApiActiveController
 {
@@ -22,18 +24,22 @@ class TimeTableController extends ApiActiveController
         $model = new TimeTable();
 
         $student = Student::findOne(['user_id' => current_user_id()]);
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0]);
 
         if ($student) {
-
-            $eduSmesterIds = EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id');
-
-            $query = $model->find()
-                ->andWhere(['is_deleted' => 0]);
-
-            $query->andWhere(['in', 'edu_semester_id', $eduSmesterIds]);
+            $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
         } else {
-            $query = $model->find()
-                ->andWhere(['is_deleted' => 0]);
+
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            if ($k['status'] == 1) {
+
+                $query->andFilterWhere([
+                    'in', 'subject_id', Subject::find()->where([
+                        'kafedra_id' => $k['UserAccess']->table_id
+                    ])->select('id')
+                ]);
+            }
         }
 
         // filter

@@ -41,7 +41,7 @@ class TelegramController extends ActiveController
 
         /* ************** */
         $telegram = Yii::$app->telegram;
-        // return $telegram;
+        return $telegram;
         if ($telegram) {
             $telegram->sendMessage([
                 'chat_id' => 813225336,

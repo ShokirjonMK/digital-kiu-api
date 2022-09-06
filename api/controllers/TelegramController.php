@@ -41,8 +41,16 @@ class TelegramController extends ActiveController
 
         /* ************** */
         $telegram = Yii::$app->telegram;
-        return $telegram;
+        // return $telegram;
         if ($telegram) {
+            $telegram->setWebhook([
+                'chat_id' => 813225336,
+                'text' =>  $telegram
+
+            ]);
+
+
+            
             $telegram->sendMessage([
                 'chat_id' => 813225336,
                 'text' =>  $telegram

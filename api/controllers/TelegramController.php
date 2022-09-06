@@ -44,17 +44,18 @@ class TelegramController extends ActiveController
         // return $telegram;
         if ($telegram) {
             
-            $telegram->setWebhook([
-                'chat_id' => 813225336,
-                'text' =>  json_encode($telegram)
+            // $telegram->setWebhook([
+            //     'chat_id' => 813225336,
+            //     'text' =>  json_encode($telegram)
 
-            ]);
+            // ]);
 
 
             
             $telegram->sendMessage([
                 'chat_id' => 813225336,
-                'text' =>  $telegram
+                'text' =>  json_encode($telegram)
+
 
             ]);
 

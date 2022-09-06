@@ -65,19 +65,80 @@ class TimeTable extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['teacher_access_id', 'room_id', 'para_id',  'subject_id', 'language_id', 'subject_category_id'], 'required'],
-            [['teacher_access_id', 'room_id', 'parent_id', 'lecture_id', 'para_id', 'course_id', 'semester_id', 'edu_year_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
-            [['edu_semester_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semester_id' => 'id']],
-            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
-            [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
-            [['para_id'], 'exist', 'skipOnError' => true, 'targetClass' => Para::className(), 'targetAttribute' => ['para_id' => 'id']],
-            [['room_id'], 'exist', 'skipOnError' => true, 'targetClass' => Room::className(), 'targetAttribute' => ['room_id' => 'id']],
-            [['week_id'], 'exist', 'skipOnError' => true, 'targetClass' => Week::className(), 'targetAttribute' => ['week_id' => 'id']],
-            [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['semester_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semester_id' => 'id']],
-            [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
-            [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
+            [
+                [
+                    'teacher_access_id',
+                    'room_id',
+                    'para_id',  'subject_id',
+                    'language_id',
+                    'subject_category_id'
+                ], 'required'
+            ],
+            [
+                [
+                    'teacher_access_id',
+                    'room_id',
+                    'parent_id',
+                    'lecture_id',
+                    'para_id',
+                    'course_id',
+                    'semester_id',
+                    'edu_year_id',
+                    'subject_id',
+                    'language_id',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
+            [
+                ['course_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']
+            ],
+            [
+                ['edu_semester_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semester_id' => 'id']
+            ],
+            [
+                ['edu_year_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']
+            ],
+            [
+                ['language_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']
+            ],
+            [
+                ['para_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Para::className(), 'targetAttribute' => ['para_id' => 'id']
+            ],
+            [
+                ['room_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Room::className(), 'targetAttribute' => ['room_id' => 'id']
+            ],
+            [
+                ['week_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Week::className(), 'targetAttribute' => ['week_id' => 'id']
+            ],
+            [
+                ['subject_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']
+            ],
+            [
+                ['semester_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semester_id' => 'id']
+            ],
+            [
+                ['subject_category_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']
+            ],
+            [
+                ['teacher_access_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']
+            ],
         ];
     }
 
@@ -166,7 +227,8 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[SubjectCategory]].
+     * Gets query for [
+     * [SubjectCategory]].
      *
      * @return \yii\db\ActiveQuery
      */

@@ -24,11 +24,21 @@ class TeacherContentController extends ApiActiveController
         $model = new TeacherContent();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin('subject', "subject.id = ' . $this->table_name . '.subject_id'")
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = subject")
+            // ->groupBy($this->table_name . '.id')
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
+
+
+        // return $this->hasMany(Translate::class, ['model_id' => 'id'])
+        // ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+
 
         if (isRole('contenter')) {
             $query->andWhere(['in', 'user_id', current_user_id()]);
         }
+
         // filter
         $query = $this->filterAll($query, $model);
 

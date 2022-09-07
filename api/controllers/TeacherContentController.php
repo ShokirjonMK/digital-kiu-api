@@ -27,7 +27,7 @@ class TeacherContentController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin('subject', "subject.id = '$this->table_name'.subject_id'")
-            ->leftJoin("translate tr", "tr.model_id = subject.id and tr.table_name = subject")
+            ->leftJoin("translate tr", "tr.model_id = subject.id and tr.table_name = 'subject'")
             // ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
 

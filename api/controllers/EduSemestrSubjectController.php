@@ -7,7 +7,10 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\EduSemestr;
 use common\models\model\Faculty;
+use common\models\model\Kafedra;
 use common\models\model\Student;
+use common\models\model\Subject;
+use common\models\model\TeacherAccess;
 
 class EduSemestrSubjectController extends ApiActiveController
 {
@@ -34,6 +37,61 @@ class EduSemestrSubjectController extends ApiActiveController
         } else {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0]);
+
+            $subjectModel = new Subject();
+            $subject = $subjectModel->find()
+                ->andWhere(['is_deleted' => 0]);
+
+            /** subject bo'yicha filter */
+            if (isRole('mudir')) {
+
+                $k1 = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+                if ($k1['status'] == 1) {
+                    // $kafedraIds = Kafedra::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
+                    // $query->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
+                    $subject->andFilterWhere([
+                        'kafedra_id' => $k1['UserAccess']->table_id
+                    ]);
+                } elseif ($k1['status'] == 2) {
+                    $subject->andFilterWhere([
+                        'kafedra_id' => -1
+                    ]);
+                }
+            } elseif (isRole("teacher")) {
+                $teacherAccessSubjectIds = TeacherAccess::find()
+                    ->select('subject_id')
+                    ->where(['user_id' => current_user_id(), 'is_deleted' => 0])
+                    ->groupBy('subject_id');
+
+                if ($teacherAccessSubjectIds) {
+                    $subject->andFilterWhere(['in', $this->table_name . '.id', $teacherAccessSubjectIds]);
+                } else {
+                    $subject->andFilterWhere(['kafedra_id' => -1]);
+                }
+            } else {
+                /*  is Self  */
+                $k1 = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+                if ($k1['status'] == 1) {
+                    $kafedraIds = Kafedra::find()->where(['faculty_id' => $k1['UserAccess']->table_id])->select('id');
+                    $subject->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
+                    // $subject->andFilterWhere([
+                    //     'kafedra_id' => $k1['UserAccess']->table_id
+                    // ]);
+                } elseif ($k1['status'] == 2) {
+                    $subject->andFilterWhere([
+                        'kafedra_id' => -1
+                    ]);
+                }
+                /*  is Self  */
+            }
+
+            $subjectIds = $subject->select('id');
+            $query->andFilterWhere([
+                'in', 'subject_id', $subjectIds
+            ]);
+
+            /** subject bo'yicha filter */
+
 
             /*  is Self  */
             /* $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);

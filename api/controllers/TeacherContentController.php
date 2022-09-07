@@ -37,6 +37,7 @@ class TeacherContentController extends ApiActiveController
 
         //  Filter from subject 
         $subject = new Subject();
+        $filter = Yii::$app->request->get('filter');
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $subject->attributes())) {

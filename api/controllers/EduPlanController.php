@@ -33,7 +33,7 @@ class EduPlanController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+       /*  $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
             $query->andFilterWhere([
                 'faculty_id' => $t['UserAccess']->table_id
@@ -42,7 +42,7 @@ class EduPlanController extends ApiActiveController
             $query->andFilterWhere([
                 'faculty_id' => -1
             ]);
-        }
+        } */
         // dd('ss');
 
         /*  is Self  */

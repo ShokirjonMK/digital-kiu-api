@@ -3,6 +3,7 @@
 namespace api\controllers;
 
 use base\ResponseStatus;
+use common\models\model\Subject;
 use common\models\model\TeacherContent;
 use Yii;
 
@@ -26,18 +27,34 @@ class TeacherContentController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin('subject', "subject.id = ' . $this->table_name . '.subject_id'")
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = subject")
+            ->leftJoin("translate tr", "tr.model_id = subject.id and tr.table_name = subject")
             // ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
-
-
-        // return $this->hasMany(Translate::class, ['model_id' => 'id'])
-        // ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
-
 
         if (isRole('contenter')) {
             $query->andWhere(['in', 'user_id', current_user_id()]);
         }
+
+        //  Filter from subject 
+        $subject = new Subject();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $subject->attributes())) {
+                    $query = $query->andFilterWhere(['subject.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $subject->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'subject.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
         // filter
         $query = $this->filterAll($query, $model);

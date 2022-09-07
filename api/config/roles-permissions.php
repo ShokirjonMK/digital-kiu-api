@@ -1237,7 +1237,7 @@ return [
         "student-exam_index",
         "student-exam_update",
         "student-exam_view",
-        "student-time-table_create",
+        // "student-time-table_create",
         "student-time-table_delete",
         "student-time-table_index",
         "student-time-table_update",

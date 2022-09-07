@@ -18,7 +18,7 @@ class TelegramController extends ActiveController
         return [];
     }
 
-    // public $enableCsrfValidation = false;
+    public $enableCsrfValidation = false;
 
     public function actionBot()
     {

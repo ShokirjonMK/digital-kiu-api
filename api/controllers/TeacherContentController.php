@@ -32,7 +32,7 @@ class TeacherContentController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
 
         if (isRole('contenter')) {
-            $query->andWhere(['in', 'user_id', current_user_id()]);
+            $query->andWhere(['in', $this->table_name . '.user_id', current_user_id()]);
         }
 
         //  Filter from subject 

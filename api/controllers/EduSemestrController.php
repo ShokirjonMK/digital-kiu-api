@@ -35,7 +35,7 @@ class EduSemestrController extends ApiActiveController
                 ->andFilterWhere(['like', 'edu_semestr.name', Yii::$app->request->get('q')]);
 
             /*  is Self  */
-            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+           /*  $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
                 $eduPlan = EduPlan::find()->where(['faculty_id'=> $t['UserAccess']->table_id])->select('id');
                 $query->andWhere(['in', 'edu_plan_id', $eduPlan]);
@@ -43,7 +43,7 @@ class EduSemestrController extends ApiActiveController
                 $query->andFilterWhere([
                     'edu_plan_id' => -1
                 ]);
-            }
+            } */
             /*  is Self  */
         }
 

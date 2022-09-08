@@ -58,6 +58,9 @@ class TeacherContent extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::class, 'targetAttribute' => ['subject_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::class, 'targetAttribute' => ['lang_id' => 'id']],
+
+            [['user_id'], 'unique', 'targetAttribute' => ['is_deleted', 'subject_id']],
+
         ];
     }
 

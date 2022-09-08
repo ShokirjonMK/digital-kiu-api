@@ -206,6 +206,7 @@ class TimeTable extends \yii\db\ActiveRecord
         $extraFields =  [
             'course',
             'eduYear',
+            'child',
             'language',
             'teacher',
             'building',
@@ -255,6 +256,11 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getEduYear()
     {
         return $this->hasOne(EduYear::className(), ['id' => 'edu_year_id']);
+    }
+
+    public function getChild()
+    {
+        return $this->hasMany(self::className(), ['parent_id' => 'id']);
     }
 
     /**

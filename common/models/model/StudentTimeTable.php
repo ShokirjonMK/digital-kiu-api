@@ -227,6 +227,12 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         /**
          *  Faqat  Student user
          */
+///
+
+
+123
+
+room check
 
         $student = Student::findOne(['user_id' => Current_user_id()]);
         if (!isset($student)) {

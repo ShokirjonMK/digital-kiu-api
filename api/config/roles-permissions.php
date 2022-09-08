@@ -544,6 +544,7 @@ return [
 
         "access-control_roles",
 
+        "faculty_index",
         "area_index",
         "area_view",
         "building_create",

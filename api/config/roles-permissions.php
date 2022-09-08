@@ -92,6 +92,8 @@ return [
         "user_self",
         "user_selfget",
 
+        "access-control_roles",
+
         "area_index",
         "area_view",
         "building_create",
@@ -539,6 +541,8 @@ return [
     'edu_quality' => [
         "user_self",
         "user_selfget",
+
+        "access-control_roles",
 
         "area_index",
         "area_view",

@@ -19,17 +19,15 @@ class m220908_134708_create_student_subject_selection_table extends Migration
 
         $this->createTable('{{%student_subject_selection}}', [
             'id' => $this->primaryKey(),
+            
             'edu_semestr_subject_id' => $this->integer(11)->notNull(),
             'student_id' => $this->integer(11)->notNull(),
-
             'edu_semester_id' => $this->integer(11)->Null(),
             'subject_id' => $this->integer(11)->Null(),
             'faculty_id' => $this->integer(11)->Null(),
             'edu_plan_id' => $this->integer(11)->Null(),
             'type' => $this->integer(11)->Null(),
-
             'user_id' => $this->integer(11)->Null(),
-
             'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),

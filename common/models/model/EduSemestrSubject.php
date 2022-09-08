@@ -151,7 +151,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         }
         return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id']);
     }
-    
+
     public function getSelection()
     {
         if (isRole('student')) {
@@ -179,6 +179,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Direction::className(), ['direction_id' => 'id']);
     }
+    
     /**
      * Gets query for [[EduSemestrExamsTypes]].
      *

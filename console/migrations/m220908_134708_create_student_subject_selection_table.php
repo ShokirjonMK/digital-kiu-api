@@ -39,7 +39,7 @@ class m220908_134708_create_student_subject_selection_table extends Migration
         ]);
         $this->addForeignKey('student_subject_selection_user_id', 'student_subject_selection', 'user_id', 'users', 'id');
         $this->addForeignKey('student_subject_selection_edu_semestr_subject_id', 'student_subject_selection', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');
-        $this->addForeignKey('student_subject_selection_edu_semester_id', 'student_subject_selection', 'edu_semester_id', 'edu_semester', 'id');
+        $this->addForeignKey('student_subject_selection_edu_semester_id', 'student_subject_selection', 'edu_semester_id', 'edu_semestr', 'id');
         $this->addForeignKey('student_subject_selection_subject_id', 'student_subject_selection', 'subject_id', 'subject', 'id');
         $this->addForeignKey('student_subject_selection_edu_plan_id', 'student_subject_selection', 'edu_plan_id', 'edu_plan', 'id');
         $this->addForeignKey('student_subject_selection_faculty_id', 'student_subject_selection', 'faculty_id', 'faculty', 'id');

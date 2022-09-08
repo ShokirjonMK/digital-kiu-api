@@ -131,6 +131,10 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             'subject',
             'subjectType',
             'eduSemestrSubjectCategoryTimes',
+            
+            'studentSubjectSelection',
+            'selection',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -138,6 +142,15 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getStudentSubjectSelection()
+    {
+        return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id']);
+    }
+    public function getSelection()
+    {
+        return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id']);
     }
 
 

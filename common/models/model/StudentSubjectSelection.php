@@ -207,23 +207,23 @@ class StudentSubjectSelection extends \yii\db\ActiveRecord
 
     public function getEduSemestrSubject()
     {
-        return $this->hasOne(eduSemestrSubject::class, ['id' => 'edu_semestr_subject_id']);
+        return $this->hasOne(EduSemestrSubject::class, ['id' => 'edu_semestr_subject_id']);
     }
     public function getStudent()
     {
-        return $this->hasOne(student::class, ['id' => 'student_id']);
+        return $this->hasOne(Student::class, ['id' => 'student_id']);
     }
     public function getEduSemester()
     {
-        return $this->hasOne(eduSemester::class, ['id' => 'edu_semester_id']);
+        return $this->hasOne(EduSemester::class, ['id' => 'edu_semester_id']);
     }
     public function getFaculty()
     {
-        return $this->hasOne(faculty::class, ['id' => 'faculty_id']);
+        return $this->hasOne(Faculty::class, ['id' => 'faculty_id']);
     }
     public function getEduPlan()
     {
-        return $this->hasOne(eduPlan::class, ['id' => 'edu_plan_id']);
+        return $this->hasOne(EduPlan::class, ['id' => 'edu_plan_id']);
     }
 
     public static function createItem($model, $post)

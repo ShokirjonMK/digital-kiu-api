@@ -50,7 +50,6 @@ class SubjectContent extends \yii\db\ActiveRecord
     public $file_videoFileMaxSize = 1024 * 1024 * 160; // 160 Mb
     public $file_audioFileMaxSize = 1024 * 1024 * 100; // 100 Mb
 
-
     public $file_textFileExtentions = 'text';
     public $file_fileFileExtentions = 'pdf,doc,docx,ppt,pptx,zip';
     public $file_imageFileExtentions = 'png,jpg,gimp,bmp,jpeg';

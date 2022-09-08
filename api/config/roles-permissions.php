@@ -92,8 +92,6 @@ return [
         "user_self",
         "user_selfget",
 
-        "access-control_permissions",
-        "access-control_roles",
         "area_index",
         "area_view",
         "building_create",
@@ -535,6 +533,87 @@ return [
         'student_update',
         'student_view',
 
+    ],
+
+    /* Talim sifati */
+    'edu_quality' => [
+        "user_self",
+        "user_selfget",
+
+        "area_index",
+        "area_view",
+        "building_create",
+        "building_index",
+        "building_update",
+        "building_view",
+        "citizenship_index",
+        "country_index",
+        "country_view",
+        "course_index",
+        "course_view",
+
+
+        "enum_education-degrees",
+        "enum_education-types",
+        "enum_educations",
+        "enum_family-statuses",
+        "enum_genders",
+        "enum_rates",
+        "enum_topic-types",
+        "enum_yesno",
+
+
+        "kafedra_index",
+        "kafedra_view",
+        "languages_index",
+        "nationality_index",
+        "notification_approved",
+        "notification_index",
+        "notification_my",
+        "notification_status-list",
+        "notification_view",
+
+
+        "password_index",
+        "password_view",
+
+        "region_index",
+        "region_view",
+        "room_index",
+        "room_view",
+
+        "subject-category_index",
+        "subject-category_view",
+        "subject-content_index",
+        "subject-content_types",
+        "subject-content_view",
+        "subject-sillabus_index",
+        "subject-sillabus_view",
+
+        "subject-type_index",
+
+        "subject-type_view",
+
+        "subject_index",
+
+        "subject_view",
+
+        'teacher-content_index',
+        'teacher-content_view',
+        'teacher-content_update',
+        'teacher-content_create',
+        'teacher-content_delete',
+
+        "user-access-type_index",
+
+        "user_index",
+        "user_logout",
+        "user_me",
+        "user_status-list",
+
+        "user_view",
+        "week_index",
+        "week_view"
     ],
 
 
@@ -1172,7 +1251,7 @@ return [
     'student' => [
         "user_self",
         "user_selfget",
-
+        "para_index",
         'student_me',
 
         "access-control_permissions",

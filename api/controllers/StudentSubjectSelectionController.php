@@ -119,13 +119,19 @@ class StudentSubjectSelectionController extends ApiActiveController
     public function actionDelete($lang, $id)
     {
         $model = StudentSubjectSelection::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->andWhere(['id' => $id])
             ->one();
 
-        $model->delete();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        // remove model
+        if ($model) {
+            $model->delete();
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+        }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 }

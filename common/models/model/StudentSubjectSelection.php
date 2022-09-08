@@ -176,6 +176,7 @@ class StudentSubjectSelection extends \yii\db\ActiveRecord
 
             'subject',
             'user',
+            'profile',
 
             'createdBy',
             'updatedBy',
@@ -189,6 +190,10 @@ class StudentSubjectSelection extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::class, ['user_id' => 'user_id']);
     }
 
     public function getSubject()
@@ -230,6 +235,7 @@ class StudentSubjectSelection extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        $model->user_id = current_user_id();
         $model->student_id = $student->id;
         $model->faculty_id = $student->faculty_id;
         $model->edu_plan_id = $student->edu_plan_id;

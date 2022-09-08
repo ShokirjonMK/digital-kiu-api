@@ -132,6 +132,9 @@ $controllers = [
     'hostel-app',
     'hostel-doc',
     'teacher-content',
+    'student-subject-selection',
+
+
     'telegram',
     'test-get-data',
 ];

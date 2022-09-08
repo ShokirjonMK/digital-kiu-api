@@ -69,7 +69,8 @@ class TimeTable extends \yii\db\ActiveRecord
                 [
                     'teacher_access_id',
                     'room_id',
-                    'para_id',  'subject_id',
+                    'para_id',
+                    'subject_id',
                     'language_id',
                     'subject_category_id'
                 ], 'required'

@@ -28,6 +28,10 @@ class StudentSubjectSelectionController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
+        if (isRole('student')) {
+            $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);
+        }
+
         $query
             ->with(['profile'])
             ->join('INNER JOIN', 'profile', 'profile.user_id = student_subject_selection.user_id')
@@ -93,6 +97,13 @@ class StudentSubjectSelectionController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+
+        if (isRole('student')) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours!'), ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
         $post = Yii::$app->request->post();
 
         $this->load($model, $post);
@@ -112,6 +123,12 @@ class StudentSubjectSelectionController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        if (isRole('student')) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours!'), ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -128,6 +145,11 @@ class StudentSubjectSelectionController extends ApiActiveController
 
         // remove model
         if ($model) {
+            if (isRole('student')) {
+                if ($model->user_id != current_user_id()) {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours!'), ResponseStatus::UPROCESSABLE_ENTITY);
+                }
+            }
             $model->delete();
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

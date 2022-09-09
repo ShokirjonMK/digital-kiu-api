@@ -208,6 +208,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'course',
             'eduYear',
             'child',
+            'seminar',
             'language',
             'teacher',
             'building',
@@ -262,6 +263,11 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getChild()
     {
         return $this->hasMany(self::className(), ['parent_id' => 'id']);
+    }
+
+    public function getSeminar()
+    {
+        return $this->hasMany(self::className(), ['lecture_id' => 'id']);
     }
 
     /**

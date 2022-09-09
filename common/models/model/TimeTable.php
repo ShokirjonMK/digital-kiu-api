@@ -214,6 +214,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'building',
             'para',
             'room',
+            'selected',
             'eduSemestr',
             'subjectCategory',
             'week',
@@ -268,6 +269,22 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getSeminar()
     {
         return $this->hasMany(self::className(), ['lecture_id' => 'id'])->onCondition(['parent_id' => null]);
+    }
+
+    public function getSelected()
+    {
+        if (isRole('student')) {
+
+            $studentTimeTable = StudentTimeTable::find()->where(['time_table_id' => $this->id, 'student_id' => $this->student()])->all();
+            if (count($studentTimeTable) > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        $studentTimeTable = StudentTimeTable::find()->where(['time_table_id' => $this->id])->all();
+
+        return count($studentTimeTable);
     }
 
     /**

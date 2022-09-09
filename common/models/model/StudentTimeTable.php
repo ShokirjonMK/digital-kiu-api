@@ -280,7 +280,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         // 
 
-        $timeTableSelected = StudentTimeTable::find()->where([
+        $timeTableSelected = self::find()->where([
             'edu_semester_id' => $model->timeTable->edu_semester_id,
             'edu_year_id' => $model->timeTable->edu_year_id,
             'subject_id' => $model->timeTable->subject_id,

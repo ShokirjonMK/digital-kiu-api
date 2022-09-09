@@ -267,7 +267,7 @@ class TimeTable extends \yii\db\ActiveRecord
 
     public function getSeminar()
     {
-        return $this->hasMany(self::className(), ['lecture_id' => 'id']);
+        return $this->hasMany(self::className(), ['lecture_id' => 'id'])->onCondition(['parent_id' => null]);
     }
 
     /**

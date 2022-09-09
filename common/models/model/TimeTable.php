@@ -220,7 +220,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'week',
             'subject',
             'semestr',
-          
+
             'isStudentBusy',
 
             'teacherAccess',
@@ -233,7 +233,7 @@ class TimeTable extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getIsBusy()
+    public function getIsStudentBusy()
     {
         if (isRole('student')) {
             $timeTableSameBusy = TimeTable::find()->where([
@@ -255,6 +255,7 @@ class TimeTable extends \yii\db\ActiveRecord
                 return 0;
             }
         }
+        return 0;
     }
 
     /**

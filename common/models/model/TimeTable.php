@@ -220,6 +220,9 @@ class TimeTable extends \yii\db\ActiveRecord
             'week',
             'subject',
             'semestr',
+          
+            'isStudentBusy',
+
             'teacherAccess',
             'createdBy',
             'updatedBy',
@@ -228,6 +231,30 @@ class TimeTable extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getIsBusy()
+    {
+        if (isRole('student')) {
+            $timeTableSameBusy = TimeTable::find()->where([
+                'edu_semester_id' => $this->edu_semester_id,
+                'edu_year_id' => $this->edu_year_id,
+                'semester_id' => $this->semester_id,
+                'para_id' => $this->para_id,
+                'week_id' => $this->week_id,
+            ])->select('id');
+
+            $timeTableSelected = StudentTimeTable::find()
+                ->where(['in', 'time_table_id', $timeTableSameBusy])
+                ->andWhere(['student_id' => self::student()])
+                ->all();
+
+            if (count($timeTableSelected) > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 
     /**
@@ -275,7 +302,13 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         if (isRole('student')) {
 
-            $studentTimeTable = StudentTimeTable::find()->where(['time_table_id' => $this->id, 'student_id' => $this->student()])->all();
+            $studentTimeTable = StudentTimeTable::find()
+                ->where([
+                    'time_table_id' => $this->id,
+                    'student_id' => $this->student()
+                ])
+                ->all();
+
             if (count($studentTimeTable) > 0) {
                 return 1;
             } else {

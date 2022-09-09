@@ -16,6 +16,17 @@ use yii\behaviors\TimestampBehavior;
  * @property int $time_table_id
  * @property int|null $order
  * @property int|null $status
+ * @property int|null $teacher_access_id
+ * @property int|null $language_id
+ * @property int|null $course_id
+ * @property int|null $semester_id
+ * @property int|null $edu_year_id
+ * @property int|null $subject_id
+ * @property int|null $room_id
+ * @property int|null $para_id
+ * @property int|null $week_id
+ * @property int|null $edu_semester_id
+ * @property int|null $subject_category_id
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
@@ -54,7 +65,29 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'time_table_id'], 'required'],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [
+                [
+                    'teacher_access_id',
+                    'language_id',
+                    'course_id',
+                    'semester_id',
+                    'edu_year_id',
+                    'subject_id',
+                    'room_id',
+                    'para_id',
+                    'week_id',
+                    'edu_semester_id',
+                    'subject_category_id',
+
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['time_table_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeTable::className(), 'targetAttribute' => ['time_table_id' => 'id']],
         ];
@@ -107,6 +140,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'week',
             'para',
             'subjectCategory',
+            'isBusy',
 
             'student',
             'timeTable',
@@ -126,7 +160,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     sillabus(seminar | amaliy | ...)
  */
 
-
+ 
 
     /**
      * Gets query for [[SubjectCategory]].
@@ -259,7 +293,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         }
 
         /**
-         *  Student Edu Plan bo'yicah tekshirish
+         *  Student Edu Plan bo'yicha tekshirish
          */
 
         if (isset($timeTableCheck)) {
@@ -278,8 +312,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        // 
+        //
 
+        /** Shu fanni tanlaganmi */
         $timeTableSame = TimeTable::find()->where([
             'edu_semester_id' => $model->timeTable->edu_semester_id,
             'edu_year_id' => $model->timeTable->edu_year_id,
@@ -289,24 +324,97 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'parent_id' => null
         ])->select('id');
 
-        $timeTableSelected = self::find()->where(['in', 'time_table_id', $timeTableSame])->all();
+        $timeTableSelected = self::find()
+            ->where(['in', 'time_table_id', $timeTableSame])
+            ->andWhere(['student_id' => self::student()])
+            ->all();
 
         if (count($timeTableSelected) > 0) {
             $errors[] = _e('This subject already selected');
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+        /** Shu fanni tanlaganmi */
+
+        /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+        $timeTableSameBusy = TimeTable::find()->where([
+            'edu_semester_id' => $model->timeTable->edu_semester_id,
+            'edu_year_id' => $model->timeTable->edu_year_id,
+            'semester_id' => $model->timeTable->semester_id,
+            'para_id' => $model->timeTable->para_id,
+            'week_id' => $model->timeTable->week_id,
+        ])->select('id');
+
+        $timeTableSelected = self::find()
+            ->where(['in', 'time_table_id', $timeTableSameBusy])
+            ->andWhere(['student_id' => self::student()])
+            ->all();
+
+        if (count($timeTableSelected) > 0) {
+            $errors[] = _e('You are busy in this time!');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+
+        //
+
+        $model->teacher_access_id = $model->timeTable->teacher_access_id;
+        $model->language_id = $model->timeTable->language_id;
+        $model->course_id = $model->timeTable->course_id;
+        $model->semester_id = $model->timeTable->semester_id;
+        $model->edu_year_id = $model->timeTable->edu_year_id;
+        $model->subject_id = $model->timeTable->subject_id;
+        $model->room_id = $model->timeTable->room_id;
+        $model->para_id = $model->timeTable->para_id;
+        $model->week_id = $model->timeTable->week_id;
+        $model->edu_semester_id = $model->timeTable->edu_semester_id;
+        $model->subject_category_id = $model->timeTable->subject_category_id;
 
         if ($model->save()) {
 
             // Student child larini yozish
             $timeTables = TimeTable::findAll(['parent_id' => $model->time_table_id]);
             if (isset($timeTables)) {
-                foreach ($timeTables as $timeTable) {
+                foreach ($timeTables as $timeTableOne) {
 
                     $newModel = new StudentTimeTable();
                     $newModel->student_id = $model->student_id;
-                    $newModel->time_table_id = $timeTable->id;
+                    $newModel->time_table_id = $timeTableOne->id;
+
+                    /** Child Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+                    $timeTableSameBusyChild = TimeTable::find()->where([
+                        'edu_semester_id' => $timeTableOne->edu_semester_id,
+                        'edu_year_id' => $timeTableOne->edu_year_id,
+                        'semester_id' => $timeTableOne->semester_id,
+                        'para_id' => $timeTableOne->para_id,
+                        'week_id' => $timeTableOne->week_id,
+                    ])->select('id');
+
+                    $timeTableSelectedChild = self::find()
+                        ->where(['in', 'time_table_id', $timeTableSameBusyChild])
+                        ->andWhere(['student_id' => self::student()])
+                        ->all();
+
+                    if (count($timeTableSelectedChild) > 0) {
+                        $errors[] = _e('You are already busy in this time!');
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
+                    /** Child Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+
+                    $newModel->teacher_access_id = $timeTableOne->teacher_access_id;
+                    $newModel->language_id = $timeTableOne->language_id;
+                    $newModel->course_id = $timeTableOne->course_id;
+                    $newModel->semester_id = $timeTableOne->semester_id;
+                    $newModel->edu_year_id = $timeTableOne->edu_year_id;
+                    $newModel->subject_id = $timeTableOne->subject_id;
+                    $newModel->room_id = $timeTableOne->room_id;
+                    $newModel->para_id = $timeTableOne->para_id;
+                    $newModel->week_id = $timeTableOne->week_id;
+                    $newModel->edu_semester_id = $timeTableOne->edu_semester_id;
+                    $newModel->subject_category_id = $timeTableOne->subject_category_id;
+
                     if (!$newModel->save()) {
                         $errors[] = _e('Child can not added!');
                     }
@@ -415,9 +523,21 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $timeTableChilds = TimeTable::find()->where(['parent_id' => $model->time_table_id])->all();
+        if (self::deleteAll([
+            'in', 'time_table_id',
+            TimeTable::find()->where(['parent_id' => $model->time_table_id])->select('id')
+        ])) {
+            $errors[] = _e('Childs not deleted!');
+        }
 
-        if (isset($timeTableChilds)) {
+        if (self::deleteAll([
+            'in', 'time_table_id',
+            TimeTable::find()->where(['lecture_id' => $model->time_table_id])->select('id')
+        ])) {
+            $errors[] = _e('Seminars not deleted!');
+        }
+
+        /*   if (isset($timeTableChilds)) {
 
             if (isset($timeTableChilds)) {
                 StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChilds]);
@@ -429,6 +549,19 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             //     }
             // }
         }
+
+        if (isset($timeTableChildSemenars)) {
+
+            if (isset($timeTableChildSemenars)) {
+                StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChildSemenars]);
+            }
+
+            // foreach ($timeTableChilds as $timeTableChildOne) {
+            //     if (!$timeTableChildOne->delete()) {
+            //         $errors[] = _e('Child ' . $timeTableChildOne->id . ' not deleted!');
+            //     }
+            // }
+        } */
         if (count($errors) == 0) {
 
             if ($model->delete()) {

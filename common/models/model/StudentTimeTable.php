@@ -252,7 +252,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $timeTableCheck = TimeTable::findOne($model->time_table_id);
 
         $studentTimeTable = self::find()->where(['time_table_id' => $model->time_table_id, 'is_deleted' => 0])->all();
-        if ($model->timeTable->room->capacity > count($studentTimeTable)) {
+        if ($model->timeTable->room->capacity < count($studentTimeTable)) {
             $errors[] = _e('This Time Table is Full!');
             $transaction->rollBack();
             return simplify_errors($errors);
@@ -290,7 +290,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         ])->all();
 
         if (count($timeTableSelected) > 0) {
-            $errors[] = _e('This Student Time Table already exists ');
+            $errors[] = _e('This subject already selected');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

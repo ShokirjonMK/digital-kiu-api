@@ -419,11 +419,15 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         if (isset($timeTableChilds)) {
 
-            foreach ($timeTableChilds as $timeTableChildOne) {
-                if (!$timeTableChildOne->delete()) {
-                    $errors[] = _e('Child ' . $timeTableChildOne->id . ' not deleted!');
-                }
+            if (isset($timeTableChilds)) {
+                StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChilds]);
             }
+
+            // foreach ($timeTableChilds as $timeTableChildOne) {
+            //     if (!$timeTableChildOne->delete()) {
+            //         $errors[] = _e('Child ' . $timeTableChildOne->id . ' not deleted!');
+            //     }
+            // }
         }
         if (count($errors) == 0) {
 

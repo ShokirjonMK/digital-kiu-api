@@ -280,14 +280,16 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         // 
 
-        $timeTableSelected = self::find()->where([
+        $timeTableSame = TimeTable::find()->where([
             'edu_semester_id' => $model->timeTable->edu_semester_id,
             'edu_year_id' => $model->timeTable->edu_year_id,
             'subject_id' => $model->timeTable->subject_id,
             'semester_id' => $model->timeTable->semester_id,
             'subject_category_id' => $model->timeTable->subject_category_id,
             'parent_id' => null
-        ])->all();
+        ])->select('id');
+
+        $timeTableSelected = self::find()->where(['in', 'time_table_id', $timeTableSame])->all();
 
         if (count($timeTableSelected) > 0) {
             $errors[] = _e('This subject already selected');

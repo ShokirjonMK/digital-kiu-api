@@ -222,19 +222,22 @@ class KpiCategory extends \yii\db\ActiveRecord
         //     $errors[] = $model->errors;
         // }
 
-        if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
-            $post['fields'] =  substr($post['fields'], 1, -1);
-        }
+        if (isset($post['fields'])) {
 
-        if (!isJsonMK($post['fields'])) {
-            $errors['fields'] = [_e('Must be Json')];
-        } else {
-            $fields = ((array)json_decode($post['fields']));
-            // dd($fields);
-            if (!empty(array_diff($fields, self::categoryFields()))) {
-                $errors['fields'] = [_e('Incorrect fields')];
+            if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
+                $post['fields'] =  substr($post['fields'], 1, -1);
+            }
+
+            if (!isJsonMK($post['fields'])) {
+                $errors['fields'] = [_e('Must be Json')];
             } else {
-                $model->fields = $fields;
+                $fields = ((array)json_decode($post['fields']));
+                // dd($fields);
+                if (!empty(array_diff($fields, self::categoryFields()))) {
+                    $errors['fields'] = [_e('Incorrect fields')];
+                } else {
+                    $model->fields = $fields;
+                }
             }
         }
 

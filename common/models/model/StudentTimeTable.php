@@ -229,21 +229,20 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          */
         ///
 
-
-
         $student = Student::findOne(['user_id' => Current_user_id()]);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
         $model->student_id = $student->id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
 
-        $hasModel = StudentTimeTable::findOne([
+        $hasModel = self::findOne([
             'student_id' => $model->student_id,
             'time_table_id' => $model->time_table_id,
         ]);
@@ -386,6 +385,40 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
         } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function deleteItem($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $timeTableChildIds = TimeTable::find()->select('id')->where(['parent_id' => $model->time_table_id]);
+
+        if (isset($timeTableChildIds)) {
+
+            if (StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChildIds])) {
+                if (count($errors) == 0) {
+                    $transaction->commit();
+                    return true;
+                } else {
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            } else {
+                $errors[] = _e('Child StudentTimeTable not deleted!');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        if ($model->delete()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $errors[] = _e('StudentTimeTable not deleted!');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

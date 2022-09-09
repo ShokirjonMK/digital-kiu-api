@@ -273,7 +273,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         }
 
         if (isset($hasModel)) {
-            $errors[] = _e('This Student Time Table already exists ');
+            $errors[] = _e('This Student Time Table already exists');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

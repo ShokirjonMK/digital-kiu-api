@@ -37,13 +37,24 @@ class PasswordController extends ApiActiveController
         $passwordOld =  $post['old_password'] ?? null;
         $passwordRe =  $post['re_password'] ?? null;
         $data = new Password();
-        $data = $data->decryptThisUser(current_user_id());
+
+        if (isRole('admin')) {
+            $data = $data->decryptThisUser($id);
+        } else {
+            $data = $data->decryptThisUser(current_user_id());
+        }
         if (($data['password'] == $passwordOld) || isRole('admin')) {
 
             if (strlen($passwordNew) >= 6) {
 
                 if ($passwordRe == $passwordNew) {
-                    $model = User::findOne(current_user_id());
+                    if (isRole('admin')) {
+                        $model = User::findOne($id);
+                        $model->savePassword($passwordNew, $id);
+                    } else {
+                        $model = User::findOne(current_user_id());
+                        $model->savePassword($passwordNew, current_user_id());
+                    }
                     //**parolni shifrlab saqlaymiz */
                     $model->savePassword($passwordNew, current_user_id());
                     //**** */

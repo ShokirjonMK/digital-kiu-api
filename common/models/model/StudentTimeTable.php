@@ -413,30 +413,27 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $timeTableChildIds = TimeTable::find()->select('id')->where(['parent_id' => $model->time_table_id]);
+        $timeTableChilds = TimeTable::find()->where(['parent_id' => $model->time_table_id])->all();
 
-        if (isset($timeTableChildIds)) {
+        if (isset($timeTableChilds)) {
 
-            if (StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChildIds])) {
-                if (count($errors) == 0) {
-                    $transaction->commit();
-                    return true;
-                } else {
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
+            foreach ($timeTableChilds as $timeTableChildOne) {
+                if (!$timeTableChildOne->delete()) {
+                    $errors[] = _e('Child ' . $timeTableChildOne->id . ' not deleted!');
                 }
+            }
+        }
+        if (count($errors) == 0) {
+
+            if ($model->delete()) {
+                $transaction->commit();
+                return true;
             } else {
-                $errors[] = _e('Child StudentTimeTable not deleted!');
+                $errors[] = _e('StudentTimeTable not deleted!');
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-        }
-
-        if ($model->delete()) {
-            $transaction->commit();
-            return true;
         } else {
-            $errors[] = _e('StudentTimeTable not deleted!');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

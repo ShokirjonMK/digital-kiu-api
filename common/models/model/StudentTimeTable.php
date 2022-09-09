@@ -247,6 +247,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'time_table_id' => $model->time_table_id,
         ]);
 
+
         $studentCheck = Student::findOne($model->student_id);
         $timeTableCheck = TimeTable::findOne($model->time_table_id);
 
@@ -272,6 +273,23 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         }
 
         if (isset($hasModel)) {
+            $errors[] = _e('This Student Time Table already exists ');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        // 
+
+        $timeTableSelected = TimeTable::find()->where([
+            'edu_semester_id' => $model->timeTable->edu_semester_id,
+            'edu_year_id' => $model->timeTable->edu_year_id,
+            'subject_id' => $model->timeTable->subject_id,
+            'semester_id' => $model->timeTable->semester_id,
+            'subject_category_id' => $model->timeTable->subject_category_id,
+            'parent_id' => null
+        ])->all();
+
+        if (count($timeTableSelected) > 0) {
             $errors[] = _e('This Student Time Table already exists ');
             $transaction->rollBack();
             return simplify_errors($errors);

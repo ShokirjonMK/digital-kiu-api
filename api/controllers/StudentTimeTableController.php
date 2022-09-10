@@ -88,6 +88,8 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+
         $model = StudentTimeTable::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

@@ -355,12 +355,23 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $studentCheck = Student::findOne($model->student_id);
         $timeTableCheck = TimeTable::findOne($model->time_table_id);
 
-        $studentTimeTable = self::find()->where(['time_table_id' => $model->time_table_id, 'is_deleted' => 0])->all();
+        $studentTimeTable = self::find()->where([
+            'time_table_id' => $model->time_table_id,
+            'is_deleted' => 0
+        ])->all();
+
         if ($model->timeTable->room->capacity < count($studentTimeTable)) {
             $errors[] = _e('This Time Table is Full!');
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        if ($model->subject_category_id == 1 &&  count($studentTimeTable) > 30) {
+            $errors[] = _e('This Time Table is Full! (30)');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
 
         /**
          *  Student Edu Plan bo'yicha tekshirish

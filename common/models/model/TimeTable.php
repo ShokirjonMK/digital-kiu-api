@@ -87,6 +87,7 @@ class TimeTable extends \yii\db\ActiveRecord
                     'edu_year_id',
                     'subject_id',
                     'language_id',
+                    'teacher_user_id',
                     'order',
                     'status',
                     'created_at',
@@ -438,6 +439,8 @@ class TimeTable extends \yii\db\ActiveRecord
         $model->semester_id = $eduSemester->semestr_id;
         $model->course_id = $eduSemester->course_id;
         $model->edu_year_id = $eduSemester->edu_year_id;
+
+        $model->teacher_user_id = $model->teacherAccess->user_id;
 
         if (isset($timeTable)) {
             if ($model->semester_id % 2 == $timeTable->semester_id % 2) {

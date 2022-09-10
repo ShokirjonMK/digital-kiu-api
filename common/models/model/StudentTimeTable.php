@@ -423,6 +423,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     $newModel->edu_semester_id = $timeTableOne->edu_semester_id;
                     $newModel->subject_category_id = $timeTableOne->subject_category_id;
 
+                    $model->time_table_parent_id = $timeTableOne->parent_id;
+                    $model->time_table_lecture_id = $timeTableOne->lecture_id;
+                    $model->teacher_user_id = $timeTableOne->teacher_user_id;
+
                     if (!$newModel->save()) {
                         $errors[] = _e('Child can not added!');
                     }

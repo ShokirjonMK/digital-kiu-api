@@ -108,6 +108,11 @@ class  StudentTimeTableController extends ApiActiveController
 
     public function actionCreate($lang)
     {
+        $errors = [];
+        if (!StudentTimeTable::chekTime()) {
+            $errors[] = _e('This is not your time to choose!');
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
         $model = new StudentTimeTable();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
@@ -159,7 +164,7 @@ class  StudentTimeTableController extends ApiActiveController
 
         $result = StudentTimeTable::deleteItem($model);
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

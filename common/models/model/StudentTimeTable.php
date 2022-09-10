@@ -60,6 +60,20 @@ class StudentTimeTable extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
 
+    // const TIME_10 = 1662837860;
+    // const TIME_10 = 1662872400;
+    const TIME_10 = 1662867000;
+    // const TIME_11 = 1662837860;
+    const TIME_11 = 1662876000;
+    const TIME_12 = 1662879600;
+    const TIME_13 = 1662883200;
+    const TIME_14 = 1662886800;
+    const TIME_15 = 1662890400;
+    const TIME_16 = 1662894000;
+    const TIME_17 = 1662897600;
+    const TIME_18 = 1662901200;
+    const TIME_19 = 1662904800;
+
 
     public function rules()
     {
@@ -163,7 +177,65 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     para,
     sillabus(seminar | amaliy | ...)
  */
+    public static function chekTime()
+    {
+        // return 1;
+        if (isRole('student')) {
+            $student = self::student(2);
 
+// dd(date('Y-m-d H:m:s', self::TIME_11), time());
+// dd( time());
+            // 1662839403
+            // 1662837860
+            if ($student) {
+                $now = time();
+                if ($student->course_id == 2) {
+                    if ($now >= self::TIME_10 && $now <= self::TIME_11) {
+                        return true;
+                    }
+                    if ($now >= self::TIME_13 && $now <= self::TIME_14) {
+                        return true;
+                    }
+                    if ($now >= self::TIME_16 && $now <= self::TIME_17) {
+                        return true;
+                    }
+                    return false;
+                }
+                if ($student->course_id == 3) {
+                    
+                    if ($now >= self::TIME_11 && $now <= self::TIME_12) {
+                    // if ( $now <= self::TIME_12) {
+                    // if ($now >= self::TIME_11) {
+                        return true;
+                        
+                        
+                    }
+                    if ($now >= self::TIME_14 && $now <= self::TIME_15) {
+                        return true;
+                    }
+                    if ($now >= self::TIME_17 && $now <= self::TIME_18) {
+                        return true;
+                    }
+                    return false;
+                }
+                if ($student->course_id == 4) {
+                    if ($now >= self::TIME_12 && $now <= self::TIME_13) {
+                        return true;
+                    }
+                    if ($now >= self::TIME_15 && $now <= self::TIME_16) {
+                        return true;
+                    }
+                    if ($now >= self::TIME_18 && $now <= self::TIME_19) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        return true;
+    }
 
 
     /**
@@ -535,10 +607,26 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+
+        self::deleteAll([
+            'in', 'time_table_id',
+            TimeTable::find()->where(['parent_id' => $model->time_table_id])->select('id')
+        ]);
+
+
+
+        self::deleteAll([
+            'in', 'time_table_id',
+            TimeTable::find()->where(['lecture_id' => $model->time_table_id])->select('id')
+        ]);
+
+        // dd("dddd");
+
         if (self::deleteAll([
             'in', 'time_table_id',
             TimeTable::find()->where(['parent_id' => $model->time_table_id])->select('id')
         ])) {
+
             $errors[] = _e('Childs not deleted!');
         }
 

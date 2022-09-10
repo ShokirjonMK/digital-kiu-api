@@ -99,6 +99,7 @@ class Student extends \yii\db\ActiveRecord
                     'student_category_id',
                     //
                     'partners_count',
+                    'edu_lang_id',
                     //
 
                     'is_contract',

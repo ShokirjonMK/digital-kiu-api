@@ -183,10 +183,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         if (isRole('student')) {
             $student = self::student(2);
 
-// dd(date('Y-m-d H:m:s', self::TIME_11), time());
-// dd( time());
-            // 1662839403
-            // 1662837860
+            // dd(date('Y-m-d H:m:s', self::TIME_11), time());
+
             if ($student) {
                 $now = time();
                 if ($student->course_id == 2) {
@@ -202,13 +200,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     return false;
                 }
                 if ($student->course_id == 3) {
-                    
+                    // dd([$now, self::TIME_11, self::TIME_12]);
                     if ($now >= self::TIME_11 && $now <= self::TIME_12) {
-                    // if ( $now <= self::TIME_12) {
-                    // if ($now >= self::TIME_11) {
                         return true;
-                        
-                        
                     }
                     if ($now >= self::TIME_14 && $now <= self::TIME_15) {
                         return true;

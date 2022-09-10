@@ -9,6 +9,7 @@ use common\models\model\EduSemestr;
 use common\models\model\Faculty;
 use common\models\model\Kafedra;
 use common\models\model\Student;
+use common\models\model\StudentTimeTable;
 use common\models\model\Subject;
 use common\models\model\TeacherAccess;
 
@@ -27,6 +28,14 @@ class EduSemestrSubjectController extends ApiActiveController
 
         $student = Student::findOne(['user_id' => Current_user_id()]);
         if (isset($student)) {
+
+            $errors = [];/* 
+            if (!StudentTimeTable::chekTime()) {
+                $errors[] = _e('This is not your time to choose!');
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            } */
+
+            
             $eduSemesterIds = EduSemestr::find()
                 ->select('id')
                 ->where(['edu_plan_id' => $student->edu_plan_id]);

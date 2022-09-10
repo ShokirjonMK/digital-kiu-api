@@ -8,6 +8,7 @@ use base\ResponseStatus;
 use common\models\model\EduSemestr;
 use common\models\model\Kafedra;
 use common\models\model\Student;
+use common\models\model\StudentTimeTable;
 use common\models\model\Subject;
 
 class TimeTableController extends ApiActiveController
@@ -70,6 +71,17 @@ class TimeTableController extends ApiActiveController
             ->andWhere(['is_deleted' => 0]);
 
         if ($student) {
+
+            /** Kurs bo'yicha vaqt belgilash */
+            $errors = [];
+            if (!StudentTimeTable::chekTime()) {
+                $errors[] = _e('This is not your time to choose!');
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+            /** Kurs bo'yicha vaqt belgilash */
+            
+            
+            
             $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
             $query->andWhere(['language_id' => $student->edu_lang_id]);
         } else {

@@ -505,6 +505,8 @@ class TimeTable extends \yii\db\ActiveRecord
         $model->course_id = $eduSemester->course_id;
         $model->edu_year_id = $eduSemester->edu_year_id;
 
+        $model->teacher_user_id = $model->teacherAccess->user_id;
+
         if (isset($timeTable)) {
             if (($model->semester_id % 2 == $timeTable->semester_id % 2) && ($model->id != $timeTable->id)) {
                 $errors[] = _e("This Room and Para are busy for this Edu Year's semestr");

@@ -61,8 +61,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
      */
 
     // const TIME_10 = 1662837860;
-    // const TIME_10 = 1662872400;
-    const TIME_10 = 1662867000;
+    const TIME_10 = 1662872400;
+    // const TIME_10 = 1662867000;
     // const TIME_11 = 1662837860;
     const TIME_11 = 1662876000;
     const TIME_12 = 1662879600;

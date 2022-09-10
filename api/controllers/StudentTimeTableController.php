@@ -6,6 +6,7 @@ use Yii;
 
 use base\ResponseStatus;
 use common\models\model\EduSemestr;
+use common\models\model\Profile;
 use common\models\model\Semestr;
 use common\models\model\Student;
 use common\models\model\StudentTimeTable;
@@ -27,7 +28,9 @@ class  StudentTimeTableController extends ApiActiveController
     {
         $model = new StudentTimeTable();
         $query = $model->find()
-            ->andWhere(['is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->join('INNER JOIN', 'student', 'student.id = ' . $this->table_name . '.student_id')
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id');
 
         $student = Student::findOne(['user_id' => Current_user_id()]);
 
@@ -43,22 +46,53 @@ class  StudentTimeTableController extends ApiActiveController
             // return $eduSemestr;
             if ($eduSemestr) {
 
-                $query->andWhere(['in', 'time_table_id', TimeTable::find()
+                $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
                     ->select('id')
-                    ->where(['edu_semester_id' => $eduSemestr->id])]);
+                    ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);
             }
-            $query->andWhere(['student_id' => $student->id]);
+            $query->andWhere([$this->table_name . '.student_id' => $student->id]);
         } else {
             if ($semester) {
                 $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
                 if ($eduSemestr) {
 
-                    $query->andWhere(['in', 'time_table_id', TimeTable::find()
+                    $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
                         ->select('id')
-                        ->where(['edu_semester_id' => $eduSemestr->id])]);
+                        ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);
                 }
             }
         }
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        $student = new Student();
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $student->attributes())) {
+                    $query = $query->andFilterWhere(['student.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+                if (in_array($attributeq, $student->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'student.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
         // filter
         $query = $this->filterAll($query, $model);

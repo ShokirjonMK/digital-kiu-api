@@ -375,8 +375,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $model->edu_semester_id = $model->timeTable->edu_semester_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
 
-        $model->time_table_parent_id = $model->timeTable->time_table_parent_id;
-        $model->time_table_lecture_id = $model->timeTable->time_table_lecture_id;
+        $model->time_table_parent_id = $model->timeTable->parent_id;
+        $model->time_table_lecture_id = $model->timeTable->lecture_id;
         $model->teacher_user_id = $model->timeTable->teacher_user_id;
 
         if ($model->save()) {

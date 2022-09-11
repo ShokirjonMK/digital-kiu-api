@@ -1258,6 +1258,8 @@ return [
         "time-table_index",
         "time-table_parent-null",
         "time-table_view",
+        "week_index",
+        "para_index",
     ],
 
     /* Student  */

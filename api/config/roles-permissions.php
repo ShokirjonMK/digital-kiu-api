@@ -1253,7 +1253,11 @@ return [
         "subject-topic_view",
         "subject_index",
         "user_logout",
-        "user_me"
+        "user_me",
+
+        "time-table_index",
+        "time-table_parent-null",
+        "time-table_view",
     ],
 
     /* Student  */
@@ -1325,9 +1329,9 @@ return [
         "student-exam_index",
         "student-exam_update",
         "student-exam_view",
-        
+
         "student-time-table_create",
-        
+
         // "student-time-table_delete",
         "student-time-table_index",
         // "student-time-table_update",

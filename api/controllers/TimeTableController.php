@@ -114,7 +114,7 @@ class TimeTableController extends ApiActiveController
         // sort
         $query = $this->sort($query);
 
-        dd($query->createCommand()->getRawSql());
+        // dd($query->createCommand()->getRawSql());
 
         // data
         $data =  $this->getData($query);

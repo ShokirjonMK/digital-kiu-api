@@ -6,6 +6,7 @@ use Yii;
 use base\ResponseStatus;
 use api\forms\Login;
 use common\models\model\LoginHistory;
+use common\models\model\StudentTimeTable;
 
 class AuthController extends ApiController
 {
@@ -50,6 +51,18 @@ class AuthController extends ApiController
 
                     $res = LoginHistory::createItemLogin($result['data']['user_id']);
                     if (!is_array($res)) {
+
+
+
+                        // /** Kurs bo'yicha vaqt belgilash */
+                        // $errors = [];
+                        // if (!StudentTimeTable::chekTime()) {
+                        //     $errors[] = _e('This is not your time to choose!');
+                        //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+                        // }
+                        // /** Kurs bo'yicha vaqt belgilash */
+          
+                        
                         return $this->response(1, _e('User successfully logged in.'), $result['data'], null);
                     }
                     return $this->response(1, _e('User successfully logged in.'), $result['data'], _e('Login not saved'));

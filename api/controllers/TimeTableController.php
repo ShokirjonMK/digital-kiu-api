@@ -68,13 +68,12 @@ class TimeTableController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['<', 'parent_id', 1])
+            ->andWhere(['parent_id' => null])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
 
 
         $student = Student::findOne(['user_id' => current_user_id()]);
-        $query = $model->find()
-            ->andWhere(['is_deleted' => 0]);
+      
 
         if ($student) {
 
@@ -103,11 +102,19 @@ class TimeTableController extends ApiActiveController
             }
         }
 
+        if (isRole('teacher') && !isRole('mudir')) {
+            $query->andFilterWhere([
+                'teacher_user_id' => current_user_id()
+            ]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 
         // sort
         $query = $this->sort($query);
+
+        dd($query->createCommand()->getRawSql());
 
         // data
         $data =  $this->getData($query);

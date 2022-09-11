@@ -44,6 +44,12 @@ class TimeTableController extends ApiActiveController
             }
         }
 
+        if (isRole('teacher')) {
+            $query->andFilterWhere([
+                'teacher_user_id' => current_user_id()
+            ]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -79,9 +85,9 @@ class TimeTableController extends ApiActiveController
             //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
             // }
             // /** Kurs bo'yicha vaqt belgilash */
-            
-            
-            
+
+
+
             $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
             $query->andWhere(['language_id' => $student->edu_lang_id]);
         } else {
@@ -96,7 +102,7 @@ class TimeTableController extends ApiActiveController
                 ]);
             }
         }
-        
+
         // filter
         $query = $this->filterAll($query, $model);
 

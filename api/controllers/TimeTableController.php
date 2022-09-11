@@ -72,13 +72,13 @@ class TimeTableController extends ApiActiveController
 
         if ($student) {
 
-            /** Kurs bo'yicha vaqt belgilash */
-            $errors = [];
-            if (!StudentTimeTable::chekTime()) {
-                $errors[] = _e('This is not your time to choose!');
-                return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-            }
-            /** Kurs bo'yicha vaqt belgilash */
+            // /** Kurs bo'yicha vaqt belgilash */
+            // $errors = [];
+            // if (!StudentTimeTable::chekTime()) {
+            //     $errors[] = _e('This is not your time to choose!');
+            //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
+            // }
+            // /** Kurs bo'yicha vaqt belgilash */
             
             
             

@@ -179,7 +179,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
  */
     public static function chekTime()
     {
-        // return 1;
+        return true;
         if (isRole('student')) {
             $student = self::student(2);
 

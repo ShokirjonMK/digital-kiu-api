@@ -44,7 +44,7 @@ class TimeTableController extends ApiActiveController
             }
         }
 
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('mudir')) {
             $query->andFilterWhere([
                 'teacher_user_id' => current_user_id()
             ]);

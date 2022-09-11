@@ -96,7 +96,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     'time_table_parent_id',
                     'time_table_lecture_id',
                     'teacher_user_id',
-
+                    'edu_plan_id',
+                    'building_id',
                     'order',
                     'status',
                     'created_at',
@@ -122,6 +123,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'time_table_id' => 'Time Table Id',
             'order' => _e('Order'),
             'status' => _e('Status'),
+            'edu_plan_id' => 'edu_plan_id',
+            'building_id' => 'building_id',
+
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),

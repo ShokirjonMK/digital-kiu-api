@@ -12,7 +12,8 @@ class m220911_075608_alter_student_time_table_add_time_table_edu_pan extends Mig
      */
     public function safeUp()
     {
-
+        $this->addColumn('time_table', 'edu_plan_id', $this->integer()->null()->after('status'));
+        $this->addColumn('time_table', 'building_id', $this->integer()->null()->after('status'));
     }
 
     /**

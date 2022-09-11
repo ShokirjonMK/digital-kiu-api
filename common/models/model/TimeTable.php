@@ -88,6 +88,9 @@ class TimeTable extends \yii\db\ActiveRecord
                     'subject_id',
                     'language_id',
                     'teacher_user_id',
+                    'edu_plan_id',
+                    'building_id',
+
                     'order',
                     'status',
                     'created_at',
@@ -155,6 +158,8 @@ class TimeTable extends \yii\db\ActiveRecord
             'room_id' => 'Room ID',
             'para_id' => 'Para ID',
             'course_id' => 'Course ID',
+            'edu_plan_id' => 'edu_plan_id',
+            'building_id' => 'building_id',
             'lecture_id' => 'Lecture ID',
             'semester_id' => 'Semestr ID',
             'parent_id' => 'Parent ID',
@@ -190,6 +195,8 @@ class TimeTable extends \yii\db\ActiveRecord
             'subject_id',
             'language_id',
             'order',
+            'edu_plan_id',
+            'building_id',
             'subject_category_id',
             'status',
             'created_at',
@@ -439,6 +446,8 @@ class TimeTable extends \yii\db\ActiveRecord
         $model->semester_id = $eduSemester->semestr_id;
         $model->course_id = $eduSemester->course_id;
         $model->edu_year_id = $eduSemester->edu_year_id;
+        $model->edu_plan_id = $eduSemester->edu_plan_id;
+        $model->building_id = $model->room->building_id;
 
         $model->teacher_user_id = $model->teacherAccess->user_id;
 

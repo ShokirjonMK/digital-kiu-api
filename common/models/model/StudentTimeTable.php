@@ -351,7 +351,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'time_table_id' => $model->time_table_id,
         ]);
 
-
         $studentCheck = Student::findOne($model->student_id);
         $timeTableCheck = TimeTable::findOne($model->time_table_id);
 

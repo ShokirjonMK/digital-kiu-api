@@ -228,12 +228,14 @@ return [
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",
+
         "time-table_create",
         "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
-        "time-table_update",
+        // "time-table_update",
         "time-table_view",
+
         "user-access-type_index",
         "user_create",
         "user_delete",
@@ -743,11 +745,11 @@ return [
         "teacher-access_index",
         "teacher-access_view",
 
-        "time-table_create",
-        "time-table_delete",
+        // "time-table_create",
+        // "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
-        "time-table_update",
+        // "time-table_update",
         "time-table_view",
 
         "user-access-type_index",
@@ -841,7 +843,7 @@ return [
         "time-table_index",
         "time-table_parent-null",
         "time-table_view",
-        "time-table_create",
+        // "time-table_create",
         "time-table_update",
         "time-table_delete",
 

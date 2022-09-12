@@ -76,7 +76,7 @@ class TeacherAccessController extends ApiActiveController
         $semester_ids = Semestr::find()->select('id')->where(['type' => $type]);
 
         $teacheIds =  TimeTable::find()
-            ->select('teacher_access_id')
+            ->select('teacher_user_id')
             ->where([
                 'para_id' => Yii::$app->request->get('para_id'),
                 'edu_year_id' => Yii::$app->request->get('edu_year_id'),
@@ -91,7 +91,7 @@ class TeacherAccessController extends ApiActiveController
             ->andWhere(['is_deleted' => 0]);
 
         if (isset($teacheIds)) {
-            $query->andFilterWhere(['not in', 'id', $teacheIds]);
+            $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
         }
 
         // filter

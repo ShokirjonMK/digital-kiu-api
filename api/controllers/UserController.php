@@ -135,12 +135,14 @@ class UserController extends ApiActiveController
         // }
 
 
-        $query->andFilterWhere([
-            'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                'table_id' => $kafedraId,
-                'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
-            ])
-        ]);
+        if (isset($kafedraId)) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $kafedraId,
+                    'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+        }
 
         if (!(isRole('admin')  || isRole('content_assign'))) {
             // dd(123);

@@ -229,8 +229,8 @@ return [
         "teacher-access_index",
         "teacher-access_view",
 
-        "time-table_create",
-        "time-table_delete",
+        // "time-table_create",
+        // "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
         // "time-table_update",
@@ -269,11 +269,11 @@ return [
         ////
 
 
-        'time-table_index',
-        'time-table_create',
-        'time-table_update',
-        'time-table_view',
-        'time-table_delete',
+        // 'time-table_index',
+        // 'time-table_create',
+        // 'time-table_update',
+        // 'time-table_view',
+        // 'time-table_delete',
     ],
 
     /* O'quv bo'limi nazoratchi */
@@ -405,11 +405,11 @@ return [
         'student_view',
 
 
-        'time-table_index',
-        'time-table_create',
-        'time-table_update',
-        'time-table_view',
-        'time-table_delete',
+        // 'time-table_index',
+        // 'time-table_create',
+        // 'time-table_update',
+        // 'time-table_view',
+        // 'time-table_delete',
     ],
 
     /* O'quv bo'limi yordamchi */
@@ -745,8 +745,8 @@ return [
         "teacher-access_index",
         "teacher-access_view",
 
-        "time-table_create",
-        "time-table_delete",
+        // "time-table_create",
+        // "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
         // "time-table_update",
@@ -843,9 +843,9 @@ return [
         "time-table_index",
         "time-table_parent-null",
         "time-table_view",
-        "time-table_create",
-        "time-table_update",
-        "time-table_delete",
+        // "time-table_create",
+        // "time-table_update",
+        // "time-table_delete",
 
         "building_index",
         "room_index",
@@ -1332,8 +1332,8 @@ return [
         "student-exam_update",
         "student-exam_view",
 
-        // "student-time-table_create",
-
+        
+        "student-time-table_create",
         "student-time-table_delete",
         "student-time-table_index",
         // "student-time-table_update",
@@ -1425,16 +1425,16 @@ return [
 
     ],
 
-    'time_table_plus' => [
+    // 'time_table_plus' => [
 
-        "time-table_create",
-        "time-table_delete",
-        "time-table_index",
-        "time-table_parent-null",
-        "time-table_update",
-        "time-table_view",
+    //     "time-table_create",
+    //     "time-table_delete",
+    //     "time-table_index",
+    //     "time-table_parent-null",
+    //     "time-table_update",
+    //     "time-table_view",
 
-    ],
+    // ],
 
     'content_assign' => [
 
@@ -1490,16 +1490,16 @@ return [
         "user_view"
     ],
 
-    'student_time_table_plus' => [
+    // 'student_time_table_plus' => [
 
 
-        "student-time-table_create",
+    //     "student-time-table_create",
 
-        "student-time-table_delete",
-        "student-time-table_index",
-        "student-time-table_update",
-        "student-time-table_view",
-    ],
+    //     "student-time-table_delete",
+    //     "student-time-table_index",
+    //     "student-time-table_update",
+    //     "student-time-table_view",
+    // ],
 
     'kpi_plus' => [
 

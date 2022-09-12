@@ -1332,7 +1332,7 @@ return [
         "student-exam_update",
         "student-exam_view",
 
-        // "student-time-table_create",
+        "student-time-table_create",
 
         "student-time-table_delete",
         "student-time-table_index",

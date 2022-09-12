@@ -100,6 +100,7 @@ class UserController extends ApiActiveController
     {
         $model = new User();
         $filter = Yii::$app->request->get('filter');
+        $kafedraId = Yii::$app->request->get('kafedra_id');
         $filter = json_decode(str_replace("'", "", $filter));
 
         $query = $model->find()
@@ -133,6 +134,13 @@ class UserController extends ApiActiveController
 
         // }
 
+
+        $query->andFilterWhere([
+            'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                'table_id' => $kafedraId,
+                'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+            ])
+        ]);
 
         if (!(isRole('admin')  || isRole('content_assign'))) {
             // dd(123);

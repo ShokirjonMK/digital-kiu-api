@@ -745,8 +745,8 @@ return [
         "teacher-access_index",
         "teacher-access_view",
 
-        // "time-table_create",
-        // "time-table_delete",
+        "time-table_create",
+        "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
         // "time-table_update",

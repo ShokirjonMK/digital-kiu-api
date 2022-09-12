@@ -124,11 +124,11 @@ class TimeTableController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $errors = [];
+        /* $errors = [];
         if (StudentTimeTable::TIME_10 < time()) {
             $errors[] = _e('Students started choosing!');
             return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        } */
         $model = new TimeTable();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
@@ -142,11 +142,11 @@ class TimeTableController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $errors = [];
+        /* $errors = [];
         if (StudentTimeTable::TIME_10 < time()) {
             $errors[] = _e('Students started choosing!');
             return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        } */
         $model = TimeTable::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

@@ -59,7 +59,6 @@ class TimeTableController extends ApiActiveController
             ]);
         }
 
-
         // filter
         $query = $this->filterAll($query, $model);
 

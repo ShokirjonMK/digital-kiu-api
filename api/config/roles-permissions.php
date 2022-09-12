@@ -1332,7 +1332,7 @@ return [
         "student-exam_update",
         "student-exam_view",
 
-        "student-time-table_create",
+        // "student-time-table_create",
 
         "student-time-table_delete",
         "student-time-table_index",
@@ -1422,6 +1422,17 @@ return [
         'user_view',
         'teacher-content_index',
         'teacher-content_view'
+
+    ],
+
+    'time_table_plus' => [
+
+        "time-table_create",
+        "time-table_delete",
+        "time-table_index",
+        "time-table_parent-null",
+        "time-table_update",
+        "time-table_view",
 
     ],
 

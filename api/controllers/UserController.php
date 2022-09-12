@@ -99,9 +99,6 @@ class UserController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new User();
-        $filter = Yii::$app->request->get('filter');
-        $kafedraId = Yii::$app->request->get('kafedra_id');
-        $filter = json_decode(str_replace("'", "", $filter));
 
         $query = $model->find()
             ->with(['profile'])
@@ -134,7 +131,7 @@ class UserController extends ApiActiveController
 
         // }
 
-
+        $kafedraId = Yii::$app->request->get('kafedra_id');
         if (isset($kafedraId)) {
             $query->andFilterWhere([
                 'in', 'users.id', UserAccess::find()->select('user_id')->where([
@@ -187,6 +184,8 @@ class UserController extends ApiActiveController
         }
         /*  is Self  */
 
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
         //  Filter from Profile 
         $profile = new Profile();
         if (isset($filter)) {

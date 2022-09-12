@@ -378,6 +378,10 @@ trait ApiActionTrait
             return $t;
         }
 
+        if (property_exists($roles, 'kpi_check')) {
+            return $t;
+        }
+
         if (property_exists($roles, 'hostel')) {
             return $t;
         }

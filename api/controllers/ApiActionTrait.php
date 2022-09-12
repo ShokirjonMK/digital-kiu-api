@@ -267,6 +267,18 @@ trait ApiActionTrait
         ]);
     }
 
+    public function getDataNoPage($query, $perPage = 0, $validatePage = true)
+    {
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => Yii::$app->request->get('per-page') ?? $perPage,
+                'validatePage' => $validatePage
+            ],
+        ]);
+    }
+
     public function response($status, $message, $data = null, $errors = null, $responsStatusCode = 200)
     {
         Yii::$app->response->statusCode = $responsStatusCode;

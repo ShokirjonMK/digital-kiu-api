@@ -34,7 +34,7 @@ class AccessControlController extends ApiActiveController
             $queryRole = $this->sort($queryRole);
 
             // data
-            $data =  $this->getData($queryRole);
+            $data =  $this->getDataNoPage($queryRole);
 
             return $this->response(1, _e('Success'), $data);
         }

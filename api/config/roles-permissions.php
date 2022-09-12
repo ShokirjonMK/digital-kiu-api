@@ -1480,6 +1480,7 @@ return [
         "notification_my",
         "region_index",
         "subject-category_index",
+        "kafedra_index",
         "user_index",
         "user_logout",
         "user_me",

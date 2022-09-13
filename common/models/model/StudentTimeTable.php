@@ -615,21 +615,25 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        /* 
-        self::deleteAll([
+
+        /* self::deleteAll([
             'in', 'time_table_id',
-            TimeTable::find()->where(['parent_id' => $model->time_table_id
-            ])->select('id')
+            TimeTable::find()->where([
+                'parent_id' => $model->time_table_id
+            ])->select('id'),
+            'student_id' => $model->student_id
         ]);
 
 
 
         self::deleteAll([
             'in', 'time_table_id',
-            TimeTable::find()->where(['lecture_id' => $model->time_table_id
-    
-            ])->select('id')
+            TimeTable::find()->where([
+                'lecture_id' => $model->time_table_id
+            ])->select('id'),
+            'student_id' => $model->student_id
         ]);
+
 
         // dd("dddd");
 
@@ -646,40 +650,16 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             TimeTable::find()->where(['lecture_id' => $model->time_table_id])->select('id')
         ])) {
             $errors[] = _e('Seminars not deleted!');
-        }
- */
-        /*   if (isset($timeTableChilds)) {
-
-            if (isset($timeTableChilds)) {
-                StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChilds]);
-            }
-
-            // foreach ($timeTableChilds as $timeTableChildOne) {
-            //     if (!$timeTableChildOne->delete()) {
-            //         $errors[] = _e('Child ' . $timeTableChildOne->id . ' not deleted!');
-            //     }
-            // }
-        }
-
-        if (isset($timeTableChildSemenars)) {
-
-            if (isset($timeTableChildSemenars)) {
-                StudentTimeTable::deleteAll(['in', 'time_table_id', $timeTableChildSemenars]);
-            }
-
-            // foreach ($timeTableChilds as $timeTableChildOne) {
-            //     if (!$timeTableChildOne->delete()) {
-            //         $errors[] = _e('Child ' . $timeTableChildOne->id . ' not deleted!');
-            //     }
-            // }
         } */
+
+
 
 
         $studentTimeTableLecture = StudentTimeTable::find()->where([
             'in', 'time_table_id',
             TimeTable::find()->where([
                 'lecture_id' => $model->time_table_id
-            ]),
+            ])->select('id'),
             'student_id' => $model->student_id
         ])->all();
 
@@ -696,7 +676,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'in', 'time_table_id',
             TimeTable::find()->where([
                 'parent_id' => $model->time_table_id
-            ]),
+            ])->select('id'),
             'student_id' => $model->student_id
         ])->all();
 

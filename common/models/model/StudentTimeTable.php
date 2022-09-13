@@ -618,8 +618,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         /* 
         self::deleteAll([
             'in', 'time_table_id',
-            TimeTable::find()->where(['parent_id' => $model->time_table_id,
-            'student_id' => $model->student_id
+            TimeTable::find()->where(['parent_id' => $model->time_table_id
             ])->select('id')
         ]);
 
@@ -627,8 +626,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         self::deleteAll([
             'in', 'time_table_id',
-            TimeTable::find()->where(['lecture_id' => $model->time_table_id,
-            'student_id' => $model->student_id
+            TimeTable::find()->where(['lecture_id' => $model->time_table_id
+    
             ])->select('id')
         ]);
 
@@ -662,8 +661,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             // }
         }
 
-
-        
         if (isset($timeTableChildSemenars)) {
 
             if (isset($timeTableChildSemenars)) {
@@ -681,9 +678,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $studentTimeTableLecture = StudentTimeTable::find()->where([
             'in', 'time_table_id',
             TimeTable::find()->where([
-                'lecture_id' => $model->time_table_id,
-                'student_id' => $model->student_id
-            ])
+                'lecture_id' => $model->time_table_id
+            ]),
+            'student_id' => $model->student_id
         ])->all();
 
         if (isset($studentTimeTableLecture)) {
@@ -698,9 +695,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $studentTimeTableParent = StudentTimeTable::find()->where([
             'in', 'time_table_id',
             TimeTable::find()->where([
-                'parent_id' => $model->time_table_id,
-                'student_id' => $model->student_id
-            ])
+                'parent_id' => $model->time_table_id
+            ]),
+            'student_id' => $model->student_id
         ])->all();
 
         if (isset($studentTimeTableParent)) {

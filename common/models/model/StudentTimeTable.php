@@ -678,7 +678,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                 'parent_id' => $model->time_table_id
             ])->select('id'),
             'student_id' => $model->student_id
-        ])->all();
+        ]);
+
+        dd($studentTimeTableParent->createCommand()->getRawSql());
+
 
         if (isset($studentTimeTableParent)) {
 

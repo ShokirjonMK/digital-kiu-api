@@ -659,9 +659,11 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'in', 'time_table_id',
             TimeTable::find()->where([
                 'lecture_id' => $model->time_table_id
-            ])->select('id'),
-            'student_id' => $model->student_id
-        ])->all();
+            ])->select('id')
+
+        ])
+            ->andWhere(['student_id' => $model->student_id])
+            ->all();
 
         if (isset($studentTimeTableLecture)) {
 
@@ -676,11 +678,11 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'in', 'time_table_id',
             TimeTable::find()->where([
                 'parent_id' => $model->time_table_id
-            ])->select('id'),
-            'student_id' => $model->student_id
-        ]);
+            ])->select('id')
 
-        dd($studentTimeTableParent->createCommand()->getRawSql());
+        ])
+            ->andWhere(['student_id' => $model->student_id])
+            ->all();
 
 
         if (isset($studentTimeTableParent)) {
@@ -691,7 +693,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                 }
             }
         }
-
 
         if (count($errors) == 0) {
 

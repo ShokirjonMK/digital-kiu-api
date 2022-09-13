@@ -223,6 +223,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'para',
             'room',
             'selected',
+            'selectedCount',
             'eduSemestr',
             'subjectCategory',
             'week',
@@ -325,7 +326,12 @@ class TimeTable extends \yii\db\ActiveRecord
             }
         }
         $studentTimeTable = StudentTimeTable::find()->where(['time_table_id' => $this->id])->all();
+        return count($studentTimeTable);
+    }
 
+    public function getSelectedCount()
+    {
+        $studentTimeTable = StudentTimeTable::find()->where(['time_table_id' => $this->id])->all();
         return count($studentTimeTable);
     }
 

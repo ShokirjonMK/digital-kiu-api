@@ -615,7 +615,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-
+        /* 
         self::deleteAll([
             'in', 'time_table_id',
             TimeTable::find()->where(['parent_id' => $model->time_table_id,
@@ -648,7 +648,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         ])) {
             $errors[] = _e('Seminars not deleted!');
         }
-
+ */
         /*   if (isset($timeTableChilds)) {
 
             if (isset($timeTableChilds)) {
@@ -662,6 +662,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             // }
         }
 
+
+        
         if (isset($timeTableChildSemenars)) {
 
             if (isset($timeTableChildSemenars)) {
@@ -674,6 +676,43 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             //     }
             // }
         } */
+
+
+        $studentTimeTableLecture = StudentTimeTable::find()->where([
+            'in', 'time_table_id',
+            TimeTable::find()->where([
+                'lecture_id' => $model->time_table_id,
+                'student_id' => $model->student_id
+            ])
+        ])->all();
+
+        if (isset($studentTimeTableLecture)) {
+
+            foreach ($studentTimeTableLecture as $studentTimeTableLectureOne) {
+                if (!$studentTimeTableLectureOne->delete()) {
+                    $errors[] = _e('Child ' . $studentTimeTableLectureOne->id . ' not deleted!');
+                }
+            }
+        }
+
+        $studentTimeTableParent = StudentTimeTable::find()->where([
+            'in', 'time_table_id',
+            TimeTable::find()->where([
+                'parent_id' => $model->time_table_id,
+                'student_id' => $model->student_id
+            ])
+        ])->all();
+
+        if (isset($studentTimeTableParent)) {
+
+            foreach ($studentTimeTableParent as $studentTimeTableParentOne) {
+                if (!$studentTimeTableParentOne->delete()) {
+                    $errors[] = _e('Child ' . $studentTimeTableParentOne->id . ' not deleted!');
+                }
+            }
+        }
+
+
         if (count($errors) == 0) {
 
             if ($model->delete()) {

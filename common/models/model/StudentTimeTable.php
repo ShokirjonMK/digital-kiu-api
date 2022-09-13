@@ -344,7 +344,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->student_id = $student->id;
+        $model->student_id = self::student();
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

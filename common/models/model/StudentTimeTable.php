@@ -618,14 +618,18 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         self::deleteAll([
             'in', 'time_table_id',
-            TimeTable::find()->where(['parent_id' => $model->time_table_id])->select('id')
+            TimeTable::find()->where(['parent_id' => $model->time_table_id,
+            'student_id' => $model->student_id
+            ])->select('id')
         ]);
 
 
 
         self::deleteAll([
             'in', 'time_table_id',
-            TimeTable::find()->where(['lecture_id' => $model->time_table_id])->select('id')
+            TimeTable::find()->where(['lecture_id' => $model->time_table_id,
+            'student_id' => $model->student_id
+            ])->select('id')
         ]);
 
         // dd("dddd");

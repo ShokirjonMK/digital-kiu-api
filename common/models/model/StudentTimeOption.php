@@ -114,6 +114,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             ],
 
             [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'time_option_id']],
+            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id']],
 
 
         ];

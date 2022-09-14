@@ -1454,9 +1454,11 @@ return [
         "kpi-category_index",
         "kpi-category_update",
         "kpi-category_view",
+
         "kpi-data_index",
-        "kpi-data_update",
+        // "kpi-data_update",
         "kpi-data_view",
+        
         "kpi-mark_create",
         "kpi-mark_delete",
         "kpi-mark_index",

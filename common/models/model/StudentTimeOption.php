@@ -114,7 +114,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             ],
 
             [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'time_option_id'], 'message' => 'You have already selected Time Option'],
-            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id', 'message' => 'You have already selected Time Option for this Edu Year']],
+            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id'], 'message' => 'You have already selected Time Option for this Edu Year'],
 
 
         ];

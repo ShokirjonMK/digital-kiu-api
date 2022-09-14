@@ -107,7 +107,7 @@ class TimeOption extends \yii\db\ActiveRecord
                 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']
             ],
 
-            [['key'], 'unique', 'targetAttribute' => ['edu_semester_id', 'language_id']],
+            [['key'], 'unique', 'targetAttribute' => ['edu_semester_id', 'key', 'language_id']],
 
 
         ];

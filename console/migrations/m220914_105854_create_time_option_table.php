@@ -27,6 +27,7 @@ class m220914_105854_create_time_option_table extends Migration
             'edu_year_id' => $this->integer()->notNull(),
             'edu_semester_id' => $this->integer()->notNull(),
             'language_id' => $this->integer()->notNull(),
+            'capacity' => $this->integer()->notNull(),
             'type' => $this->integer()->null(),
             'description' => $this->text()->null(),
 

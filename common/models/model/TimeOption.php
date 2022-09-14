@@ -67,6 +67,9 @@ class TimeOption extends \yii\db\ActiveRecord
                     // 'edu_plan_id',
                     // 'edu_year_id',
                     'edu_semester_id',
+                    'edu_semester_id',
+                    'capacity',
+
                     'language_id',
                 ], 'required'
             ],
@@ -77,6 +80,7 @@ class TimeOption extends \yii\db\ActiveRecord
                     'edu_year_id',
                     'edu_semester_id',
                     'language_id',
+                    'capacity',
 
                     // 'order',
                     'status',
@@ -103,7 +107,7 @@ class TimeOption extends \yii\db\ActiveRecord
                 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']
             ],
 
-            [['key'], 'unique', 'targetAttribute' => ['key', 'edu_semester_id', 'is_deleted', 'language_id']],
+            [['key'], 'unique', 'targetAttribute' => ['edu_semester_id', 'is_deleted', 'language_id']],
 
 
         ];
@@ -120,6 +124,7 @@ class TimeOption extends \yii\db\ActiveRecord
             'edu_year_id' => 'Edu Year ID',
             'edu_semester_id' => 'Edu Semester ID',
             'language_id' => 'Languages ID',
+            'capacity',
 
             'key',
             'faculty_id',
@@ -145,6 +150,7 @@ class TimeOption extends \yii\db\ActiveRecord
                 return $model->key . '(' . $this->language->lang_code . ')';
             },
 
+            'capacity',
             'key',
             'faculty_id',
             'edu_plan_id',

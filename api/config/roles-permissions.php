@@ -603,8 +603,7 @@ return [
         "teacher-content_view",
         "user-access-type_index",
         "user_index",
-        "subject-content-mark_index",
-        "subject-content-mark_view",
+        
         "kpi-category_index",
         "kpi-category_view",
         "kpi-data_view",

@@ -541,25 +541,18 @@ return [
 
     /* Talim sifati */
     'edu_quality' => [
-        "user_self",
-        "user_selfget",
-
         "access-control_roles",
-
-        "faculty_index",
         "area_index",
         "area_view",
-        "building_create",
+        // "building_create",
         "building_index",
-        "building_update",
+        // "building_update",
         "building_view",
         "citizenship_index",
         "country_index",
         "country_view",
         "course_index",
         "course_view",
-
-
         "enum_education-degrees",
         "enum_education-types",
         "enum_educations",
@@ -568,8 +561,7 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
-
-
+        "faculty_index",
         "kafedra_index",
         "kafedra_view",
         "languages_index",
@@ -579,45 +571,47 @@ return [
         "notification_my",
         "notification_status-list",
         "notification_view",
-
-
         "password_index",
         "password_view",
-
         "region_index",
         "region_view",
         "room_index",
         "room_view",
-
         "subject-category_index",
         "subject-category_view",
+        "subject-content-mark_index",
+        "subject-content-mark_view",
         "subject-content_index",
         "subject-content_types",
         "subject-content_view",
         "subject-sillabus_index",
         "subject-sillabus_view",
-
+        "subject-topic-reference_index",
+        "subject-topic-reference_view",
+        "subject-topic_index",
+        "subject-topic_view",
         "subject-type_index",
-
         "subject-type_view",
-
         "subject_index",
-
         "subject_view",
-
-        'teacher-content_index',
-        'teacher-content_view',
-        'teacher-content_update',
-        'teacher-content_create',
-        'teacher-content_delete',
-
+        "teacher-access_index",
+        "teacher-access_view",
+        "teacher-content_create",
+        "teacher-content_delete",
+        "teacher-content_index",
+        "teacher-content_update",
+        "teacher-content_view",
         "user-access-type_index",
-
         "user_index",
+        "kpi-category_index",
+        "kpi-category_view",
+        "kpi-data_view",
+        "kpi-data_index",
         "user_logout",
         "user_me",
+        "user_self",
+        "user_selfget",
         "user_status-list",
-
         "user_view",
         "week_index",
         "week_view"

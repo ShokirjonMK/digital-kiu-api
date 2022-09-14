@@ -57,68 +57,6 @@ class TimeOptionController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        foreach (EduSemestr::findAll(['status' => 1]) as $edu_semester) {
-            $post = [];
-            $post['edu_semester_id'] = $edu_semester->id;
-            $post['key'] = 'A';
-            $post['capacity'] = 60;
-            $post['language_id'] = 1;
-
-            $model = new TimeOption();
-            $this->load($model, $post);
-            $result = TimeOption::createItem($model, $post);
-            /**
-             * 2
-             */
-
-            $post['key'] = 'B';
-            $post['language_id'] = 1;
-
-            $model = new TimeOption();
-            $this->load($model, $post);
-            $result = TimeOption::createItem($model, $post);
-
-
-            /**
-             * 3
-             */
-            $post['key'] = 'C';
-            $post['language_id'] = 1;
-
-            $model = new TimeOption();
-            $this->load($model, $post);
-            $result = TimeOption::createItem($model, $post);
-
-
-            $post['key'] = 'A';
-            $post['language_id'] = 3;
-
-            $model = new TimeOption();
-            $this->load($model, $post);
-            $result = TimeOption::createItem($model, $post);
-            /**
-             * 2
-             */
-
-            $post['key'] = 'B';
-            $post['language_id'] = 3;
-
-            $model = new TimeOption();
-            $this->load($model, $post);
-            $result = TimeOption::createItem($model, $post);
-
-
-            /**
-             * 3
-             */
-            $post['key'] = 'C';
-            $post['language_id'] = 3;
-
-            $model = new TimeOption();
-            $this->load($model, $post);
-            $result = TimeOption::createItem($model, $post);
-
-        }
         $model = new TimeOption();
         $post = Yii::$app->request->post();
         $this->load($model, $post);

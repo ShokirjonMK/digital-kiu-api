@@ -61,6 +61,7 @@ class TimeOptionController extends ApiActiveController
             $post = [];
             $post['edu_semester_id'] = $edu_semester->id;
             $post['key'] = 'A';
+            $post['capacity'] = 60;
             $post['language_id'] = 1;
 
             $model = new TimeOption();

@@ -123,7 +123,7 @@ class TimeOption extends \yii\db\ActiveRecord
             'edu_plan_id' => 'edu_plan_id',
             'edu_year_id' => 'Edu Year ID',
             'edu_semester_id' => 'Edu Semester ID',
-            'language_id' => 'Languages ID',
+            'language_id' => 'Language ID',
             'capacity',
 
             'key',

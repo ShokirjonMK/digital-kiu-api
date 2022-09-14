@@ -65,8 +65,8 @@ class TimeOption extends \yii\db\ActiveRecord
                     'key',
                     // 'faculty_id',
                     // 'edu_plan_id',
-                    // 'edu_year_id',
-                    'edu_semester_id',
+                    'edu_year_id',
+                    
                     'edu_semester_id',
                     'capacity',
 
@@ -241,7 +241,6 @@ class TimeOption extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->edu_year_id = $model->eduSemester->edu_year_id;
         $model->edu_plan_id = $model->eduSemester->edu_plan_id;
         $model->faculty_id = $model->eduPlan->faculty_id;
 
@@ -271,7 +270,6 @@ class TimeOption extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->edu_year_id = $model->eduSemester->edu_year_id;
         $model->edu_plan_id = $model->eduSemester->edu_plan_id;
         $model->faculty_id = $model->eduPlan->faculty_id;
 

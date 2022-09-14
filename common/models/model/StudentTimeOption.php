@@ -55,7 +55,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            
+
             [
                 ['student_id'], 'exist',
                 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']
@@ -264,7 +264,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         $model->edu_semester_id = $model->timeOption->edu_semester_id;
         $model->edu_year_id = $model->timeOption->edu_year_id;
         $model->user_id = current_user_id();
-        $model->student_id = self::student();
+        $model->student_id = self::student()?? 1;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

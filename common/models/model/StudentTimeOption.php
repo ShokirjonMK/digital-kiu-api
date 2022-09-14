@@ -55,6 +55,30 @@ class StudentTimeOption extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [[
+                // 'student_id',
+                // 'user_id',
+                'time_option_id',
+                // 'edu_year_id'
+            ], 'required'],
+
+            [[
+                'student_id',
+                'user_id',
+                'time_option_id',
+                'edu_year_id',
+                'faculty_id',
+                'edu_plan_id',
+                'edu_semester_id',
+                'language_id',
+                'status',
+                'is_deleted',
+                'order',
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by'
+            ], 'integer'],
 
             [
                 ['student_id'], 'exist',
@@ -89,31 +113,8 @@ class StudentTimeOption extends \yii\db\ActiveRecord
                 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']
             ],
 
+            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'time_option_id']],
 
-            [[
-                // 'student_id',
-                // 'user_id',
-                'time_option_id',
-                // 'edu_year_id'
-            ], 'required'],
-
-            [[
-                'student_id',
-                'user_id',
-                'time_option_id',
-                'edu_year_id',
-                'faculty_id',
-                'edu_plan_id',
-                'edu_semester_id',
-                'language_id',
-                'status',
-                'is_deleted',
-                'order',
-                'created_at',
-                'updated_at',
-                'created_by',
-                'updated_by'
-            ], 'integer'],
 
         ];
     }
@@ -264,7 +265,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         $model->edu_semester_id = $model->timeOption->edu_semester_id;
         $model->edu_year_id = $model->timeOption->edu_year_id;
         $model->user_id = current_user_id();
-        $model->student_id = self::student()?? 1;
+        $model->student_id = self::student() ?? 1;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

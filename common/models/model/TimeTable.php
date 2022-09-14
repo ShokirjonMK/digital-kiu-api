@@ -90,6 +90,7 @@ class TimeTable extends \yii\db\ActiveRecord
                     'teacher_user_id',
                     'edu_plan_id',
                     'building_id',
+                    'time_option_id',
 
                     'order',
                     'status',
@@ -144,6 +145,10 @@ class TimeTable extends \yii\db\ActiveRecord
                 ['teacher_access_id'], 'exist',
                 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']
             ],
+            [
+                ['time_option_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => TimeOption::className(), 'targetAttribute' => ['time_option_id' => 'id']
+            ],
         ];
     }
 
@@ -157,6 +162,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'teacher_access_id' => 'Teacher Access ID',
             'room_id' => 'Room ID',
             'para_id' => 'Para ID',
+            'time_option_id' => 'time_option_id',
             'course_id' => 'Course ID',
             'edu_plan_id' => 'edu_plan_id',
             'building_id' => 'building_id',
@@ -190,6 +196,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'semester_id',
             'parent_id',
             'lecture_id',
+            'time_option_id',
             'edu_semester_id',
             'edu_year_id',
             'subject_id',
@@ -230,6 +237,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'week',
             'subject',
             'semestr',
+            'timeOption',
 
             'isStudentBusy',
 
@@ -297,6 +305,11 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getEduYear()
     {
         return $this->hasOne(EduYear::className(), ['id' => 'edu_year_id']);
+    }
+
+    public function getTimeOption()
+    {
+        return $this->hasOne(TimeOption::className(), ['id' => 'time_option_id']);
     }
 
     public function getEduPlan()
@@ -443,6 +456,14 @@ class TimeTable extends \yii\db\ActiveRecord
 
         $eduSemester = EduSemestr::findOne($model->edu_semester_id);
 
+        if (isset($post['time_option_id'])) {
+            $model->edu_year_id = $model->timeOption->edu_year_id;
+            $model->edu_plan_id = $model->timeOption->edu_plan_id;
+            $model->edu_year_id = $model->timeOption->edu_year_id;
+            $model->edu_semester_id = $model->timeOption->edu_semester_id;
+            $model->language_id = $model->timeOption->language_id;
+        }
+
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");
             $transaction->rollBack();
@@ -504,11 +525,14 @@ class TimeTable extends \yii\db\ActiveRecord
 
     public static function updateItem($model, $post)
     {
-
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $eduSemester = EduSemestr::findOne($model->edu_semester_id);
+
+        if (isset($post['time_option_id'])) {
+            $childs = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['parent_id' => $model->id]);
+            // $seminars = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['lecture_id' => $model->id]);
+        }
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");

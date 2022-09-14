@@ -49,6 +49,7 @@ $controllers = [
     'time-table',
     'time-option',
     'student-time-table',
+    'student-time-option',
 
     'exam',
     'exam-student',

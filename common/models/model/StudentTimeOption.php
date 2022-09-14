@@ -3,36 +3,31 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use common\models\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "time_table".
+ * This is the model class for table "{{%student_time_option}}".
  *
  * @property int $id
- * @property string $key
+ * @property int $student_id
+ * @property int $user_id
+ * @property int $time_option_id
+ * @property int $edu_year_id
  * @property int $faculty_id
  * @property int $edu_plan_id
- * @property int $edu_year_id
  * @property int $edu_semester_id
- * @property int $lang_id
- * @property int $type
- * @property string $description
- * @property int|null $order
+ * @property int $language_id
  * @property int|null $status
+ * @property int|null $is_deleted
+ * @property int|null $order
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
- * @property int $is_deleted
- *
- * @property Faculty_id $faculty_id
- * @property Edu_plan_id $edu_plan_id
- * @property Edu_year_id $edu_year_id
- * @property Edu_semester_id $edu_semester_id
- * @property Lang_id $lang_id
  */
-class TimeOption extends \yii\db\ActiveRecord
+class StudentTimeOption extends \yii\db\ActiveRecord
 {
     use ResourceTrait;
 
@@ -51,7 +46,7 @@ class TimeOption extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'time_option';
+        return 'student_time_option';
     }
 
     /**
@@ -60,40 +55,19 @@ class TimeOption extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            
             [
-                [
-                    'key',
-                    // 'faculty_id',
-                    // 'edu_plan_id',
-                    'edu_year_id',
-
-                    'edu_semester_id',
-                    'capacity',
-
-                    'language_id',
-                ], 'required'
+                ['student_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']
             ],
             [
-                [
-                    'faculty_id',
-                    'edu_plan_id',
-                    'edu_year_id',
-                    'edu_semester_id',
-                    'language_id',
-                    'capacity',
-
-                    // 'order',
-                    'status',
-                    'created_at',
-                    'updated_at',
-                    'created_by',
-                    'updated_by',
-                    'is_deleted'
-                ], 'integer'
+                ['user_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']
             ],
-            [['description'], 'string'],
-            [['key'], 'string', 'max' => 1],
-            ['key', 'filter', 'filter' => 'ucfirst'],
+            [
+                ['time_option_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => TimeOption::className(), 'targetAttribute' => ['time_option_id' => 'id']
+            ],
             [
                 ['edu_semester_id'], 'exist',
                 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semester_id' => 'id']
@@ -115,8 +89,31 @@ class TimeOption extends \yii\db\ActiveRecord
                 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']
             ],
 
-            [['key'], 'unique', 'targetAttribute' => ['edu_semester_id', 'key', 'language_id']],
 
+            [[
+                // 'student_id',
+                // 'user_id',
+                'time_option_id',
+                // 'edu_year_id'
+            ], 'required'],
+
+            [[
+                'student_id',
+                'user_id',
+                'time_option_id',
+                'edu_year_id',
+                'faculty_id',
+                'edu_plan_id',
+                'edu_semester_id',
+                'language_id',
+                'status',
+                'is_deleted',
+                'order',
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by'
+            ], 'integer'],
 
         ];
     }
@@ -128,16 +125,14 @@ class TimeOption extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'edu_plan_id' => 'edu_plan_id',
-            'edu_year_id' => 'Edu Year ID',
-            'edu_semester_id' => 'Edu Semester ID',
-            'language_id' => 'Language ID',
-            'capacity',
-
-            'key',
+            'student_id',
+            'user_id',
+            'time_option_id',
+            'edu_year_id',
             'faculty_id',
-            'type',
-            'description',
+            'edu_plan_id',
+            'edu_semester_id',
+            'language_id',
 
             // 'order' => _e('Order'),
             'status' => _e('Status'),
@@ -153,20 +148,15 @@ class TimeOption extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
+            'student_id',
+            'user_id',
+            'time_option_id',
+            'edu_year_id',
 
-            'name' => function ($model) {
-                return $model->key . '(' . $this->language->lang_code . ')';
-            },
-
-            'capacity',
-            'key',
             'faculty_id',
             'edu_plan_id',
-            'edu_year_id',
             'edu_semester_id',
             'language_id',
-            'type',
-            'description',
 
             'status',
             'created_at',
@@ -184,12 +174,14 @@ class TimeOption extends \yii\db\ActiveRecord
     {
         $extraFields =  [
 
+            'student',
+            'user',
+            'timeOption',
             'eduYear',
-            'eduPlan',
             'faculty',
+            'eduPlan',
             'eduSemester',
             'language',
-            'timeTables',
 
             'createdBy',
             'updatedBy',
@@ -200,17 +192,16 @@ class TimeOption extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-
-    public function getTimeTables()
+    public function getStudent()
     {
-        return $this->hasMany(TimeTable::className(), ['time_option_id' => 'id']);
+        return $this->hasOne(Student::className(), ['id' => 'student_id']);
     }
 
-    /**
-     * Gets query for [[faculty]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+    public function getTimeOption()
+    {
+        return $this->hasOne(TimeOption::className(), ['id' => 'time_option_id']);
+    }
+
     public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
@@ -255,8 +246,25 @@ class TimeOption extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->edu_plan_id = $model->eduSemester->edu_plan_id;
-        $model->faculty_id = $model->eduPlan->faculty_id;
+        $studentOption = self::find()->where([
+            'time_option_id' => $model->time_option_id,
+            'is_deleted' => 0
+        ])->all();
+
+        if ($model->timeOption->capacity <= count($studentOption)) {
+            $errors[] = _e('This Time Option is Full!');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+
+        $model->edu_plan_id = $model->timeOption->edu_plan_id;
+        $model->faculty_id = $model->timeOption->faculty_id;
+        $model->language_id = $model->timeOption->language_id;
+        $model->edu_semester_id = $model->timeOption->edu_semester_id;
+        $model->edu_year_id = $model->timeOption->edu_year_id;
+        $model->user_id = current_user_id();
+        $model->student_id = self::student()();
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -277,15 +285,6 @@ class TimeOption extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-
-        $model->edu_plan_id = $model->eduSemester->edu_plan_id;
-        $model->faculty_id = $model->eduPlan->faculty_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

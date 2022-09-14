@@ -53,13 +53,11 @@ class m220914_105854_create_time_option_table extends Migration
     public function safeDown()
     {
 
-        $this->dropForeignKey('time_option_user_id', 'time_option');
-        $this->dropForeignKey('time_option_edu_semestr_subject_id', 'time_option');
-        $this->dropForeignKey('time_option_edu_semester_id', 'time_option');
-        $this->dropForeignKey('time_option_subject_id', 'time_option');
-        $this->dropForeignKey('time_option_edu_plan_id', 'time_option');
         $this->dropForeignKey('time_option_faculty_id', 'time_option');
-
+        $this->dropForeignKey('time_option_edu_plan_id', 'time_option');
+        $this->dropForeignKey('time_option_edu_year_id', 'time_option');
+        $this->dropForeignKey('time_option_edu_semester_id', 'time_option');
+        $this->dropForeignKey('time_option_language_id', 'time_option');
 
         $this->dropTable('{{%time_option}}');
     }

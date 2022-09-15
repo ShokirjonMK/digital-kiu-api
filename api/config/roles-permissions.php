@@ -229,12 +229,19 @@ return [
         "teacher-access_index",
         "teacher-access_view",
 
-        // "time-table_create",
-        // "time-table_delete",
+        "time-table_create",
+        "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
-        // "time-table_update",
+        "time-table_update",
         "time-table_view",
+
+
+        "time-option_create",
+        "time-option_delete",
+        "time-option_index",
+        "time-option_update",
+        "time-option_view",
 
         "user-access-type_index",
         "user_create",

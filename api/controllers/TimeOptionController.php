@@ -24,24 +24,24 @@ class TimeOptionController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
-        // $student = $this->student(2);
-        // if ($student) {
-        //     $query->andWhere(['language_id' => $student->edu_lang_id]);
-        //     $query->andWhere(['edu_plan_id' => $student->edu_plan_id]);
-        // } else {
-        //     /*  is Self  */
-        //     $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        //     if ($t['status'] == 1) {
-        //         $query->andFilterWhere([
-        //             'faculty_id' => $t['UserAccess']->table_id
-        //         ]);
-        //     } elseif ($t['status'] == 2) {
-        //         $query->andFilterWhere([
-        //             'faculty_id' => -1
-        //         ]);
-        //     }
-        //     /*  is Self  */
-        // }
+        if (isRole('student')) {
+            $student = $this->student(2);
+            $query->andWhere(['language_id' => $student->edu_lang_id]);
+            $query->andWhere(['edu_plan_id' => $student->edu_plan_id]);
+        } else {
+            /*  is Self  */
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                $query->andFilterWhere([
+                    'faculty_id' => $t['UserAccess']->table_id
+                ]);
+            } elseif ($t['status'] == 2) {
+                $query->andFilterWhere([
+                    'faculty_id' => -1
+                ]);
+            }
+            /*  is Self  */
+        }
 
         // filter
         $query = $this->filterAll($query, $model);

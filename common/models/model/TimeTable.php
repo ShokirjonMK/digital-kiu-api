@@ -469,9 +469,9 @@ class TimeTable extends \yii\db\ActiveRecord
             $model->language_id = $model->timeOption->language_id;
         }
 
-       /*  if (isset($model->parent->time_option_id)) {
+        if (isset($model->parent->time_option_id)) {
             $model->time_option_id = $model->parent->time_option_id;
-        } */
+        }
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");
@@ -538,10 +538,10 @@ class TimeTable extends \yii\db\ActiveRecord
         $errors = [];
         $eduSemester = EduSemestr::findOne($model->edu_semester_id);
 
-       /*  if (isset($post['time_option_id'])) {
+        if (isset($post['time_option_id'])) {
             $childs = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['parent_id' => $model->id]);
             // $seminars = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['lecture_id' => $model->id]);
-        } */
+        }
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");

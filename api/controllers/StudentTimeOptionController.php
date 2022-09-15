@@ -36,17 +36,17 @@ class  StudentTimeOptionController extends ApiActiveController
         $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
 
         if ($student) {
-            // if ($semester) {
-            //     $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
-            // } else {
-            //     $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
-            // }
-            
-            // // return $eduSemestr;
-            // if ($eduSemestr) {
-            //     $query->andWhere([$this->table_name . '.edu_semester_id' => $eduSemestr->id]);
-            // }
-            // $query->andWhere([$this->table_name . '.student_id' => $student->id]);
+            if ($semester) {
+                $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
+            } else {
+                $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
+            }
+
+            // return $eduSemestr;
+            if ($eduSemestr) {
+                $query->andWhere([$this->table_name . '.edu_semester_id' => $eduSemestr->id]);
+            }
+            $query->andWhere([$this->table_name . '.student_id' => $student->id]);
         } else {
             if ($semester) {
                 $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);

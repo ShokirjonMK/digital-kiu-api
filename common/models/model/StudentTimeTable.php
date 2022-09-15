@@ -472,6 +472,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     $newModel = new StudentTimeTable();
                     $newModel->student_id = $model->student_id;
                     $newModel->time_table_id = $timeTableOne->id;
+                    $newModel->time_option_id = $model->time_option_id;
+                    $newModel->student_time_option_id = $model->student_time_option_id;
 
                     /** Child Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
                     $timeTableSameBusyChild = TimeTable::find()->where([

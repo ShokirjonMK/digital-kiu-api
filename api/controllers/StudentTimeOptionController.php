@@ -36,7 +36,6 @@ class  StudentTimeOptionController extends ApiActiveController
 
         $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
 
-
         if ($student) {
             if ($semester) {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);

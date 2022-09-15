@@ -251,6 +251,7 @@ class TimeOption extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }
+
     /**
      * Gets query for [[EduYear]].
      *
@@ -265,6 +266,7 @@ class TimeOption extends \yii\db\ActiveRecord
     {
         return $this->hasOne(EduPlan::className(), ['id' => 'edu_plan_id']);
     }
+
     public function getEduSemester()
     {
         return $this->hasOne(EduSemestr::className(), ['id' => 'edu_semester_id']);

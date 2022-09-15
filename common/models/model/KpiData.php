@@ -365,7 +365,6 @@ class KpiData extends \yii\db\ActiveRecord
         }
         // ***
 
-
         // kpi file saqlaymiz
         $model->kpi_file4 = UploadedFile::getInstancesByName('kpi_file4');
         if ($model->kpi_file4) {
@@ -378,8 +377,6 @@ class KpiData extends \yii\db\ActiveRecord
             }
         }
         // ***
-
-
 
         if (!isset($post['user_id'])) {
             if (!isRole('admin')) {

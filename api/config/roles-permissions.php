@@ -228,6 +228,7 @@ return [
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",
+        "teacher-access_update",
 
         "time-table_create",
         "time-table_delete",

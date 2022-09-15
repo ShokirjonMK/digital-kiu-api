@@ -28,9 +28,11 @@ class TimeTableController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
-        if ($student) {
-            $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
-            $query->andWhere(['language_id' => $student->edu_lang_id]);
+        if (isRole('student')) {
+            if ($student) {
+                $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
+                $query->andWhere(['language_id' => $student->edu_lang_id]);
+            }
         } else {
 
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);

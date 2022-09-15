@@ -259,7 +259,6 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-
         $model->edu_plan_id = $model->timeOption->edu_plan_id;
         $model->faculty_id = $model->timeOption->faculty_id;
         $model->language_id = $model->timeOption->language_id;
@@ -274,15 +273,31 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-
-        // TimeTable::findAll([
-        //     'is_deleted' => 0,
-        //     'time_option_id' => $model->time_option_id
-        // ]);
-
-
+        if (count($errors) > 0) {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         if ($model->save()) {
+            $timeTableParentNull = TimeTable::findAll([
+                'is_deleted' => 0,
+                'time_option_id' => $model->time_option_id,
+                'parent_id' => null
+            ]);
+
+            foreach ($timeTableParentNull as $timeTableParentNullOne) {
+                $studentTimeTableNew = new StudentTimeTable();
+                $studentTimeTableNew->time_table_id = $timeTableParentNullOne->id;
+                $result = StudentTimeTable::createItem($studentTimeTableNew);
+                if (is_array($result)) {
+                    $errors[] = $result;
+                }
+            }
+
+            if (count($errors) > 0) {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
             $transaction->commit();
             return true;
         } else {

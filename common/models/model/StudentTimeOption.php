@@ -274,6 +274,16 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+
+        // TimeTable::findAll([
+        //     'is_deleted' => 0,
+        //     'time_option_id' => $model->time_option_id
+        // ]);
+
+
+
+        87956435241321
+
         if ($model->save()) {
             $transaction->commit();
             return true;

@@ -382,7 +382,9 @@ class KpiData extends \yii\db\ActiveRecord
 
 
         if (!isset($post['user_id'])) {
-            $model->user_id = current_user_id();
+            if (!isRole('admin')) {
+                $model->user_id = current_user_id();
+            }
         }
 
         if (!$model->save()) {

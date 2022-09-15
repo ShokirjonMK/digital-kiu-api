@@ -266,7 +266,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         $model->edu_semester_id = $model->timeOption->edu_semester_id;
         $model->edu_year_id = $model->timeOption->edu_year_id;
         $model->user_id = current_user_id();
-        $model->student_id = self::student() ?? 1;
+        $model->student_id = self::student();
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -281,8 +281,6 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         // ]);
 
 
-
-        87956435241321
 
         if ($model->save()) {
             $transaction->commit();

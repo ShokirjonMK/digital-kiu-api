@@ -228,7 +228,7 @@ return [
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",
-        "teacher-access_view",
+        "teacher-access_update",
 
         "time-table_create",
         "time-table_delete",
@@ -1386,7 +1386,6 @@ return [
 
         'hostel-category-type_index',
         'hostel-category_index',
-
 
         "time-option_index",
         "time-option_view",

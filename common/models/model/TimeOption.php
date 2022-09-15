@@ -190,6 +190,9 @@ class TimeOption extends \yii\db\ActiveRecord
             'eduSemester',
             'language',
             'timeTables',
+            'studentTimeOption',
+            'selected',
+            'selectedCount',
 
             'createdBy',
             'updatedBy',
@@ -200,6 +203,40 @@ class TimeOption extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+
+    public function getStudentTimeOption()
+    {
+        return $this->hasMany(StudentTimeOption::className(), ['time_option_id' => 'id']);
+    }
+
+    public function getSelected()
+    {
+        if (isRole('student')) {
+
+            $studentTimeOption = StudentTimeOption::find()
+                ->where([
+                    'time_option_id' => $this->id,
+                    'student_id' => $this->student()
+                ])
+                ->all();
+
+            if (count($studentTimeOption) > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        $studentTimeOption = StudentTimeOption::find()->where(['time_option_id' => $this->id])->all();
+        return count($studentTimeOption);
+    }
+
+    public function getSelectedCount()
+    {
+
+        $studentTimeOption = StudentTimeOption::find()->where(['time_option_id' => $this->id])->all();
+        return count($studentTimeOption);
+        return count($this->studentTimeOption);
+    }
 
     public function getTimeTables()
     {

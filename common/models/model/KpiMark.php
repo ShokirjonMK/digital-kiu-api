@@ -50,7 +50,7 @@ class KpiMark extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'kpi_category_id',], 'required'],
+            [['user_id', 'kpi_category_id','ball'], 'required'],
             [['ball'], 'double',],
             [['user_id', 'type', 'edu_year_id', 'kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],

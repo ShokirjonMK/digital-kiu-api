@@ -42,26 +42,20 @@ class  StudentTimeOptionController extends ApiActiveController
             } else {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
             }
+            
             // return $eduSemestr;
             if ($eduSemestr) {
-
-                $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
-                    ->select('id')
-                    ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);
+                $query->andWhere([$this->table_name . '.edu_semester_id' => $eduSemestr->id]);
             }
             $query->andWhere([$this->table_name . '.student_id' => $student->id]);
         } else {
             if ($semester) {
                 $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
                 if ($eduSemestr) {
-
-                    $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
-                        ->select('id')
-                        ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);
+                    $query->andWhere([$this->table_name . '.edu_semester_id' => $eduSemestr->id]);
                 }
             }
         }
-
 
         //  Filter from Profile 
         $profile = new Profile();

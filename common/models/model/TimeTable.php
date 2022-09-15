@@ -322,6 +322,11 @@ class TimeTable extends \yii\db\ActiveRecord
         return $this->hasMany(self::className(), ['parent_id' => 'id']);
     }
 
+    public function getParent()
+    {
+        return $this->hasOne(self::className(), ['id' => 'parent_id']);
+    }
+
     public function getSeminar()
     {
         return $this->hasMany(self::className(), ['lecture_id' => 'id'])->onCondition(['parent_id' => null]);
@@ -462,6 +467,10 @@ class TimeTable extends \yii\db\ActiveRecord
             $model->edu_year_id = $model->timeOption->edu_year_id;
             $model->edu_semester_id = $model->timeOption->edu_semester_id;
             $model->language_id = $model->timeOption->language_id;
+        }
+
+        if (isset($model->parent->time_option_id)) {
+            $model->time_option_id = $model->parent->time_option_id;
         }
 
         if (!isset($eduSemester)) {

@@ -228,7 +228,7 @@ return [
         "teacher-access_free",
         "teacher-access_index",
         "teacher-access_view",
-        "teacher-access_update",
+        "teacher-access_view",
 
         "time-table_create",
         "time-table_delete",
@@ -611,7 +611,7 @@ return [
         "teacher-content_view",
         "user-access-type_index",
         "user_index",
-        
+
         "kpi-category_index",
         "kpi-category_view",
         "kpi-data_view",
@@ -1386,6 +1386,17 @@ return [
 
         'hostel-category-type_index',
         'hostel-category_index',
+
+
+        "time-option_index",
+        "time-option_view",
+
+        "student-time-option_create",
+        // "student-time-option_delete",
+        "student-time-option_index",
+        "student-time-option_view",
+
+
     ],
 
     'contenter' => [
@@ -1467,7 +1478,7 @@ return [
         "kpi-data_index",
         // "kpi-data_update",
         "kpi-data_view",
-        
+
         "kpi-mark_create",
         "kpi-mark_delete",
         "kpi-mark_index",

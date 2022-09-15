@@ -232,7 +232,6 @@ class TimeOption extends \yii\db\ActiveRecord
 
     public function getSelectedCount()
     {
-
         $studentTimeOption = StudentTimeOption::find()->where(['time_option_id' => $this->id])->all();
         return count($studentTimeOption);
         return count($this->studentTimeOption);
@@ -240,7 +239,7 @@ class TimeOption extends \yii\db\ActiveRecord
 
     public function getTimeTables()
     {
-        return $this->hasMany(TimeTable::className(), ['time_option_id' => 'id']);
+        return $this->hasMany(TimeTable::className(), ['time_option_id' => 'id'])->onCondition(['parent_id' => null]);
     }
 
     /**

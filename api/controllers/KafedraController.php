@@ -65,20 +65,20 @@ class KafedraController extends ApiActiveController
 
 
 
-        /*  is Self  */
-        $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-        if ($k['status'] == 1) {
+        // /*  is Self  */
+        // $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+        // if ($k['status'] == 1) {
 
-            // return $k['UserAccess']->table_id;
-            $query->where([
-                'in', $this->table_name . '.id', $k['UserAccess']->table_id
-            ])->all();
-        } elseif ($k['status'] == 2) {
-            $query->andFilterWhere([
-                'faculty_id' => -1
-            ]);
-        }
-        /*  is Self  */
+        //     // return $k['UserAccess']->table_id;
+        //     $query->where([
+        //         'in', $this->table_name . '.id', $k['UserAccess']->table_id
+        //     ])->all();
+        // } elseif ($k['status'] == 2) {
+        //     $query->andFilterWhere([
+        //         'faculty_id' => -1
+        //     ]);
+        // }
+        // /*  is Self  */
 
 
         // filter

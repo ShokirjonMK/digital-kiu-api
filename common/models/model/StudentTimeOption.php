@@ -282,6 +282,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             $timeTableParentNull = TimeTable::findAll([
                 'is_deleted' => 0,
                 'time_option_id' => $model->time_option_id,
+                'subject_category_id' => 1,
                 'parent_id' => null
             ]);
 

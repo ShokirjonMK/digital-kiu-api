@@ -1227,7 +1227,7 @@ return [
         // "kpi-data_create",
         // "kpi-data_delete",
         "kpi-data_index",
-        "kpi-data_update",
+        // "kpi-data_update",
         "kpi-data_view",
         "lang-certificate-type_index",
         "lang-certificate-type_view",

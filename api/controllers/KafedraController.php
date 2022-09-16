@@ -47,20 +47,21 @@ class KafedraController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
+            
 
 
-        /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $query->andFilterWhere([
-                'faculty_id' => $t['UserAccess']->table_id
-            ]);
-        } elseif ($t['status'] == 2) {
-            $query->andFilterWhere([
-                'faculty_id' => -1
-            ]);
-        }
-        /*  is Self  */
+        // /*  is Self  */
+        // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+        //     $query->andFilterWhere([
+        //         'faculty_id' => $t['UserAccess']->table_id
+        //     ]);
+        // } elseif ($t['status'] == 2) {
+        //     $query->andFilterWhere([
+        //         'faculty_id' => -1
+        //     ]);
+        // }
+        // /*  is Self  */
 
 
 

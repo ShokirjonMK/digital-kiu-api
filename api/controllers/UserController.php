@@ -139,6 +139,15 @@ class UserController extends ApiActiveController
                 ])
             ]);
         }
+        $facultyId = Yii::$app->request->get('faculty_id');
+        if (isset($facultyId)) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $facultyId,
+                    'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+        }
 
         if (!(isRole('admin')  || isRole('content_assign') || isRole('kpi_check'))) {
             // dd(123);

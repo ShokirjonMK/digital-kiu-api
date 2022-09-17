@@ -238,6 +238,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'subject',
             'semestr',
             'timeOption',
+            'studentTimeTable',
 
             'isStudentBusy',
 
@@ -352,6 +353,12 @@ class TimeTable extends \yii\db\ActiveRecord
         $studentTimeTable = StudentTimeTable::find()->where(['time_table_id' => $this->id])->all();
         return count($studentTimeTable);
     }
+
+    public function getStudentTimeTable()
+    {
+        return $this->hasOne(StudentTimeTable::className(), ['time_table_id' => 'id'])->onCondition(['student_id' => self::student()]);
+    }
+
 
     public function getSelectedCount()
     {

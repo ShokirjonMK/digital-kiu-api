@@ -177,6 +177,7 @@ $routes = [
     /* statistics all */
     // statistic student-count-by-faculty
     'GET <lang:\w{2}>/statistics/student-count-by-faculty' => 'statistic/student-count-by-faculty',
+    'GET <lang:\w{2}>/statistics/kpi-content-store' => 'statistic/kpi-content-store',
 
     // statistic Kafedra Questions Teachers
     'GET <lang:\w{2}>/statistics/kafedra' => 'statistic/kafedra',

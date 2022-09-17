@@ -22,7 +22,6 @@ class UserController extends ApiActiveController
     {
         return [];
     }
-
     public function actionMe()
     {
         $data = null;

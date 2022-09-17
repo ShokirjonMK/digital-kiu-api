@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\resources\User as ResourcesUser;
 use common\models\model\UserStatistic;
 use Yii;
 use common\models\model\Department;
@@ -16,6 +17,8 @@ use common\models\model\ExamStudentAnswerSubQuestion;
 use common\models\model\Faculty;
 use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
+use common\models\model\KpiMark;
+use common\models\model\SubjectContentMark;
 use common\models\model\TeacherAccess;
 use common\models\model\UserStatistic1;
 use common\models\User;
@@ -554,5 +557,55 @@ class StatisticController extends ApiActiveController
         }
 
         return $data;
+    }
+
+
+    public function actionKpiContentStore()
+    {
+        $model = new UserStatistic();
+
+        $query = $model->find()
+            ->with(['profile'])
+            ->andWhere(['users.deleted' => 0])
+            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->groupBy('users.id');
+
+        // dd($query->createCommand()->getRawSql());
+        $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+        $data = [];
+        $errors = [];
+
+        $users = $query->all();
+        foreach ($users as $userOne) {
+
+            $summ = SubjectContentMark::find()
+                ->where(['user_id' => $userOne->id])
+                ->sum('ball');
+            $count = SubjectContentMark::find()
+                ->where(['user_id' => $userOne->id])
+                ->count();
+
+            // $data[$userOne->id]['sum'] = $summ;
+            // $data[$userOne->id]['count'] = $count;
+            if ($count > 0) {
+
+                $newKpiMark = new KpiMark();
+                $newKpiMark->type = 1;
+                $newKpiMark->kpi_category_id = 8;
+                $newKpiMark->user_id = $userOne->id;
+                $newKpiMark->edu_year_id = 16;
+                $newKpiMark->ball = round($summ / $count);
+                $result = KpiMark::createItem($newKpiMark,);
+                if (is_array($result)) {
+                    $errors[] = [$userOne->id => [$newKpiMark, $result]];
+                }
+            }
+        }
+
+        if (count($errors) > 0) {
+            return $errors;
+        }
+        return "ok";
     }
 }

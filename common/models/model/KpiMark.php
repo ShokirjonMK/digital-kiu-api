@@ -120,7 +120,7 @@ class KpiMark extends \yii\db\ActiveRecord
     }
 
 
-    public static function createItem($model, $post)
+    public static function createItem($model, $post = null)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];

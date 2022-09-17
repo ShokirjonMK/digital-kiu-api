@@ -11,6 +11,7 @@ use Yii;
 //use api\resources\Profile;
 use common\models\model\Profile;
 use common\models\model\EncryptPass;
+use common\models\model\Kafedra;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
 use common\models\model\Region;
@@ -259,6 +260,12 @@ class User extends CommonUser
         return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->sum('ball');
         // return $this->hasOne(Profile::className(), ['user_id' => 'id']);
     }
+
+    // public function getKafedra()
+    // {
+    //    return getUserAccess
+    //     return $this->hasOne(Kafedra::className(), ['user_id' => 'id']);
+    // }
 
     public function getProfile()
     {

@@ -174,13 +174,6 @@ class  StudentTimeTableController extends ApiActiveController
         }
 
 
-        if (StudentTimeTable::deleteAll([
-            'in', 'time_table_id',
-            TimeTable::find()->where(['parent_id' => $model->time_table_id])->select('id')
-        ])) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, _e('Child StudentTimeTable not deleted!'), ResponseStatus::BAD_REQUEST);
-        }
-
         // remove model
         $result = StudentTimeTable::findOne($id)->delete();
 

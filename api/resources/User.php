@@ -115,6 +115,8 @@ class User extends CommonUser
             'roles',
             'rolesAll',
 
+            'kpiBall',
+
             'country',
             'region',
             'area',

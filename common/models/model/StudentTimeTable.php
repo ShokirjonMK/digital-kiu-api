@@ -453,9 +453,11 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $model->edu_year_id = $model->timeTable->edu_year_id;
         $model->subject_id = $model->timeTable->subject_id;
         $model->room_id = $model->timeTable->room_id;
+        $model->building_id = $model->timeTable->room->building_id;
         $model->para_id = $model->timeTable->para_id;
         $model->week_id = $model->timeTable->week_id;
         $model->edu_semester_id = $model->timeTable->edu_semester_id;
+        $model->edu_plan_id = $model->timeTable->eduSemestr->edu_plan_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
 
         $model->time_table_parent_id = $model->timeTable->parent_id;

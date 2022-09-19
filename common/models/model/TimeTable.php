@@ -253,10 +253,8 @@ class TimeTable extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-
     public function getSubjectType()
     {
-
         // return 1;
         return EduSemestrSubject::findOne(
             [
@@ -265,7 +263,6 @@ class TimeTable extends \yii\db\ActiveRecord
             ]
         )->subject_type_id;
     }
-
 
     public function getIsStudentBusy()
     {

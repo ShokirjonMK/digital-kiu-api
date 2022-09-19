@@ -233,6 +233,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'selected',
             'selectedCount',
             'eduSemestr',
+            'subjectType',
             'subjectCategory',
             'week',
             'subject',
@@ -251,6 +252,20 @@ class TimeTable extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+
+    public function getSubjectType()
+    {
+
+        // return 1;
+        return EduSemestrSubject::findOne(
+            [
+                'subject_id' => $this->subject_id,
+                'edu_semestr_id' => $this->edu_semester_id,
+            ]
+        )->subject_type_id;
+    }
+
 
     public function getIsStudentBusy()
     {
@@ -297,6 +312,8 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Course::className(), ['id' => 'course_id']);
     }
+
+
 
     /**
      * Gets query for [[EduYear]].

@@ -256,12 +256,20 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getSubjectType()
     {
         // return 1;
-        return EduSemestrSubject::findOne(
+        
+        $eduSemester = EduSemestrSubject::findOne(
             [
                 'subject_id' => $this->subject_id,
                 'edu_semestr_id' => $this->edu_semester_id,
             ]
-        )->subject_type_id;
+            );
+
+            if($eduSemester){
+                return $eduSemester->subject_type_id;
+            }else{
+                return null;
+            }
+        
     }
 
     public function getIsStudentBusy()

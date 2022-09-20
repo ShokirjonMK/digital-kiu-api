@@ -283,7 +283,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
                 ->where([
                     'is_deleted' => 0,
                     'time_option_id' => $model->time_option_id,
-                    'lecture_id' => null,
+                    'subject_category_id' => 1,
                     'parent_id' => null
                 ])
                 ->andWhere(['!=', 'subject_category_id', 2])

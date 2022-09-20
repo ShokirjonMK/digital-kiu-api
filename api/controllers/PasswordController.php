@@ -56,7 +56,7 @@ class PasswordController extends ApiActiveController
                         $model->savePassword($passwordNew, current_user_id());
                     }
                     //**parolni shifrlab saqlaymiz */
-                    $model->savePassword($passwordNew, current_user_id());
+                    // $model->savePassword($passwordNew, current_user_id());
                     //**** */
                     $model->password_hash = \Yii::$app->security->generatePasswordHash($passwordNew);
 

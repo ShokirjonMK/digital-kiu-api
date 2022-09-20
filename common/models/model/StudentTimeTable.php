@@ -361,10 +361,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             return $errors;
         }
 
-        if ($model->subject_category_id == 1 &&  count($studentTimeTable) > 30) {
-            $errors[] = _e('This Time Table is Full! (30)');
-            return $errors;
-        }
+        // if ($model->subject_category_id == 1 &&  count($studentTimeTable) > 30) {
+        //     $errors[] = _e('This Time Table is Full! (30)');
+        //     return $errors;
+        // }
 
 
         /**
@@ -405,10 +405,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             ->andWhere(['student_id' => self::student()])
             ->all();
 
-        if (count($timeTableSelected) > 0) {
-            $errors[] = _e('This subject already selected');
-            return $errors;
-        }
+        // if (count($timeTableSelected) > 0) {
+        //     $errors[] = _e('This subject already selected');
+        //     return $errors;
+        // }
         /** Shu fanni tanlaganmi */
 
         /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */

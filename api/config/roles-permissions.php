@@ -1250,10 +1250,10 @@ return [
         "subject-content_index",
         "subject-content_types",
 
-        "subject-content_create",
+        // "subject-content_create",
 
         "subject-content_update",
-        "subject-content_delete",
+        // "subject-content_delete",
         "subject-content_view",
         "subject-sillabus_index",
         "subject-topic-reference_create",
@@ -1571,5 +1571,12 @@ return [
         "user_logout",
         "user_me",
 
+    ],
+
+    'content_plus' => [
+        "subject-content_create",
+        "subject-content_update",
+        "subject-content_delete",
+        "subject-content_view",
     ]
 ];

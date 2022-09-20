@@ -294,7 +294,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
                 $studentTimeTableNew->time_table_id = $timeTableParentNullOne->id;
                 $studentTimeTableNew->time_option_id = $model->time_option_id;
                 $studentTimeTableNew->student_time_option_id = $model->id;
-                $result = StudentTimeTable::createItemForOption($studentTimeTableNew);
+                $result = StudentTimeTable::createItem($studentTimeTableNew);
                 if (is_array($result)) {
                     $errors[] = $result;
                 }

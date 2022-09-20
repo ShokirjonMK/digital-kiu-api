@@ -402,7 +402,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         $timeTableSelected = self::find()
             ->where(['in', 'time_table_id', $timeTableSame])
-            ->andWhere(['student_id' => self::student()])
+            ->andWhere(['student_id' => $model->student_id])
             ->all();
 
         // if (count($timeTableSelected) > 0) {
@@ -422,7 +422,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         $timeTableSelected = self::find()
             ->where(['in', 'time_table_id', $timeTableSameBusy])
-            ->andWhere(['student_id' => self::student()])
+            ->andWhere(['student_id' => $model->student_id])
             ->all();
 
         if (count($timeTableSelected) > 0) {
@@ -430,7 +430,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             return $errors;
         }
 
-        
+
         /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
 
         //
@@ -608,7 +608,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         $timeTableSelected = self::find()
             ->where(['in', 'time_table_id', $timeTableSame])
-            ->andWhere(['student_id' => self::student()])
+            ->andWhere(['student_id' => $model->student_id])
             ->all();
 
         if (count($timeTableSelected) > 0) {

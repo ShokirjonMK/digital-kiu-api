@@ -1393,13 +1393,13 @@ return [
         "time-option_index",
         "time-option_view",
 
-        // "student-time-option_create",
+        "student-time-option_create",
         // "student-time-option_delete",
         "student-time-option_index",
         "student-time-option_view",
 
 
-        "student-time-table_create",
+        // "student-time-table_create",
         // "student-time-table_delete",
         "student-time-table_index",
         // "student-time-table_update",

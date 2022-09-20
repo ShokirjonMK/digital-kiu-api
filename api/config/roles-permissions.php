@@ -971,7 +971,7 @@ return [
 
     /* tutor tarbiyachi huquqlari */
     'tutor' => [
-        
+
 
         "area_index",
         "citizenship_index",
@@ -1345,11 +1345,6 @@ return [
         "student-exam_view",
 
 
-        "student-time-table_create",
-        "student-time-table_delete",
-        "student-time-table_index",
-        // "student-time-table_update",
-        "student-time-table_view",
 
         "subject-category_index",
         "subject-category_view",
@@ -1402,6 +1397,13 @@ return [
         // "student-time-option_delete",
         "student-time-option_index",
         "student-time-option_view",
+
+
+        // "student-time-table_create",
+        // "student-time-table_delete",
+        "student-time-table_index",
+        // "student-time-table_update",
+        "student-time-table_view",
 
 
     ],

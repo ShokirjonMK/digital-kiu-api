@@ -279,12 +279,15 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
-            $timeTableParentNull = TimeTable::findAll([
-                'is_deleted' => 0,
-                'time_option_id' => $model->time_option_id,
-                'subject_category_id' => 1,
-                'parent_id' => null
-            ]);
+            $timeTableParentNull = TimeTable::find()
+                ->where([
+                    'is_deleted' => 0,
+                    'time_option_id' => $model->time_option_id,
+                    'lecture_id' => null,
+                    'parent_id' => null
+                ])
+                ->andWhere(['!=', 'subject_category_id', 2])
+                ->all();
 
             foreach ($timeTableParentNull as $timeTableParentNullOne) {
                 $studentTimeTableNew = new StudentTimeTable();

@@ -513,10 +513,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     $newModel->time_table_parent_id = $timeTableOne->parent_id;
                     $newModel->time_table_lecture_id = $timeTableOne->lecture_id;
                     $newModel->teacher_user_id = $timeTableOne->teacher_user_id;
-                    
+
                     /**** */
-                    $model->building_id = $timeTableOne->building_id;
-                    $model->edu_plan_id = $timeTableOne->edu_plan_id;
+                    $newModel->building_id = $timeTableOne->building_id;
+                    $newModel->edu_plan_id = $timeTableOne->edu_plan_id;
                     /**** */
 
                     if (!$newModel->save()) {

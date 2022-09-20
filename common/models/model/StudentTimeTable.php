@@ -429,6 +429,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             $errors[] = _e('You are busy in this time!');
             return $errors;
         }
+
+        
         /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
 
         //

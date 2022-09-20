@@ -425,10 +425,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             ->andWhere(['student_id' => $model->student_id])
             ->all();
 
-        if (count($timeTableSelected) > 0) {
-            $errors[] = _e('You are busy in this time!');
-            return $errors;
-        }
+        // if (count($timeTableSelected) > 0) {
+        //     $errors[] = _e('You are busy in this time!');
+        //     return $errors;
+        // }
 
 
         /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
@@ -632,11 +632,11 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             ->andWhere(['student_id' => self::student()])
             ->all();
 
-        if (count($timeTableSelected) > 0) {
-            $errors[] = _e('You are busy in this time!');
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+        // if (count($timeTableSelected) > 0) {
+        //     $errors[] = _e('You are busy in this time!');
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
         /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
 
         //

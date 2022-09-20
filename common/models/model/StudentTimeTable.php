@@ -327,6 +327,199 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     }
 
 
+    public static function createItemForOption($model, $post = null)
+    {
+        $errors = [];
+
+        $student = Student::findOne(['user_id' => Current_user_id()]);
+        if (!isset($student)) {
+            $errors[] = _e('Student not found');
+            return $errors;
+        }
+
+        $model->student_id = self::student();
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+
+        $hasModel = self::findOne([
+            'student_id' => $model->student_id,
+            'time_table_id' => $model->time_table_id,
+        ]);
+
+        $studentCheck = Student::findOne($model->student_id);
+        $timeTableCheck = TimeTable::findOne($model->time_table_id);
+
+        $studentTimeTable = self::find()->where([
+            'time_table_id' => $model->time_table_id,
+            'is_deleted' => 0
+        ])->all();
+
+        if ($model->timeTable->room->capacity <= count($studentTimeTable)) {
+            $errors[] = _e('This Time Table is Full!');
+            return $errors;
+        }
+
+        if ($model->subject_category_id == 1 &&  count($studentTimeTable) > 30) {
+            $errors[] = _e('This Time Table is Full! (30)');
+            return $errors;
+        }
+
+
+        /**
+         *  Student Edu Plan bo'yicha tekshirish
+         */
+
+        if (isset($timeTableCheck)) {
+            if ($timeTableCheck->eduSemestr) {
+                if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+                    $errors[] = $timeTableCheck->eduSemestr;
+                    $errors[] = $studentCheck->edu_plan_id;
+
+                    $errors[] = _e('This Time Table is not for you');
+                    return $errors;
+                }
+            }
+        }
+
+        if (isset($hasModel)) {
+            $errors[] = _e('This Student Time Table already exists');
+            return $errors;
+        }
+
+        //
+
+        /** Shu fanni tanlaganmi */
+        $timeTableSame = TimeTable::find()->where([
+            'edu_semester_id' => $model->timeTable->edu_semester_id,
+            'edu_year_id' => $model->timeTable->edu_year_id,
+            'subject_id' => $model->timeTable->subject_id,
+            'semester_id' => $model->timeTable->semester_id,
+            'subject_category_id' => $model->timeTable->subject_category_id,
+            'parent_id' => null
+        ])->select('id');
+
+        $timeTableSelected = self::find()
+            ->where(['in', 'time_table_id', $timeTableSame])
+            ->andWhere(['student_id' => self::student()])
+            ->all();
+
+        if (count($timeTableSelected) > 0) {
+            $errors[] = _e('This subject already selected');
+            return $errors;
+        }
+        /** Shu fanni tanlaganmi */
+
+        /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+        $timeTableSameBusy = TimeTable::find()->where([
+            'edu_semester_id' => $model->timeTable->edu_semester_id,
+            'edu_year_id' => $model->timeTable->edu_year_id,
+            'semester_id' => $model->timeTable->semester_id,
+            'para_id' => $model->timeTable->para_id,
+            'week_id' => $model->timeTable->week_id,
+        ])->select('id');
+
+        $timeTableSelected = self::find()
+            ->where(['in', 'time_table_id', $timeTableSameBusy])
+            ->andWhere(['student_id' => self::student()])
+            ->all();
+
+        if (count($timeTableSelected) > 0) {
+            $errors[] = _e('You are busy in this time!');
+            return $errors;
+        }
+        /** Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+
+        //
+
+        $model->teacher_access_id = $model->timeTable->teacher_access_id;
+        $model->language_id = $model->timeTable->language_id;
+        $model->course_id = $model->timeTable->course_id;
+        $model->semester_id = $model->timeTable->semester_id;
+        $model->edu_year_id = $model->timeTable->edu_year_id;
+        $model->subject_id = $model->timeTable->subject_id;
+        $model->room_id = $model->timeTable->room_id;
+        $model->building_id = $model->timeTable->room->building_id;
+        $model->para_id = $model->timeTable->para_id;
+        $model->week_id = $model->timeTable->week_id;
+        $model->edu_semester_id = $model->timeTable->edu_semester_id;
+        $model->edu_plan_id = $model->timeTable->eduSemestr->edu_plan_id;
+        $model->subject_category_id = $model->timeTable->subject_category_id;
+
+        $model->time_table_parent_id = $model->timeTable->parent_id;
+        $model->time_table_lecture_id = $model->timeTable->lecture_id;
+        $model->teacher_user_id = $model->timeTable->teacher_user_id;
+
+        if ($model->save()) {
+
+            // Student child larini yozish
+            $timeTables = TimeTable::findAll(['parent_id' => $model->time_table_id]);
+            if (isset($timeTables)) {
+                foreach ($timeTables as $timeTableOne) {
+
+                    $newModel = new StudentTimeTable();
+                    $newModel->student_id = $model->student_id;
+                    $newModel->time_table_id = $timeTableOne->id;
+                    $newModel->time_option_id = $model->time_option_id;
+                    $newModel->student_time_option_id = $model->student_time_option_id;
+
+                    /** Child Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+                    $timeTableSameBusyChild = TimeTable::find()->where([
+                        'edu_semester_id' => $timeTableOne->edu_semester_id,
+                        'edu_year_id' => $timeTableOne->edu_year_id,
+                        'semester_id' => $timeTableOne->semester_id,
+                        'para_id' => $timeTableOne->para_id,
+                        'week_id' => $timeTableOne->week_id,
+                    ])->select('id');
+
+                    $timeTableSelectedChild = self::find()
+                        ->where(['in', 'time_table_id', $timeTableSameBusyChild])
+                        ->andWhere(['student_id' => self::student()])
+                        ->all();
+
+                    if (count($timeTableSelectedChild) > 0) {
+                        $errors[] = _e('You are already busy in this time!');
+                        return $errors;
+                    }
+                    /** Child Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
+
+                    $newModel->teacher_access_id = $timeTableOne->teacher_access_id;
+                    $newModel->language_id = $timeTableOne->language_id;
+                    $newModel->course_id = $timeTableOne->course_id;
+                    $newModel->semester_id = $timeTableOne->semester_id;
+                    $newModel->edu_year_id = $timeTableOne->edu_year_id;
+                    $newModel->subject_id = $timeTableOne->subject_id;
+                    $newModel->room_id = $timeTableOne->room_id;
+                    $newModel->para_id = $timeTableOne->para_id;
+                    $newModel->week_id = $timeTableOne->week_id;
+                    $newModel->edu_semester_id = $timeTableOne->edu_semester_id;
+                    $newModel->subject_category_id = $timeTableOne->subject_category_id;
+
+                    $newModel->time_table_parent_id = $timeTableOne->parent_id;
+                    $newModel->time_table_lecture_id = $timeTableOne->lecture_id;
+                    $newModel->teacher_user_id = $timeTableOne->teacher_user_id;
+
+                    /**** */
+                    $newModel->building_id = $timeTableOne->building_id;
+                    $newModel->edu_plan_id = $timeTableOne->edu_plan_id;
+                    /**** */
+
+                    if (!$newModel->save()) {
+                        $errors[] = _e('Child can not added!');
+                    }
+                }
+            }
+
+            if (count($errors) == 0) {
+                return true;
+            } else {
+                return $errors;
+            }
+        } else {
+            return $errors;
+        }
+    }
     public static function createItem($model, $post = null)
     {
         $transaction = Yii::$app->db->beginTransaction();

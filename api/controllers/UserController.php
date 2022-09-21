@@ -75,6 +75,7 @@ class UserController extends ApiActiveController
                 }
             } else {
                 $errors[] = [_e('User is not active.')];
+                return $this->response(1, _e('User is not active'), $data, null, ResponseStatus::UNAUTHORIZED);
             }
             if (count($errors) == 0) {
                 return $this->response(1, _e('User successfully refreshed'), $data, null, ResponseStatus::OK);

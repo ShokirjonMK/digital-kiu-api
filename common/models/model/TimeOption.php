@@ -191,6 +191,7 @@ class TimeOption extends \yii\db\ActiveRecord
             'language',
             'timeTables',
             'studentTimeOption',
+            'studentTimeOptions',
             'selected',
             'selectedCount',
 
@@ -205,6 +206,11 @@ class TimeOption extends \yii\db\ActiveRecord
 
 
     public function getStudentTimeOption()
+    {
+        return $this->hasMany(StudentTimeOption::className(), ['time_option_id' => 'id']);
+    }
+
+    public function getStudentTimeOptions()
     {
         return $this->hasMany(StudentTimeOption::className(), ['time_option_id' => 'id']);
     }

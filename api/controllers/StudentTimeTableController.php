@@ -173,6 +173,8 @@ class  StudentTimeTableController extends ApiActiveController
             } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours'), ResponseStatus::UPROCESSABLE_ENTITY);
             }
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, _e('You can delete only seminars!'), ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
 

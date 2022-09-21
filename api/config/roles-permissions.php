@@ -726,6 +726,8 @@ return [
         "student_index",
         "student_update",
         "student_view",
+        "student-category_index",
+        "student-category_view",
 
         "subject-category_index",
         "subject-category_view",

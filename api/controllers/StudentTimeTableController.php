@@ -162,16 +162,19 @@ class  StudentTimeTableController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if ($model->created_by == current_user_id() || isRole('admin')) {
-            $result = StudentTimeTable::deleteItem($model);
-            if (!is_array($result)) {
-                return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
+        if ($model->subject_category_id == 2) {
+            if ($model->created_by == current_user_id() || isRole('admin')) {
+                $result = StudentTimeTable::deleteItem($model);
+                if (!is_array($result)) {
+                    return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
+                } else {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+                }
             } else {
-                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+                return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours'), ResponseStatus::UPROCESSABLE_ENTITY);
             }
-        } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours'), ResponseStatus::UPROCESSABLE_ENTITY);
         }
+
 
 
         // remove model

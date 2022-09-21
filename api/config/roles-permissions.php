@@ -1019,12 +1019,14 @@ return [
         "student_view",
         "subject_index",
         "subject_view",
+        
         "time-option_index",
         "time-option_view",
         "time-table_index",
         "time-table_parent-null",
-        "time-table_update",
+        // "time-table_update",
         "time-table_view",
+
         "user_logout",
         "user_me",
         "user_self",

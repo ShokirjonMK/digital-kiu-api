@@ -240,6 +240,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'semestr',
             'timeOption',
             'studentTimeTable',
+            'studentTimeTables',
 
             'isStudentBusy',
 
@@ -256,20 +257,19 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getSubjectType()
     {
         // return 1;
-        
+
         $eduSemester = EduSemestrSubject::findOne(
             [
                 'subject_id' => $this->subject_id,
                 'edu_semestr_id' => $this->edu_semester_id,
             ]
-            );
+        );
 
-            if($eduSemester){
-                return $eduSemester->subject_type_id;
-            }else{
-                return null;
-            }
-        
+        if ($eduSemester) {
+            return $eduSemester->subject_type_id;
+        } else {
+            return null;
+        }
     }
 
     public function getIsStudentBusy()
@@ -379,6 +379,12 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getStudentTimeTable()
     {
         return $this->hasOne(StudentTimeTable::className(), ['time_table_id' => 'id'])->onCondition(['student_id' => self::student()]);
+    }
+
+
+    public function getStudentTimeTables()
+    {
+        return $this->hasMany(StudentTimeTable::className(), ['time_table_id' => 'id']);
     }
 
 

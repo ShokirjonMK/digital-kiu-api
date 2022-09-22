@@ -230,11 +230,11 @@ return [
         "teacher-access_view",
         "teacher-access_update",
 
-        "time-table_create",
-        "time-table_delete",
+        // "time-table_create",
+        // "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
-        "time-table_update",
+        // "time-table_update",
         "time-table_view",
 
 
@@ -1019,7 +1019,7 @@ return [
         "student_view",
         "subject_index",
         "subject_view",
-        
+
         "time-option_index",
         "time-option_view",
         "time-table_index",

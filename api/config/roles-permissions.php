@@ -1455,11 +1455,11 @@ return [
 
     'time_table_plus' => [
 
-        "time-table_create",
+        // "time-table_create",
         "time-table_delete",
-        "time-table_index",
+        // "time-table_index",
         "time-table_parent-null",
-        "time-table_update",
+        // "time-table_update",
         "time-table_view",
 
     ],

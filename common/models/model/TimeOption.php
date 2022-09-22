@@ -232,8 +232,8 @@ class TimeOption extends \yii\db\ActiveRecord
                 return 0;
             }
         }
-        $studentTimeOption = StudentTimeOption::find()->where(['time_option_id' => $this->id])->all();
-        return count($studentTimeOption);
+        // $studentTimeOption = StudentTimeOption::find()->where(['time_option_id' => $this->id])->all();
+        return count($this->studentTimeOption);
     }
 
     public function getSelectedCount()

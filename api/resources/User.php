@@ -126,7 +126,8 @@ class User extends CommonUser
             'permanentArea',
 
             'updatedBy',
-            'createdBy',
+
+            'createdBy'
 
 
         ];

@@ -125,6 +125,10 @@ class User extends CommonUser
             'permanentRegion',
             'permanentArea',
 
+            'updatedBy',
+            'createdBy',
+
+
         ];
 
         return $extraFields;

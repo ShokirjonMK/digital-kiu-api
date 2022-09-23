@@ -1402,7 +1402,6 @@ return [
         "student-time-option_index",
         "student-time-option_view",
 
-
         "student-time-table_create",
         "student-time-table_delete",
         "student-time-table_index",

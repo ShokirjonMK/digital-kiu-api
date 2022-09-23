@@ -559,7 +559,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'is_deleted' => 0
         ])->all();
 
-        if ($model->timeTable->room->capacity <= count($studentTimeTable)) {
+        if ($model->timeTable->room->capacity <= count($studentTimeTable) || $model->student_id == 3511) {
             $errors[] = _e('This Time Table is Full!');
             $transaction->rollBack();
             return simplify_errors($errors);

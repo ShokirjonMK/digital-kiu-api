@@ -575,7 +575,7 @@ class StatisticController extends ApiActiveController
 
         $data = [];
         $errors = [];
-
+        $created_by = 7457;
         $users = $query->all();
         foreach ($users as $userOne) {
 
@@ -585,6 +585,9 @@ class StatisticController extends ApiActiveController
             $count = SubjectContentMark::find()
                 ->where(['user_id' => $userOne->id])
                 ->count();
+
+            $created = SubjectContentMark::findOne(['user_id' => $userOne->id]);
+            if ($created) $created_by  = $created->created_by;
 
             // $data[$userOne->id]['sum'] = $summ;
             // $data[$userOne->id]['count'] = $count;
@@ -597,11 +600,12 @@ class StatisticController extends ApiActiveController
                     $newKpiMark = new KpiMark();
                 }
                 $newKpiMark->type = 1;
+                $newKpiMark->created_by = $created_by;
                 $newKpiMark->kpi_category_id = 8;
                 $newKpiMark->user_id = $userOne->id;
                 $newKpiMark->edu_year_id = 16;
                 $newKpiMark->ball = round($summ / $count);
-                $result = KpiMark::createItem($newKpiMark,);
+                $result = KpiMark::createItemStat($newKpiMark);
                 if (is_array($result)) {
                     $errors[] = [$userOne->id => [$newKpiMark, $result]];
                 }

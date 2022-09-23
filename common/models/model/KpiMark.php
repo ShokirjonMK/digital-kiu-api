@@ -171,6 +171,35 @@ class KpiMark extends \yii\db\ActiveRecord
         }
     }
 
+    public static function createItemStat($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->ball > $model->kpiCategory->max_ball) {
+            $errors[] = _e('Ushbu tur uchun max ball ' . $model->kpiCategory->max_ball);
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
 
     public static function updateItem($model, $post)
     {
@@ -195,13 +224,13 @@ class KpiMark extends \yii\db\ActiveRecord
         }
     }
 
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->created_by = Current_user_id();
-        } else {
-            $this->updated_by = Current_user_id();
-        }
-        return parent::beforeSave($insert);
-    }
+    // public function beforeSave($insert)
+    // {
+    //     if ($insert) {
+    //         $this->created_by = Current_user_id();
+    //     } else {
+    //         $this->updated_by = Current_user_id();
+    //     }
+    //     return parent::beforeSave($insert);
+    // }
 }

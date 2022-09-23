@@ -15,6 +15,7 @@ use common\models\model\Kafedra;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
 use common\models\model\Region;
+use common\models\model\Translate;
 use common\models\model\UserAccess;
 use common\models\model\UserAccessType;
 use common\models\User as CommonUser;
@@ -114,6 +115,7 @@ class User extends CommonUser
             'profile',
             'userAccess',
             'department',
+            'departmentName',
             'here',
 
             'roles',
@@ -326,6 +328,28 @@ class User extends CommonUser
     public function getUserAccess()
     {
         return $this->hasMany(UserAccess::className(), ['user_id' => 'id']);
+    }
+
+    // UserAccess
+    public function getDepartmentName()
+    {
+        $data = [];
+
+        // return $this->userAccess;
+        foreach ($this->userAccess as $userAccessOne) {
+            $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
+            if ($user_access_type) {
+                $sssasaaa = $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]);
+
+                $data[] = $sssasaaa->translate->name;
+            }
+        }
+
+        return $data;
+        // return $this->userAccess->user_access_type_id;
+        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
+
+        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
     }
 
     // UserAccess

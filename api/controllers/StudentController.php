@@ -306,7 +306,8 @@ class  StudentController extends ApiActiveController
             ->where(['student.is_deleted' => 0])
             ->leftJoin('student_time_option', 'student.id = student_time_option.student_id')
             ->leftJoin('profile', 'profile.user_id = student.user_id')
-            ->groupBy('student.id');
+            // ->groupBy('student.id')
+        ;
 
         $query->andWhere(['student_time_option.student_id' => null]);
 

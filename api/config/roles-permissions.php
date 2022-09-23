@@ -1429,7 +1429,7 @@ return [
         'kafedra_index',
         'kafedra_user-access',
         'kafedra_view',
-        // 'subject-content-mark_create',
+        'subject-content-mark_create',
         // 'subject-content-mark_delete',
         'subject-content-mark_index',
         // 'subject-content-mark_update',

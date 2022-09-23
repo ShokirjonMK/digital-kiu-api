@@ -80,6 +80,9 @@ class User extends CommonUser
             'last_name' => function ($model) {
                 return $model->profile->last_name ?? '';
             },
+            'middle_name' => function ($model) {
+                return $model->profile->middle_name ?? '';
+            },
             'role' => function ($model) {
                 return $model->roles ?? '';
             },

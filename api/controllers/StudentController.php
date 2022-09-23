@@ -35,6 +35,9 @@ class  StudentController extends ApiActiveController
     public $getOnlySheet;
     public $leaveRecordByIndex = [];
 
+    public $table_name = 'student';
+    public $controller_name = 'Student';
+
     public function executeArrayLabel($sheetData)
     {
         $keys = ArrayHelper::remove($sheetData, '1');
@@ -250,6 +253,81 @@ class  StudentController extends ApiActiveController
         if (isRole('tutor')) {
             $query = $query->andWhere([
                 'tutor_id' => current_user_id()
+            ]);
+        }
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        $user = new User();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $user->attributes())) {
+                    $query = $query->andFilterWhere(['users.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+                if (in_array($attributeq, $user->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'users.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionTimeOptionNot($lang)
+    {
+        /*********/
+        $model = new Student();
+
+        $query = $model->find()
+            ->with(['profile'])
+            ->where(['student.is_deleted' => 0])
+            ->join('INNER JOIN', 'student_time_option', 'student.id = student_time_option.student_id')
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            // ->groupBy('student.id')
+        ;
+
+        $query->andWhere(['student_time_option.student_id' => null]);
+
+        // return $model->tableName();
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere([
+                $this->table_name . '.faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                $this->table_name . '.faculty_id' => -1
+            ]);
+        }
+
+        /*  is Role check  */
+        if (isRole('tutor')) {
+            $query = $query->andWhere([
+                $this->table_name . '.tutor_id' => current_user_id()
             ]);
         }
 

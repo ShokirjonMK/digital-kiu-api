@@ -163,6 +163,7 @@ $routes = [
 
     /** Student from Hemis via pinfl */
     'GET <lang:\w{2}>/students/get/' => 'student/get',
+    'GET <lang:\w{2}>/students/time-option-not/' => 'student/time-option-not',
 
     /** Hostel Yotoqxona */
     'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',

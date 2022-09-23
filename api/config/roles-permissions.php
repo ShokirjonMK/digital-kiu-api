@@ -729,6 +729,8 @@ return [
         "student-category_index",
         "student-category_view",
 
+        "student_time-option-not",
+
         "subject-category_index",
         "subject-category_view",
         "subject-sillabus_create",
@@ -1017,6 +1019,9 @@ return [
         "student_index",
         "student_update",
         "student_view",
+
+        "student_time-option-not",
+
         "subject_index",
         "subject_view",
 

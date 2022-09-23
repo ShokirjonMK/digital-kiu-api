@@ -339,7 +339,7 @@ class User extends CommonUser
             if ($user_access_type) {
                 $sssasaaa = $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]);
 
-                $data[] = $sssasaaa->translate->name;
+                $data[$userAccessOne->user_access_type_id][] = $sssasaaa->translate->name;
             }
         }
 

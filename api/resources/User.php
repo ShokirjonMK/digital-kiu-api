@@ -117,6 +117,7 @@ class User extends CommonUser
             'rolesAll',
 
             'kpiBall',
+            'kpiMark',
 
             'country',
             'region',
@@ -263,6 +264,11 @@ class User extends CommonUser
     {
         return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->sum('ball');
         // return $this->hasOne(Profile::className(), ['user_id' => 'id']);
+    }
+
+    public function getKpiMark()
+    {
+        return $this->hasMany(KpiMark::className(), ['user_id' => 'id']);
     }
 
     // public function getKafedra()

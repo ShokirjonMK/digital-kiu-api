@@ -50,7 +50,7 @@ class KpiMark extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'kpi_category_id','ball'], 'required'],
+            [['user_id', 'kpi_category_id', 'ball'], 'required'],
             [['ball'], 'double',],
             [['user_id', 'type', 'edu_year_id', 'kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
@@ -103,6 +103,24 @@ class KpiMark extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'user',
+            'kpiCategory',
+            'subjectCategory',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
+    }
+
+
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
@@ -113,6 +131,10 @@ class KpiMark extends \yii\db\ActiveRecord
         return $this->hasOne(KpiCategory::class, ['id' => 'kpi_category_id']);
     }
 
+    public function getSubjectCategory()
+    {
+        return $this->hasOne(SubjectCategory::className(), ['id' => 'subject_category_id']);
+    }
 
     public function getEduYear()
     {

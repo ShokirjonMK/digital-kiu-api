@@ -1045,6 +1045,7 @@ return [
         'building_view',
         'subject-type_index',
         'student-time-table_index',
+        'student-time-option_index',
 
     ],
 

@@ -1039,7 +1039,12 @@ return [
         "user_status-list",
         "week_index",
         "week_view",
-
+        'room_index',
+        'room_view',
+        'building_index',
+        'building_view',
+        'subject-type_index',
+        'student-time-table_index',
 
     ],
 

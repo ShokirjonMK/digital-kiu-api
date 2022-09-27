@@ -1333,9 +1333,9 @@ return [
         "exam_view",
 
         'exam-appeal_view',
-        // "exam-appeal_create",
+         "exam-appeal_create",
         // 'exam-appeal_delete',
-        // 'exam-appeal_update',
+         'exam-appeal_update',
 
         "faculty_view",
         "kafedra_view",

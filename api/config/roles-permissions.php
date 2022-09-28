@@ -976,7 +976,6 @@ return [
     /* tutor tarbiyachi huquqlari */
     'tutor' => [
 
-
         "area_index",
         "citizenship_index",
         "country_index",
@@ -986,6 +985,7 @@ return [
         "direction_index",
         "edu-form_index",
         "edu-plan_index",
+        "edu-plan_view",
         "edu-type_index",
         "edu-year_index",
         "enum_education-degrees",
@@ -1041,11 +1041,18 @@ return [
         "week_view",
         'room_index',
         'room_view',
+        'para_index',
+        'para_view',
+        "edu-semestr_index",
+        "edu-semestr_view",
         'building_index',
         'building_view',
         'subject-type_index',
         'student-time-table_index',
+        'student-time-table_view',
         'student-time-option_index',
+        'student-time-option_view',
+
 
     ],
 

@@ -1006,8 +1006,7 @@ return [
         "notification_index",
         "notification_my",
         "notification_status-list",
-        "para_index",
-        "para_view",
+       
         "password_index",
         "password_update",
         "region_index",
@@ -1052,7 +1051,7 @@ return [
         'student-time-table_view',
         'student-time-option_index',
         'student-time-option_view',
-        
+
     ],
 
 

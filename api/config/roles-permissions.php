@@ -1052,8 +1052,7 @@ return [
         'student-time-table_view',
         'student-time-option_index',
         'student-time-option_view',
-
-
+        
     ],
 
 

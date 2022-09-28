@@ -1006,7 +1006,7 @@ return [
         "notification_index",
         "notification_my",
         "notification_status-list",
-       
+
         "password_index",
         "password_update",
         "region_index",

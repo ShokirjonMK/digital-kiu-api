@@ -204,21 +204,8 @@ class ClubTime extends \yii\db\ActiveRecord
             }
         }
 
-        $has_error = Translate::checkingAll($post);
+        if ($model->save()) {
 
-        if ($has_error['status']) {
-            if ($model->save()) {
-                if (isset($post['description'])) {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id, $post['description']);
-                } else {
-                    Translate::createTranslate($post['name'], $model->tableName(), $model->id);
-                }
-            }
-        } else {
-            $errors = double_errors($errors, $has_error['errors']);
-        }
-
-        if (count($errors) == 0) {
             $transaction->commit();
             return true;
         } else {

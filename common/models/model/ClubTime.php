@@ -99,6 +99,10 @@ class ClubTime extends \yii\db\ActiveRecord
             // 'description' => function ($model) {
             //     return $model->translate->description ?? '';
             // },
+            'room_id',
+            'building_id',
+            'club_category_id',
+            'club_id',
 
             'times',
             'order',
@@ -203,6 +207,8 @@ class ClubTime extends \yii\db\ActiveRecord
                 $model->times = $times;
             }
         }
+
+        $model->club_category_id = $model->club->club_category_id;
 
         if ($model->save()) {
 

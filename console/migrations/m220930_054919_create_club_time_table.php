@@ -22,8 +22,8 @@ class m220930_054919_create_club_time_table extends Migration
 
             'club_category_id' => $this->integer()->null(),
             'club_id' => $this->integer()->notNull(),
-            'room' => $this->integer()->null(),
-            'building' => $this->integer()->null(),
+            'room_id' => $this->integer()->null(),
+            'building_id' => $this->integer()->null(),
 
             'times' => $this->json()->Null(),
 

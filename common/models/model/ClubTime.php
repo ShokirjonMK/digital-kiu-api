@@ -7,21 +7,26 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "building".
+ * This is the model class for table "{{%club_time}}".
  *
  * @property int $id
- * @property string $name
- * @property int|null $order
+ * @property int|null $club_category_id
+ * @property int $club_id
+ * @property int|null $room
+ * @property int|null $building
+ * @property string|null $times
  * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
+ * @property int|null $order
+ * @property int|null $created_at
+ * @property int|null $updated_at
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property Room[] $rooms
+ * @property Club $club
+ * @property ClubCategory $clubCategory
  */
-class Building extends \yii\db\ActiveRecord
+class ClubTime extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -34,12 +39,15 @@ class Building extends \yii\db\ActiveRecord
         ];
     }
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'building';
+        return 'club_time';
     }
 
     /**
@@ -48,20 +56,29 @@ class Building extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['name'], 'required'],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            // [['name'], 'string', 'max' => 255],
+            [['club_category_id', 'club_id', 'room_id', 'building_id', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['club_id', 'times'], 'required'],
+            [['times'], 'safe'],
+            [['status'], 'default', 'value' => 1],
+            [['club_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClubCategory::className(), 'targetAttribute' => ['club_category_id' => 'id']],
+            [['club_id'], 'exist', 'skipOnError' => true, 'targetClass' => Club::className(), 'targetAttribute' => ['club_id' => 'id']],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
+
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            // 'name' => 'Name',
+            'room_id',
+            'building_id',
+            'club_category_id',
+            'club_id',
+            'times',
+
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -79,6 +96,11 @@ class Building extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            // 'description' => function ($model) {
+            //     return $model->translate->description ?? '';
+            // },
+
+            'times',
             'order',
             'status',
             'created_at',
@@ -94,8 +116,11 @@ class Building extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'rooms',
             'description',
+
+            'clubCategory',
+            'clubs',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -103,6 +128,20 @@ class Building extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
     }
 
     public function getInfoRelation()
@@ -120,42 +159,49 @@ class Building extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get Tranlate
+     * Gets query for [[Club]].
      *
-     * @return void
+     * @return \yii\db\ActiveQuery|ClubQuery
      */
-    public function getTranslate()
+    public function getClub()
     {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
-
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
-
-    public function getDescription()
-    {
-        return $this->translate->description ?? '';
+        return $this->hasOne(Club::className(), ['id' => 'club_id']);
     }
 
     /**
-     * Gets query for [[Rooms]].
+     * Gets query for [[ClubCategory]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery|ClubCategoryQuery
      */
-    public function getRooms()
+    public function getClubCategory()
     {
-        return $this->hasMany(Room::className(), ['building_id' => 'id']);
+        return $this->hasOne(ClubCategory::className(), ['id' => 'club_category_id']);
     }
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);
+        }
+
+        if (isset($post['times'])) {
+
+            if (($post['times'][0] == "'") && ($post['times'][strlen($post['times']) - 1] == "'")) {
+                $post['times'] =  substr($post['times'], 1, -1);
+            }
+
+            if (!isJsonMK($post['times'])) {
+                $errors['times'] = [_e('Must be Json')];
+            } else {
+                $times = ((array)json_decode($post['times']));
+
+                $model->times = $times;
+            }
         }
 
         $has_error = Translate::checkingAll($post);
@@ -167,15 +213,17 @@ class Building extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
             }
         } else {
+            $errors = double_errors($errors, $has_error['errors']);
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 
@@ -185,7 +233,25 @@ class Building extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
+
+        if (isset($post['times'])) {
+
+            if (($post['times'][0] == "'") && ($post['times'][strlen($post['times']) - 1] == "'")) {
+                $post['times'] =  substr($post['times'], 1, -1);
+            }
+
+            if (!isJsonMK($post['times'])) {
+                $errors['times'] = [_e('Must be Json')];
+            } else {
+                $times = ((array)json_decode($post['times']));
+
+                $model->times = $times;
+            }
+        }
+        
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
@@ -212,9 +278,9 @@ class Building extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }

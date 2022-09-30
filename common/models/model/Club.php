@@ -7,21 +7,22 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "building".
+ * This is the model class for table "{{%club}}".
  *
  * @property int $id
- * @property string $name
- * @property int|null $order
+ * @property int $club_category_id
  * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
+ * @property int|null $order
+ * @property int|null $created_at
+ * @property int|null $updated_at
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property Room[] $rooms
+ * @property ClubCategory $clubCategory
+ * @property ClubTime[] $clubTimes
  */
-class Building extends \yii\db\ActiveRecord
+class Club extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
@@ -34,12 +35,15 @@ class Building extends \yii\db\ActiveRecord
         ];
     }
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'building';
+        return 'club';
     }
 
     /**
@@ -48,20 +52,29 @@ class Building extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['name'], 'required'],
+            [['club_category_id'], 'required'],
+            [[
+                'club_category_id'
+            ], 'integer'],
+
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            // [['name'], 'string', 'max' => 255],
+            [['status'], 'default', 'value' => 1],
+
+            [['club_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClubCategory::className(), 'targetAttribute' => ['club_category_id' => 'id']],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
+
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            // 'name' => 'Name',
+
+            'club_category_id',
+
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -79,6 +92,12 @@ class Building extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            // 'description' => function ($model) {
+            //     return $model->translate->description ?? '';
+            // },
+
+            'club_category_id',
+
             'order',
             'status',
             'created_at',
@@ -94,8 +113,11 @@ class Building extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'rooms',
             'description',
+
+            'clubCategory',
+            'clubTimes',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -103,6 +125,20 @@ class Building extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getTranslate()
+    {
+        if (Yii::$app->request->get('self') == 1) {
+            return $this->infoRelation[0];
+        }
+
+        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+    }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
     }
 
     public function getInfoRelation()
@@ -120,38 +156,30 @@ class Building extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get Tranlate
+     * Gets query for [[ClubCategory]].
      *
-     * @return void
+     * @return \yii\db\ActiveQuery|ClubCategoryQuery
      */
-    public function getTranslate()
+    public function getClubCategory()
     {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
-
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
-    }
-
-    public function getDescription()
-    {
-        return $this->translate->description ?? '';
+        return $this->hasOne(ClubCategory::className(), ['id' => 'club_category_id']);
     }
 
     /**
-     * Gets query for [[Rooms]].
+     * Gets query for [[ClubTimes]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery|ClubTimeQuery
      */
-    public function getRooms()
+    public function getClubTimes()
     {
-        return $this->hasMany(Room::className(), ['building_id' => 'id']);
+        return $this->hasMany(ClubTime::className(), ['club_id' => 'id']);
     }
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
@@ -167,15 +195,17 @@ class Building extends \yii\db\ActiveRecord
                 } else {
                     Translate::createTranslate($post['name'], $model->tableName(), $model->id);
                 }
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
             }
         } else {
+            $errors = double_errors($errors, $has_error['errors']);
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
             $transaction->rollBack();
-            return double_errors($errors, $has_error['errors']);
+            return simplify_errors($errors);
         }
     }
 
@@ -185,7 +215,10 @@ class Building extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
+
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
@@ -212,9 +245,9 @@ class Building extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }

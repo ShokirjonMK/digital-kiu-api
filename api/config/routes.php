@@ -137,6 +137,10 @@ $controllers = [
     'teacher-content',
     'student-subject-selection',
 
+    'club-category',
+    'club',
+    'club-time',
+
 
     'telegram',
     'test-get-data',

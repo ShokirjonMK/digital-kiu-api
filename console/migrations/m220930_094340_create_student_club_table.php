@@ -21,12 +21,11 @@ class m220930_094340_create_student_club_table extends Migration
 
             'club_category_id' => $this->integer()->null(),
             'club_time_id' => $this->integer()->notNull(),
-            'club_id' => $this->integer()->notNull(),
+            'club_id' => $this->integer()->null(),
             'student_id' => $this->integer()->notNull(),
             'faculty_id' => $this->integer()->null(),
             'edu_plan_id' => $this->integer()->null(),
             'gender' => $this->tinyInteger(1)->defaultValue(1),
-
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

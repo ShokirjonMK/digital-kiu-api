@@ -141,6 +141,8 @@ $controllers = [
     'club',
     'club-time',
 
+    'student-club',
+
 
     'telegram',
     'test-get-data',

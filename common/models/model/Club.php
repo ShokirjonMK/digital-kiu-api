@@ -5,6 +5,7 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%club}}".
@@ -37,6 +38,11 @@ class Club extends \yii\db\ActiveRecord
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
+    const UPLOADS_FOLDER = 'uploads/club/';
+
+    public $club_image;
+    public $clubImageMaxSize = 1024 * 1024 * 3; // 3 Mb
+
 
     /**
      * {@inheritdoc}
@@ -56,11 +62,14 @@ class Club extends \yii\db\ActiveRecord
             [[
                 'club_category_id'
             ], 'integer'],
-
+            [['image'], 'string', 'max' => 255],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
 
             [['club_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClubCategory::className(), 'targetAttribute' => ['club_category_id' => 'id']],
+
+            [['club_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg,jpeg,bmp', 'maxSize' => $this->clubImageMaxSize]
+
         ];
     }
 
@@ -73,6 +82,7 @@ class Club extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
 
+            'image',
             'club_category_id',
 
             'order' => _e('Order'),
@@ -97,6 +107,7 @@ class Club extends \yii\db\ActiveRecord
             // },
 
             'club_category_id',
+            'image',
 
             'order',
             'status',
@@ -188,6 +199,18 @@ class Club extends \yii\db\ActiveRecord
 
         $has_error = Translate::checkingAll($post);
 
+        // club image  saqlaymiz
+        $model->club_image = UploadedFile::getInstancesByName('club_image');
+        if ($model->club_image) {
+            $model->club_image = $model->club_image[0];
+            $clubImageUrl = $model->uploadFile();
+            if ($clubImageUrl) {
+                $model->image = $clubImageUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+
         if ($has_error['status']) {
             if ($model->save()) {
                 if (isset($post['description'])) {
@@ -220,6 +243,18 @@ class Club extends \yii\db\ActiveRecord
         }
 
         $has_error = Translate::checkingUpdate($post);
+        // club image  saqlaymiz
+        $model->club_image = UploadedFile::getInstancesByName('club_image');
+        if ($model->club_image) {
+            $model->club_image = $model->club_image[0];
+            $clubImageUrl = $model->uploadFile();
+            if ($clubImageUrl) {
+                $model->image = $clubImageUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+
         if ($has_error['status']) {
             if ($model->save()) {
                 if (isset($post['name'])) {
@@ -241,6 +276,34 @@ class Club extends \yii\db\ActiveRecord
         }
     }
 
+    public function uploadFile()
+    {
+        if ($this->validate()) {
+            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+
+            $fileName = time() . '_' . \Yii::$app->security->generateRandomString(3) . '.' . $this->club_image->extension;
+
+            $miniUrl = self::UPLOADS_FOLDER . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->club_image->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
+        }
+    }
+
+    // 
+    public function deleteFile($oldFile = NULL)
+    {
+        if (isset($oldFile)) {
+            if (file_exists(HOME_PATH . $oldFile)) {
+                unlink(HOME_PATH  . $oldFile);
+            }
+        }
+        return true;
+    }
 
     public function beforeSave($insert)
     {

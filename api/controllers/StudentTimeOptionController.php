@@ -11,7 +11,7 @@ use common\models\model\Semestr;
 use common\models\model\Student;
 use common\models\model\StudentTimeOption;
 
-class  StudentTimeOptionController extends ApiActiveController
+class StudentTimeOptionController extends ApiActiveController
 {
 
     public $modelClass = 'api\resources\StudentTimeOption';

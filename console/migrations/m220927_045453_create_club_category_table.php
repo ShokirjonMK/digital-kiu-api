@@ -20,6 +20,7 @@ class m220927_045453_create_club_category_table extends Migration
         $this->createTable('{{%club_category}}', [
             'id' => $this->primaryKey(),
             // name in translate
+            // des in translate
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

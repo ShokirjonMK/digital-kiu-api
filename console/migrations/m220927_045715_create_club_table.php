@@ -22,6 +22,7 @@ class m220927_045715_create_club_table extends Migration
 
             'club_category_id' => $this->integer()->notNull(),
             //names in translate
+            //des in translate
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -33,7 +34,6 @@ class m220927_045715_create_club_table extends Migration
         ]);
 
         $this->addForeignKey('ccc_club_club_category_id', 'club', 'club_category_id', 'club_category', 'id');
-
     }
 
     /**

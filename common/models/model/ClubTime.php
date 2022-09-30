@@ -62,6 +62,10 @@ class ClubTime extends \yii\db\ActiveRecord
             [['status'], 'default', 'value' => 1],
             [['club_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClubCategory::className(), 'targetAttribute' => ['club_category_id' => 'id']],
             [['club_id'], 'exist', 'skipOnError' => true, 'targetClass' => Club::className(), 'targetAttribute' => ['club_id' => 'id']],
+            [
+                ['room_id'], 'exist',
+                'skipOnError' => true, 'targetClass' => Room::className(), 'targetAttribute' => ['room_id' => 'id']
+            ],
         ];
     }
 
@@ -124,6 +128,8 @@ class ClubTime extends \yii\db\ActiveRecord
 
             'clubCategory',
             'clubs',
+            'room',
+            'building',
 
             'createdBy',
             'updatedBy',
@@ -172,6 +178,15 @@ class ClubTime extends \yii\db\ActiveRecord
         return $this->hasOne(Club::className(), ['id' => 'club_id']);
     }
 
+    public function getRoom()
+    {
+        return $this->hasOne(Room::className(), ['id' => 'room_id']);
+    }
+    public function getBuilding()
+    {
+        return $this->hasOne(Building::className(), ['id' => 'building_id']);
+    }
+
     /**
      * Gets query for [[ClubCategory]].
      *
@@ -209,6 +224,9 @@ class ClubTime extends \yii\db\ActiveRecord
         }
 
         $model->club_category_id = $model->club->club_category_id;
+        if (isset($post['room_id'])) {
+            $model->building_id = $model->room->building_id;
+        }
 
         if ($model->save()) {
 

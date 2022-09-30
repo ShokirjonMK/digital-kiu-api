@@ -1338,9 +1338,9 @@ return [
         "exam_view",
 
         'exam-appeal_view',
-         "exam-appeal_create",
+        "exam-appeal_create",
         // 'exam-appeal_delete',
-         'exam-appeal_update',
+        'exam-appeal_update',
 
         "faculty_view",
         "kafedra_view",
@@ -1423,6 +1423,17 @@ return [
         "student-time-table_index",
         // "student-time-table_update",
         "student-time-table_view",
+
+        'club-category_view',
+        'club-category_index',
+        'club_index',
+        'club_view',
+        'club-time_index',
+        'club-time_view',
+
+        'student-club_create',
+        'student-club_delete',
+        'student-club_view',
 
 
     ],

@@ -47,6 +47,18 @@ class ClubTimeController extends ApiActiveController
     {
         $model = new ClubTime();
         $post = Yii::$app->request->post();
+
+        // $post['duration'] =  strtotime($post['duration']);
+
+        if (isset($post['duration'])) {
+            $post['duration'] =  str_replace("'", "", $post['duration']);
+            $post['duration'] =  str_replace('"', "", $post['duration']);
+            $duration = explode(":", $post['duration']);
+            $hours = isset($duration[0]) ? $duration[0] : 0;
+            $min = isset($duration[1]) ? $duration[1] : 0;
+            $post['duration'] = (int)$hours * 3600 + (int)$min * 60;
+        }
+
         $this->load($model, $post);
 
         $result = ClubTime::createItem($model, $post);

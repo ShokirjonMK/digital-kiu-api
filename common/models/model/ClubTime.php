@@ -56,7 +56,7 @@ class ClubTime extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['club_category_id', 'club_id', 'room_id', 'building_id', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['club_category_id', 'duration', 'club_id', 'room_id', 'building_id', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['club_id', 'times'], 'required'],
             [['times'], 'safe'],
             [['status'], 'default', 'value' => 1],
@@ -82,6 +82,7 @@ class ClubTime extends \yii\db\ActiveRecord
             'club_category_id',
             'club_id',
             'times',
+            'duration',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -107,6 +108,8 @@ class ClubTime extends \yii\db\ActiveRecord
             'building_id',
             'club_category_id',
             'club_id',
+            'duration',
+
 
             'times',
             'order',

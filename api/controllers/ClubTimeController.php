@@ -107,11 +107,7 @@ class ClubTimeController extends ApiActiveController
         }
 
         // remove model
-        if ($model) {
-            // Translate::deleteTranslate($this->table_name, $model->id);
-            $model->is_deleted = 1;
-            $model->update();
-
+        if ($model->delete()) {
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
 

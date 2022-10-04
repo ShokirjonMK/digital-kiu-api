@@ -215,6 +215,8 @@ class  StudentController extends ApiActiveController
         $hemis = new HemisMK();
 
         $data = $hemis->getHemis($pinfl);
+
+        
         // return $data;
         if (isset($data->success)) {
             if (isset($data->data))

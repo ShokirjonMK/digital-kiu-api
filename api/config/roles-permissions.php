@@ -1270,10 +1270,10 @@ return [
         "subject-content_index",
         "subject-content_types",
 
-        // "subject-content_create",
+        "subject-content_create",
 
         "subject-content_update",
-        // "subject-content_delete",
+        "subject-content_delete",
         "subject-content_view",
         "subject-sillabus_index",
         "subject-topic-reference_create",
@@ -1294,7 +1294,7 @@ return [
         "para_index",
     ],
 
-    /* Student  */
+    /* Student */
     'student' => [
         "user_self",
         "user_selfget",
@@ -1364,8 +1364,6 @@ return [
         "student-exam_update",
         "student-exam_view",
 
-
-
         "subject-category_index",
         "subject-category_view",
         "subject-content_index",
@@ -1434,7 +1432,6 @@ return [
         'student-club_create',
         'student-club_delete',
         'student-club_view',
-
 
     ],
 

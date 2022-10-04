@@ -29,6 +29,9 @@ class StudentClubController extends ApiActiveController
             // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
         ;
 
+        if (isRole('student')) {
+            $query->andWhere([$this->table_name . '.student_id' => $this->student()]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);

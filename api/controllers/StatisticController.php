@@ -385,20 +385,6 @@ class StatisticController extends ApiActiveController
 
     public function actionExamChecking($lang)
     {
-        // $data = [];
-
-        // $examSemeta = TeacherAccess::find()
-        //     ->where(['is_deleted' => 0])
-        //     ->orderBy('user_id')
-        //     ->all();
-
-        // foreach ($examSemeta as $examSemetaOne) {
-        //     $data[$examSemetaOne->id] = $examSemetaOne->teacher;
-        // }
-
-        // return $data;
-
-
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));

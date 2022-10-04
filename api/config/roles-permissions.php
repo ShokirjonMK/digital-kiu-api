@@ -1432,6 +1432,7 @@ return [
         'student-club_create',
         'student-club_delete',
         'student-club_view',
+        "student-club_index",
 
     ],
 

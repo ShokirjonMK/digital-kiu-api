@@ -101,7 +101,8 @@ class Exam extends \yii\db\ActiveRecord
                     'appeal_finish',
                     'created_by',
                     'updated_by',
-                    'is_deleted'
+                    'is_deleted',
+                    'archived'
                 ], 'integer'
             ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
@@ -176,6 +177,8 @@ class Exam extends \yii\db\ActiveRecord
             'is_protected',
             'max_ball',
             'min_ball',
+
+            'archived',
 
             'category',
             'appeal_start',

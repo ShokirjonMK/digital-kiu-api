@@ -80,6 +80,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
+                    'archived',
                 ], 'integer'
             ],
             [['answer'], 'string'],
@@ -149,6 +150,8 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             'appeal_teacher_conclusion',
             'old_ball',
             'is_cheked',
+
+            'archived',
 
             'order',
             'status',

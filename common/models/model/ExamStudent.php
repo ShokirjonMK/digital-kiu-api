@@ -106,7 +106,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'updated_by',
                     'is_deleted',
                     'act',
-                    'type'
+                    'type',
+                    'archived'
                 ], 'integer'
             ],
             [['ball', 'in_ball', 'on1', 'on2'], 'double'],
@@ -184,6 +185,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'type',
             'on1',
             'on2',
+            'archived',
 
             'conclusion',
             'plagiat_file',

@@ -77,6 +77,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
             [
                 [
+                    'archived',
                     'exam_id',
                     'question_id',
                     'parent_id',
@@ -163,6 +164,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'option_id',
             'answer',
             'ball',
+            'archived',
             'max_ball',
             'teacher_access_id',
             'attempt',

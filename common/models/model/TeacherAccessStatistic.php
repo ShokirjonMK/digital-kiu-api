@@ -27,8 +27,8 @@ class TeacherAccessStatistic extends TeacherAccess
             'mustCheckCount' => function ($model) {
                 return $model->mustCheckCount ?? 0;
             },
-            'сheckCount' => function ($model) {
-                return $model->сheckCount ?? 0;
+            'checkCount' => function ($model) {
+                return $model->checkCount ?? 0;
             },
             'actCount' => function ($model) {
                 return $model->actCount ?? 0;
@@ -108,6 +108,27 @@ class TeacherAccessStatistic extends TeacherAccess
 
     public function getCheckCount()
     {
+        $model = new ExamStudent();
+        $query = $model->find();
+        $query = $query->andWhere([$model->tableName() . '.teacher_access_id' => $this->id]);
+
+        $query = $query->andWhere([
+            'in', 'id',
+            ExamStudentAnswer::find()
+                ->select('exam_student_id')->where([
+                    'in', 'id',
+                    ExamStudentAnswerSubQuestion::find()
+                        ->select('exam_student_answer_id')
+                        ->andWhere(['IS NOT', 'ball', null])
+                        ->andWhere(['IS NOT', 'teacher_conclusion', null])
+                ])
+        ]);
+
+        $query = $query->all();
+
+        return count($query);
+
+        /*** */
         $model = new ExamStudent();
         $query = $model->find();
         $query = $query->andWhere([$model->tableName() . '.teacher_access_id' => $this->id])

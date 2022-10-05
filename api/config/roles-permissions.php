@@ -1606,5 +1606,29 @@ return [
         // "subject-content_update",
         // "subject-content_delete",
         // "subject-content_view",
-    ]
+    ],
+
+    'club' => [
+        "club-time_create",
+        "club-time_delete",
+        "club-time_index",
+        "club-time_update",
+        "club-time_view",
+        "club-category_create",
+        "club-category_delete",
+        "club-category_index",
+        "club-category_update",
+        "club-category_view",
+        "club_create",
+        "club_delete",
+        "club_index",
+        "club_update",
+        "club_view",
+        "student-club_delete",
+        "student-club_index",
+        "student-club_view",
+        "week_index",
+        "week_view",
+
+    ],
 ];

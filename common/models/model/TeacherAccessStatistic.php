@@ -111,6 +111,11 @@ class TeacherAccessStatistic extends TeacherAccess
         return count($query->all());
     }
 
+    // public function getMustCheckCount0()
+    // {
+
+    // }
+
     public function getMustCheckCount()
     {
         $model = new ExamStudent();
@@ -121,7 +126,7 @@ class TeacherAccessStatistic extends TeacherAccess
             // ->andWhere(['not', ['esasq.ball' => null, 'esasq.teacher_conclusion' => null]])
         ;
         $query->andWhere([
-            'or',
+            'and',
             ['exam_student_answer_sub_question.ball' => null],
             ['exam_student_answer_sub_question.teacher_conclusion' => null]
         ])

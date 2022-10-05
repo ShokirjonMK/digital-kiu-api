@@ -196,7 +196,7 @@ class TeacherAccessStatistic extends TeacherAccess
             ExamStudentAnswer::find()
                 ->select('exam_student_id')
                 ->andWhere([
-                    'not in', 'id',
+                    'in', 'id',
                     ExamStudentAnswerSubQuestion::find()
                         ->select('exam_student_answer_id')
                 ])

@@ -33,6 +33,11 @@ class TeacherAccessController extends ApiActiveController
             ->with(['teacher'])
             ->andWhere(['is_deleted' => 0]);
 
+
+        if (isRole(('teacher') && (!isRole('mudir')))) {
+            $query->andWhere(['user_id' => current_user_id()]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 

@@ -1287,6 +1287,8 @@ return [
         "user_logout",
         "user_me",
 
+        "teacher-access_index",
+        "teacher-access_view",
         "time-table_index",
         "time-table_parent-null",
         "time-table_view",

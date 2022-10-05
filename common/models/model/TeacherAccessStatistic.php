@@ -27,6 +27,9 @@ class TeacherAccessStatistic extends TeacherAccess
             'mustCheckCount' => function ($model) {
                 return $model->mustCheckCount ?? 0;
             },
+            'сheckCount' => function ($model) {
+                return $model->сheckCount ?? 0;
+            },
             'actCount' => function ($model) {
                 return $model->actCount ?? 0;
             },

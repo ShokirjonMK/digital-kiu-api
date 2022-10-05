@@ -16,6 +16,7 @@ class m220930_094340_create_student_club_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('student_club');
         }
+
         $this->createTable('{{%student_club}}', [
             'id' => $this->primaryKey(),
 
@@ -49,7 +50,6 @@ class m220930_094340_create_student_club_table extends Migration
      */
     public function safeDown()
     {
-
         $this->dropForeignKey('ctcc_student_club_club_category_id', 'student_club');
         $this->dropForeignKey('ctct_student_club_club_time_id', 'student_club');
         $this->dropForeignKey('ctct_student_club_club_id', 'student_club');

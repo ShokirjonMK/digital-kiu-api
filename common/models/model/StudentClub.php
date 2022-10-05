@@ -67,6 +67,7 @@ class StudentClub extends \yii\db\ActiveRecord
             [['club_time_id'], 'required'],
             [['club_category_id', 'club_time_id', 'club_id', 'student_id', 'faculty_id', 'edu_plan_id', 'gender', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
+            [['description'], 'string'],
 
             [['club_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClubCategory::className(), 'targetAttribute' => ['club_category_id' => 'id']],
             [['club_id'], 'exist', 'skipOnError' => true, 'targetClass' => Club::className(), 'targetAttribute' => ['club_id' => 'id']],
@@ -93,6 +94,7 @@ class StudentClub extends \yii\db\ActiveRecord
             'faculty_id',
             'edu_plan_id',
             'gender',
+            'description',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -116,6 +118,7 @@ class StudentClub extends \yii\db\ActiveRecord
             // 'faculty_id',
             // 'edu_plan_id',
             // 'gender',
+            'description',
 
 
             'order',

@@ -14,9 +14,7 @@ class TeacherAccessStatistic extends TeacherAccess
             'subject' => function ($model) {
                 return $model->subject->name ?? '';
             },
-            // 'examStudent' => function ($model) {
-            //     return $model->examStudent ?? 0;
-            // },
+
             'examStudentCount' => function ($model) {
                 return $model->examStudentCount ?? 0;
             },
@@ -26,6 +24,19 @@ class TeacherAccessStatistic extends TeacherAccess
             'examId' => function ($model) {
                 return $model->examSemeta->exam->id ?? '';
             },
+            'mustCheckCount' => function ($model) {
+                return $model->mustCheckCount ?? 0;
+            },
+            'actCount' => function ($model) {
+                return $model->actCount ?? 0;
+            },
+            'notAnswerCount' => function ($model) {
+                return $model->examStudentNotAnswerCount ?? 0;
+            },
+
+
+
+
             // 'examSemeta' => function ($model) {
             //     return $model->examSemeta; //->exam->name ?? '';
             // },
@@ -35,21 +46,15 @@ class TeacherAccessStatistic extends TeacherAccess
             // 'checkedCount' => function ($model) {
             //     return $model->checkCount ?? 0;
             // },
-            'mustCheckCount' => function ($model) {
-                return $model->mustCheckCount ?? 0;
-            },
+
             // 'percent' => function ($model) {
             //     return $model->checkCount ?  ceil($model->checkCount / $model->examStudentCount * 100) : 0;
             // },
-            'actCount' => function ($model) {
-                return $model->actCount ?? 0;
-            },
+
             // 'hasAnswerCount' => function ($model) {
             //     return $model->notCount ?? 0;
             // },
-            'notAnswerCount' => function ($model) {
-                return $model->examStudentNotAnswerCount ?? 0;
-            },
+
             // 'examStudent' => function ($model) {
             //     return $model->examStudent ?? 0;
             // },
@@ -59,7 +64,9 @@ class TeacherAccessStatistic extends TeacherAccess
             // 'updated_at',
             // 'created_by',
             // 'updated_by',
-
+            // 'examStudent' => function ($model) {
+            //     return $model->examStudent ?? 0;
+            // },
         ];
 
         return $fields;
@@ -164,7 +171,6 @@ class TeacherAccessStatistic extends TeacherAccess
             'not in', 'id',
             ExamStudentAnswer::find()
                 ->select('exam_student_id')
-                ->where(['teacher_access_id' => $this->id])
         ])->all();
 
         return count($query);

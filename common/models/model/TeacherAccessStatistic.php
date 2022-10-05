@@ -195,6 +195,11 @@ class TeacherAccessStatistic extends TeacherAccess
             'not in', 'id',
             ExamStudentAnswer::find()
                 ->select('exam_student_id')
+                ->andWhere([
+                    'not in', 'id',
+                    ExamStudentAnswerSubQuestion::find()
+                        ->select('exam_student_answer_id')
+                ])
         ])->all();
 
         return count($query);

@@ -220,6 +220,7 @@ class TimeTable extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+            'attendance',
             'course',
             'eduYear',
             'eduPlan',
@@ -241,7 +242,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'timeOption',
             'studentTimeTable',
             'studentTimeTables',
-
+            'now',
             'isStudentBusy',
 
             'teacherAccess',
@@ -253,6 +254,50 @@ class TimeTable extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+
+    public function getAttendance()
+    {
+        // if (($this->week_id == date('w')) && ($this->para->start_time <  date('H:i')) && ($this->para->end_time >  date('H:i'))) {
+        if (($this->week_id == date('w')) && ($this->para->start_time <  date('H:i'))) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public function getNow()
+    {
+
+        return [
+            time(),
+            date('Y-m-d H:i:s'),
+            date('H:i'),
+            date('m'),
+            date('M'),
+            date('w'),
+            date('W'),
+            date('w', strtotime('2022-10-05')),
+        ];
+
+        return [
+            $this->para->start_time,
+            date('H:i'),
+            ($this->para->start_time <  date('H:i')) ? 1 : 0,
+            $this->para->end_time,
+            ($this->para->end_time >  date('H:i')) ? 1 : 0,
+
+        ];
+
+        if ($this->week_id == date('w')) {
+            return 1;
+        }
+
+        if ($this->para->start_time <  date('H:i')) {
+            return 1;
+        }
+    }
+
 
     public function getSubjectType()
     {
@@ -296,6 +341,7 @@ class TimeTable extends \yii\db\ActiveRecord
         }
         return 0;
     }
+
 
     /**
      * Gets query for [

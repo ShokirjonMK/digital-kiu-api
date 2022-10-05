@@ -33,6 +33,9 @@ class SubjectTopicController extends ApiActiveController
         if (isRole(('teacher') && (!isRole('mudir'))) && (isRole('teacher') && (!isRole('contenter')))) {
             $query->andWhere(['in', 'lang_id', $this->teacher_access(1, ['language_id'])]);
         }
+        if (isRole('student')) {
+            $query->andWhere(['lang_id' => $this->student(2) ?? $this->student(2)->edu_lang_id]);
+        }
 
         // dd($query->createCommand()->getSql());
 

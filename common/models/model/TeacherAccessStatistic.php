@@ -32,9 +32,9 @@ class TeacherAccessStatistic extends TeacherAccess
             // 'exams' => function ($model) {
             //     return $model->exams->name ?? '';
             // },
-            'checkedCount' => function ($model) {
-                return $model->checkCount ?? 0;
-            },
+            // 'checkedCount' => function ($model) {
+            //     return $model->checkCount ?? 0;
+            // },
             'mustCheckCount' => function ($model) {
                 return $model->mustCheckCount ?? 0;
             },
@@ -44,8 +44,11 @@ class TeacherAccessStatistic extends TeacherAccess
             'actCount' => function ($model) {
                 return $model->actCount ?? 0;
             },
-            'hasAnswerCount' => function ($model) {
-                return $model->notCount ?? 0;
+            // 'hasAnswerCount' => function ($model) {
+            //     return $model->notCount ?? 0;
+            // },
+            'notAnswerCount' => function ($model) {
+                return $model->examStudentNotAnswerCount ?? 0;
             },
             // 'examStudent' => function ($model) {
             //     return $model->examStudent ?? 0;
@@ -78,6 +81,7 @@ class TeacherAccessStatistic extends TeacherAccess
             'mustCheckCount',
 
 
+            'examStudentNotAnswerCount',
             'actCount',
             'notCount',
 
@@ -130,7 +134,8 @@ class TeacherAccessStatistic extends TeacherAccess
             ['exam_student_answer_sub_question.ball' => null],
             ['exam_student_answer_sub_question.teacher_conclusion' => null]
         ])
-            ->groupBy('exam_student.id');
+            // ->groupBy('exam_student.id')
+        ;
 
         // dd($query->createCommand()->getRawSql());
         // dd("qweqwe");
@@ -148,6 +153,23 @@ class TeacherAccessStatistic extends TeacherAccess
     {
         return $this->hasMany(ExamStudent::className(), ['teacher_access_id' => 'id'])->onCondition(['act' => 1]);
     }
+
+    public function getExamStudentNotAnswerCount()
+    {
+        $model = new ExamStudent();
+        $query = $model->find();
+        $query = $query->andWhere([$model->tableName() . '.teacher_access_id' => $this->id]);
+
+        $query = $query->andWhere([
+            'not in', 'id',
+            ExamStudentAnswer::find()
+                ->select('exam_student_id')
+                ->where(['teacher_access_id' => $this->id])
+        ])->all();
+
+        return count($query);
+    }
+
 
     public function getExamStudentNot()
     {

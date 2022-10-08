@@ -43,14 +43,6 @@ class m221008_105914_create_attend_reason_table extends Migration
         $this->addForeignKey('ars_mk_attend_reason_faculty_id', 'attend_reason', 'faculty_id', 'faculty', 'id');
         $this->addForeignKey('ars_mk_attend_reason_edu_plan_id', 'attend_reason', 'edu_plan_id', 'edu_plan', 'id');
         $this->addForeignKey('ars_mk_attend_reason_subject', 'attend_reason', 'subject_id', 'subject', 'id');
-
-
-
-        $this->addForeignKey('amk_attend_time_table', 'attend', 'time_table_id', 'time_table', 'id');
-        $this->addForeignKey('amk_attend_subject_category', 'attend', 'subject_category_id', 'subject_category', 'id');
-        $this->addForeignKey('amk_attend_time_option', 'attend', 'time_option_id', 'time_option', 'id');
-        $this->addForeignKey('amk_attend_edu_year', 'attend', 'edu_year_id', 'edu_year', 'id');
-        $this->addForeignKey('amk_attend_edu_semestr', 'attend', 'edu_semestr_id', 'edu_semestr', 'id');
     }
 
     /**

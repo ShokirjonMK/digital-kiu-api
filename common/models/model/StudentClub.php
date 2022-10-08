@@ -223,7 +223,7 @@ class StudentClub extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $student = self::student(2, 6967);
+        $student = self::student(2);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
             $transaction->rollBack();

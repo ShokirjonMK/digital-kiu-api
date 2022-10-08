@@ -17,6 +17,7 @@ use common\models\model\Faculty;
 use common\models\model\Profile;
 use common\models\model\Student;
 use common\models\model\StudentExport;
+use common\models\model\StudentPinn;
 use Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
@@ -210,13 +211,33 @@ class  StudentController extends ApiActiveController
         die();
     } */
 
+    public function actionByPinfl($pinfl)
+    {
+        $model = new StudentPinn();
+        $query = $model->find()
+            // ->with(['profile'])
+            // ->where(['student.is_deleted' => 0])
+            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            // ->groupBy('student.id')
+        ;
+        $query->andFilterWhere([
+            'profile.passport_pin' => $pinfl
+        ]);
+
+        $data = $query->one();
+        if ($data) {
+            return $this->response(1, _e('Success'), $data);
+        }
+        return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+    }
+
     public function actionGet($pinfl)
     {
         $hemis = new HemisMK();
 
         $data = $hemis->getHemis($pinfl);
 
-        
+
         // return $data;
         if (isset($data->success)) {
             if (isset($data->data))

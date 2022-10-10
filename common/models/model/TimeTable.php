@@ -391,6 +391,7 @@ class TimeTable extends \yii\db\ActiveRecord
         $date = Yii::$app->request->get('date');
 
         if (isset($date)) {
+            $date = date("Y-m-d", strtotime($date));
             return $this->hasMany(Attend::className(), ['time_table_id' => 'id'])->onCondition(['date' => $date])->orderBy('date');
         }
 

@@ -250,6 +250,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'eduSemestr',
             'teacher',
             'building',
+            'lecture',
             /** */
 
             'createdBy',
@@ -441,6 +442,11 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getSeminar()
     {
         return $this->hasMany(self::className(), ['lecture_id' => 'id'])->onCondition(['parent_id' => null]);
+    }
+
+    public function getLecture()
+    {
+        return $this->hasOne(self::className(), ['id' => 'lecture_id'])->onCondition(['parent_id' => null]);
     }
 
     public function getSelected()

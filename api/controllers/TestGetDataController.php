@@ -34,12 +34,16 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-    //    return LoginHistory::createItemLogin();
+        //    return LoginHistory::createItemLogin();
 
         // return getIpAddressData();
 
         // return 1;
-        return MipTokenGen::getToken();
+        $data = MipTokenGen::getToken();
+
+        return $this->response(1, _e('Success'), $data);
+
+
         $mk = new MipService();
         $pinpp = "30111975890051";
         $doc_give_date = "2014-12-09";

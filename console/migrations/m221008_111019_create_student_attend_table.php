@@ -35,6 +35,7 @@ class m221008_111019_create_student_attend_table extends Migration
             'faculty_id' => $this->integer()->null(),
             'course_id' => $this->integer()->null(),
             'edu_plan_id' => $this->integer()->null(),
+            'semestr_id' => $this->integer()->null(),
             'type' => $this->tinyInteger(1)->defaultValue(1)->comment('1 kuz 2 bohor'),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),

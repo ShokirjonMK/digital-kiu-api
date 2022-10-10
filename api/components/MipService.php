@@ -141,7 +141,6 @@ class MipService
         }
 
 
-
         $response = curl_exec($mk_curl);
 
         if (curl_errno($mk_curl)) {

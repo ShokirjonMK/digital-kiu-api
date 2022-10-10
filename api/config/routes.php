@@ -140,8 +140,11 @@ $controllers = [
     'club-category',
     'club',
     'club-time',
-
+    
     'student-club',
+    
+    'attend',
+
 
 
     'telegram',

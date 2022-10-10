@@ -30,6 +30,7 @@ class m221008_102604_create_attend_table extends Migration
             'edu_semestr_id' => $this->integer()->notNull(),
             'faculty_id' => $this->integer()->null(),
             'edu_plan_id' => $this->integer()->null(),
+            'semestr_id' => $this->integer()->null(),
 
             'type' => $this->tinyInteger(1)->defaultValue(1)->comment('1 kuz 2 bohor'),
 

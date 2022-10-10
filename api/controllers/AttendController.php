@@ -48,6 +48,10 @@ class AttendController extends ApiActiveController
     {
         $model = new Attend();
         $post = Yii::$app->request->post();
+        if (!isset($post['date'])) {
+            $post['date'] = date('Y-m-d');
+        }
+
         $this->load($model, $post);
 
         $result = Attend::createItem($model, $post);
@@ -65,6 +69,7 @@ class AttendController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
+        unset($post['date']);
         $this->load($model, $post);
         $result = Attend::updateItem($model, $post);
         if (!is_array($result)) {
@@ -98,7 +103,9 @@ class AttendController extends ApiActiveController
         // remove model
         if ($model) {
 
-            $model->delete();
+            // $model->delete();
+            $model->is_deleted = 1;
+            $model->update();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

@@ -220,32 +220,38 @@ class TimeTable extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
+
+            /** */
             'attendance',
+            'now',
+            'subjectType',
+            'isStudentBusy',
+            'subjectCategory',
             'course',
+            'attends',
+            'studentAttends',
             'eduYear',
+            'timeOption',
             'eduPlan',
             'child',
+            'parent',
             'seminar',
+            'selected',
+            'studentTimeTable',
+            'studentTimeTables',
+            'selectedCount',
             'language',
-            'teacher',
-            'building',
             'para',
             'room',
-            'selected',
-            'selectedCount',
-            'eduSemestr',
-            'subjectType',
-            'subjectCategory',
             'week',
             'subject',
             'semestr',
-            'timeOption',
-            'studentTimeTable',
-            'studentTimeTables',
-            'now',
-            'isStudentBusy',
-
             'teacherAccess',
+            'eduSemestr',
+            'teacher',
+            'building',
+            /** */
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -258,6 +264,17 @@ class TimeTable extends \yii\db\ActiveRecord
 
     public function getAttendance()
     {
+        $date = Yii::$app->request->get('date');
+
+        if (isset($date)) {
+            // if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date))) && ($this->para->end_time >  date('H:i', strtotime($date)))) {
+            if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date)))) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
         // if (($this->week_id == date('w')) && ($this->para->start_time <  date('H:i')) && ($this->para->end_time >  date('H:i'))) {
         if (($this->week_id == date('w')) && ($this->para->start_time <  date('H:i'))) {
             return 1;
@@ -364,7 +381,25 @@ class TimeTable extends \yii\db\ActiveRecord
         return $this->hasOne(Course::className(), ['id' => 'course_id']);
     }
 
+    /**
+     * Gets query for [[Attends]].
+     *
+     * @return \yii\db\ActiveQuery|AttendQuery
+     */
+    public function getAttends()
+    {
+        return $this->hasMany(Attend::className(), ['time_table_id' => 'id']);
+    }
 
+    /**
+     * Gets query for [[StudentAttends]].
+     *
+     * @return \yii\db\ActiveQuery|StudentAttendQuery
+     */
+    public function getStudentAttends()
+    {
+        return $this->hasMany(StudentAttend::className(), ['time_table_id' => 'id']);
+    }
 
     /**
      * Gets query for [[EduYear]].

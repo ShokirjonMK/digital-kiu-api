@@ -96,6 +96,11 @@ class Attend extends \yii\db\ActiveRecord
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
             [['time_option_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeOption::className(), 'targetAttribute' => ['time_option_id' => 'id']],
             [['time_table_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeTable::className(), 'targetAttribute' => ['time_table_id' => 'id']],
+
+            // ['time_table_id', 'unique', 'targetAttribute' => ['time_table_id', 'date']],
+            [['time_table_id'], 'unique', 'targetAttribute' => ['time_table_id', 'date'], 'message' => "This TimeTable already exists in this date"],
+
+
         ];
     }
 
@@ -143,7 +148,6 @@ class Attend extends \yii\db\ActiveRecord
             'edu_semestr_id',
             'faculty_id',
             'edu_plan_id',
-
             'type',
 
 
@@ -281,12 +285,7 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        /* $student = self::student(2);
-        if (!isset($student)) {
-            $errors[] = _e('Student not found');
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        } */
+        $t = false;
 
         if (isset($post['student_ids'])) {
 
@@ -299,6 +298,7 @@ class Attend extends \yii\db\ActiveRecord
             } else {
                 $student_ids = ((array)json_decode($post['student_ids']));
                 $model->student_ids = $student_ids;
+                $t = true;
             }
         }
 
@@ -307,9 +307,11 @@ class Attend extends \yii\db\ActiveRecord
         $model->subject_category_id = $model->timeTable->subject_category_id;
         $model->time_option_id = $model->timeTable->time_option_id;
         $model->edu_year_id = $model->timeTable->edu_year_id;
-        $model->edu_semestr_id = $model->timeTable->edu_semestr_id;
-        $model->faculty_id = $model->timeTable->faculty_id;
+        $model->edu_semestr_id = $model->timeTable->edu_semester_id;
+        $model->faculty_id = $model->timeTable->eduPlan->faculty_id;
         $model->edu_plan_id = $model->timeTable->edu_plan_id;
+        $model->type = $model->eduSemestr->semestr->type;
+        $model->semestr_id = $model->eduSemestr->semestr_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -319,10 +321,42 @@ class Attend extends \yii\db\ActiveRecord
 
         if ($model->save()) {
 
-            foreach ($model->student_ids as $student_id) {
-                /** new Student Attent here */
+            if ($t) {
+                foreach ($model->student_ids as $student_id) {
+                    /** new Student Attent here */
+
+                    /** Checking student is really choos this time table */
+
+                    /** Checking student is really choos this time table */
+                    $newStudentAttend = new StudentAttend();
+                    $newStudentAttend->student_id = $student_id;
+                    $newStudentAttend->attend_id = $model->id;
+                    $newStudentAttend->time_table_id = $model->time_table_id;
+                    $newStudentAttend->subject_id = $model->subject_id;
+                    $newStudentAttend->date = $model->date;
+                    $newStudentAttend->subject_category_id = $model->subject_category_id;
+                    $newStudentAttend->edu_year_id = $model->edu_year_id;
+                    $newStudentAttend->time_option_id = $model->time_option_id;
+                    $newStudentAttend->edu_semestr_id = $model->edu_semestr_id;
+                    $newStudentAttend->faculty_id = $model->faculty_id;
+                    $newStudentAttend->course_id = $model->timeTable->course_id;
+                    $newStudentAttend->edu_plan_id = $model->edu_plan_id;
+                    $newStudentAttend->type = $model->type;
+                    $newStudentAttend->semestr_id = $model->eduSemestr->semestr_id;
+
+
+                    // $newStudentAttend->reason = $model->reason;
+                    if (!$newStudentAttend->save()) {
+                        $errors[] = [$student_id => $newStudentAttend->errors];
+                    }
+                    /** new Student Attent here */
+                }
             }
 
+            if (count($errors) > 0) {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
 
             $transaction->commit();
             return true;
@@ -343,17 +377,33 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $student = self::student(2);
-        if (!isset($student)) {
-            $errors[] = _e('Student not found');
-            $transaction->rollBack();
-            return simplify_errors($errors);
+        $t = false;
+
+        if (isset($post['student_ids'])) {
+
+            if (($post['student_ids'][0] == "'") && ($post['student_ids'][strlen($post['student_ids']) - 1] == "'")) {
+                $post['student_ids'] =  substr($post['student_ids'], 1, -1);
+            }
+
+            if (!isJsonMK($post['student_ids'])) {
+                $errors['student_ids'] = [_e('Must be Json')];
+            } else {
+                $student_ids = ((array)json_decode($post['student_ids']));
+                $model->student_ids = $student_ids;
+                $t = true;
+            }
         }
 
-        $model->student_id = $student->id;
-        $model->faculty_id = $student->faculty_id;
-        $model->edu_plan_id = $student->edu_plan_id;
-        $model->gender = $student->gender;
+        // time_table_id
+        $model->subject_id = $model->timeTable->subject_id;
+        $model->subject_category_id = $model->timeTable->subject_category_id;
+        $model->time_option_id = $model->timeTable->time_option_id;
+        $model->edu_year_id = $model->timeTable->edu_year_id;
+        $model->edu_semestr_id = $model->timeTable->edu_semester_id;
+        $model->faculty_id = $model->timeTable->eduPlan->faculty_id;
+        $model->edu_plan_id = $model->timeTable->edu_plan_id;
+        $model->type = $model->eduSemestr->semestr->type;
+        $model->semestr_id = $model->eduSemestr->semestr_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -362,6 +412,51 @@ class Attend extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
+
+            if (StudentAttend::deleteAll(['attend_id' => $model->id])) {
+                if ($t) {
+                    foreach ($model->student_ids as $student_id) {
+                        /** new Student Attent here */
+
+                        /** Checking student is really choos this time table */
+
+                        /** Checking student is really choos this time table */
+
+                        // if (!StudentAttend::find()->where(['date' => $model->date, 'student_id' => $student_id, 'attend_id' => $model->id])->exists()) {
+                        $newStudentAttend = new StudentAttend();
+                        $newStudentAttend->student_id = $student_id;
+                        $newStudentAttend->attend_id = $model->id;
+                        $newStudentAttend->time_table_id = $model->time_table_id;
+                        $newStudentAttend->subject_id = $model->subject_id;
+                        $newStudentAttend->date = $model->date;
+                        $newStudentAttend->subject_category_id = $model->subject_category_id;
+                        $newStudentAttend->edu_year_id = $model->edu_year_id;
+                        $newStudentAttend->time_option_id = $model->time_option_id;
+                        $newStudentAttend->edu_semestr_id = $model->edu_semestr_id;
+                        $newStudentAttend->faculty_id = $model->faculty_id;
+                        $newStudentAttend->course_id = $model->timeTable->course_id;
+                        $newStudentAttend->edu_plan_id = $model->edu_plan_id;
+                        $newStudentAttend->type = $model->type;
+                        $newStudentAttend->semestr_id = $model->eduSemestr->semestr_id;
+
+                        // $newStudentAttend->reason = $model->reason;
+                        if (!$newStudentAttend->save()) {
+                            $errors[] = [$student_id => $newStudentAttend->errors];
+                        }
+                        // }
+
+                        /** new Student Attent here */
+                    }
+                }
+            } else {
+                $errors[] = _e('Error occured in updating');
+            }
+
+            if (count($errors) > 0) {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
             $transaction->commit();
             return true;
         } else {

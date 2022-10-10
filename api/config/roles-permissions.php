@@ -623,7 +623,13 @@ return [
         "user_status-list",
         "user_view",
         "week_index",
-        "week_view"
+        "week_view",
+
+        "time-table_index",
+        "time-table_parent-null",
+        "time-table_view",
+       
+        "para_index",
     ],
 
 

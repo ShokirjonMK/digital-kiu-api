@@ -36,9 +36,9 @@ class TestGetDataController extends ApiActiveController
     {
        return LoginHistory::createItemLogin();
 
-        return getIpAddressData();
+        // return getIpAddressData();
 
-        return 1;
+        // return 1;
         return MipTokenGen::getToken();
         $mk = new MipService();
         $pinpp = "30111975890051";

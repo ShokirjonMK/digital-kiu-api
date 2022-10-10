@@ -22,6 +22,7 @@ class m220512_112417_create_action_log_table extends Migration
 
             'id' => $this->primaryKey(),
             'controller' => $this->string(255)->Null(),
+            'role' => $this->string(255)->Null(),
             'action' => $this->string(255)->Null(),
             'method' => $this->string(255)->Null(),
             'user_id' => $this->integer()->Null(),

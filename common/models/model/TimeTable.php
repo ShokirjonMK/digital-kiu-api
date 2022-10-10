@@ -388,7 +388,13 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getAttends()
     {
-        return $this->hasMany(Attend::className(), ['time_table_id' => 'id']);
+        $date = Yii::$app->request->get('date');
+
+        if (isset($date)) {
+            return $this->hasMany(Attend::className(), ['time_table_id' => 'id'])->onCondition(['date' => $date])->orderBy('date');
+        }
+
+        return $this->hasMany(Attend::className(), ['time_table_id' => 'id'])->orderBy('date');
     }
 
     /**

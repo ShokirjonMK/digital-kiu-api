@@ -319,6 +319,12 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if (!$model->timeTable->attendance) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         if ($model->save()) {
 
             if ($t) {
@@ -406,6 +412,12 @@ class Attend extends \yii\db\ActiveRecord
         $model->semestr_id = $model->eduSemestr->semestr_id;
 
         if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (!$model->timeTable->attendance) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);

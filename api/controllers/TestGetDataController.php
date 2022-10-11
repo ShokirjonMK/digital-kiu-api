@@ -39,14 +39,17 @@ class TestGetDataController extends ApiActiveController
         // return getIpAddressData();
 
         // return 1;
-        $data = MipTokenGen::getToken();
+        // $data = MipTokenGen::getToken();
+        $pinpp = "30111975890051";
+        $doc_give_date = "2014-12-09";
+
+        $data = MipService::getPhotoService($pinpp, $doc_give_date);
 
         return $this->response(1, _e('Success'), $data);
 
 
         $mk = new MipService();
-        $pinpp = "30111975890051";
-        $doc_give_date = "2014-12-09";
+
 
         // $xml = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date)); // where $xml_string is the XML data you'd like to use (a well-formatted XML string). If retrieving from an external source, you can use file_get_contents to retrieve the data and populate this variable.
         // $json = json_encode($xml); // convert the XML string to JSON

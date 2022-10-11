@@ -407,7 +407,11 @@ class Attend extends \yii\db\ActiveRecord
         // time_table_id
         $model->subject_id = $model->timeTable->subject_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
-        $model->time_option_id = $model->timeTable->time_option_id;
+        if ($model->timeTable->time_option_id) {
+            $model->time_option_id = $model->timeTable->time_option_id;
+        } else {
+            $model->time_option_id = $model->timeTable->lecture->time_option_id;
+        }
         $model->edu_year_id = $model->timeTable->edu_year_id;
         $model->edu_semestr_id = $model->timeTable->edu_semester_id;
         $model->faculty_id = $model->timeTable->eduPlan->faculty_id;

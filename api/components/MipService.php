@@ -64,10 +64,6 @@ class MipService
     public static function getPhotoService($pinpp, $doc_give_date)
     {
 
-        $pinpp = "30111975890051";
-        $doc_give_date = "2014-12-09";
-
-
         $xmlMK = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:idm="http://fido.com/IdmsEGMICServices">
    <soapenv:Header/>
    <soapenv:Body>
@@ -85,6 +81,9 @@ class MipService
       </idm:GetDataByPinppRequest>
    </soapenv:Body>
 </soapenv:Envelope>';
+
+
+        // dd(simplexml_load_string($xmlMK));
 
 
         $url = 'https://apimgw.egov.uz:8243/gcp/photoservice/v1';
@@ -127,15 +126,22 @@ class MipService
             //getting response from server
             $response = curl_exec($mk_curl);
 
+            dd($response);
+
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
             // $getContent = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $getContent);
             // $getContent = utf8_encode($getContent);
 
-            // $getContent = str_replace('&lt;', '<', $getContent);
-            // $getContent = str_replace('&gt;', '>', $getContent);
-            dd($getContent);
-            return simplexml_load_file($getContent);
+            $getContent = str_replace('&lt;', '<', $getContent);
+            $getContent = str_replace('&gt;', '>', $getContent);
+
+
+            // dd($response);
+            // dd($getContent);
+            // return simplexml_load_file($getContent);
+            return $getContent;
+
             // \r\n\r\n 
 
         }

@@ -13,8 +13,8 @@ class MipService
 
     public static function getPhotoService1()
     {
-        $pinpp = "30111975890051";
-        $doc_give_date = "2014-12-09";
+        $pinpp = "60111035440025";
+        $doc_give_date = "2019-11-30";
 
 
         $xmlMK = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:idm="http://fido.com/IdmsEGMICServices">
@@ -119,16 +119,17 @@ class MipService
 
             // moving to display page to display curl errors
             echo curl_errno($mk_curl);
-            echo curl_error($mk_curl);
+            // echo curl_error($mk_curl);
         } else {
             // return "res";
 
             //getting response from server
             $response = curl_exec($mk_curl);
 
-            dd($response);
+            // dd($response);
 
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
+            dd($getContent);
             curl_close($mk_curl);
             // $getContent = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $getContent);
             // $getContent = utf8_encode($getContent);
@@ -136,6 +137,8 @@ class MipService
             $getContent = str_replace('&lt;', '<', $getContent);
             $getContent = str_replace('&gt;', '>', $getContent);
 
+
+            dd(json_decode(json_encode(simplexml_load_string($getContent))));
 
             // dd($response);
             // dd($getContent);

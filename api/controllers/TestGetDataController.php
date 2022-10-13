@@ -40,8 +40,8 @@ class TestGetDataController extends ApiActiveController
 
         // return 1;
         // $data = MipTokenGen::getToken();
-        $pinpp = "30111975890051";
-        $doc_give_date = "2014-12-09";
+        $pinpp = "60111016600035";
+        $doc_give_date = "2017-09-28";
 
         $data = MipService::getPhotoService($pinpp, $doc_give_date);
 

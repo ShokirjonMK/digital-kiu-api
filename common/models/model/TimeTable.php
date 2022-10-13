@@ -263,11 +263,11 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
 
-    public function getAttendance()
+    public function getAttendance($date = null)
     {
-        $date = Yii::$app->request->get('date');
+        $date = $date ?? Yii::$app->request->get('date');
 
-        if (isset($date)) {
+        if (isset($date) && $date != null) {
             // if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date))) && ($this->para->end_time >  date('H:i', strtotime($date)))) {
             if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date)))) {
                 return 1;

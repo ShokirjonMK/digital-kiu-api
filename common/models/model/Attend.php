@@ -425,7 +425,7 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if (!$model->timeTable->attendance) {
+        if (!$model->timeTable->attendance($model->date)) {
             $errors[] = _e('There is no access to attend');
             $transaction->rollBack();
             return simplify_errors($errors);

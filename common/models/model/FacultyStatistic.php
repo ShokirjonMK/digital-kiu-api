@@ -62,7 +62,7 @@ class FacultyStatistic extends Faculty
         return [
             Gender::MALE => [
                 'count' => count($this->genderMale),
-                'name' =>  _e('Male')
+                'name' =>  _e('MALE')
             ],
             Gender::FEMALE => [
                 'count' => count($this->genderFemale),

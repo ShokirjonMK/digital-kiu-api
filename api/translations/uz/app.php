@@ -20,4 +20,8 @@
   '1 year' => '1 yil',
   '6 month' => '6 oy',
 
+
+  'MALE' => 'Erkak',
+  'FEMALE' => 'Ayol',
+
 ];

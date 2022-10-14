@@ -73,7 +73,7 @@ trait ApiActionTrait
      * @return void
      */
 
-     public function afterAction($action, $result)
+    /*  public function afterAction($action, $result)
      {
 
      // vdd(Yii::$app->request);
@@ -102,7 +102,7 @@ trait ApiActionTrait
          $action_log->save(false);
          // dd(json_encode($result));
          return $result;
-     }
+     } */
 
     /**
      * Before action
@@ -141,7 +141,7 @@ trait ApiActionTrait
             // vdd(Yii::$app->request->get());
             // vdd(Yii::$app->request->post());
 
-             $action_log = new ActionLog();
+          /*    $action_log = new ActionLog();
              $action_log->user_id = current_user_id();
              $action_log->controller = Yii::$app->controller->id;
              $action_log->action = Yii::$app->controller->action->id;
@@ -149,7 +149,7 @@ trait ApiActionTrait
              $action_log->get_data = json_encode(Yii::$app->request->get());
              $action_log->post_data = json_encode(Yii::$app->request->post());
              $action_log->save(false);
-             Yii::$app->session->set('action_log', $action_log);
+             Yii::$app->session->set('action_log', $action_log); */
 
             // dd(current_user_id());
             Yii::$app->language = $lang;

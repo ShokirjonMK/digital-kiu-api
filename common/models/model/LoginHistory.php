@@ -129,9 +129,9 @@ class LoginHistory extends \yii\db\ActiveRecord
         $model->data = json_encode($browser);
         $model->host = get_host();
         $model->log_in_out = $log_in_out;
-        if ($ipData = getIpAddressData()) {
+       /*  if ($ipData = getIpAddressData()) {
             $model->ip_data = $ipData;
-        }
+        } */
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

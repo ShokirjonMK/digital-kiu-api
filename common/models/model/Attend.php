@@ -323,7 +323,7 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if (!$model->timeTable->attendance) {
+        if (!$model->timeTable->attendance($model->date)) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);

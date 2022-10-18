@@ -949,29 +949,43 @@ class Exam extends \yii\db\ActiveRecord
             $examSmetas = ExamSemeta::findAll(['exam_id' => $exam->id]);
 
             foreach ($examSmetas as $examSmetaOne) {
-                $examStudent = ExamStudent::find()
+
+                $examStudentCount = ExamStudent::find()
                     ->where([
+                        'teacher_access_id' => $examSmetaOne->teacher_access_id,
+                        // 'exam_semeta_id' => $examSmetaOne->id,
                         'exam_id' => $exam->id,
-                        'teacher_access_id' => null,
                         'lang_id' => $examSmetaOne->lang_id,
-                        // 'status' => ExamStudent::STATUS_TAKED,
-                    ])
-                    ->orderBy(new Expression('rand()'))
-                    ->limit($examSmetaOne->count)
-                    ->all();
+                    ])->count();
 
-                $examSmetaOne->status = ExamSemeta::STATUS_IN_CHECKING;
-                if (!$examSmetaOne->save()) {
-                    $errors[] = _('There is an error occurred while distributed');
-                }
+                if ($examSmetaOne->count < $examStudentCount) {
 
-                foreach ($examStudent as $examStudentOne) {
-                    $examStudentOne->teacher_access_id = $examSmetaOne->teacher_access_id;
-                    $examStudentOne->exam_semeta_id = $examSmetaOne->id;
-                    $examStudentOne->status = ExamStudent::STATUS_IN_CHECKING;
 
-                    if (!$examStudentOne->save()) {
+                    $examStudent = ExamStudent::find()
+                        ->where([
+                            'exam_id' => $exam->id,
+                            'teacher_access_id' => null,
+                            'lang_id' => $examSmetaOne->lang_id,
+                            // 'status' => ExamStudent::STATUS_TAKED,
+                        ])
+                        ->orderBy(new Expression('rand()'))
+                        ->limit($examSmetaOne->count - $examStudentCount)
+                        ->all();
+
+                    $examSmetaOne->status = ExamSemeta::STATUS_IN_CHECKING;
+                    if (!$examSmetaOne->save()) {
                         $errors[] = _('There is an error occurred while distributed');
+                    }
+
+                    foreach ($examStudent as $examStudentOne) {
+
+                        $examStudentOne->teacher_access_id = $examSmetaOne->teacher_access_id;
+                        $examStudentOne->exam_semeta_id = $examSmetaOne->id;
+                        $examStudentOne->status = ExamStudent::STATUS_IN_CHECKING;
+
+                        if (!$examStudentOne->save()) {
+                            $errors[] = _('There is an error occurred while distributed');
+                        }
                     }
                 }
             }

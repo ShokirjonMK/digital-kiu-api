@@ -458,7 +458,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getTeacherAccess()
     {
-        return $this->subject->getTeacherAccess;
+        return $this->subject->teacherAccesses;
         $model = new TeacherAccess();
         $query = $model->find();
         $table_name = 'teacher_access';

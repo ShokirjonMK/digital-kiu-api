@@ -958,8 +958,11 @@ class Exam extends \yii\db\ActiveRecord
                         'lang_id' => $examSmetaOne->lang_id,
                     ])->count();
 
-                if ($examSmetaOne->count < $examStudentCount) {
 
+                // dd($examStudentCount);
+
+                $examStudentMustDist = $examSmetaOne->count - $examStudentCount;
+                if ($examStudentMustDist > 0) {
 
                     $examStudent = ExamStudent::find()
                         ->where([
@@ -969,7 +972,7 @@ class Exam extends \yii\db\ActiveRecord
                             // 'status' => ExamStudent::STATUS_TAKED,
                         ])
                         ->orderBy(new Expression('rand()'))
-                        ->limit($examSmetaOne->count - $examStudentCount)
+                        ->limit($examStudentMustDist)
                         ->all();
 
                     $examSmetaOne->status = ExamSemeta::STATUS_IN_CHECKING;

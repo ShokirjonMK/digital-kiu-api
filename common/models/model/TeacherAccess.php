@@ -93,6 +93,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
             'is_lecture',
             'subject_id',
             'language_id',
+            'is_deleted',
             'status',
             'created_at',
             'updated_at',

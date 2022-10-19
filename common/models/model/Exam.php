@@ -350,6 +350,10 @@ class Exam extends \yii\db\ActiveRecord
         return count($this->question);
     }
 
+    public function getSubjectt()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
 
     public function getSubject()
     {
@@ -454,10 +458,12 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getTeacherAccess()
     {
+        return $this->subject->getTeacherAccess;
         $model = new TeacherAccess();
         $query = $model->find();
         $table_name = 'teacher_access';
         // $query = $query->andWhere([$table_name . '.is_deleted' => 0])
+
         $query = $query
             ->leftJoin("users us", "us.id = $table_name.user_id")
             ->andWhere(['us.deleted' => 0])

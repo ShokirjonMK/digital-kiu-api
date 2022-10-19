@@ -262,7 +262,6 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
                             $newExamSmeta->status = self::STATUS_NEW;
 
-
                             if (!($newExamSmeta->validate())) {
                                 $errors[] = [$teacherAccessId => $newExamSmeta->errors];
                             }

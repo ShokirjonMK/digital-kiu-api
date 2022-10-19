@@ -268,12 +268,36 @@ class TimeTable extends \yii\db\ActiveRecord
         $date = $date ?? Yii::$app->request->get('date');
 
         if (isset($date) && $date != null) {
-            // if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date))) && ($this->para->end_time >  date('H:i', strtotime($date)))) {
-            if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date)))) {
-                return 1;
-            } else {
+            if ($date > date('Y-m-d')) {
                 return 0;
             }
+            // if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date))) && ($this->para->end_time >  date('H:i', strtotime($date)))) {
+            /* dd([
+                $date,
+                date('w', strtotime($date)),
+                date('H:i', strtotime($date)),
+                $this->para->start_time
+            ]); */
+            // if ($this->eduSemestr->start_date <= $date && $date <= $this->eduSemestr->end_date)
+
+            // if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i', strtotime($date)))) {
+
+            if ($date == date('Y-m-d')) {
+                if (($this->week_id == date('w', strtotime($date))) && ($this->para->start_time <  date('H:i'))) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                if (($this->week_id == date('w', strtotime($date)))) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+
+            return 0;
         }
 
         // if (($this->week_id == date('w')) && ($this->para->start_time <  date('H:i')) && ($this->para->end_time >  date('H:i'))) {

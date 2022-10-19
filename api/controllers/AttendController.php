@@ -51,6 +51,9 @@ class AttendController extends ApiActiveController
         if (!isset($post['date'])) {
             $post['date'] = date('Y-m-d');
         }
+        /* else{
+            $post['date'] = date('Y-m-d', strtotime($post['date']));
+        } */
 
         $this->load($model, $post);
 

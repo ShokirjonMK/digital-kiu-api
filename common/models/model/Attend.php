@@ -323,11 +323,11 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-       /*  if (!$model->timeTable->attendance($model->date)) {
-            $errors[] = $model->errors;
+        if (!$model->timeTable->getAttendance($model->date)) {
+            $errors[] = _e("There is no access");
             $transaction->rollBack();
             return simplify_errors($errors);
-        } */
+        }
 
         if ($model->save()) {
 
@@ -425,8 +425,8 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if (!$model->timeTable->attendance($model->date)) {
-            $errors[] = _e('There is no access to attend');
+        if (!$model->timeTable->getAttendance($model->date)) {
+            $errors[] = _e('There is no access to update attend');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

@@ -457,7 +457,8 @@ class Exam extends \yii\db\ActiveRecord
         $model = new TeacherAccess();
         $query = $model->find();
         $table_name = 'teacher_access';
-        $query = $query->andWhere([$table_name . '.is_deleted' => 0])
+        // $query = $query->andWhere([$table_name . '.is_deleted' => 0])
+        $query = $query
             ->leftJoin("users us", "us.id = $table_name.user_id")
             ->andWhere(['us.deleted' => 0])
             ->andWhere([$table_name . '.subject_id' => $this->eduSemestrSubject->subject->id, $table_name . '.status' => 1])

@@ -76,6 +76,9 @@ class StudentClub extends \yii\db\ActiveRecord
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
 
+
+            [['student_id'], 'unique', 'targetAttribute' => ['club_id', 'student_id'], 'message' => "You are already selected thi club!"],
+
         ];
     }
 

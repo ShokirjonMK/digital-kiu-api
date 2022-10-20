@@ -220,6 +220,12 @@ class StudentClub extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        if (!isset($post['club_id'])) {
+            $errors[] = ['club_id' => _e('Required')];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

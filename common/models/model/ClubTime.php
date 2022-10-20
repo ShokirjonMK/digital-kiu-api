@@ -130,9 +130,11 @@ class ClubTime extends \yii\db\ActiveRecord
             'description',
 
             'clubCategory',
-            'clubs',
+            'club',
             'room',
             'building',
+            'studentClub',
+            'selected',
 
             'createdBy',
             'updatedBy',
@@ -179,6 +181,39 @@ class ClubTime extends \yii\db\ActiveRecord
     public function getClub()
     {
         return $this->hasOne(Club::className(), ['id' => 'club_id']);
+    }
+
+    /**
+     * Gets query for [[StudentClubs]].
+     *
+     * @return \yii\db\ActiveQuery|StudentClubQuery
+     */
+    public function getStudentClubs()
+    {
+        if (isRole('student')) {
+            return $this->hasOne(StudentClub::className(), ['club_time_id' => 'id'])->onCondition(['student_id' => $this->student()]);
+        }
+        return $this->hasMany(StudentClub::className(), ['club_time_id' => 'id']);
+    }
+
+    public function getSelected()
+    {
+        if (isRole('student')) {
+
+            $studentClub = StudentClub::find()
+                ->where([
+                    'club_time_id' => $this->id,
+                    'student_id' => $this->student()
+                ])
+                ->all();
+
+            if (count($studentClub) > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     public function getRoom()

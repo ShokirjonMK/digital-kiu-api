@@ -28,6 +28,7 @@ class m220930_094340_create_student_club_table extends Migration
             'edu_plan_id' => $this->integer()->null(),
             'gender' => $this->tinyInteger(1)->defaultValue(1),
 
+            'is_leader' => $this->tinyInteger(1)->defaultValue(0),
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),

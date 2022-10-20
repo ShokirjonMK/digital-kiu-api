@@ -135,6 +135,7 @@ class ClubTime extends \yii\db\ActiveRecord
             'building',
             'studentClub',
             'selected',
+            'leader',
 
             'createdBy',
             'updatedBy',
@@ -194,6 +195,12 @@ class ClubTime extends \yii\db\ActiveRecord
             return $this->hasOne(StudentClub::className(), ['club_time_id' => 'id'])->onCondition(['student_id' => $this->student()]);
         }
         return $this->hasMany(StudentClub::className(), ['club_time_id' => 'id']);
+    }
+
+
+    public function getLeader()
+    {
+        return $this->hasOne(StudentClub::className(), ['club_time_id' => 'id'])->onCondition(['is_leader' => 1]);
     }
 
     public function getSelected()

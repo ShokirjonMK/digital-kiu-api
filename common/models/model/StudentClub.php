@@ -65,8 +65,9 @@ class StudentClub extends \yii\db\ActiveRecord
         return [
 
             [['club_time_id'], 'required'],
-            [['club_category_id', 'club_time_id', 'club_id', 'student_id', 'faculty_id', 'edu_plan_id', 'gender', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['club_category_id', 'is_leader', 'club_time_id', 'club_id', 'student_id', 'faculty_id', 'edu_plan_id', 'gender', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
+            [['is_leader'], 'default', 'value' => 0],
             [['description'], 'string'],
 
             [['club_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => ClubCategory::className(), 'targetAttribute' => ['club_category_id' => 'id']],
@@ -76,8 +77,8 @@ class StudentClub extends \yii\db\ActiveRecord
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
 
-
             [['student_id'], 'unique', 'targetAttribute' => ['club_id', 'student_id'], 'message' => "You are already selected thi club!"],
+            [['is_leader'], 'unique', 'targetAttribute' => ['club_time_id', 'is_leader'], 'message' => "Only one person can be leader!"],
 
         ];
     }
@@ -97,6 +98,7 @@ class StudentClub extends \yii\db\ActiveRecord
             'faculty_id',
             'edu_plan_id',
             'gender',
+            'is_leader',
             'description',
 
             'order' => _e('Order'),
@@ -118,11 +120,11 @@ class StudentClub extends \yii\db\ActiveRecord
             'club_time_id',
             'club_id',
             'student_id',
+            'is_leader',
             // 'faculty_id',
             // 'edu_plan_id',
             // 'gender',
             'description',
-
 
             'order',
             'status',

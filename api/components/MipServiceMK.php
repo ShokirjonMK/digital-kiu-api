@@ -1,8 +1,9 @@
 <?php
 
 namespace api\components;
-
-use GuzzleHttp\Client;
+use yii\httpclient\Client;
+//
+//use GuzzleHttp\Client;
 
 class MipServiceMK
 {
@@ -17,6 +18,20 @@ class MipServiceMK
         // $document_issue_date =  "2021-01-13";
         $data = [];
         $data['status'] = false;
+
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('POST')
+            ->setUrl('http://example.com/api/1.0/users')
+            ->setData(['name' => 'John Doe', 'email' => 'johndoe@example.com'])
+            ->send();
+        if ($response->isOk) {
+            $newUserId = $response->data['id'];
+        }
+        dd($response);
+
+
         $client = new Client([
             'headers' => [
                 'Content-Type' => 'application/json',

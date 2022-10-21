@@ -3,8 +3,6 @@
 namespace api\components;
 
 use GuzzleHttp\Client;
-use SoapClient;
-use SoapFault;
 
 class MipServiceMK
 {
@@ -13,69 +11,77 @@ class MipServiceMK
 
     private $_token = 'BF9F9B0C-9273-4072-A815-A51AC905FE9A';
 
-    public static function getData()
+    public static function getData($pin, $document_issue_date)
     {
-        $pin = "61801045840029";
-        $document_issue_date =  "2021-01-13";
-
-        $client = new \GuzzleHttp\Client();
-        $response = $client->post('http://10.190.24.138:7075', [
-            'form_params' => [
-                'jsonrpc' => '2.2',
-                "id" => "ID",
-                "method" => "adliya.get_personal_data_by_pin",
-                "params" => [
-                    "pin" => $pin,
-                    "document_issue_date" => $document_issue_date
-                ]
+        // $pin = "61801045840029";
+        // $document_issue_date =  "2021-01-13";
+        $data = [];
+        $data['status'] = false;
+        $client = new Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Api-token' => 'BF9F9B0C-9273-4072-A815-A51AC905FE9A',
             ]
         ]);
 
-
-
-        $client = new Client();
-        $response = $client->createRequest()
-            ->setMethod('POST')
-            ->setUrl('http://10.190.24.138:7075')
-            ->addHeaders([
-                'content-type' => 'application/json',
-                'Api-token' => self::$_token,
-            ])->addBody([
-                'jsonrpc' => '2.2',
-                "id" => "ID",
-                "method" => "adliya.get_personal_data_by_pin",
-                "params" => [
-                    "pin" => $pin,
-                    "document_issue_date" => $document_issue_date
+        $response = $client->post(
+            'http://10.190.24.138:7075',
+            ['body' => json_encode(
+                [
+                    'jsonrpc' => '2.2',
+                    "id" => "ID",
+                    "method" => "adliya.get_personal_data_by_pin",
+                    "params" => [
+                        "pin" => $pin,
+                        "document_issue_date" => $document_issue_date
+                    ]
                 ]
-            ])
-            ->send();
-        if ($response->isOk) {
-            return $response->getData();
+            )]
+        );
+
+        if ($response->getStatusCode() == 200) {
+
+            $res = json_decode($response->getBody()->getContents());
+            if (isset($res->result)) {
+                $result = $res->result;
+                $photo = self::saveTo($result->photo, $result->pinpp);
+                // dd(json_decode($response->getBody()->getContents()));
+                // return  json_decode($response->getBody()->getContents());
+                $data['status'] = true;
+                $result->avatar = $photo;
+                $data['data'] = $result;
+
+                return $data;
+            } else {
+                $error = $res->error;
+                $data['error'] = $error;
+                return $data;
+            }
+        } else {
+            $data['status'] = false;
+            return $data;
         }
     }
 
-    public function saveTo()
+    private static function saveTo($imgBase64, $pin)
     {
-        $base64string = '';
-        $uploadpath   = STORAGE_PATH  . 'base64/';
-        if (!file_exists(STORAGE_PATH  . 'base64/')) {
-            mkdir(STORAGE_PATH  . 'base64/', 0777, true);
+        // $imgBase64 = '';
+        $uploadPathMK   = STORAGE_PATH  . 'user_images/';
+        if (!file_exists(STORAGE_PATH  . 'user_images/')) {
+            mkdir(STORAGE_PATH . 'user_images/', 0777, true);
         }
-
 
         $parts        = explode(
             ";base64,",
-            $base64string
+            $imgBase64
         );
         $imageparts   = explode("image/", @$parts[0]);
-        // $imagetype    = $imageparts[1];
-        $imagebase64  = base64_decode($base64string);
-        $miniurl = uniqid() . '.png';
-        $file = $uploadpath . $miniurl;
+        $imagebase64  = base64_decode($imgBase64);
+        $miniurl = $pin . '.png';
+        $file = $uploadPathMK . $miniurl;
 
         file_put_contents($file, $imagebase64);
 
-        return 'storage/base64/' . $miniurl;
+        return 'storage/user_images/' . $miniurl;
     }
 }

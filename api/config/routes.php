@@ -170,6 +170,9 @@ $routes = [
     'GET <lang:\w{2}>/telegrams/bot' => 'telegram/bot',
 
 
+    /** MIP pinfl */
+    'GET <lang:\w{2}>/users/get/' => 'user/get',
+
     /** Student from Hemis via pinfl */
     'GET <lang:\w{2}>/students/get/' => 'student/get',
     /** Student For turniket */

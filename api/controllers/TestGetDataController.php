@@ -36,7 +36,17 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-        return MipServiceMK::getData();
+        $mip = MipServiceMK::getData(6180104840029, "2021-01-13");
+        if ($mip['status']) {
+            return $this->response(1, _e('Success'), $mip['data']);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $mip['error'], ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        
+        $pin = "61801045840029";
+        $document_issue_date =  "2021-01-13";
+
         // Define the Base64 value you need to save as an image
         $base64string = "/9j/4AAQF9\nPSn4FR4NLg+tID//2Q==";
 

@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\components\MipServiceMK;
 use api\forms\Login;
 use Yii;
 use api\resources\User;
@@ -22,6 +23,16 @@ class UserController extends ApiActiveController
     {
         return [];
     }
+    public function actionGet($pin, $document_issue_date)
+    {
+        $mip = MipServiceMK::getData($pin, $document_issue_date);
+        if ($mip['status']) {
+            return $this->response(1, _e('Success'), $mip['data']);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $mip['error'], ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
     public function actionMe()
     {
         $data = null;

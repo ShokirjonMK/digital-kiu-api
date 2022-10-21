@@ -628,7 +628,7 @@ return [
         "time-table_index",
         "time-table_parent-null",
         "time-table_view",
-       
+
         "para_index",
     ],
 
@@ -1300,6 +1300,10 @@ return [
         "time-table_view",
         "week_index",
         "para_index",
+        "attend_create",
+        "attend_index",
+        "attend_update",
+        "attend_view",
     ],
 
     /* Student */

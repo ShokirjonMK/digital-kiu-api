@@ -357,10 +357,12 @@ yf8APVfyNMR//9k=';
         $imageparts   = explode("image/", @$parts[0]);
         // $imagetype    = $imageparts[1];
         $imagebase64  = base64_decode($base64string);
-        $file         = "storage/base64/" . uniqid() . '.png';
+        $miniurl = uniqid() . '.png';
+        $file = $uploadpath . $miniurl;
+
         file_put_contents($file, $imagebase64);
 
-        return $file;
+        return $miniurl;
         //    return LoginHistory::createItemLogin();
 
         // return getIpAddressData();

@@ -5,9 +5,6 @@ namespace api\components;
 use GuzzleHttp\Client;
 use yii\httpclient\Client as HttpClient;
 
-
-
-
 class MipServiceMK
 {
     public $user_number = '';
@@ -19,7 +16,7 @@ class MipServiceMK
     {
         // $pin = "61801045840029";
         // $document_issue_date =  "2021-01-13";
-        
+
         $data = [];
         $data['status'] = false;
 

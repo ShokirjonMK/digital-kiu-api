@@ -362,7 +362,7 @@ yf8APVfyNMR//9k=';
 
         file_put_contents($file, $imagebase64);
 
-        return $miniurl;
+        return 'storage/base64/'.$miniurl;
         //    return LoginHistory::createItemLogin();
 
         // return getIpAddressData();

@@ -350,13 +350,14 @@ yf8APVfyNMR//9k=';
         }
 
 
-        $parts        = explode(";base64,",
+        $parts        = explode(
+            ";base64,",
             $base64string
         );
         $imageparts   = explode("image/", @$parts[0]);
         // $imagetype    = $imageparts[1];
         $imagebase64  = base64_decode($base64string);
-        $file         = $uploadpath . uniqid() . '.png';
+        $file         = "storage/base64/" . uniqid() . '.png';
         file_put_contents($file, $imagebase64);
 
         return $file;

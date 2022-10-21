@@ -19,11 +19,15 @@ class MipServiceMK
         $document_issue_date =  "2021-01-13";
 
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'http://www.example.com/user/create', [
+        $response = $client->post('http://10.190.24.138:7075', [
             'form_params' => [
-                'email' => 'test@gmail.com',
-                'name' => 'Test user',
-                'password' => 'testpassword',
+                'jsonrpc' => '2.2',
+                "id" => "ID",
+                "method" => "adliya.get_personal_data_by_pin",
+                "params" => [
+                    "pin" => $pin,
+                    "document_issue_date" => $document_issue_date
+                ]
             ]
         ]);
 

@@ -3,6 +3,10 @@
 namespace api\components;
 
 use GuzzleHttp\Client;
+use yii\httpclient\Client as HttpClient;
+
+
+
 
 class MipServiceMK
 {
@@ -17,6 +21,7 @@ class MipServiceMK
         // $document_issue_date =  "2021-01-13";
         $data = [];
         $data['status'] = false;
+
         $client = new Client([
             'headers' => [
                 'Content-Type' => 'application/json',

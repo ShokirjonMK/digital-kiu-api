@@ -97,7 +97,7 @@ class StudentClubController extends ApiActiveController
 
         // remove model
         if ($model) {
-            if (!(isRole('student') && $model->created_by == current_user_id())) {
+            if (!(isRole('student') && $model->created_by == current_user_id()) || !isRole('admin')) {
                 return $this->response(0, _e('You can not delete.'), null, null, ResponseStatus::BAD_REQUEST);
             }
 

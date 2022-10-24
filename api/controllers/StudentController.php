@@ -243,7 +243,7 @@ class  StudentController extends ApiActiveController
             if (isset($data->data))
                 return $this->response(1, _e('Success'), $data->data);
         } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $data->data, ResponseStatus::NOT_FOUND);
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $data, ResponseStatus::NOT_FOUND);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
     }

@@ -125,6 +125,10 @@ class StudentAttend extends \yii\db\ActiveRecord
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
             [['time_option_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeOption::className(), 'targetAttribute' => ['time_option_id' => 'id']],
             [['time_table_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeTable::className(), 'targetAttribute' => ['time_table_id' => 'id']],
+
+
+            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'time_table_id', 'date'], 'message' => "Student Already recorded"],
+
         ];
     }
 

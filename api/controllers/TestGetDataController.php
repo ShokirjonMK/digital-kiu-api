@@ -11,6 +11,7 @@ use api\components\PersonDataHelper;
 use base\ResponseStatus;
 use common\models\model\Attend;
 use common\models\model\LoginHistory;
+use common\models\model\StudentAttend;
 
 class TestGetDataController extends ApiActiveController
 {
@@ -36,9 +37,46 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-
+        $errors = [];
 
         $attends = Attend::find()->all();
+
+
+        foreach ($attends as $one) {
+
+
+            foreach ($one->student_ids as $student_id) {
+                /** new Student Attent here */
+
+                /** Checking student is really choos this time table */
+
+                /** Checking student is really choos this time table */
+                $newStudentAttend = new StudentAttend();
+                $newStudentAttend->student_id = $student_id;
+                $newStudentAttend->attend_id = $one->id;
+                $newStudentAttend->time_table_id = $one->time_table_id;
+                $newStudentAttend->subject_id = $one->subject_id;
+                $newStudentAttend->date = $one->date;
+                $newStudentAttend->subject_category_id = $one->subject_category_id;
+                $newStudentAttend->edu_year_id = $one->edu_year_id;
+                $newStudentAttend->time_option_id = $one->time_option_id;
+                $newStudentAttend->edu_semestr_id = $one->edu_semestr_id;
+                $newStudentAttend->faculty_id = $one->faculty_id;
+                $newStudentAttend->course_id = $one->timeTable->course_id;
+                $newStudentAttend->edu_plan_id = $one->edu_plan_id;
+                $newStudentAttend->type = $one->type;
+                $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
+
+
+                // $newStudentAttend->reason = $one->reason;
+                if (!$newStudentAttend->save()) {
+                    $errors[] = [$student_id => $newStudentAttend->errors];
+                }
+                /** new Student Attent here */
+            }
+        }
+
+        return $this->response(1, _e('Success'), $errors);
     }
 
 

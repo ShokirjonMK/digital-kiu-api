@@ -71,10 +71,11 @@ class TestGetDataController extends ApiActiveController
                 $newStudentAttend->type = $one->type;
                 $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
 
-                $newStudentAttend->updated_at = $one->updated_at;
                 $newStudentAttend->updated_by = $one->updated_by;
                 $newStudentAttend->created_by = $one->created_by;
+                $newStudentAttend->updated_at = $one->updated_at;
                 $newStudentAttend->created_at = $one->created_at;
+                return $this->response(1, _e('Success'), $one->created_at);
 
                 // $newStudentAttend->reason = $one->reason;
                 if (!$newStudentAttend->save()) {

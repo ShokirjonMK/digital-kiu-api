@@ -86,7 +86,9 @@ class Attend extends \yii\db\ActiveRecord
             [[
                 'time_table_id',
                 'subject_id',
-                'subject_category_id', 'time_option_id', 'edu_year_id', 'edu_semestr_id', 'faculty_id', 'edu_plan_id', 'type', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'
+                'subject_category_id', 'time_option_id', 'edu_year_id', 'edu_semestr_id', 'faculty_id', 'edu_plan_id', 'type', 'status', 'order',
+                 'created_at', 'updated_at', 'created_by', 'updated_by',
+                  'is_deleted'
             ], 'integer'],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],

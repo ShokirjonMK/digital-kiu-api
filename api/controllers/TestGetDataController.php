@@ -35,11 +35,15 @@ class TestGetDataController extends ApiActiveController
         }
     }
 
-    public function actionIndex($passport = null, $jshir = null)
+    public function actionIndex($i)
     {
         $errors = [];
+        $soni = $i * 500;
 
-        $attends = Attend::find()->all();
+        return $this->response(1, _e('Success'), $soni);
+
+        $attends = Attend::find()
+            ->limit(10000)->offset($soni)->all();
 
 
         foreach ($attends as $one) {

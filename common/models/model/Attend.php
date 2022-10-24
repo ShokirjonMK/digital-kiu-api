@@ -282,9 +282,10 @@ class Attend extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TimeTable::className(), ['id' => 'time_table_id']);
     }
-s fsdf lksfd
+
     public static function createItem($model, $post)
     {
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
@@ -293,6 +294,13 @@ s fsdf lksfd
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+
+        // return
+            $errors[] = "Asdasd";
+        $transaction->rollBack();
+        return simplify_errors($errors);
+
 
         $t = false;
 

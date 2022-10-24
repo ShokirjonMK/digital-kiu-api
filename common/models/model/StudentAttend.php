@@ -50,7 +50,7 @@ class StudentAttend extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
-    use ResourceTrait;
+    // use ResourceTrait;
 
     // public function behaviors()
     // {

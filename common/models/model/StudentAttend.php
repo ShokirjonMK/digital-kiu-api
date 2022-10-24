@@ -50,14 +50,14 @@ class StudentAttend extends \yii\db\ActiveRecord
 {
     public static $selected_language = 'uz';
 
-    // use ResourceTrait;
+    use ResourceTrait;
 
-    // public function behaviors()
-    // {
-    //     return [
-    //         TimestampBehavior::class,
-    //     ];
-    // }
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
@@ -392,7 +392,7 @@ class StudentAttend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        // $student = self::student(2);
+        $student = self::student(2);
         if (!isset($student)) {
             $errors[] = _e('Student not found');
             $transaction->rollBack();
@@ -419,13 +419,13 @@ class StudentAttend extends \yii\db\ActiveRecord
         }
     }
 
-    // public function beforeSave($insert)
-    // {
-    //     if ($insert) {
-    //         $this->created_by = current_user_id();
-    //     } else {
-    //         $this->updated_by = current_user_id();
-    //     }
-    //     return parent::beforeSave($insert);
-    // }
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->created_by = current_user_id();
+        } else {
+            $this->updated_by = current_user_id();
+        }
+        return parent::beforeSave($insert);
+    }
 }

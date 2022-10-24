@@ -35,63 +35,63 @@ class TestGetDataController extends ApiActiveController
         }
     }
 
-    public function actionIndex($i)
-    {
-        $errors = [];
-        $soni = $i * 500;
+    // public function actionIndex($i)
+    // {
+    //     $errors = [];
+    //     $soni = $i * 500;
 
-        // return $this->response(1, _e('Success'), $soni);
+    //     // return $this->response(1, _e('Success'), $soni);
 
-        $attends = Attend::find()
-            ->limit(500)->offset($soni)->all();
-
-
-        foreach ($attends as $one) {
+    //     $attends = Attend::find()
+    //         ->limit(500)->offset($soni)->all();
 
 
-            foreach ($one->student_ids as $student_id) {
-                /** new Student Attent here */
-
-                /** Checking student is really choos this time table */
-
-                /** Checking student is really choos this time table */
-                $newStudentAttend = new StudentAttend();
-                $newStudentAttend->student_id = $student_id;
-                $newStudentAttend->attend_id = $one->id;
-                $newStudentAttend->time_table_id = $one->time_table_id;
-                $newStudentAttend->subject_id = $one->subject_id;
-                $newStudentAttend->date = $one->date;
-                $newStudentAttend->subject_category_id = $one->subject_category_id;
-                $newStudentAttend->edu_year_id = $one->edu_year_id;
-                $newStudentAttend->time_option_id = $one->time_option_id;
-                $newStudentAttend->edu_semestr_id = $one->edu_semestr_id;
-                $newStudentAttend->faculty_id = $one->faculty_id;
-                $newStudentAttend->course_id = $one->timeTable->course_id;
-                $newStudentAttend->edu_plan_id = $one->edu_plan_id;
-                $newStudentAttend->type = $one->type;
-                $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
-
-                $newStudentAttend->updated_by = $one->updated_by;
-                $newStudentAttend->created_by = $one->created_by;
-                $newStudentAttend->updated_at = $one->updated_at;
-                $newStudentAttend->created_at = $one->created_at;
-
-                // return $this->response(1, _e('Success'), $newStudentAttend->created_at);
-
-                // $newStudentAttend->reason = $one->reason;
-                if (!$newStudentAttend->save()) {
-                    $errors[] = [$student_id => $newStudentAttend->errors];
-                }
-                /** new Student Attent here */
-            }
-        }
-
-        return $this->response(1, _e('Success'), $errors);
-    }
+    //     foreach ($attends as $one) {
 
 
+    //         foreach ($one->student_ids as $student_id) {
+    //             /** new Student Attent here */
 
-    public function actionIndex1($passport = null, $jshir = null)
+    //             /** Checking student is really choos this time table */
+
+    //             /** Checking student is really choos this time table */
+    //             $newStudentAttend = new StudentAttend();
+    //             $newStudentAttend->student_id = $student_id;
+    //             $newStudentAttend->attend_id = $one->id;
+    //             $newStudentAttend->time_table_id = $one->time_table_id;
+    //             $newStudentAttend->subject_id = $one->subject_id;
+    //             $newStudentAttend->date = $one->date;
+    //             $newStudentAttend->subject_category_id = $one->subject_category_id;
+    //             $newStudentAttend->edu_year_id = $one->edu_year_id;
+    //             $newStudentAttend->time_option_id = $one->time_option_id;
+    //             $newStudentAttend->edu_semestr_id = $one->edu_semestr_id;
+    //             $newStudentAttend->faculty_id = $one->faculty_id;
+    //             $newStudentAttend->course_id = $one->timeTable->course_id;
+    //             $newStudentAttend->edu_plan_id = $one->edu_plan_id;
+    //             $newStudentAttend->type = $one->type;
+    //             $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
+
+    //             $newStudentAttend->updated_by = $one->updated_by;
+    //             $newStudentAttend->created_by = $one->created_by;
+    //             $newStudentAttend->updated_at = $one->updated_at;
+    //             $newStudentAttend->created_at = $one->created_at;
+
+    //             // return $this->response(1, _e('Success'), $newStudentAttend->created_at);
+
+    //             // $newStudentAttend->reason = $one->reason;
+    //             if (!$newStudentAttend->save()) {
+    //                 $errors[] = [$student_id => $newStudentAttend->errors];
+    //             }
+    //             /** new Student Attent here */
+    //         }
+    //     }
+
+    //     return $this->response(1, _e('Success'), $errors);
+    // }
+
+
+
+    public function actionIndex($passport = null, $jshir = null)
     {
 
         $mip = MipServiceMK::getData(61801045840029, "2021-01-13");

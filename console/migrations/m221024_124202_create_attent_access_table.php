@@ -12,9 +12,9 @@ class m221024_124202_create_attent_access_table extends Migration
      */
     public function safeUp()
     {
-        $tableName = Yii::$app->db->tablePrefix . 'student_attend';
+        $tableName = Yii::$app->db->tablePrefix . 'attent_access';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
-            $this->dropTable('student_attend');
+            $this->dropTable('attent_access');
         }
         $this->createTable('{{%attent_access}}', [
             'id' => $this->primaryKey(),
@@ -42,15 +42,15 @@ class m221024_124202_create_attent_access_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
-        $this->addForeignKey('mk_a_a_time_table_id', 'attent_access', 'time_table_id', 'time_table', 'id');
-        $this->addForeignKey('mk_a_a_subject_id', 'attent_access', 'subject_id', 'subject', 'id');
-        $this->addForeignKey('mk_a_a_user_id', 'attent_access', 'user_id', 'user', 'id');
-        $this->addForeignKey('mk_a_a_edu_year_id', 'attent_access', 'edu_year_id', 'edu_year', 'id');
-        $this->addForeignKey('mk_a_a_subject_category_id', 'attent_access', 'subject_category_id', 'subject_category', 'id');
-        $this->addForeignKey('mk_a_a_time_option_id', 'attent_access', 'time_option_id', 'time_option', 'id');
-        $this->addForeignKey('mk_a_a_faculty_id', 'attent_access', 'faculty_id', 'faculty', 'id');
-        $this->addForeignKey('mk_a_a_edu_plan_id', 'attent_access', 'edu_plan_id', 'edu_plan', 'id');
-        $this->addForeignKey('mk_a_a_edu_semestr_id', 'attent_access', 'edu_semestr_id', 'edu_semestr', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_time_table_id', 'attent_access', 'time_table_id', 'time_table', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_subject_id', 'attent_access', 'subject_id', 'subject', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_user_id', 'attent_access', 'user_id', 'users', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_edu_year_id', 'attent_access', 'edu_year_id', 'edu_year', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_subject_category_id', 'attent_access', 'subject_category_id', 'subject_category', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_time_option_id', 'attent_access', 'time_option_id', 'time_option', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_faculty_id', 'attent_access', 'faculty_id', 'faculty', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_edu_plan_id', 'attent_access', 'edu_plan_id', 'edu_plan', 'id');
+        $this->addForeignKey('mk_a_a_attent_access_edu_semestr_id', 'attent_access', 'edu_semestr_id', 'edu_semestr', 'id');
     }
 
     /**
@@ -58,15 +58,15 @@ class m221024_124202_create_attent_access_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('mk_a_a_time_table_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_subject_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_user_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_edu_year_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_subject_category_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_time_option_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_faculty_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_edu_plan_id', 'attent_access');
-        $this->dropForeignKey('mk_a_a_edu_semestr_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_time_table_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_subject_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_user_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_edu_year_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_subject_category_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_time_option_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_faculty_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_edu_plan_id', 'attent_access');
+        $this->dropForeignKey('mk_a_a_attent_access_edu_semestr_id', 'attent_access');
 
         $this->dropTable('{{%attent_access}}');
     }

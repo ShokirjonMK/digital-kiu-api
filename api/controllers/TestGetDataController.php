@@ -9,6 +9,7 @@ use api\components\MipTokenGen;
 use api\components\PersonDataHelper;
 
 use base\ResponseStatus;
+use common\models\model\Attend;
 use common\models\model\LoginHistory;
 
 class TestGetDataController extends ApiActiveController
@@ -34,6 +35,15 @@ class TestGetDataController extends ApiActiveController
     }
 
     public function actionIndex($passport = null, $jshir = null)
+    {
+
+
+        $attends = Attend::find()->all();
+    }
+
+
+
+    public function actionIndex1($passport = null, $jshir = null)
     {
 
         $mip = MipServiceMK::getData(61801045840029, "2021-01-13");

@@ -163,6 +163,7 @@ class Attend extends \yii\db\ActiveRecord
         return $fields;
     }
 
+
     public function extraFields()
     {
         $extraFields =  [
@@ -188,7 +189,7 @@ class Attend extends \yii\db\ActiveRecord
     public function getAttendance()
     {
         $date = $this->date;
-        
+
         return 0;
     }
 

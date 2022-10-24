@@ -52,12 +52,12 @@ class StudentAttend extends \yii\db\ActiveRecord
 
     use ResourceTrait;
 
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
+    // public function behaviors()
+    // {
+    //     return [
+    //         TimestampBehavior::class,
+    //     ];
+    // }
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
@@ -415,13 +415,13 @@ class StudentAttend extends \yii\db\ActiveRecord
         }
     }
 
-    public function beforeSave($insert)
-    {
-        if ($insert) {
-            $this->created_by = current_user_id();
-        } else {
-            $this->updated_by = current_user_id();
-        }
-        return parent::beforeSave($insert);
-    }
+    // public function beforeSave($insert)
+    // {
+    //     if ($insert) {
+    //         $this->created_by = current_user_id();
+    //     } else {
+    //         $this->updated_by = current_user_id();
+    //     }
+    //     return parent::beforeSave($insert);
+    // }
 }

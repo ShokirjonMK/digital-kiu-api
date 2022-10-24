@@ -184,6 +184,15 @@ class Attend extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getAttendance()
+    {
+        $date = $this->date;
+
+        
+        return 0;
+    }
+
     /**
      * Gets query for [[EduPlan]].
      *

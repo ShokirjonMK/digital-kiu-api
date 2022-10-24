@@ -172,7 +172,7 @@ class StudentAttend extends \yii\db\ActiveRecord
             'reason',
             // 'attend_id',
             // 'attend_reason_id',
-            // 'date',
+            'date',
             // 'time_table_id',
             // 'subject_id',
             // 'subject_category_id',

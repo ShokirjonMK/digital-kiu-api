@@ -266,11 +266,13 @@ class Student extends \yii\db\ActiveRecord
             'categoryOfCohabitant',
             'studentCategory',
 
-
             'usernamePass',
             'username',
             'password',
 
+            // attent
+            'studentAttends',
+            'attends',
 
             'createdBy',
             'updatedBy',
@@ -281,6 +283,21 @@ class Student extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+
+    /**
+     * Gets query for [[StudentAttends]].
+     *
+     * @return \yii\db\ActiveQuery|StudentAttendQuery
+     */
+    public function getStudentAttends()
+    {
+        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id']);
+    }
+
+    public function getAttends()
+    {
+        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id']);
+    }
 
     public function getUsernamePass()
     {

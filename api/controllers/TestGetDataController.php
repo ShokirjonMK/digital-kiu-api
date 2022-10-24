@@ -40,7 +40,7 @@ class TestGetDataController extends ApiActiveController
         $errors = [];
         $soni = $i * 500;
 
-        return $this->response(1, _e('Success'), $soni);
+        // return $this->response(1, _e('Success'), $soni);
 
         $attends = Attend::find()
             ->limit(500)->offset($soni)->all();

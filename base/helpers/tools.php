@@ -446,6 +446,7 @@ function getIpMK()
 // Get IP address data
 function getIpAddressData($ip_address = null)
 {
+    return null;
     if (is_null($ip_address)) {
         $ip_address = getIpMK();
     }

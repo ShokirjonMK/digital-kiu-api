@@ -143,12 +143,9 @@ return [
         "enum_yesno",
         "exam-semeta_index",
 
-
-
-
         "exam-semeta_create",
         "exam-semeta_view",
-     
+
 
         "exam-appeal-semeta_create",
         "exam-appeal-semeta_index",
@@ -156,6 +153,7 @@ return [
 
 
         "exam-student_index",
+        "exam-student_view",
         "exam-student_update",
         "exams-type_create",
         "exams-type_index",

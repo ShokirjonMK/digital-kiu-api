@@ -156,6 +156,7 @@ return [
         "exam-student_index",
         "exam-student_view",
         "exam-student_update",
+        "exam-student_create",
         "exams-type_create",
         "exams-type_index",
         "exams-type_update",

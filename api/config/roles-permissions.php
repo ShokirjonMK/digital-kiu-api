@@ -146,6 +146,7 @@ return [
         "exam-semeta_create",
         "exam-semeta_view",
 
+        "exam-appeal_index",
 
         "exam-appeal-semeta_create",
         "exam-appeal-semeta_index",

@@ -35,7 +35,7 @@ class TestGetDataController extends ApiActiveController
         }
     }
 
-    // public function actionIndex($i)
+    // public function actionIndex111($i)
     // {
     //     $errors = [];
     //     $soni = $i * 500;
@@ -93,7 +93,6 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-
         $mip = MipServiceMK::getData(61801045840029, "2021-01-13");
         if ($mip['status']) {
             return $this->response(1, _e('Success'), $mip['data']);

@@ -253,6 +253,9 @@ class TimeTable extends \yii\db\ActiveRecord
             'lecture',
             /** */
 
+
+            'attendanceDates',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -262,11 +265,51 @@ class TimeTable extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getAttendanceDates()
+    {
+        $dateFromString = $this->eduSemestr->start_date;
+        $dateToString = $this->eduSemestr->end_date;
+
+        $dateFrom = new \DateTime($dateFromString);
+        $dateTo = new \DateTime($dateToString);
+        $dates = [];
+
+        if ($dateFrom > $dateTo) {
+            return $dates;
+        }
+
+        if ($this->week_id != $dateFrom->format('N')) {
+            $dateFrom->modify('next ' . $this->dayName()[$this->week_id]);
+        }
+
+        while ($dateFrom <= $dateTo) {
+            $dates[$dateFrom->format('Y-m-d')] = $this->getAttend($dateFrom->format('Y-m-d'));
+            $dateFrom->modify('+1 week');
+        }
+
+        return $dates;
+    }
+
+    public function dayName()
+    {
+        return [
+            1 => 'monday',
+            2 => 'tuesday',
+            3 => 'wednesday',
+            4 => 'thursday',
+            5 => 'friday',
+            6 => 'saturday',
+            7 => 'sunday',
+        ];
+    }
 
     public function getAttendance($date = null)
     {
         $date = $date ?? Yii::$app->request->get('date');
 
+        if (!($date >= $this->eduSemestr->start_date && $date <= $this->eduSemestr->end_date)) {
+            return 0;
+        }
         if (isset($date) && $date != null) {
             if ($date > date('Y-m-d')) {
                 return 0;
@@ -306,14 +349,16 @@ class TimeTable extends \yii\db\ActiveRecord
         } else {
             return 0;
         }
+
+        return 0;
     }
 
     public function getNow()
     {
-
         return [
             time(),
             date('Y-m-d H:i:s'),
+            date('Y-m-d'),
             date('H:i'),
             date('m'),
             date('M'),
@@ -344,7 +389,6 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getSubjectType()
     {
         // return 1;
-
         $eduSemester = EduSemestrSubject::findOne(
             [
                 'subject_id' => $this->subject_id,
@@ -421,6 +465,12 @@ class TimeTable extends \yii\db\ActiveRecord
         }
 
         return $this->hasMany(Attend::className(), ['time_table_id' => 'id'])->orderBy('date');
+    }
+
+    public function getAttend($date)
+    {
+        $date = date("Y-m-d", strtotime($date));
+        return Attend::findOne(['time_table_id' => $this->id, 'date' => $date]);
     }
 
     /**

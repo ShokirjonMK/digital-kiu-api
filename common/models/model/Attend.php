@@ -193,6 +193,36 @@ class Attend extends \yii\db\ActiveRecord
         return 0;
     }
 
+
+    public function hasAccess()
+    {
+        $date = $this->date;
+
+        $this->timeTable->eduSemestr;
+
+        if ($date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date)
+            if (isset($date) && $date != null) {
+                if ($date > date('Y-m-d')) {
+                    return 0;
+                }
+
+                if ($date == date('Y-m-d')) {
+                    if (($this->timeTable->week_id == date('w', strtotime($date))) && ($this->timeTable->para->start_time <  date('H:i'))) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    if (($this->timeTable->week_id == date('w', strtotime($date)))) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        return 0;
+    }
+
     /**
      * Gets query for [[EduPlan]].
      *
@@ -332,7 +362,12 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if (!$model->timeTable->getAttendance($model->date)) {
+        // if (!$model->timeTable->getAttendance($model->date)) {
+        //     $errors[] = _e("There is no access");
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
+        if (!$model->hasAccess()) {
             $errors[] = _e("There is no access");
             $transaction->rollBack();
             return simplify_errors($errors);

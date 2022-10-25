@@ -142,6 +142,19 @@ return [
         "enum_topic-types",
         "enum_yesno",
         "exam-semeta_index",
+
+
+
+
+        "exam-semeta_create",
+        "exam-semeta_view",
+     
+
+        "exam-appeal-semeta_create",
+        "exam-appeal-semeta_index",
+        "exam-appeal-semeta_view",
+
+
         "exam-student_index",
         "exam-student_update",
         "exams-type_create",

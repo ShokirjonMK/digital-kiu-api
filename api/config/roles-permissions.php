@@ -1395,6 +1395,8 @@ return [
         "subject-topic_index",
         "subject-type_index",
         "subject-type_view",
+        "subject-topic-reference_index",
+
         "subject_view",
         "time-table_index",
         "time-table_parent-null",

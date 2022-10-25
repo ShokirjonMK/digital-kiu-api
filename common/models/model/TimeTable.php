@@ -307,10 +307,12 @@ class TimeTable extends \yii\db\ActiveRecord
     {
         $date = $date ?? Yii::$app->request->get('date');
 
-        if (!($date >= $this->eduSemestr->start_date && $date <= $this->eduSemestr->end_date)) {
-            return 0;
-        }
+
         if (isset($date) && $date != null) {
+            if (!($date >= $this->eduSemestr->start_date && $date <= $this->eduSemestr->end_date)) {
+                return 0;
+            }
+
             if ($date > date('Y-m-d')) {
                 return 0;
             }

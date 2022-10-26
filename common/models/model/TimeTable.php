@@ -482,6 +482,9 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getStudentAttends()
     {
+        if (isRole('student')) {
+            return $this->hasMany(StudentAttend::className(), ['time_table_id' => 'id'])->onCondition(['student_id' => $this->student()]);
+        }
         return $this->hasMany(StudentAttend::className(), ['time_table_id' => 'id']);
     }
 

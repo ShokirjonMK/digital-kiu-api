@@ -77,6 +77,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
             [
                 [
+                    'archived',
                     'exam_id',
                     'question_id',
                     'parent_id',
@@ -163,6 +164,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
             'option_id',
             'answer',
             'ball',
+            'archived',
             'max_ball',
             'teacher_access_id',
             'attempt',
@@ -567,6 +569,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
                             $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
                             $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
+                            if (isset($subQuestionOneAnswerChecking->teacher_conclusion) && isset($subQuestionOneAnswerChecking->ball)) {
+                                $examStudentAnswerSubQuestion->is_cheked = 1;
+                            }
                             if ($examStudentAnswerSubQuestion->save()) {
                                 $mainBallForOneQuestion += $subQuestionOneAnswerChecking->ball;
                                 $subQuestionOneAnswerCount++;
@@ -590,6 +595,20 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+        }
+
+        /** Tekshirayotganda examStudent status aniqlash */
+        $examStudent = ExamStudent::findOne($model->exam_student_id);
+        // $examStudent->
+
+        if (!($examStudent->type > 0)) {
+
+            $examStudent->ball = $examStudent->allBall;
+
+            $examStudent->is_checked = $examStudent->isChecked;
+            $examStudent->is_checked_full = $examStudent->isCheckedFull;
+            $examStudent->has_answer = $examStudent->hasAnswer;
+            $examStudent->update(false);
         }
 
         if (count($errors) == 0) {

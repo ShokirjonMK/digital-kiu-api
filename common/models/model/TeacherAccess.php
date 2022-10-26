@@ -54,7 +54,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'subject_id', 'language_id'], 'required'],
-            [['user_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['is_lecture', 'user_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -71,6 +71,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'subject_id' => 'Subject ID',
             'language_id' => 'Languages ID',
+            'is_lecture' => 'is_lecture',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -89,8 +90,10 @@ class TeacherAccess extends \yii\db\ActiveRecord
                 return $model->teacher ?? null;
             },
             'user_id',
+            'is_lecture',
             'subject_id',
             'language_id',
+            'is_deleted',
             'status',
             'created_at',
             'updated_at',
@@ -102,20 +105,20 @@ class TeacherAccess extends \yii\db\ActiveRecord
         return $fields;
     }
 
-
     public function extraFields()
     {
         $extraFields =  [
-            'languages',
+            'language',
             'subject',
+            'subjectAll',
             'teacher',
             'examStudentCount',
             'examStudent',
             'user',
 
             'hasContent',
+            'content',
             'profile',
-
 
             'timeTables',
             'createdBy',
@@ -137,7 +140,6 @@ class TeacherAccess extends \yii\db\ActiveRecord
         return count($this->examStudent);
     }
 
-
     /**
      * Gets query for [[Languages]].
      *
@@ -148,6 +150,15 @@ class TeacherAccess extends \yii\db\ActiveRecord
         return $this->hasOne(Languages::className(), ['id' => 'language_id']);
     }
 
+    /**
+     * Gets query for [[Subject]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubjectAll()
+    {
+        return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
+    }
     /**
      * Gets query for [[Subject]].
      *
@@ -188,6 +199,24 @@ class TeacherAccess extends \yii\db\ActiveRecord
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+    }
+
+    public function getContent()
+    {
+        $model = new SubjectContent();
+
+        $query = $model->find()
+            ->andWhere(
+                ['user_id' => $this->user_id]
+            )
+            ->andWhere([
+                'in', 'subject_topic_id',
+                SubjectTopic::find()->select('id')->where(['subject_id' => $this->subject_id, 'lang_id' => $this->language_id])
+            ]);
+
+        $data = $query->all();
+
+        return count($data);
     }
 
     public function getHasContent()

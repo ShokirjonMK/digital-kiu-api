@@ -193,6 +193,14 @@ class ExamSemeta extends \yii\db\ActiveRecord
         $status = $post['status'] ?? null;
         $data['status'] = true;
         if (isset($examId)) {
+
+            /* $teacher_access_ids = ExamSemeta::find()
+                ->where(['exam_id' => $examId])
+                ->select('teacher_access_id')
+                ->asArray()
+                ->all(); */
+
+
             $exam = Exam::findOne($examId);
             if (isset($exam)) {
                 /** smetas */
@@ -223,8 +231,11 @@ class ExamSemeta extends \yii\db\ActiveRecord
                     //     $oldExamSemetaOne->save();
                     // }
 
-                    ExamSemeta::deleteAll(['exam_id' => $exam->id]);
+                    // ExamSemeta::deleteAll(['exam_id' => $exam->id]);
 
+
+
+                    $post_teacher_access_ids = [];
                     foreach (((array)json_decode($post['smetas'])) as  $teacherAccessId => $smetaAttribute) {
                         // [['exam_id', 'lang_id', 'teacher_access_id',  'count'], 'required'],
 
@@ -262,13 +273,16 @@ class ExamSemeta extends \yii\db\ActiveRecord
 
                             $newExamSmeta->status = self::STATUS_NEW;
 
-
                             if (!($newExamSmeta->validate())) {
                                 $errors[] = [$teacherAccessId => $newExamSmeta->errors];
                             }
 
                             $newExamSmeta->status = $status;
-                            $newExamSmeta->save();
+
+                            if ($newExamSmeta->save()) {
+                                $post_teacher_access_ids[] = $teacherAccessId;
+                            }
+
                             $data['data'][] = $newExamSmeta;
                         } else {
                             $errors[] = [$teacherAccessId  => _e(' Teacher Access Id is not vailed (' . $teacherAccessId . ')')];
@@ -287,6 +301,10 @@ class ExamSemeta extends \yii\db\ActiveRecord
             } else {
                 $errors['exam'] = [_e('Exam not found')];
             }
+
+            /*    $data['status'] = false;
+            $data['errors'] = $teacher_access_ids;
+            return $data; */
         } else {
             $errors['exam_id'] = [_e('Exam ID is required')];
         }

@@ -7,8 +7,10 @@ use Yii;
 use api\resources\Job;
 use base\ResponseStatus;
 use common\models\JobInfo;
+use common\models\model\Profile;
 use common\models\model\Semestr;
 use common\models\model\TimeTable;
+use common\models\User;
 
 class TeacherAccessController extends ApiActiveController
 {
@@ -19,6 +21,10 @@ class TeacherAccessController extends ApiActiveController
         return [];
     }
 
+
+    public $table_name = 'teacher_access';
+    public $controller_name = 'TeacherAccess';
+
     public function actionContent($lang)
     {
         $model = new TeacherAccess();
@@ -26,6 +32,11 @@ class TeacherAccessController extends ApiActiveController
         $query = $model->find()
             ->with(['teacher'])
             ->andWhere(['is_deleted' => 0]);
+
+
+        if (isRole(('teacher') && (!isRole('mudir')))) {
+            $query->andWhere(['user_id' => current_user_id()]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -70,7 +81,7 @@ class TeacherAccessController extends ApiActiveController
         $semester_ids = Semestr::find()->select('id')->where(['type' => $type]);
 
         $teacheIds =  TimeTable::find()
-            ->select('teacher_access_id')
+            ->select('teacher_user_id')
             ->where([
                 'para_id' => Yii::$app->request->get('para_id'),
                 'edu_year_id' => Yii::$app->request->get('edu_year_id'),
@@ -85,7 +96,7 @@ class TeacherAccessController extends ApiActiveController
             ->andWhere(['is_deleted' => 0]);
 
         if (isset($teacheIds)) {
-            $query->andFilterWhere(['not in', 'id', $teacheIds]);
+            $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
         }
 
         // filter
@@ -105,8 +116,34 @@ class TeacherAccessController extends ApiActiveController
         $model = new TeacherAccess();
 
         $query = $model->find()
-            // ->with(['teacher'])
-            ->andWhere(['is_deleted' => 0]);
+            ->where([$this->table_name . '.is_deleted' => 0])
+            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $this->table_name . '.user_id')
+            ->join('INNER JOIN', 'users', 'users.id = ' . $this->table_name . '.user_id');
+
+        $query->andWhere(['users.status' => User::STATUS_ACTIVE, 'deleted' => 0]);
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -138,11 +175,14 @@ class TeacherAccessController extends ApiActiveController
     public function actionUpdate($lang, $id)
     {
         $model = TeacherAccess::findOne($id);
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         $post = Yii::$app->request->post();
         $this->load($model, $post);
+
         $result = TeacherAccess::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e('TeacherAccess successfully updated.'), $model, null, ResponseStatus::OK);
@@ -156,9 +196,11 @@ class TeacherAccessController extends ApiActiveController
         $model = TeacherAccess::find()
             ->andWhere(['id' => $id])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

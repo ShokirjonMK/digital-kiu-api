@@ -12,6 +12,7 @@ use Yii;
 use common\models\model\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
+use common\models\model\KpiMark;
 use common\models\model\Region;
 use common\models\model\UserAccess;
 use common\models\model\UserAccessType;
@@ -78,6 +79,9 @@ class User extends CommonUser
             'last_name' => function ($model) {
                 return $model->profile->last_name ?? '';
             },
+            'middle_name' => function ($model) {
+                return $model->profile->middle_name ?? '';
+            },
             'role' => function ($model) {
                 return $model->roles ?? '';
             },
@@ -109,10 +113,14 @@ class User extends CommonUser
             'profile',
             'userAccess',
             'department',
+            'departmentName',
             'here',
 
             'roles',
             'rolesAll',
+
+            'kpiBall',
+            'kpiMark',
 
             'country',
             'region',
@@ -120,6 +128,10 @@ class User extends CommonUser
             'permanentCountry',
             'permanentRegion',
             'permanentArea',
+
+            'updatedBy',
+            'createdBy'
+
 
         ];
 
@@ -251,6 +263,23 @@ class User extends CommonUser
     }
 
 
+    public function getKpiBall()
+    {
+        return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->sum('ball');
+        // return $this->hasOne(Profile::className(), ['user_id' => 'id']);
+    }
+
+    public function getKpiMark()
+    {
+        return $this->hasMany(KpiMark::className(), ['user_id' => 'id']);
+    }
+
+    // public function getKafedra()
+    // {
+    //    return getUserAccess
+    //     return $this->hasOne(Kafedra::className(), ['user_id' => 'id']);
+    // }
+
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'id']);
@@ -300,6 +329,28 @@ class User extends CommonUser
     }
 
     // UserAccess
+    public function getDepartmentName()
+    {
+        $data = [];
+
+        // return $this->userAccess;
+        foreach ($this->userAccess as $userAccessOne) {
+            $user_access_type = $this->userAccess ? UserAccessType::findOne($userAccessOne->user_access_type_id) : null;
+            if ($user_access_type) {
+                $sssasaaa = $user_access_type->table_name::findOne(['id' => $userAccessOne->table_id]);
+
+                $data[$userAccessOne->user_access_type_id][] = $sssasaaa->translate->name;
+            }
+        }
+
+        return $data;
+        // return $this->userAccess->user_access_type_id;
+        $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
+
+        return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
+    }
+
+    // UserAccess
     public function getDepartment()
     {
         $data = [];
@@ -334,10 +385,6 @@ class User extends CommonUser
 
         return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
     }
-
-
-
-
 
     public static function createItem($model, $profile, $post)
     {
@@ -490,6 +537,61 @@ class User extends CommonUser
                     } else {
                         $errors[] = ['role' => [_e('Role is invalid')]];
                     }
+                }
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+
+        if (count($errors) == 0) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function selfUpdateItem($model, $profile, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (!$post) {
+            $errors[] = ['all' => [_e('Please send data.')]];
+        }
+
+        if (count($errors) == 0) {
+
+            if ($model->save()) {
+                // avatarni saqlaymiz
+                $model->avatar = UploadedFile::getInstancesByName('avatar');
+                if ($model->avatar) {
+                    $model->avatar = $model->avatar[0];
+                    $avatarUrl = $model->upload();
+                    if ($avatarUrl) {
+                        $profile->image = $avatarUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                // passport file saqlaymiz
+                $model->passport_file = UploadedFile::getInstancesByName('passport_file');
+                if ($model->passport_file) {
+                    $model->passport_file = $model->passport_file[0];
+                    $passportUrl = $model->uploadPassport();
+                    if ($passportUrl) {
+                        $profile->passport_file = $passportUrl;
+                    } else {
+                        $errors[] = $model->errors;
+                    }
+                }
+                // ***
+
+                if (!$profile->save()) {
+                    $errors[] = $profile->errors;
                 }
             } else {
                 $errors[] = $model->errors;

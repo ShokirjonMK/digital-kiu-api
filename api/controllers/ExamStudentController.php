@@ -52,6 +52,8 @@ class ExamStudentController extends ApiActiveController
 
         //  Filter from Profile 
         $profile = new Profile();
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {

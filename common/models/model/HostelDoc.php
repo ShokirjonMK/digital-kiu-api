@@ -74,6 +74,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             ],
 
             [['description', 'conclution'], 'string'],
+            [['ball'], 'double'],
             [['file'], 'string', 'max' => 255],
 
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
@@ -106,6 +107,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             'file',
             'description',
             'user_id',
+            'ball',
 
             'start',
             'finish',
@@ -136,6 +138,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             'file',
             'description',
             'user_id',
+            'ball',
 
             'order',
             'status',
@@ -148,8 +151,6 @@ class HostelDoc extends \yii\db\ActiveRecord
 
         return $fields;
     }
-
-
 
     public function extraFields()
     {
@@ -178,34 +179,30 @@ class HostelDoc extends \yii\db\ActiveRecord
     // hostelApp
     public function getHostelApp()
     {
-        return $this->hasOne(HostelApp::className(), ['id' => 'hostelApp']);
+        return $this->hasOne(HostelApp::className(), ['id' => 'hostel_app_id']);
     }
 
     // hostelCategory
     public function getHostelCategory()
     {
-        return $this->hasOne(HostelCategory::className(), ['id' => 'hostelCategory']);
+        return $this->hasOne(HostelCategory::className(), ['id' => 'hostel_category_id']);
     }
 
     // hostelCategoryType
     public function getHostelCategoryType()
     {
-        return $this->hasOne(HostelCategoryType::className(), ['id' => 'hostelCategoryType']);
+        return $this->hasOne(HostelCategoryType::className(), ['id' => 'hostel_category_type_id']);
     }
-
-
 
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
             return simplify_errors($errors);
         }
-
 
         // hostel file saqlaymiz
         $model->hostel_file = UploadedFile::getInstancesByName('hostel_file');
@@ -253,6 +250,14 @@ class HostelDoc extends \yii\db\ActiveRecord
             }
         }
         // ***
+
+        if ($model->is_checked = HostelDoc::IS_CHECKED_TRUE) {
+            if ($model->hostel_category_id > 0) {
+                $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+            } else {
+                $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+            }
+        }
 
         if ($model->save()) {
             $transaction->commit();

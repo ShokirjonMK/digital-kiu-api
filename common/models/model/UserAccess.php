@@ -162,6 +162,7 @@ class UserAccess extends \yii\db\ActiveRecord
             'fullName',
             'workRate',
             'jobTitle',
+            'department',
 
             'createdBy',
             'updatedBy',

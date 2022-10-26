@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\resources\User as ResourcesUser;
 use common\models\model\UserStatistic;
 use Yii;
 use common\models\model\Department;
@@ -16,6 +17,8 @@ use common\models\model\ExamStudentAnswerSubQuestion;
 use common\models\model\Faculty;
 use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
+use common\models\model\KpiMark;
+use common\models\model\SubjectContentMark;
 use common\models\model\TeacherAccess;
 use common\models\model\UserStatistic1;
 use common\models\User;
@@ -382,20 +385,6 @@ class StatisticController extends ApiActiveController
 
     public function actionExamChecking($lang)
     {
-        // $data = [];
-
-        // $examSemeta = TeacherAccess::find()
-        //     ->where(['is_deleted' => 0])
-        //     ->orderBy('user_id')
-        //     ->all();
-
-        // foreach ($examSemeta as $examSemetaOne) {
-        //     $data[$examSemetaOne->id] = $examSemetaOne->teacher;
-        // }
-
-        // return $data;
-
-
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
@@ -554,5 +543,64 @@ class StatisticController extends ApiActiveController
         }
 
         return $data;
+    }
+
+
+    public function actionKpiContentStore()
+    {
+        $model = new UserStatistic();
+
+        $query = $model->find()
+            ->with(['profile'])
+            ->andWhere(['users.deleted' => 0])
+            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->groupBy('users.id');
+
+        // dd($query->createCommand()->getRawSql());
+        $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+        $data = [];
+        $errors = [];
+        $created_by = 7457;
+        $users = $query->all();
+        foreach ($users as $userOne) {
+
+            $summ = SubjectContentMark::find()
+                ->where(['user_id' => $userOne->id])
+                ->sum('ball');
+            $count = SubjectContentMark::find()
+                ->where(['user_id' => $userOne->id])
+                ->count();
+
+            $created = SubjectContentMark::findOne(['user_id' => $userOne->id]);
+            if ($created) $created_by  = $created->created_by;
+
+            // $data[$userOne->id]['sum'] = $summ;
+            // $data[$userOne->id]['count'] = $count;
+            if ($count > 0) {
+
+                $hasKpiMark = KpiMark::findOne(['user_id' => $userOne->id, 'kpi_category_id' => 8]);
+                if ($hasKpiMark) {
+                    $newKpiMark = $hasKpiMark;
+                } else {
+                    $newKpiMark = new KpiMark();
+                }
+                $newKpiMark->type = 1;
+                $newKpiMark->created_by = $created_by;
+                $newKpiMark->kpi_category_id = 8;
+                $newKpiMark->user_id = $userOne->id;
+                $newKpiMark->edu_year_id = 16;
+                $newKpiMark->ball = round($summ / $count);
+                $result = KpiMark::createItemStat($newKpiMark);
+                if (is_array($result)) {
+                    $errors[] = [$userOne->id => [$newKpiMark, $result]];
+                }
+            }
+        }
+
+        if (count($errors) > 0) {
+            return $errors;
+        }
+        return "ok";
     }
 }

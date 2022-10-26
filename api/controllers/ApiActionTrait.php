@@ -73,21 +73,20 @@ trait ApiActionTrait
      * @return void
      */
 
- /*    public function afterAction($action, $result)
+    public function afterAction($action, $result)
     {
 
         // vdd(Yii::$app->request);
         // vdd(get_host());
         // vdd(getIpAddressData());
 
-
         $action_log = Yii::$app->session->get('action_log');
         $action_log->user_id = current_user_id();
         $action_log->status = isset($result['status']) ? $result['status'] : 'Failed';
         $action_log->message = isset($result['message']) ? $result['message'] : 'Failed';
         $action_log->browser = json_encode(getBrowser());
-        // $action_log->ip_address = getIpAddress();
-        // $action_log->host = get_host();
+        // $action_log->ip_address = getIpMK();
+        $action_log->host = get_host();
         // $action_log->ip_address_data = json_encode(getIpAddressData());
 
         if (isset($result['errors'])) {
@@ -103,7 +102,7 @@ trait ApiActionTrait
         $action_log->save(false);
         // dd(json_encode($result));
         return $result;
-    } */
+    }
 
     /**
      * Before action
@@ -124,7 +123,7 @@ trait ApiActionTrait
             return false;
         }
 
-        // echo "Please wait!!"; die(); return 0;
+      //  echo "Please wait!!"; die(); return 0;
 
         $lang = Yii::$app->request->get('lang');
 
@@ -267,6 +266,18 @@ trait ApiActionTrait
         ]);
     }
 
+    public function getDataNoPage($query, $perPage = 0, $validatePage = true)
+    {
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => Yii::$app->request->get('per-page') ?? $perPage,
+                'validatePage' => $validatePage
+            ],
+        ]);
+    }
+
     public function response($status, $message, $data = null, $errors = null, $responsStatusCode = 200)
     {
         Yii::$app->response->statusCode = $responsStatusCode;
@@ -362,6 +373,14 @@ trait ApiActionTrait
         }
 
         if (property_exists($roles, 'hr')) {
+            return $t;
+        }
+
+        if (property_exists($roles, 'kpi_check')) {
+            return $t;
+        }
+
+        if (property_exists($roles, 'hostel')) {
             return $t;
         }
 

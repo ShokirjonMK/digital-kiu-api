@@ -246,8 +246,8 @@ class System
                             $config['name'] = array_value($config, 'name', _e('No theme name'));
                             $config['description'] = array_value($config, 'description', '');
                             $config['version'] = array_value($config, 'version', '1.0.0');
-                            $config['author'] = array_value($config, 'author', 'Eurosoft UZ');
-                            $config['author_url'] = array_value($config, 'author_url', 'https://eurosoft.uz/');
+                            $config['author'] = array_value($config, 'author', 'SokirjonMK');
+                            $config['author_url'] = array_value($config, 'author_url', 'https://t.me/SokirjonMK');
 
                             $set = $config;
                             $set['theme_key'] = $theme_key;

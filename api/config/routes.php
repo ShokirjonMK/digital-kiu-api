@@ -38,15 +38,18 @@ $controllers = [
     'edu-semestr-subject',
     'edu-semestr-subject-category-time',
     'teacher-access',
-    'time-table',
     'password',
     'translate',
     'week',
     'region',
     'area',
-    'student-time-table',
     'student-exam',
     'country',
+
+    'time-table',
+    'time-option',
+    'student-time-table',
+    'student-time-option',
 
     'exam',
     'exam-student',
@@ -124,15 +127,28 @@ $controllers = [
     'military',
     'cantract',
 
-    'content',
-    'kpi-marking',
+    'subject-content-mark',
+    'kpi-mark',
     'subject-topic-reference',
     'hostel-category',
     'hostel-category-type',
     'hostel-app',
     'hostel-doc',
+
     'exam-control-student',
     'exam-control',
+
+    'teacher-content',
+    'student-subject-selection',
+
+    'club-category',
+    'club',
+    'club-time',
+    
+    'student-club',
+    
+    'attend',
+
 
 
     'telegram',
@@ -154,9 +170,22 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
+    /** telegram */
+    'GET <lang:\w{2}>/telegrams/bot' => 'telegram/bot',
+
+
+    /** MIP pinfl */
+    'GET <lang:\w{2}>/users/get/' => 'user/get',
+
+    /** Student from Hemis via pinfl */
+    'GET <lang:\w{2}>/students/get/' => 'student/get',
+    /** Student For turniket */
+    'GET <lang:\w{2}>/students/by-pinfl/<pinfl>' => 'student/by-pinfl',
+    'GET <lang:\w{2}>/students/time-option-not/' => 'student/time-option-not',
 
     /** Hostel Yotoqxona */
     'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
+    'GET <lang:\w{2}>/hostel-docs/not/<id>/' => 'hostel-doc/not',
 
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',
@@ -167,6 +196,7 @@ $routes = [
     /* statistics all */
     // statistic student-count-by-faculty
     'GET <lang:\w{2}>/statistics/student-count-by-faculty' => 'statistic/student-count-by-faculty',
+    'GET <lang:\w{2}>/statistics/kpi-content-store' => 'statistic/kpi-content-store',
 
     // statistic Kafedra Questions Teachers
     'GET <lang:\w{2}>/statistics/kafedra' => 'statistic/kafedra',
@@ -187,8 +217,14 @@ $routes = [
     // KpiCategory Extra fields, term, tab, status
     'GET <lang:\w{2}>/kpi-categories/extra' => 'kpi-category/extra',
 
+
+
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
+    // User Self update data
+    'PUT <lang:\w{2}>/users/self' => 'user/self',
+    // User Get Self data
+    'GET <lang:\w{2}>/users/self' => 'user/selfget',
     // Get me
     'GET <lang:\w{2}>/users/me' => 'user/me',
     // Log out

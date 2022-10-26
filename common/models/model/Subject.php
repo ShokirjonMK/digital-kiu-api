@@ -100,6 +100,7 @@ class Subject extends \yii\db\ActiveRecord
             'kafedra_id',
             'semestr_id',
             'parent_id',
+            'is_deleted',
             'order',
             'status',
             'created_at',

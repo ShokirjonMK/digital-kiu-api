@@ -46,14 +46,7 @@ use yii\helpers\Html;
                     <table border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse;text-align:center;" align="center">
                         <tbody>
                             <tr>
-                                <td>
-                                    <p style="font-size:13px;color:#4c4c4c;padding: 0;margin: 20px 0 0 0;">
-                                        © <?= date('Y') . ' Все права защищены. ' . get_setting_value('site_name');; ?>
-                                    </p>
-                                    <p style="font-size:13px;color:#4c4c4c;padding: 0;margin: 5px 0 0 0;">
-                                        Created by <a href="https://www.eurosoft.uz/">www.eurosoft.uz</a>
-                                    </p>
-                                </td>
+
                             </tr>
                             <tr>
                                 <td height="20"></td>

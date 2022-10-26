@@ -106,7 +106,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'updated_by',
                     'is_deleted',
                     'act',
-                    'type'
+                    'type',
+                    'archived'
                 ], 'integer'
             ],
             [['ball', 'in_ball', 'on1', 'on2'], 'double'],
@@ -184,6 +185,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'type',
             'on1',
             'on2',
+            'archived',
 
             'conclusion',
             'plagiat_file',
@@ -318,7 +320,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
         $query->andWhere([
-            'or',
+            'and',
             [$model->tableName() . '.ball' => null],
             [$model->tableName() . '.teacher_conclusion' => null]
         ]);
@@ -654,7 +656,10 @@ class ExamStudent extends \yii\db\ActiveRecord
     public static function correct($i)
     {
         $soni = $i * 5000;
-        $model = ExamStudent::find()->limit(10000)->offset($soni)->all();
+        $model = ExamStudent::find()
+            ->where(['type' => null])
+            ->andWhere(['is_checked_full' => 0])
+            ->limit(10000)->offset($soni)->all();
 
         foreach ($model as $modelOne) {
             if (!($modelOne->type > 0)) {

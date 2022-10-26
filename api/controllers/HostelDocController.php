@@ -25,7 +25,6 @@ class HostelDocController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
-
         if (isRole("student")) {
             $query = $query->andWhere([
                 'student_id' => $this->student()
@@ -87,7 +86,7 @@ class HostelDocController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if (!isRole("student")) {
+        if (isRole("student")) {
             if ($model->user_id != current_user_id()) {
                 return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
@@ -96,7 +95,9 @@ class HostelDocController extends ApiActiveController
         $post = Yii::$app->request->post();
 
         $this->load($model, $post);
+
         $result = HostelDoc::updateItem($model, $post);
+
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -112,7 +113,7 @@ class HostelDocController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        if (!isRole("student")) {
+        if (isRole("student")) {
             if ($model->user_id != current_user_id()) {
                 return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
@@ -131,16 +132,35 @@ class HostelDocController extends ApiActiveController
         }
 
         if ($model->hostel_category_id > 0) {
-            $model->ball = $model->hostelCategoryType->ball;
+            $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
         } else {
-            $model->ball = $model->hostelCategory->ball;
+            $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
         }
-
         $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
 
-        $model->update();
+        if ($model->save()) {
+            return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $model->errors, ResponseStatus::BAD_REQUEST);
+        }
+    }
+    public function actionNot($lang, $id)
+    {
+        $model = HostelDoc::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
 
-        return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);
+        $model->is_checked = HostelDoc::IS_CHECKED_FALSE;
+        $model->ball = 0;
+
+        if ($model->save()) {
+            return $this->response(1, _e('Refused.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $model->errors, ResponseStatus::BAD_REQUEST);
+        }
     }
 
     public function actionDelete($lang, $id)

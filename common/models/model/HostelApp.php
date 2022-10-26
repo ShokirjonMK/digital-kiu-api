@@ -22,7 +22,9 @@ class HostelApp extends \yii\db\ActiveRecord
     }
 
     const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_ACCEPTED = 1;
+    const STATUS_REJECTED = 2;
+    const STATUS_REVISION = 3;
 
     const STATUS_IN_CHECKING = 2;
 
@@ -64,17 +66,15 @@ class HostelApp extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
 
-            [['description'], 'string'],
+            [['description', 'conclution'], 'string'],
 
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => ModelsUser::className(), 'targetAttribute' => ['user_id' => 'id']],
 
-
             // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
-            [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id']],
-
+            // [['student_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'is_deleted']],
 
         ];
     }
@@ -87,12 +87,13 @@ class HostelApp extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
 
-            'student_id',
-            'user_id',
-            'faculty_id',
-            'edu_year_id',
-            'ball',
-            'description',
+            'student_id' => _e('student_id'),
+            'user_id' => _e('user_id'),
+            'faculty_id' => _e('faculty_id'),
+            'edu_year_id' => _e('edu_year_id'),
+            'ball' => _e('ball'),
+            'description' => _e('description'),
+            'conclution' => _e('conclution'),
 
             'status' => _e('Status'),
             'order' => _e('Order'),
@@ -115,6 +116,7 @@ class HostelApp extends \yii\db\ActiveRecord
             'edu_year_id',
             'ball',
             'description',
+            'conclution',
 
             'order',
             'status',
@@ -122,6 +124,7 @@ class HostelApp extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
+            'is_deleted',
 
         ];
 
@@ -133,7 +136,9 @@ class HostelApp extends \yii\db\ActiveRecord
         $extraFields =  [
             'student',
             'eduYear',
+            'profile',
             'hostelDoc',
+            'isChecked',
 
             'createdBy',
             'updatedBy',
@@ -144,9 +149,31 @@ class HostelApp extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getIsChecked()
+    {
+        $model = new HostelDoc();
+
+        $query = $model->find();
+        $query->andWhere(['not', ['is_checked' => null]]);
+
+        if (count($query->all()) > 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+
+        return $this->hasMany(HostelDoc::className(), ['hostel_app_id' => 'id'])->onCondition(['student_id' => $this->student_id]);
+    }
+
+
     public function getStudent()
     {
         return $this->hasOne(Student::className(), ['id' => 'student_id']);
+    }
+
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
 
     public function getHostelDoc()
@@ -170,6 +197,19 @@ class HostelApp extends \yii\db\ActiveRecord
         $errors = [];
 
         $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
+
+        $has = self::findOne(['user_id' => $model->user_id, 'edu_year_id' => $model->edu_year_id]);
+
+        if ($has) {
+            if ($has->is_deleted == 1) {
+                $has->is_deleted = 0;
+            }
+            $has->description = $model->description;
+            if ($has->update()) {
+                $transaction->commit();
+                return true;
+            }
+        }
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -240,7 +280,9 @@ class HostelApp extends \yii\db\ActiveRecord
     {
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
-            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+            self::STATUS_ACCEPTED => _e('STATUS_ACCEPTED'),
+            self::STATUS_REJECTED => _e('STATUS_REJECTED'),
+            self::STATUS_REVISION => _e('STATUS_REVISION'),
 
         ];
     }

@@ -24,6 +24,21 @@ class AccessControlController extends ApiActiveController
 
         $user_id = Current_user_id();
 
+
+        if (isRole('admin')) {
+            $roles = new AuthItem();
+            $queryRole = $roles->find()
+                ->where(['type' => 1])
+                ->andFilterWhere(['like', 'child', Yii::$app->request->get('q')]);
+            // sort
+            $queryRole = $this->sort($queryRole);
+
+            // data
+            $data =  $this->getDataNoPage($queryRole);
+
+            return $this->response(1, _e('Success'), $data);
+        }
+
         $getMyRoles = AuthAssignment::find()->select("item_name")->where([
             'user_id' => $user_id
         ]);

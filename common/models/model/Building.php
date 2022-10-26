@@ -154,6 +154,8 @@ class Building extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         $has_error = Translate::checkingAll($post);

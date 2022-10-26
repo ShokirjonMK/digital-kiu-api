@@ -58,12 +58,13 @@ class SubjectContentController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
-        if (isRole('teacher') && !isRole('mudir')) {
+        if (isRole('teacher') && (!isRole('mudir') && !isRole('contenter'))) {
+            // if (isRole('teacher') && !isRole('mudir')) {
             $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
         }
 
         if (Yii::$app->request->get('user_id') != null) {
-            $query->andWhere([$this->table_name . '.created_by' => Yii::$app->request->get('sort')]);
+            $query->andWhere([$this->table_name . '.created_by' => Yii::$app->request->get('user_id')]);
         }
 
         // filter
@@ -85,6 +86,7 @@ class SubjectContentController extends ApiActiveController
         $this->load($model, $post);
 
         $result = SubjectContent::createItem($model, $post);
+        // return $result;
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {

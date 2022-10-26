@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\HostelApp;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Profile;
 
 class HostelAppController extends ApiActiveController
 {
@@ -24,6 +25,31 @@ class HostelAppController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+        $query->join('INNER JOIN', 'profile', 'profile.user_id = hostel_app.user_id')
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
 
         if (isRole("student")) {
@@ -80,6 +106,11 @@ class HostelAppController extends ApiActiveController
         }
         $post = Yii::$app->request->post();
 
+        if (isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
         $this->load($model, $post);
         $result = HostelApp::updateItem($model, $post);
         if (!is_array($result)) {
@@ -97,14 +128,17 @@ class HostelAppController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if (isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
     public function actionDelete($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-
-
         $model = HostelApp::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
@@ -113,11 +147,17 @@ class HostelAppController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        if (isRole("student")) {
+            if ($model->user_id != current_user_id()) {
+                return $this->response(0, _e('This is not yours.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
         // remove model
         if ($model) {
             // Translate::deleteTranslate($this->table_name, $model->id);
-            $model->is_deleted = 1;
-            $model->update();
+            $model->delete();
+            // $model->update();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

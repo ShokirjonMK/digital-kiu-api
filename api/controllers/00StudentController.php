@@ -279,11 +279,11 @@ class  StudentController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        $post = Yii::$app->request->post();
         $student = Student::findOne($id);
         if (!$student) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        $post = Yii::$app->request->post();
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {

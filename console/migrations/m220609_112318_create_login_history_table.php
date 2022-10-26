@@ -29,7 +29,9 @@ class m220609_112318_create_login_history_table extends Migration
             'model_device' => $this->string(255)->Null(),
             'data' => $this->text()->null(),
             'host' => $this->text()->null(),
+            'ip_data' => $this->text()->null(),
 
+            'created_on' => $this->dateTime()->Null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),

@@ -139,6 +139,7 @@ class KpiCategory extends \yii\db\ActiveRecord
             'extra',
 
             'kpiData',
+            'kpiMark',
 
             'createdBy',
             'updatedBy',
@@ -199,7 +200,18 @@ class KpiCategory extends \yii\db\ActiveRecord
         return $this->hasMany(KpiData::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
     }
 
+    public function getKpiMark()
+    {
+        $edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
 
+        return $this->hasOne(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'edu_year_id' => $edu_year_id, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
+    }
+
+
+    public function getKpiCategory()
+    {
+        return $this->hasMany(KpiMark::class, ['kpi_category_id' => 'id']);
+    }
 
     public static function createItem($model, $post)
     {
@@ -210,19 +222,22 @@ class KpiCategory extends \yii\db\ActiveRecord
         //     $errors[] = $model->errors;
         // }
 
-        if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
-            $post['fields'] =  substr($post['fields'], 1, -1);
-        }
+        if (isset($post['fields'])) {
 
-        if (!isJsonMK($post['fields'])) {
-            $errors['fields'] = [_e('Must be Json')];
-        } else {
-            $fields = ((array)json_decode($post['fields']));
-            // dd($fields);
-            if (!empty(array_diff($fields, self::categoryFields()))) {
-                $errors['fields'] = [_e('Incorrect fields')];
+            if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
+                $post['fields'] =  substr($post['fields'], 1, -1);
+            }
+
+            if (!isJsonMK($post['fields'])) {
+                $errors['fields'] = [_e('Must be Json')];
             } else {
-                $model->fields = $fields;
+                $fields = ((array)json_decode($post['fields']));
+                // dd($fields);
+                if (!empty(array_diff($fields, self::categoryFields()))) {
+                    $errors['fields'] = [_e('Incorrect fields')];
+                } else {
+                    $model->fields = $fields;
+                }
             }
         }
 

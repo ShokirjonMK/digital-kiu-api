@@ -41,7 +41,6 @@ class MipTokenGen
 
         // curl execute (get response)
 
-
         if (curl_errno($mk_curl)) {
             $error_msg = curl_error($mk_curl);
             curl_close($mk_curl);

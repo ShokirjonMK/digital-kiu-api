@@ -77,11 +77,6 @@
         <?php else : ?>
             <p>Our store is under construction!</p>
         <?php endif; ?>
-
-        <p class="copyright">
-            <b>&copy; <?= date('Y'); ?> <?= $brand_name ?> - All rights reserved.</b>
-            <b>Created by <a href="https://www.eurosoft.uz" target="_blank">Eurosoft UZ</a></b>
-        </p>
     </div>
 </body>
 

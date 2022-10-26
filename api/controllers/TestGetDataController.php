@@ -2,11 +2,16 @@
 
 namespace api\controllers;
 
+use api\components\HemisMK;
 use api\components\MipService;
+use api\components\MipServiceMK;
+use api\components\MipTokenGen;
 use api\components\PersonDataHelper;
-use common\models\model\TeacherAccess;
-use Yii;
+
 use base\ResponseStatus;
+use common\models\model\Attend;
+use common\models\model\LoginHistory;
+use common\models\model\StudentAttend;
 
 class TestGetDataController extends ApiActiveController
 {
@@ -17,19 +22,134 @@ class TestGetDataController extends ApiActiveController
         return [];
     }
 
+    public function actionHemis($pinfl)
+    {
+        $hemis = new HemisMK();
+
+        $data = $hemis->getHemis($pinfl);
+        // return $data;
+        if ($data->success) {
+            return $this->response(1, _e('Success'), $data->data);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $data->data, ResponseStatus::FORBIDDEN);
+        }
+    }
+
+    // public function actionIndex111($i)
+    // {
+    //     $errors = [];
+    //     $soni = $i * 500;
+
+    //     // return $this->response(1, _e('Success'), $soni);
+
+    //     $attends = Attend::find()
+    //         ->limit(500)->offset($soni)->all();
+
+
+    //     foreach ($attends as $one) {
+
+
+    //         foreach ($one->student_ids as $student_id) {
+    //             /** new Student Attent here */
+
+    //             /** Checking student is really choos this time table */
+
+    //             /** Checking student is really choos this time table */
+    //             $newStudentAttend = new StudentAttend();
+    //             $newStudentAttend->student_id = $student_id;
+    //             $newStudentAttend->attend_id = $one->id;
+    //             $newStudentAttend->time_table_id = $one->time_table_id;
+    //             $newStudentAttend->subject_id = $one->subject_id;
+    //             $newStudentAttend->date = $one->date;
+    //             $newStudentAttend->subject_category_id = $one->subject_category_id;
+    //             $newStudentAttend->edu_year_id = $one->edu_year_id;
+    //             $newStudentAttend->time_option_id = $one->time_option_id;
+    //             $newStudentAttend->edu_semestr_id = $one->edu_semestr_id;
+    //             $newStudentAttend->faculty_id = $one->faculty_id;
+    //             $newStudentAttend->course_id = $one->timeTable->course_id;
+    //             $newStudentAttend->edu_plan_id = $one->edu_plan_id;
+    //             $newStudentAttend->type = $one->type;
+    //             $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
+
+    //             $newStudentAttend->updated_by = $one->updated_by;
+    //             $newStudentAttend->created_by = $one->created_by;
+    //             $newStudentAttend->updated_at = $one->updated_at;
+    //             $newStudentAttend->created_at = $one->created_at;
+
+    //             // return $this->response(1, _e('Success'), $newStudentAttend->created_at);
+
+    //             // $newStudentAttend->reason = $one->reason;
+    //             if (!$newStudentAttend->save()) {
+    //                 $errors[] = [$student_id => $newStudentAttend->errors];
+    //             }
+    //             /** new Student Attent here */
+    //         }
+    //     }
+
+    //     return $this->response(1, _e('Success'), $errors);
+    // }
+
+
+
     public function actionIndex($passport = null, $jshir = null)
     {
+        $mip = MipServiceMK::getData(61801045840029, "2021-01-13");
+        if ($mip['status']) {
+            return $this->response(1, _e('Success'), $mip['data']);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $mip['error'], ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+
+        $pin = "61801045840029";
+        $document_issue_date =  "2021-01-13";
+
+        // Define the Base64 value you need to save as an image
+        $base64string = "/9j/4AAQF9\nPSn4FR4NLg+tID//2Q==";
+
+        // $base64string = '';
+        $uploadpath   = STORAGE_PATH  . 'base64/';
+        if (!file_exists(STORAGE_PATH  . 'base64/')) {
+            mkdir(STORAGE_PATH  . 'base64/', 0777, true);
+        }
+
+
+        $parts        = explode(
+            ";base64,",
+            $base64string
+        );
+        $imageparts   = explode("image/", @$parts[0]);
+        // $imagetype    = $imageparts[1];
+        $imagebase64  = base64_decode($base64string);
+        $miniurl = uniqid() . '.png';
+        $file = $uploadpath . $miniurl;
+
+        file_put_contents($file, $imagebase64);
+
+        return 'storage/base64/' . $miniurl;
+        //    return LoginHistory::createItemLogin();
+
+        // return getIpAddressData();
+
+        // return 1;
+        // $data = MipTokenGen::getToken();
+        $pinpp = "60111016600035";
+        $doc_give_date = "2017-09-28";
+
+        $data = MipService::getPhotoService($pinpp, $doc_give_date);
+
+        return $this->response(1, _e('Success'), $data);
+
 
         $mk = new MipService();
-        $pinpp = "30111975890051";
-        $doc_give_date = "2014-12-09";
+
 
         // $xml = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date)); // where $xml_string is the XML data you'd like to use (a well-formatted XML string). If retrieving from an external source, you can use file_get_contents to retrieve the data and populate this variable.
         // $json = json_encode($xml); // convert the XML string to JSON
         // $array = json_decode($json, TRUE);
 
 
-       /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
+        /*  $xmlObject = simplexml_load_string($mk->getPhotoService($pinpp, $doc_give_date));
 
         //Encode the SimpleXMLElement object into a JSON string.
         $jsonString = json_encode($xmlObject);
@@ -47,7 +167,7 @@ class TestGetDataController extends ApiActiveController
 
         $rrrr = $mk->getPhotoService($pinpp, $doc_give_date);
 
-        return $rrrr ;
+        return $rrrr;
         return simplexml_load_file($rrrr);
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

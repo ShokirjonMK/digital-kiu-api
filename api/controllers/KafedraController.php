@@ -47,6 +47,7 @@ class KafedraController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
+            
 
 
         /*  is Self  */
@@ -72,7 +73,7 @@ class KafedraController extends ApiActiveController
             $query->where([
                 'in', $this->table_name . '.id', $k['UserAccess']->table_id
             ])->all();
-        } elseif ($t['status'] == 2) {
+        } elseif ($k['status'] == 2) {
             $query->andFilterWhere([
                 'faculty_id' => -1
             ]);

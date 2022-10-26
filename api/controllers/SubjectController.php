@@ -39,6 +39,18 @@ class SubjectController extends ApiActiveController
                 ->where(['faculty_id' => $facultyId])
                 ->select('id')]);
         }
+        if (isRole('content_assign')) {
+
+            // filter
+            $query = $this->filterAll($query, $model);
+
+            // sort
+            $query = $this->sort($query);
+
+            // data
+            $data =  $this->getData($query);
+            return $this->response(1, _e('Success'), $data);
+        }
 
         if (isRole('mudir')) {
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);

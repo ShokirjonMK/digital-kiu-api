@@ -68,6 +68,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                 [
                     'exam_student_answer_id',
                     'sub_question_id',
+                    'is_cheked',
 
                     'exam_student_id',
                     'student_id',
@@ -79,6 +80,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
+                    'archived',
                 ], 'integer'
             ],
             [['answer'], 'string'],
@@ -113,6 +115,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             'student_id' => _e('student_id'),
 
             'old_ball' => _e('old_ball'),
+            'is_cheked' => _e('is_cheked'),
             'appeal_teacher_conclusion' => _e('appeal_teacher_conclusion'),
 
             'order' => _e('Order'),
@@ -146,6 +149,9 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
 
             'appeal_teacher_conclusion',
             'old_ball',
+            'is_cheked',
+
+            'archived',
 
             'order',
             'status',

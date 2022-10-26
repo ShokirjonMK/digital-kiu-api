@@ -56,6 +56,7 @@ class LoginHistory extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
+            [['ip_data'], 'safe'],
             [['data', 'host'], 'string'],
             [['user_id', 'log_in_out', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['ip', 'device', 'device_id', 'type', 'model_device'], 'string', 'max' => 255],
@@ -71,6 +72,7 @@ class LoginHistory extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'ip' => 'Ip',
+            'ip_data' => 'ip_data',
             'user_id' => 'User ID',
             'device' => 'Device',
             'device_id' => 'Device ID',
@@ -111,31 +113,25 @@ class LoginHistory extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public static function createItemLogin($user_id, $log_in_out = self::LOGIN)
+    public static function createItemLogin($user_id = null, $log_in_out = self::LOGIN)
     {
         // dd($log_in_out);
         $model = new self;
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model->user_id = $user_id;
-        $model->ip = getIpAddress();
-        $model->data = json_encode(getBrowser());
+        $model->user_id = $user_id ?? current_user_id();
+        $model->ip = getIpMK();
+        $browser = getBrowser();
+
+        $model->device_id = $browser['device'];
+        $model->device = $browser['platform'];
+        $model->data = json_encode($browser);
         $model->host = get_host();
         $model->log_in_out = $log_in_out;
-
-        // vdd(Yii::$app->request);
-        // vdd(get_host());
-        // vdd(getIpAddressData());
-
-        // ip
-        // user_id
-        // device
-        // device_id
-        // type
-        // model_device
-        // data
-
+        if ($ipData = getIpAddressData()) {
+            $model->ip_data = $ipData;
+        }
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -190,6 +186,7 @@ class LoginHistory extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = Current_user_id();
+            $this->created_on = date("Y-m-d H:i:s");
         } else {
             $this->updated_by = Current_user_id();
         }

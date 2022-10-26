@@ -73,6 +73,12 @@ class KpiData extends \yii\db\ActiveRecord
             ],
             [
                 [
+                    'link',
+                    'link2',
+                ], 'string'
+            ],
+            [
+                [
                     'ball',
                 ], 'double'
             ],
@@ -82,8 +88,7 @@ class KpiData extends \yii\db\ActiveRecord
                     'file2',
                     'file3',
                     'file4',
-                    'link',
-                    'link2',
+
                     'number',
                     'level',
                     'name',
@@ -360,7 +365,6 @@ class KpiData extends \yii\db\ActiveRecord
         }
         // ***
 
-
         // kpi file saqlaymiz
         $model->kpi_file4 = UploadedFile::getInstancesByName('kpi_file4');
         if ($model->kpi_file4) {
@@ -374,10 +378,10 @@ class KpiData extends \yii\db\ActiveRecord
         }
         // ***
 
-
-
         if (!isset($post['user_id'])) {
-            $model->user_id = current_user_id();
+            if (!isRole('admin')) {
+                $model->user_id = current_user_id();
+            }
         }
 
         if (!$model->save()) {

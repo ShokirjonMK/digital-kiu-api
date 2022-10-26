@@ -139,14 +139,16 @@ class SubjectTopic extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields = [
+            'content',
+            'subjectContentMark',
+            'contentCount',
+            'hasContent',
+            'mark',
             'subject',
+            'teacherAccess',
             'subjectCategory',
             'lang',
-
             'reference',
-
-            'contents',
-            'hasContent',
 
             'createdBy',
             'updatedBy',
@@ -157,14 +159,38 @@ class SubjectTopic extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    public function getContents()
+    public function getContent()
     {
+        if (Yii::$app->request->get('user_id') != null) {
+            return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        }
         return $this->hasMany(SubjectContent::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
+    public function getSubjectContentMark()
+    {
+        if (Yii::$app->request->get('user_id') != null) {
+            return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        }
+        return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
+    public function getContentCount()
+    {
+        return count($this->content);
     }
 
     public function getHasContent()
     {
-        return count($this->contents) > 0 ? 1 : 0;
+        return count($this->content) > 0 ? 1 : 0;
+    }
+
+    public function getMark()
+    {
+        if (Yii::$app->request->get('user_id') != null) {
+            return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id')]);
+        }
+        return $this->hasMany(SubjectContentMark::className(), ['subject_topic_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 
     public function getSubject()

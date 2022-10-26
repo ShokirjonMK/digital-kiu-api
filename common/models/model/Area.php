@@ -21,8 +21,6 @@ use Yii;
  * @property string|null $updated_on
  * @property int $updated_by
  *
- * @property Profile[] $profiles
- * @property Profile[] $profiles0
  * @property Region $region
  */
 class Area extends \yii\db\ActiveRecord

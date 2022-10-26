@@ -2,6 +2,7 @@
 
 namespace api\controllers;
 
+use api\components\MipServiceMK;
 use api\forms\Login;
 use Yii;
 use api\resources\User;
@@ -21,6 +22,15 @@ class UserController extends ApiActiveController
     public function actions()
     {
         return [];
+    }
+    public function actionGet($pin, $document_issue_date)
+    {
+        $mip = MipServiceMK::getData($pin, $document_issue_date);
+        if ($mip['status']) {
+            return $this->response(1, _e('Success'), $mip['data']);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $mip['error'], ResponseStatus::UPROCESSABLE_ENTITY);
+        }
     }
 
     public function actionMe()
@@ -76,6 +86,7 @@ class UserController extends ApiActiveController
                 }
             } else {
                 $errors[] = [_e('User is not active.')];
+                return $this->response(1, _e('User is not active'), $data, null, ResponseStatus::UNAUTHORIZED);
             }
             if (count($errors) == 0) {
                 return $this->response(1, _e('User successfully refreshed'), $data, null, ResponseStatus::OK);
@@ -99,8 +110,6 @@ class UserController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new User();
-        $filter = Yii::$app->request->get('filter');
-        $filter = json_decode(str_replace("'", "", $filter));
 
         $query = $model->find()
             ->with(['profile'])
@@ -133,8 +142,26 @@ class UserController extends ApiActiveController
 
         // }
 
+        $kafedraId = Yii::$app->request->get('kafedra_id');
+        if (isset($kafedraId)) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $kafedraId,
+                    'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+        }
+        $facultyId = Yii::$app->request->get('faculty_id');
+        if (isset($facultyId)) {
+            $query->andFilterWhere([
+                'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                    'table_id' => $facultyId,
+                    'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                ])
+            ]);
+        }
 
-        if (!(isRole('admin'))) {
+        if (!(isRole('admin')  || isRole('content_assign') || isRole('kpi_check'))) {
             // dd(123);
             $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
@@ -177,6 +204,8 @@ class UserController extends ApiActiveController
         }
         /*  is Self  */
 
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
         //  Filter from Profile 
         $profile = new Profile();
         if (isset($filter)) {
@@ -256,6 +285,59 @@ class UserController extends ApiActiveController
         $result = User::updateItem($model, $profile, $post);
         if (!is_array($result)) {
             return $this->response(1, _e('User successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionSelfget()
+    {
+        $model = User::findOne(current_user_id());
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+    }
+
+    public function actionSelf()
+    {
+        $model = User::findOne(current_user_id());
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        $profile = $model->profile;
+        $post = Yii::$app->request->post();
+
+        if (isset($post['username'])) {
+            unset($post['username']);
+        }
+        if (isset($post['access_token'])) {
+            unset($post['access_token']);
+        }
+        if (isset($post['access_token_time'])) {
+            unset($post['access_token_time']);
+        }
+        if (isset($post['password_reset_token'])) {
+            unset($post['password_reset_token']);
+        }
+        if (isset($post['status'])) {
+            unset($post['status']);
+        }
+        if (isset($post['deleted'])) {
+            unset($post['deleted']);
+        }
+        if (isset($post['password_hash'])) {
+            unset($post['password_hash']);
+        }
+
+        $this->load($model, $post);
+        $this->load($profile, $post);
+        $result = User::selfUpdateItem($model, $profile, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Your data successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

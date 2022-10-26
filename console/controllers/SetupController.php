@@ -20,7 +20,7 @@ class SetupController extends Controller
         echo "-------------------------------------------------------\n";
         echo "\n";
         echo "Content Management Framework Setup\n";
-        echo "Created by Eurosoft UZ\n";
+        echo "Created by ShokirjonMK\n";
         echo "\n";
         echo "-------------------------------------------------------\n\n";
     }

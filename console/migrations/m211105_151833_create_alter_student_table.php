@@ -12,7 +12,7 @@ class m211105_151833_create_alter_student_table extends Migration
      */
     public function safeUp()
     {
-        $this->execute("ALTER TABLE `student` ADD `edu_lang_id` INT NOT NULL AFTER `description`");
+        $this->execute("ALTER TABLE `student` ADD `edu_lang_id` INT NULL AFTER `description`");
     }
 
     /**

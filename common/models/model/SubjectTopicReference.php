@@ -119,6 +119,7 @@ class SubjectTopicReference extends \yii\db\ActiveRecord
             'type',
 
             'order',
+            'is_deleted',
             'status',
             'created_at',
             'updated_at',

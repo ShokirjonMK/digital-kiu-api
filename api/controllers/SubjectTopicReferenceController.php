@@ -26,7 +26,9 @@ class SubjectTopicReferenceController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
-        if (isRole('teacher') && !isRole('mudir')) {
+
+        if (isRole('teacher') && (!isRole('mudir') && !isRole('contenter'))) {
+            // if (isRole('teacher') && !isRole('mudir')) {
             $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);
         }
 

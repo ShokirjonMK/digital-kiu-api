@@ -11,3 +11,4 @@ composer.lock
 api/web/index.php
 storage/uploads
 composer.lock
+storage

@@ -37,34 +37,45 @@ class PasswordController extends ApiActiveController
         $passwordOld =  $post['old_password'] ?? null;
         $passwordRe =  $post['re_password'] ?? null;
         $data = new Password();
-        $data = $data->decryptThisUser(current_user_id());
-        if ($data['password'] == $passwordOld) {
 
-        if (strlen($passwordNew) >= 6) {
+        if (isRole('admin')) {
+            $data = $data->decryptThisUser($id);
+        } else {
+            $data = $data->decryptThisUser(current_user_id());
+        }
+        if (($data['password'] == $passwordOld) || isRole('admin')) {
 
-            if ($passwordRe == $passwordNew) {
-                $model = User::findOne(current_user_id());
-                //**parolni shifrlab saqlaymiz */
-                $model->savePassword($passwordNew, current_user_id());
-                //**** */
-                $model->password_hash = \Yii::$app->security->generatePasswordHash($passwordNew);
+            if (strlen($passwordNew) >= 6) {
 
-                if ($model->save()) {
-                    return $this->response(1, _e('Password successfully changed!'), null, null, ResponseStatus::OK);
+                if ($passwordRe == $passwordNew) {
+                    if (isRole('admin')) {
+                        $model = User::findOne($id);
+                        $model->savePassword($passwordNew, $id);
+                    } else {
+                        $model = User::findOne(current_user_id());
+                        $model->savePassword($passwordNew, current_user_id());
+                    }
+                    //**parolni shifrlab saqlaymiz */
+                    // $model->savePassword($passwordNew, current_user_id());
+                    //**** */
+                    $model->password_hash = \Yii::$app->security->generatePasswordHash($passwordNew);
+
+                    if ($model->save()) {
+                        return $this->response(1, _e('Password successfully changed!'), null, null, ResponseStatus::OK);
+                    } else {
+                        return $this->response(0, _e('There is an error occurred while changing password!'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+                    }
                 } else {
-                    return $this->response(0, _e('There is an error occurred while changing password!'), null, null, ResponseStatus::FORBIDDEN);
+                    return $this->response(0, _e('Passwords are not same.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
                 }
             } else {
-                return $this->response(0, _e('Passwords are not same.'), null, null, ResponseStatus::FORBIDDEN);
+                return $this->response(0, _e('The password must be at least 6 characters.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
         } else {
-            return $this->response(0, _e('The password must be at least 6 characters.'), null, null, ResponseStatus::FORBIDDEN);
-        }
-        } else {
-            return $this->response(0, _e('Old password incorrect.'), null, null, ResponseStatus::FORBIDDEN);
+            return $this->response(0, _e('Old password incorrect.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
     }
 
     public function actionView($lang, $id)

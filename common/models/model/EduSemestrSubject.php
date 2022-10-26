@@ -131,6 +131,10 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             'subject',
             'subjectType',
             'eduSemestrSubjectCategoryTimes',
+
+            'studentSubjectSelection',
+            'selection',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -140,6 +144,21 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getStudentSubjectSelection()
+    {
+        if (isRole('student')) {
+            return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id'])->onCondition(['user_id' => current_user_id()]);
+        }
+        return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id']);
+    }
+
+    public function getSelection()
+    {
+        if (isRole('student')) {
+            return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id'])->onCondition(['user_id' => current_user_id()]);
+        }
+        return $this->hasOne(StudentSubjectSelection::className(), ['edu_semestr_subject_id' => 'id']);
+    }
 
     /**
      * Gets query for [[faculty_id]].
@@ -160,6 +179,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Direction::className(), ['direction_id' => 'id']);
     }
+    
     /**
      * Gets query for [[EduSemestrExamsTypes]].
      *

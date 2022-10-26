@@ -134,6 +134,10 @@ $controllers = [
     'hostel-category-type',
     'hostel-app',
     'hostel-doc',
+
+    'exam-control-student',
+    'exam-control',
+
     'teacher-content',
     'student-subject-selection',
 

@@ -20,30 +20,30 @@ class m221026_092632_create_exam_control_table extends Migration
         $this->createTable('{{%exam_control}}', [
             'id' => $this->primaryKey(),
 
+            'time_table_id' => $this->integer()->notNull(),
+            'start' => $this->integer()->null(),
+            'finish' => $this->integer()->null(),
+            'max_ball' => $this->double()->null(),
+            'duration' => $this->integer()->null(),
 
-            'time_table_id' => $this->integer()->null(),
-            'question' => $this->string(255)->null(),
+            'question' => $this->text()->null(),
+            'question_file' => $this->string(255)->null(),
             'course_id' => $this->integer()->null(),
-            'semester_id'=> $this->integer()->null(),
-            'edu_year_id' => $this->integer()->null(),
-            'subject_id' => $this->integer()->null(),
-            'language_id' => $this->integer()->null(),
-            'edu_plan_id' => $this->integer()->null(),
-            'teacher_user_id' => $this->integer()->null(),
-            'edu_semester_id' => $this->integer()->null(),
-            'subject_category_id' => $this->integer()->null(),
+            'semester_id' => $this->integer()->null(),
+            'edu_year_id' => $this->integer()->notNull(),
+            'subject_id' => $this->integer()->notNull(),
+            'language_id' => $this->integer()->notNull(),
+            'edu_plan_id' => $this->integer()->notNull(),
+            'teacher_user_id' => $this->integer()->notNull(),
+            'edu_semester_id' => $this->integer()->notNull(),
+            'subject_category_id' => $this->integer()->notNull(),
             'archived' => $this->integer()->null(),
             'old_exam_control_id' => $this->integer()->null(),
-            'start' => $this->dateTime()->null(),
-            'finish' => $this->dateTime()->null(),
-            'max_ball' => $this->double()->null(),
-            'duration'=>$this->integer()->null(),
+
             'faculty_id' => $this->integer()->null(),
             'direction_id' => $this->integer()->null(),
-            'type'=>$this->integer()->Null(),
-            'category' => $this->integer()->null(),
-
-
+            'type' => $this->integer()->Null(),
+            'category' => $this->tinyInteger(1)->defaultValue(1),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -64,10 +64,9 @@ class m221026_092632_create_exam_control_table extends Migration
         $this->addForeignKey('exam_control_teacher_user_id', 'exam_control', 'teacher_user_id', 'time_table', 'id');
         $this->addForeignKey('exam_control_edu_semester_id', 'exam_control', 'edu_semester_id', 'edu_semestr', 'id');
         $this->addForeignKey('exam_control_subject_category_id', 'exam_control', 'subject_category_id', 'subject_category', 'id');
-//        $this->addForeignKey('exam_control_old_exam_control_id', 'exam_control', 'old_exam_control_id', 'old_exam_control', 'id');
         $this->addForeignKey('exam_control_faculty_id', 'exam_control', 'faculty_id', 'faculty', 'id');
         $this->addForeignKey('exam_control_direction_id', 'exam_control', 'direction_id', 'direction', 'id');
-
+        //        $this->addForeignKey('exam_control_old_exam_control_id', 'exam_control', 'old_exam_control_id', 'old_exam_control', 'id');
     }
 
     /**
@@ -85,9 +84,10 @@ class m221026_092632_create_exam_control_table extends Migration
         $this->dropForeignKey('exam_control_teacher_user_id', 'exam_control');
         $this->dropForeignKey('exam_control_edu_semester_id', 'exam_control');
         $this->dropForeignKey('exam_control_subject_category_id', 'exam_control');
-//        $this->dropForeignKey('exam_control_old_exam_control_id', 'exam_control');
         $this->dropForeignKey('exam_control_faculty_id', 'exam_control');
         $this->dropForeignKey('exam_control_direction_id', 'exam_control');
+        //        $this->dropForeignKey('exam_control_old_exam_control_id', 'exam_control');
+
         $this->dropTable('{{%exam_control}}');
     }
 }

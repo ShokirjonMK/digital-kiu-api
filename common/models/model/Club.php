@@ -128,6 +128,8 @@ class Club extends \yii\db\ActiveRecord
 
             'clubCategory',
             'studentClubs',
+            'studentClubsCount',
+            'members',
             'clubTimes',
             'selected',
 
@@ -196,6 +198,14 @@ class Club extends \yii\db\ActiveRecord
     public function getStudentClubs()
     {
         return $this->hasMany(StudentClub::className(), ['club_id' => 'id']);
+    }
+    public function getStudentClubsCount()
+    {
+        return count($this->studentClubs);
+    }
+    public function getMembers()
+    {
+        return count($this->studentClubs);
     }
 
     public function getSelected()

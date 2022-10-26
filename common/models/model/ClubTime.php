@@ -137,6 +137,10 @@ class ClubTime extends \yii\db\ActiveRecord
             'selected',
             'leader',
 
+            'studentClubsCount',
+            'members',
+
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -201,6 +205,15 @@ class ClubTime extends \yii\db\ActiveRecord
     public function getLeader()
     {
         return $this->hasOne(StudentClub::className(), ['club_time_id' => 'id'])->onCondition(['is_leader' => 1]);
+    }
+
+    public function getStudentClubsCount()
+    {
+        return count($this->studentClubs);
+    }
+    public function getMembers()
+    {
+        return count($this->studentClubs);
     }
 
     public function getSelected()

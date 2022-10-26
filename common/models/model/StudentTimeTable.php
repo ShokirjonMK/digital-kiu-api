@@ -164,6 +164,11 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'subjectCategory',
             'isBusy',
 
+
+            'studentAttends',
+
+
+
             'student',
             'timeTable',
         ];
@@ -235,6 +240,10 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         return true;
     }
 
+    public function getStudentAttends()
+    {
+        return $this->timeTable->studentAttends;
+    }
 
     /**
      * Gets query for [[SubjectCategory]].

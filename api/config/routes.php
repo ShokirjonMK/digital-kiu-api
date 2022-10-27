@@ -135,21 +135,18 @@ $controllers = [
     'hostel-app',
     'hostel-doc',
 
-    'exam-control-student',
-    'exam-control',
-
     'teacher-content',
     'student-subject-selection',
 
     'club-category',
     'club',
     'club-time',
-    
     'student-club',
-    
+
     'attend',
 
-
+    'exam-control-student',
+    'exam-control',
 
     'telegram',
     'test-get-data',

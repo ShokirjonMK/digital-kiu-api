@@ -291,8 +291,6 @@ class Question extends \yii\db\ActiveRecord
         $errors = [];
 
 
-
-
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

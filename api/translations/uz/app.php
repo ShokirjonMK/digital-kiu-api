@@ -24,4 +24,5 @@
   'MALE' => 'Erkak',
   'FEMALE' => 'Ayol',
 
+  'control work' => 'oraliq nazorat',
 ];

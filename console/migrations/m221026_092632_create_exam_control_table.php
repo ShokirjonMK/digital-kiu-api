@@ -36,13 +36,14 @@ class m221026_092632_create_exam_control_table extends Migration
             'question2_file' => $this->string(255)->null(),
             'course_id' => $this->integer()->null(),
             'semester_id' => $this->integer()->null(),
-            'edu_year_id' => $this->integer()->notNull(),
-            'subject_id' => $this->integer()->notNull(),
-            'language_id' => $this->integer()->notNull(),
-            'edu_plan_id' => $this->integer()->notNull(),
-            'teacher_user_id' => $this->integer()->notNull(),
-            'edu_semester_id' => $this->integer()->notNull(),
-            'subject_category_id' => $this->integer()->notNull(),
+            'edu_year_id' => $this->integer()->null(),
+            'subject_id' => $this->integer()->null(),
+            'language_id' => $this->integer()->null(),
+            'edu_plan_id' => $this->integer()->null(),
+            'teacher_user_id' => $this->integer()->null(),
+            'teacher_access_id' => $this->integer()->null(),
+            'edu_semester_id' => $this->integer()->null(),
+            'subject_category_id' => $this->integer()->null(),
             'archived' => $this->integer()->null(),
             'old_exam_control_id' => $this->integer()->null(),
 
@@ -55,9 +56,9 @@ class m221026_092632_create_exam_control_table extends Migration
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
             'updated_at' => $this->integer()->Null(),
-            'created_by' => $this->integer()->notNull()->defaultValue(0),
-            'updated_by' => $this->integer()->notNull()->defaultValue(0),
-            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'created_by' => $this->integer()->null()->defaultValue(0),
+            'updated_by' => $this->integer()->null()->defaultValue(0),
+            'is_deleted' => $this->tinyInteger()->null()->defaultValue(0),
         ]);
 
         $this->addForeignKey('exam_control_time_table_id', 'exam_control', 'time_table_id', 'time_table', 'id');
@@ -67,7 +68,8 @@ class m221026_092632_create_exam_control_table extends Migration
         $this->addForeignKey('exam_control_subject_id', 'exam_control', 'subject_id', 'subject', 'id');
         $this->addForeignKey('exam_control_language_id', 'exam_control', 'language_id', 'language', 'id');
         $this->addForeignKey('exam_control_edu_plan_id', 'exam_control', 'edu_plan_id', 'edu_plan', 'id');
-        $this->addForeignKey('exam_control_teacher_user_id', 'exam_control', 'teacher_user_id', 'time_table', 'id');
+        $this->addForeignKey('exam_control_teacher_user_id', 'exam_control', 'teacher_user_id', 'users', 'id');
+        $this->addForeignKey('exam_control_teacher_access_id', 'exam_control', 'teacher_access_id', 'teacher_access', 'id');
         $this->addForeignKey('exam_control_edu_semester_id', 'exam_control', 'edu_semester_id', 'edu_semestr', 'id');
         $this->addForeignKey('exam_control_subject_category_id', 'exam_control', 'subject_category_id', 'subject_category', 'id');
         $this->addForeignKey('exam_control_faculty_id', 'exam_control', 'faculty_id', 'faculty', 'id');
@@ -88,6 +90,7 @@ class m221026_092632_create_exam_control_table extends Migration
         $this->dropForeignKey('exam_control_language_id', 'exam_control');
         $this->dropForeignKey('exam_control_edu_plan_id', 'exam_control');
         $this->dropForeignKey('exam_control_teacher_user_id', 'exam_control');
+        $this->dropForeignKey('exam_control_teacher_access_id', 'exam_control');
         $this->dropForeignKey('exam_control_edu_semester_id', 'exam_control');
         $this->dropForeignKey('exam_control_subject_category_id', 'exam_control');
         $this->dropForeignKey('exam_control_faculty_id', 'exam_control');

@@ -22,12 +22,18 @@ class m221026_092632_create_exam_control_table extends Migration
 
             'time_table_id' => $this->integer()->notNull(),
             'start' => $this->integer()->null(),
+            'start2' => $this->integer()->null(),
             'finish' => $this->integer()->null(),
+            'finish2' => $this->integer()->null(),
             'max_ball' => $this->double()->null(),
+            'max_ball2' => $this->double()->null(),
             'duration' => $this->integer()->null(),
+            'duration2' => $this->integer()->null(),
 
             'question' => $this->text()->null(),
+            'question2' => $this->text()->null(),
             'question_file' => $this->string(255)->null(),
+            'question2_file' => $this->string(255)->null(),
             'course_id' => $this->integer()->null(),
             'semester_id' => $this->integer()->null(),
             'edu_year_id' => $this->integer()->notNull(),

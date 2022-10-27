@@ -72,9 +72,21 @@ class AttendController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
+        $student_ids = $model->student_ids;
         unset($post['date']);
+
+        unset($post['subject_id']);
+        unset($post['subject_category_id']);
+        unset($post['time_option_id']);
+        unset($post['edu_year_id']);
+        unset($post['edu_semestr_id']);
+        unset($post['faculty_id']);
+        unset($post['edu_plan_id']);
+        unset($post['type']);
+        unset($post['semestr_id']);
+        
         $this->load($model, $post);
-        $result = Attend::updateItem($model, $post);
+        $result = Attend::updateItem($model, $post, $student_ids);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {

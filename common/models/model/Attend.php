@@ -420,7 +420,7 @@ class Attend extends \yii\db\ActiveRecord
         }
     }
 
-    public static function updateItem($model, $post)
+    public static function updateItem($model, $post, $old_student_ids)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -448,81 +448,83 @@ class Attend extends \yii\db\ActiveRecord
             }
         }
 
-        // time_table_id
-        $model->subject_id = $model->timeTable->subject_id;
-        $model->subject_category_id = $model->timeTable->subject_category_id;
-        if ($model->timeTable->time_option_id) {
-            $model->time_option_id = $model->timeTable->time_option_id;
-        } else {
-            $model->time_option_id = $model->timeTable->lecture->time_option_id;
-        }
-        $model->edu_year_id = $model->timeTable->edu_year_id;
-        $model->edu_semestr_id = $model->timeTable->edu_semester_id;
-        $model->faculty_id = $model->timeTable->eduPlan->faculty_id;
-        $model->edu_plan_id = $model->timeTable->edu_plan_id;
-        $model->type = $model->eduSemestr->semestr->type;
-        $model->semestr_id = $model->eduSemestr->semestr_id;
-
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-
         if (!$model->timeTable->getAttendance($model->date)) {
             $errors[] = _e('There is no access to update attend');
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        // dd("ssss");
+
         if ($model->save()) {
-            if (StudentAttend::find()->where(['attend_id' => $model->id])->exists())
-                if (StudentAttend::deleteAll(['attend_id' => $model->id])) {
-                    if ($t) {
-                        foreach ($model->student_ids as $student_id) {
-                            /** new Student Attent here */
 
-                            /** Checking student is really choos this time table */
+            $old_deff = array_diff($old_student_ids, $model->student_ids);
+            $new_deff = array_diff($model->student_ids, $old_student_ids);
 
-                            /** Checking student is really choos this time table */
+            if (!isRole('tutor')) {
 
-                            // if (!StudentAttend::find()->where(['date' => $model->date, 'student_id' => $student_id, 'attend_id' => $model->id])->exists()) {
-                            $newStudentAttend = new StudentAttend();
-                            $newStudentAttend->student_id = $student_id;
-                            $newStudentAttend->attend_id = $model->id;
-                            $newStudentAttend->time_table_id = $model->time_table_id;
-                            $newStudentAttend->subject_id = $model->subject_id;
-                            $newStudentAttend->date = $model->date;
-                            $newStudentAttend->subject_category_id = $model->subject_category_id;
-                            $newStudentAttend->edu_year_id = $model->edu_year_id;
-                            $newStudentAttend->time_option_id = $model->time_option_id;
-                            $newStudentAttend->edu_semestr_id = $model->edu_semestr_id;
-                            $newStudentAttend->faculty_id = $model->faculty_id;
-                            $newStudentAttend->course_id = $model->timeTable->course_id;
-                            $newStudentAttend->edu_plan_id = $model->edu_plan_id;
-                            $newStudentAttend->type = $model->type;
-                            $newStudentAttend->semestr_id = $model->eduSemestr->semestr_id;
-
-                            // $newStudentAttend->reason = $model->reason;
-                            if (!$newStudentAttend->save()) {
-                                $errors[] = [$student_id => $newStudentAttend->errors];
-                            }
-                            // }
-
-                            /** new Student Attent here */
-                        }
-                    }
-                } else {
-                    $errors[] = _e('Error occured in updating');
+                if (!StudentAttend::deleteAll([
+                    'AND',
+                    ['in', 'student_id', $old_deff],
+                    ['attend_id' => $model->id]
+                ])) {
+                    $errors[] = _e('Error on deleting StudentAttend');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
                 }
+            } else {
+                $model->student_ids = array_merge($old_deff, $model->student_ids);
+            }
+
+            // if (StudentAttend::find()->where(['attend_id' => $model->id])->exists())
+            //     if (StudentAttend::deleteAll(['attend_id' => $model->id])) {
+            if ($t) {
+                foreach ($new_deff as $student_id) {
+                    /** new Student Attent here */
+
+                    /** Checking student is really choos this time table */
+
+                    /** Checking student is really choos this time table */
+
+                    // if (!StudentAttend::find()->where(['date' => $model->date, 'student_id' => $student_id, 'attend_id' => $model->id])->exists()) {
+                    $newStudentAttend = new StudentAttend();
+                    $newStudentAttend->student_id = $student_id;
+                    $newStudentAttend->attend_id = $model->id;
+                    $newStudentAttend->time_table_id = $model->time_table_id;
+                    $newStudentAttend->subject_id = $model->subject_id;
+                    $newStudentAttend->date = $model->date;
+                    $newStudentAttend->subject_category_id = $model->subject_category_id;
+                    $newStudentAttend->edu_year_id = $model->edu_year_id;
+                    $newStudentAttend->time_option_id = $model->time_option_id;
+                    $newStudentAttend->edu_semestr_id = $model->edu_semestr_id;
+                    $newStudentAttend->faculty_id = $model->faculty_id;
+                    $newStudentAttend->course_id = $model->timeTable->course_id;
+                    $newStudentAttend->edu_plan_id = $model->edu_plan_id;
+                    $newStudentAttend->type = $model->type;
+                    $newStudentAttend->semestr_id = $model->eduSemestr->semestr_id;
+
+                    // $newStudentAttend->reason = $model->reason;
+                    if (!$newStudentAttend->save()) {
+                        $errors[] = [$student_id => $newStudentAttend->errors];
+                    }
+                    // }
+
+                    /** new Student Attent here */
+                }
+                // }
+            } else {
+                $errors[] = _e('Error occured in updating');
+            }
 
             if (count($errors) > 0) {
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-
-            $transaction->commit();
-            return true;
+            if ($model->update) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         } else {
             $transaction->rollBack();
             return simplify_errors($errors);

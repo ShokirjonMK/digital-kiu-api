@@ -24,7 +24,11 @@ class m221026_092659_create_exam_control_student_table extends Migration
             'student_id' => $this->integer()->null(),
             'answer' => $this->text()->null(),
             'answer_file' => $this->string(255)->null(),
-            
+            'conclution' => $this->text()->null(),
+            'answer2' => $this->text()->null(),
+            'answer2_file' => $this->string(255)->null(),
+            'conclution2' => $this->text()->null(),
+
             'course_id' => $this->integer()->null(),
             'semester_id' => $this->integer()->null(),
             'edu_year_id' => $this->integer()->null(),
@@ -36,10 +40,14 @@ class m221026_092659_create_exam_control_student_table extends Migration
             'subject_category_id' => $this->integer()->null(),
             'archived' => $this->integer()->null(),
             'old_exam_control_id' => $this->integer()->null(),
-            
-            'max_ball' => $this->double()->null(),
+
+            'ball' => $this->double()->null(),
+            'ball2' => $this->double()->null(),
+            'main_ball' => $this->double()->null(),
             'plagiat_percent' => $this->double()->null(),
+            'plagiat_percent2' => $this->double()->null(),
             'plagiat_file' => $this->string(255)->null(),
+            'plagiat_file2' => $this->string(255)->null(),
 
             'duration' => $this->integer()->null(),
             'faculty_id' => $this->integer()->null(),

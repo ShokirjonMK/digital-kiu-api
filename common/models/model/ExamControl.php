@@ -165,6 +165,7 @@ class ExamControl extends \yii\db\ActiveRecord
             [['time_table_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeTable::className(), 'targetAttribute' => ['time_table_id' => 'id']],
 
             [['upload_file', 'upload2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->questionFileMaxSize],
+            [['time_table_id'], 'unique'],
 
         ];
     }
@@ -209,7 +210,6 @@ class ExamControl extends \yii\db\ActiveRecord
 
             'order' => _e('Order'),
             'status' => _e('Status'),
-            'status_appeal' => _e('Status appeal'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
@@ -224,7 +224,7 @@ class ExamControl extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'name' => function ($model) {
-                return $model->translate->name ?? $this->subject->translate->name . ' ' . _e('control work') . ' ' . $this->eduSemester->semestr_id;
+                return $model->translate->name ?? $this->subject->translate->name . ' ' . _e('control work') . ' ' . $this->eduSemester->semestr_id . ' - sm';
             },
             'time_table_id',
             'start',
@@ -258,7 +258,7 @@ class ExamControl extends \yii\db\ActiveRecord
 
             'order',
             'status',
-            'status_appeal',
+
             'created_at',
             'updated_at',
             'created_by',
@@ -486,6 +486,25 @@ class ExamControl extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->timeTable->subject_category_id == 1) {
+            $errors[] = _e('Lecture has no control work');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (!isset($post['max_ball'])) {
+            $model->max_ball = (int)Yii::$app->params['exam_control_ball'];
+        }
+        if (!isset($post['max_ball2'])) {
+            $model->max_ball2 = 0;
+        }
+
+        if ((int)$model->max_ball + (int)$model->max_ball2 != (int) Yii::$app->params['exam_control_ball']) {
+            $errors[] = _e('control work') . " max ball " .  Yii::$app->params['exam_control_ball'];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         $model->course_id = $model->timeTable->course_id;
         $model->semester_id = $model->timeTable->semester_id;
         $model->edu_year_id = $model->timeTable->edu_year_id;
@@ -496,7 +515,7 @@ class ExamControl extends \yii\db\ActiveRecord
         $model->edu_semester_id = $model->timeTable->edu_semester_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
         $model->faculty_id = $model->timeTable->eduPlan->faculty_id;
-        $model->direction_id = $model->timeTable->direction_id;
+        $model->direction_id = $model->timeTable->eduPlan->direction_id;
         $model->teacher_access_id = $model->timeTable->teacher_access_id;
 
 
@@ -505,8 +524,6 @@ class ExamControl extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
-
 
         if ($model->save()) {
 
@@ -532,6 +549,7 @@ class ExamControl extends \yii\db\ActiveRecord
                     $errors[] = $model->errors;
                 }
             }
+
             if (isset($post['name'])) {
                 $has_error = Translate::checkingAll($post);
                 if ($has_error['status']) {
@@ -576,6 +594,25 @@ class ExamControl extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->timeTable->subject_category_id == 1) {
+            $errors[] = _e('Lecture has no control work');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (!isset($post['max_ball'])) {
+            $model->max_ball = (int)Yii::$app->params['exam_control_ball'];
+        }
+        if (!isset($post['max_ball2'])) {
+            $model->max_ball2 = 0;
+        }
+
+        if ((int)$model->max_ball + (int)$model->max_ball2 != (int) Yii::$app->params['exam_control_ball']) {
+            $errors[] = _e('control work') . " max ball " .  Yii::$app->params['exam_control_ball'];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         $model->course_id = $model->timeTable->course_id;
         $model->semester_id = $model->timeTable->semester_id;
         $model->edu_year_id = $model->timeTable->edu_year_id;
@@ -585,8 +622,8 @@ class ExamControl extends \yii\db\ActiveRecord
         $model->teacher_user_id = $model->timeTable->teacher_user_id;
         $model->edu_semester_id = $model->timeTable->edu_semester_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
-        $model->faculty_id = $model->timeTable->faculty_id;
-        $model->direction_id = $model->timeTable->direction_id;
+        $model->faculty_id = $model->timeTable->eduPlan->faculty_id;
+        $model->direction_id = $model->timeTable->eduPlan->direction_id;
         $model->teacher_access_id = $model->timeTable->teacher_access_id;
 
 
@@ -595,7 +632,6 @@ class ExamControl extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
 
         if ($model->save()) {
 

@@ -77,17 +77,17 @@ class ExamControlController extends ApiActiveController
         }
 
         $this->load($model, $post);
-        if (isset($post->start)) {
-            $model->start = strtotime($post->start);
+        if (isset($post['start'])) {
+            $model['start'] = strtotime($post['start']);
         }
-        if (isset($post->finish)) {
-            $model->finish = strtotime($post->finish);
+        if (isset($post['finish'])) {
+            $model['finish'] = strtotime($post['finish']);
         }
-        if (isset($post->start2)) {
-            $model->start = strtotime($post->start2);
+        if (isset($post['start2'])) {
+            $model['start'] = strtotime($post['start2']);
         }
-        if (isset($post->finish2)) {
-            $model->finish = strtotime($post->finish2);
+        if (isset($post['finish2'])) {
+            $model['finish'] = strtotime($post['finish2']);
         }
 
         $result = ExamControl::createItem($model, $post);
@@ -130,18 +130,18 @@ class ExamControlController extends ApiActiveController
         }
 
         $this->load($model, $post);
-        if (isset($post->start)) {
-            $model->start = strtotime($post->start);
+        if (isset($post['start'])) {
+            $model['start'] = strtotime($post['start']);
         }
-        if (isset($post->finish)) {
-            $model->finish = strtotime($post->finish);
+        if (isset($post['finish'])) {
+            $model['finish'] = strtotime($post['finish']);
         }
 
-        if (isset($post->start2)) {
-            $model->start2 = strtotime($post->start2);
+        if (isset($post['start2'])) {
+            $model['start2'] = strtotime($post['start2']);
         }
-        if (isset($post->finish2)) {
-            $model->finish2 = strtotime($post->finish2);
+        if (isset($post['finish2'])) {
+            $model['finish2'] = strtotime($post['finish2']);
         }
 
         $result = ExamControl::updateItem($model, $post);

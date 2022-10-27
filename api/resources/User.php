@@ -844,6 +844,11 @@ class User extends CommonUser
     public function upload()
     {
         if ($this->validate()) {
+
+            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+
             $fileName = $this->id . \Yii::$app->security->generateRandomString(10) . '.' . $this->avatar->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;
@@ -857,6 +862,11 @@ class User extends CommonUser
     public function uploadPassport()
     {
         if ($this->validate()) {
+
+            if (!file_exists(STORAGE_PATH  . self::UPLOADS_FOLDER)) {
+                mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
+            }
+
             $fileName = $this->id . \Yii::$app->security->generateRandomString(10) . '.' . $this->passport_file->extension;
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;

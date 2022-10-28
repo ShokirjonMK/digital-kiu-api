@@ -324,6 +324,12 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->timeTable->parent_id != null) {
+            $errors[] = _e("Choose main time table");
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         $t = false;
 
         if (isset($post['student_ids'])) {
@@ -367,6 +373,7 @@ class Attend extends \yii\db\ActiveRecord
         //     $transaction->rollBack();
         //     return simplify_errors($errors);
         // }
+
         if (!$model->hasAccess()) {
             $errors[] = _e("There is no access");
             $transaction->rollBack();

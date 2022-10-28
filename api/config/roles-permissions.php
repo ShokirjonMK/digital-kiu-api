@@ -1071,6 +1071,9 @@ return [
         'student-time-option_index',
         'student-time-option_view',
 
+        'attend_index',
+        'attend_create',
+
     ],
 
 

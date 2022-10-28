@@ -600,6 +600,12 @@ class ExamControl extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->timeTable->parent_id != null) {
+            $errors[] = _e("Choose main time table");
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         if (!isset($post['max_ball'])) {
             $model->max_ball = (int)Yii::$app->params['exam_control_ball'];
         }

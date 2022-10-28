@@ -324,11 +324,7 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if ($model->timeTable->parent_id != null) {
-            $errors[] = _e("Choose main time table");
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+      
 
         $t = false;
 

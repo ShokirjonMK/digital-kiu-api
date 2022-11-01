@@ -511,12 +511,12 @@ class ExamControl extends \yii\db\ActiveRecord
         $model->subject_id = $model->timeTable->subject_id;
         $model->language_id = $model->timeTable->language_id;
         $model->edu_plan_id = $model->timeTable->edu_plan_id;
-        $model->teacher_user_id = $model->timeTable->teacher_user_id;
         $model->edu_semester_id = $model->timeTable->edu_semester_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
         $model->faculty_id = $model->timeTable->eduPlan->faculty_id;
         $model->direction_id = $model->timeTable->eduPlan->direction_id;
         $model->teacher_access_id = $model->timeTable->teacher_access_id;
+        $model->teacher_user_id = $model->teacherAccess->user_id;
 
 
         if (!($model->validate())) {

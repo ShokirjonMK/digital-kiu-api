@@ -23,14 +23,14 @@ use yii\web\UploadedFile;
  */
 class SubjectContent extends \yii\db\ActiveRecord
 {
-    // use ResourceTrait;
+    use ResourceTrait;
 
-    // public function behaviors()
-    // {
-    //     return [
-    //         TimestampBehavior::class,
-    //     ];
-    // }
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
 
     const TYPE_TEXT = 1;
     const TYPE_FILE = 2;
@@ -144,6 +144,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'file_url',
             'user_id',
             'teacher_access_id',
+
             'order',
             'status',
             'created_at',
@@ -381,15 +382,15 @@ class SubjectContent extends \yii\db\ActiveRecord
         }
     }
 
-    // public function beforeSave($insert)
-    // {
-    //     if ($insert) {
-    //         $this->created_by = current_user_id();
-    //     } else {
-    //         $this->updated_by = current_user_id();
-    //     }
-    //     return parent::beforeSave($insert);
-    // }
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->created_by = current_user_id();
+        } else {
+            $this->updated_by = current_user_id();
+        }
+        return parent::beforeSave($insert);
+    }
 
     /**
      * Status array

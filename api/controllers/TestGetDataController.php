@@ -95,7 +95,7 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-        $chich = Chichqoq::find()->all();
+        /* $chich = Chichqoq::find()->all();
         $errors = [];
         foreach ($chich as $ch) {
             $sub_content = SubjectContent::findAll(['subject_topic_id' => $ch->a1]);
@@ -126,7 +126,7 @@ class TestGetDataController extends ApiActiveController
         }
 
         return $this->response(1, _e('Success'), $errors);
-
+ */
 
         return 0;
         $mip = MipServiceMK::getData(61801045840029, "2021-01-13");

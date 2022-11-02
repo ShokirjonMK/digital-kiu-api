@@ -13,6 +13,7 @@ use common\models\model\Attend;
 use common\models\model\Chichqoq;
 use common\models\model\LoginHistory;
 use common\models\model\StudentAttend;
+use common\models\model\SubjectContent;
 
 class TestGetDataController extends ApiActiveController
 {
@@ -94,10 +95,37 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
+        $chich = Chichqoq::find()->all();
+        $errors = [];
+        foreach ($chich as $ch) {
+            $sub_content = SubjectContent::findAll(['subject_topic_id' => $ch->a1]);
 
+            foreach ($sub_content as $s_c) {
+                $new = new SubjectContent();
 
+                $new->content = $s_c->content;
+                $new->type = $s_c->type;
+                $new->subject_id = $ch->a4;
+                $new->user_id = $s_c->user_id;
+                $new->subject_topic_id = $ch->a2;
+                $new->teacher_access_id = $s_c->teacher_access_id;
+                $new->description = $s_c->description;
+                $new->file_url = $s_c->file_url;
+                $new->order = $s_c->order;
+                $new->status = $s_c->status;
+                $new->created_at = $s_c->created_at;
+                $new->updated_at = $s_c->updated_at;
+                $new->created_by = $s_c->created_by;
+                $new->updated_by = $s_c->updated_by;
+                $new->is_deleted = $s_c->is_deleted;
 
-        return $this->response(1, _e('Success'), Chichqoq::find()->all());
+                if (!$new->save()) {
+                    $errors[] = $new->errors;
+                }
+            }
+        }
+
+        return $this->response(1, _e('Success'), $errors);
 
 
         return 0;

@@ -564,13 +564,17 @@ class ExamControl extends \yii\db\ActiveRecord
                     return double_errors($errors, $has_error['errors']);
                 }
             }
-
-            $transaction->commit();
-            return true;
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            }
         } else {
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
     public static function updateItem($model, $post)

@@ -144,6 +144,7 @@ $controllers = [
     'student-club',
 
     'attend',
+    'student-attend',
 
     'exam-control',
     'exam-control-student',

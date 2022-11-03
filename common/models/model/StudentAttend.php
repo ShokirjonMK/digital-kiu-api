@@ -215,6 +215,7 @@ class StudentAttend extends \yii\db\ActiveRecord
             'subjectCategory',
             'timeOption',
             'timeTable',
+            'count',
 
             'createdBy',
             'updatedBy',
@@ -223,6 +224,18 @@ class StudentAttend extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getCount()
+    {
+        return self::find()
+            ->where([ 'student_id' => $this->student_id])
+            ->count();
+        return count($this->studentAttends);
+    }
+    public function getStudentAttends()
+    {
+        return $this->hasMany(StudentAttend::className(), ['attend_id' => 'attend_id'])->onCondition(['student_id' => $this->student_id]);
     }
 
 

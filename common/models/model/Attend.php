@@ -324,7 +324,7 @@ class Attend extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-      
+
 
         $t = false;
 

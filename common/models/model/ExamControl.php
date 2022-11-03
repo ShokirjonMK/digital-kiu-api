@@ -177,7 +177,7 @@ class ExamControl extends \yii\db\ActiveRecord
     {
         return [
 
-            
+
 
 
 
@@ -396,6 +396,11 @@ class ExamControl extends \yii\db\ActiveRecord
      */
     public function getExamControlStudents()
     {
+        if (isRole('student')) {
+            return $this->hasMany(ExamControlStudent::className(), ['exam_control_id' => 'id'])
+                ->onCondition(['student_id' => $this->student()]);
+        }
+
         return $this->hasMany(ExamControlStudent::className(), ['exam_control_id' => 'id']);
     }
 

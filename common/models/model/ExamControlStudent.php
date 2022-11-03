@@ -101,7 +101,7 @@ class ExamControlStudent extends ActiveRecord
 
             [['upload_file', 'upload2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->answerFileMaxSize],
             [['upload_plagiat_file', 'upload_plagiat2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->plagiatFileMaxSize],
-            ['exam_control_id', 'unique', 'targetAttribute' => ['exam_control_id', 'student_id', 'edu_year_id', 'subject_id', 'subject_category_id'], 'message' => 'This student has alreadey recorded'],
+            ['exam_control_id', 'unique', 'targetAttribute' => ['exam_control_id', 'student_id'], 'message' => 'This student has alreadey recorded'],
             // ['a1', 'unique', 'targetAttribute' => ['a1', 'a2']],
 
         ];

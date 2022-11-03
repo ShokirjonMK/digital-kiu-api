@@ -82,7 +82,7 @@ class ExamControl extends \yii\db\ActiveRecord
     const STATUS_ACTIVE = 1;
 
 
-    const UPLOADS_FOLDER = 'uploads/exam_control/';
+    const UPLOADS_FOLDER = 'uploads/exam_control/question/';
     public $upload_file;
     public $upload2_file;
     public $questionFileMaxSize = 1024 * 1024 * 5; // 5 Mb
@@ -176,6 +176,19 @@ class ExamControl extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+
+            
+
+
+
+
+
+
+
+
+
+
+
             'id' => 'ID',
             'time_table_id' => _e('Time Table ID'),
             'start' => _e('Start'),
@@ -719,7 +732,7 @@ class ExamControl extends \yii\db\ActiveRecord
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
 
-            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(10) . '.' . $question_file->extension;
+            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(5) . '.' . $question_file->extension;
 
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;

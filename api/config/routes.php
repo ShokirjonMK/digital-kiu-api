@@ -145,8 +145,8 @@ $controllers = [
 
     'attend',
 
-    'exam-control-student',
     'exam-control',
+    'exam-control-student',
 
     'telegram',
     'test-get-data',

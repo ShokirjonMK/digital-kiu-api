@@ -17,6 +17,7 @@ class m220127_130811_create_subject_content_table extends Migration
             'content' => $this->text()->Null(),
             'type' => $this->integer()->notNull(),
             'subject_topic_id' => $this->integer()->notNull(),
+            'language_id' => $this->integer()->null(),
             'description' => $this->string()->Null(),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -29,7 +30,6 @@ class m220127_130811_create_subject_content_table extends Migration
         ]);
 
         $this->addForeignKey('scst_subject_content_subject_topic_mk', 'subject_content', 'subject_topic_id', 'subject_topic', 'id');
-
     }
 
     /**

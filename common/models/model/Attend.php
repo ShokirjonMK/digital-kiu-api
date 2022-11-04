@@ -504,28 +504,31 @@ class Attend extends \yii\db\ActiveRecord
                 $t = true;
             }
         }
-
-        if (!$model->timeTable->getAttendance($model->date)) {
-            $errors[] = _e('There is no access to update attend');
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+        // if (!$model->hasAccess()) {
+        //     $errors[] = _e('There is no access to update attend');
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
 
         if ($model->save()) {
 
             $old_deff = array_diff($old_student_ids, $model->student_ids);
             $new_deff = array_diff($model->student_ids, $old_student_ids);
 
-            if (!isRole('tutor')) {
 
-                if (!StudentAttend::deleteAll([
-                    'AND',
-                    ['in', 'student_id', $old_deff],
-                    ['attend_id' => $model->id]
-                ])) {
-                    $errors[] = _e('Error on deleting StudentAttend');
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
+
+            if (!isRole('tutor')) {
+                if (!empty($old_deff)) {
+
+                    if (!StudentAttend::deleteAll([
+                        'AND',
+                        ['in', 'student_id', $old_deff],
+                        ['attend_id' => $model->id]
+                    ])) {
+                        $errors[] = _e('Error on deleting StudentAttend');
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
                 }
             } else {
                 $model->student_ids = array_merge($old_deff, $model->student_ids);
@@ -570,12 +573,12 @@ class Attend extends \yii\db\ActiveRecord
             } else {
                 $errors[] = _e('Error occured in updating');
             }
-
+          
             if (count($errors) > 0) {
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-            if ($model->update) {
+            if ($model->save()) {
                 $transaction->commit();
                 return true;
             } else {

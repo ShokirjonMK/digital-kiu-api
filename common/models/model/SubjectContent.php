@@ -82,6 +82,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             [
                 [
                     'user_id',
+                    'language_id',
                     'type',
                     'subject_topic_id',
                     'subject_id',
@@ -119,6 +120,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'type' => 'Type',
             'subject_id' => 'subject_id',
             'user_id' => 'user_id',
+            'language_id' => 'language_id',
             'subject_topic_id' => 'subject_topic_id',
             'teacher_access_id' => 'teacher_access_id',
             'description' => 'description',
@@ -143,6 +145,7 @@ class SubjectContent extends \yii\db\ActiveRecord
             'description',
             'file_url',
             'user_id',
+            'language_id',
             'teacher_access_id',
 
             'order',
@@ -202,6 +205,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         $model->type = self::TYPE_TEXT;
         $model->subject_id = $model->subjectTopic->subject_id;
+        $model->language_id = $model->subjectTopic->lang_id;
 
         /* Fayl Yuklash*/
         $model->file_file = UploadedFile::getInstancesByName('file_file');

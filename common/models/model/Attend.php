@@ -199,74 +199,81 @@ class Attend extends \yii\db\ActiveRecord
         $date = $this->date;
 
         $this->timeTable->eduSemestr;
-
+        // dd([
+        //     $date,
+        //     $this->timeTable->eduSemestr->id,
+        //     $this->timeTable->eduSemestr->start_date,
+        //     $this->timeTable->eduSemestr->id,
+        //     $this->timeTable->eduSemestr->end_date,
+        //     $date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date ? 1 : 0
+        // ]);
         if ($date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date) {
             if (isset($date) && $date != null) {
                 if ($date > date('Y-m-d')) {
-                    dd([
-                        'kun katta ',
-                        $this->timeTable->week_id,
-                        date('w', strtotime($date)),
-                        $this->timeTable->para->start_time,
-                        date('H:i')
-                    ]);
+                    // dd([
+                    //     'kun katta ',
+                    //     $this->timeTable->week_id,
+                    //     date('w', strtotime($date)),
+                    //     $this->timeTable->para->start_time,
+                    //     date('H:i')
+                    // ]);
                     return 0;
                 }
 
                 if ($date == date('Y-m-d')) {
                     if (($this->timeTable->week_id == date('w', strtotime($date))) && ($this->timeTable->para->start_time <  date('H:i'))) {
 
-                        dd([
-                            'kun teng ',
-                            $this->timeTable->week_id,
-                            date('w', strtotime($date)),
-                            $this->timeTable->para->start_time,
-                            date('H:i')
-                        ]);
+                        // dd([
+                        //     'kun teng ',
+                        //     $this->timeTable->week_id,
+                        //     date('w', strtotime($date)),
+                        //     $this->timeTable->para->start_time,
+                        //     date('H:i')
+                        // ]);
                         return 1;
                     } else {
-                        dd([
-                            'kun teng kirmadi ichiga',
-                            $this->timeTable->week_id,
-                            date('w', strtotime($date)),
-                            $this->timeTable->para->start_time,
-                            date('H:i')
-                        ]);
+                        // dd([
+                        //     'kun teng kirmadi ichiga',
+                        //     $this->timeTable->week_id,
+                        //     date('w', strtotime($date)),
+                        //     $this->timeTable->para->start_time,
+                        //     date('H:i')
+                        // ]);
                         return 0;
                     }
                 } else {
                     if (($this->timeTable->week_id == date('w', strtotime($date)))) {
-                        dd([
-                            'farqi yo faqat week togri ',
-                            $this->timeTable->week_id,
-                            date('w', strtotime($date)),
-                            $this->timeTable->para->start_time,
-                            date('H:i')
-                        ]);
+                        // dd([
+                        //     'farqi yo faqat week togri ',
+                        //     $this->timeTable->week_id,
+                        //     date('w', strtotime($date)),
+                        //     $this->timeTable->para->start_time,
+                        //     date('H:i')
+                        // ]);
                         return 1;
                     } else {
-                        dd([
-                            'farqi yoo wek hato ',
-                            $this->timeTable->week_id,
-                            date('w', strtotime($date)),
-                            $this->timeTable->para->start_time,
-                            date('H:i')
-                        ]);
+                        // dd([
+                        //     'farqi yoo wek hato ',
+                        //     $this->timeTable->week_id,
+                        //     date('w', strtotime($date)),
+                        //     $this->timeTable->para->start_time,
+                        //     date('H:i')
+                        // ]);
                         return 0;
                     }
                 }
             }
         }
-        dd([
-            'oxiri 0 ',
-            $date,
-            $date == date('Y-m-d'),
-            date('Y-m-d'),
-            $this->timeTable->week_id,
-            date('w', strtotime($date)),
-            $this->timeTable->para->start_time,
-            date('H:i')
-        ]);
+        // dd([
+        //     'oxiri 0 ',
+        //     $date,
+        //     $date == date('Y-m-d'),
+        //     date('Y-m-d'),
+        //     $this->timeTable->week_id,
+        //     date('w', strtotime($date)),
+        //     $this->timeTable->para->start_time,
+        //     date('H:i')
+        // ]);
         return 0;
     }
 

@@ -208,6 +208,13 @@ class Attend extends \yii\db\ActiveRecord
 
                 if ($date == date('Y-m-d')) {
                     if (($this->timeTable->week_id == date('w', strtotime($date))) && ($this->timeTable->para->start_time <  date('H:i'))) {
+
+                        dd([
+                            $this->timeTable->week_id,
+                            date('w', strtotime($date)),
+                            $this->timeTable->para->start_time,
+                            date('H:i')
+                        ]);
                         return 1;
                     } else {
                         return 0;

@@ -259,6 +259,7 @@ class Attend extends \yii\db\ActiveRecord
         dd([
             'oxiri 0 ',
             $date,
+            date('Y-m-d'),
             $this->timeTable->week_id,
             date('w', strtotime($date)),
             $this->timeTable->para->start_time,

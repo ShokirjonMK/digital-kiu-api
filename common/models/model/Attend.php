@@ -200,7 +200,7 @@ class Attend extends \yii\db\ActiveRecord
 
         $this->timeTable->eduSemestr;
 
-        if ($date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date)
+        if ($date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date) {
             if (isset($date) && $date != null) {
                 if ($date > date('Y-m-d')) {
                     dd([
@@ -256,6 +256,7 @@ class Attend extends \yii\db\ActiveRecord
                     }
                 }
             }
+        }
         dd([
             'oxiri 0 ',
             $date,

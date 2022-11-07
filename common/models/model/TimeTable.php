@@ -255,6 +255,7 @@ class TimeTable extends \yii\db\ActiveRecord
 
 
             'attendanceDates',
+            'examControl',
 
             'createdBy',
             'updatedBy',
@@ -264,6 +265,16 @@ class TimeTable extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+    /**
+     * Gets query for [[ExamControls]]. 
+     * 
+     * @return \yii\db\ActiveQuery|ExamControlQuery 
+     */
+    public function getExamControl()
+    {
+        return $this->hasOne(ExamControl::className(), ['time_table_id' => 'id']);
+    } 
+ 
 
     public function getAttendanceDates()
     {

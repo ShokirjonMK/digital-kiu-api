@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use common\models\Languages;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -97,7 +98,7 @@ class ExamControlStudent extends ActiveRecord
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['subject_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectCategory::className(), 'targetAttribute' => ['subject_category_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
-            [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeTable::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],
+            [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],
 
             [['upload_file', 'upload2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->answerFileMaxSize],
             [['upload_plagiat_file', 'upload_plagiat2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->plagiatFileMaxSize],
@@ -379,8 +380,6 @@ class ExamControlStudent extends ActiveRecord
             return simplify_errors($errors);
         }
 
-        // dd("asdas");
-
         if (isRole('student')) {
             $model->student_id = self::student();
             if (
@@ -458,6 +457,12 @@ class ExamControlStudent extends ActiveRecord
         $model->direction_id = $model->examControl->direction_id;
         $model->type = $model->examControl->type;
         $model->category = $model->examControl->category;
+        
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         if ($model->save()) {
 

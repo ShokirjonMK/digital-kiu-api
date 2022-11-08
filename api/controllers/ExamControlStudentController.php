@@ -103,7 +103,6 @@ class ExamControlStudentController extends ApiActiveController
             $result = ExamControlStudent::createItem($model, $post);
         }
 
-
         $this->load($model, $post);
         $result = ExamControlStudent::updateItem($model, $post);
         if (!is_array($result)) {

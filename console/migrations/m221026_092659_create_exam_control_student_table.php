@@ -73,7 +73,7 @@ class m221026_092659_create_exam_control_student_table extends Migration
         $this->addForeignKey('exam_control_student_subject_id', 'exam_control_student', 'subject_id', 'subject', 'id');
         $this->addForeignKey('exam_control_student_language_id', 'exam_control_student', 'language_id', 'language', 'id');
         $this->addForeignKey('exam_control_student_edu_plan_id', 'exam_control_student', 'edu_plan_id', 'edu_plan', 'id');
-        $this->addForeignKey('exam_control_student_teacher_user_id', 'exam_control_student', 'teacher_user_id', 'time_table', 'id');
+        $this->addForeignKey('exam_control_student_teacher_user_id', 'exam_control_student', 'teacher_user_id', 'users', 'id');
         $this->addForeignKey('exam_control_student_edu_semester_id', 'exam_control_student', 'edu_semester_id', 'edu_semestr', 'id');
         $this->addForeignKey('exam_control_student_subject_category_id', 'exam_control_student', 'subject_category_id', 'subject_category', 'id');
         //        $this->addForeignKey('exam_control_student_old_exam_control_id', 'exam_control_student', 'old_exam_control_id', 'old_exam_control', 'id');

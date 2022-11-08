@@ -102,16 +102,16 @@ class ExamControlController extends ApiActiveController
     {
         $model = ExamControl::findOne($id);
 
-        /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            if ($model->faculty_id != $t['UserAccess']->table_id) {
-                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
-            }
-        } elseif ($t['status'] == 2) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
-        }
-        /*  is Self  */
+        // /*  is Self  */
+        // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+        //     if ($model->faculty_id != $t['UserAccess']->table_id) {
+        //         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        //     }
+        // } elseif ($t['status'] == 2) {
+        //     return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        // }
+        // /*  is Self  */
 
         $post = Yii::$app->request->post();
 

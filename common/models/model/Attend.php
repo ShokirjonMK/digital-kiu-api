@@ -573,7 +573,7 @@ class Attend extends \yii\db\ActiveRecord
             } else {
                 $errors[] = _e('Error occured in updating');
             }
-          
+
             if (count($errors) > 0) {
                 $transaction->rollBack();
                 return simplify_errors($errors);

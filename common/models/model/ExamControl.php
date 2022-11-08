@@ -176,19 +176,6 @@ class ExamControl extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-
-
-
-
-
-
-
-
-
-
-
-
-
             'id' => 'ID',
             'time_table_id' => _e('Time Table ID'),
             'start' => _e('Start'),

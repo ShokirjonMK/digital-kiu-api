@@ -60,7 +60,7 @@ class HemisMK
         return $pinfl;
     }
 
-    public function getToken()
+    protected function getToken()
     {
         // headers
         $headers = array(

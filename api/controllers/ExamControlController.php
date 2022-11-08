@@ -105,7 +105,7 @@ class ExamControlController extends ApiActiveController
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
-            if ($model->facuty_id != $t['UserAccess']->table_id) {
+            if ($model->faculty_id != $t['UserAccess']->table_id) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
             }
         } elseif ($t['status'] == 2) {

@@ -1659,6 +1659,7 @@ return [
         "student_index",
         "student_update",
         "student_view",
+        "student_get",
 
         "student_time-option-not",
 

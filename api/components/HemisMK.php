@@ -79,7 +79,6 @@ class HemisMK
             CURLOPT_POSTFIELDS => array(
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $refreshToken,
-
             ),
             CURLOPT_TIMEOUT => 30,
         );
@@ -87,9 +86,8 @@ class HemisMK
         $mk_curl = curl_init();
         curl_setopt_array($mk_curl, $defaults);
 
-
         $response = curl_exec($mk_curl);
-        dd($response);
+        dd('edede');
 
 
         if (curl_errno($mk_curl)) {

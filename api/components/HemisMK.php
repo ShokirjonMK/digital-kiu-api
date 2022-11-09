@@ -18,7 +18,7 @@ class HemisMK
         // $token = self::getToken();
 
         // return $token;
-        $token = 'RRUGUZ0WPToptTK3DKKD8bP7JLA';
+        $token = 'qyRmqLl49YJYJlQ42BuvxEgKBqk';
         // headers
         $headers = array(
             "Authorization: Bearer $token",
@@ -58,6 +58,61 @@ class HemisMK
             return $getContentJson;
         }
         return $pinfl;
+    }
+
+    public static function refreshToken()
+    {
+        $url = 'http://ministry.hemis.uz/app/rest/v2/oauth/token';
+        $mk_curl = curl_init();
+        curl_setopt($mk_curl, CURLOPT_URL, $url);
+
+        $refreshToken = 'N771lKEu1YoWHettr6Poca_c-HY';
+        // headers
+        $headers = array(
+            "Authorization: Bearer $refreshToken",
+            'Content-Type: application/json; charset=UTF-8'
+        );
+
+        $defaults = array(
+            CURLOPT_URL => $url,
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Basic Y2xpZW50OnNlY3JldA==",
+                'Content-Type: multipart/form-data; boundary=<calculated when request is sent>'
+            ),
+            CURLOPT_HEADER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => array(
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $token,
+
+            ),
+            CURLOPT_TIMEOUT => 30,
+        );
+
+        $mk_curl = curl_init();
+        curl_setopt_array($mk_curl, $defaults);
+
+
+        $response = curl_exec($mk_curl);
+
+    
+
+        if (curl_errno($mk_curl)) {
+            $error_msg = curl_error($mk_curl);
+            curl_close($mk_curl);
+            return $error_msg;
+        } else {
+
+            dd($response);
+
+
+            list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
+            curl_close($mk_curl);
+            $getContentJson = json_decode($getContent);
+
+            return $getContentJson;
+        }
+        return 0;
     }
 
     public function getToken()

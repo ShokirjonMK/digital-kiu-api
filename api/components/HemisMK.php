@@ -18,7 +18,7 @@ class HemisMK
         // $token = self::getToken();
 
         // return $token;
-        $token = 'qyRmqLl49YJYJlQ42BuvxEgKBqk';
+        $token = 'HZW8NnRoEC7J-Hdv2m5kZMCXnzU';
         // headers
         $headers = array(
             "Authorization: Bearer $token",
@@ -67,11 +67,6 @@ class HemisMK
         curl_setopt($mk_curl, CURLOPT_URL, $url);
 
         $refreshToken = 'N771lKEu1YoWHettr6Poca_c-HY';
-        // headers
-        $headers = array(
-            "Authorization: Bearer $refreshToken",
-            'Content-Type: application/json; charset=UTF-8'
-        );
 
         $defaults = array(
             CURLOPT_URL => $url,
@@ -83,7 +78,7 @@ class HemisMK
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => array(
                 'grant_type' => 'refresh_token',
-                'refresh_token' => $token,
+                'refresh_token' => $refreshToken,
 
             ),
             CURLOPT_TIMEOUT => 30,
@@ -94,8 +89,8 @@ class HemisMK
 
 
         $response = curl_exec($mk_curl);
+        dd($response);
 
-    
 
         if (curl_errno($mk_curl)) {
             $error_msg = curl_error($mk_curl);
@@ -103,7 +98,7 @@ class HemisMK
             return $error_msg;
         } else {
 
-            dd($response);
+            dd(json_encode($response));
 
 
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
@@ -162,4 +157,50 @@ class HemisMK
         }
         return false;
     }
+
+
+    /*
+    $refreshToken = 'N771lKEu1YoWHettr6Poca_c-HY';
+
+        $client = new Client([
+            'headers' => [
+                "Authorization: Basic Y2xpZW50OnNlY3JldA==",
+                'Content-Type: multipart/form-data;'
+            ]
+        ]);
+
+        $response = $client->post(
+            'http://ministry.hemis.uz/app/rest/v2/oauth/token',
+            ['body' => json_encode(
+                [
+                    'grant_type' => 'refresh_token',
+                    'refresh_token' => $refreshToken,
+                ]
+            )]
+        );
+        dd('sasdas');
+        dd($response);
+        if ($response->getStatusCode() == 200) {
+
+            $res = json_decode($response->getBody()->getContents());
+
+            dd($res);
+
+            if (isset($res->result)) {
+                $result = $res->result;
+
+                // return  json_decode($response->getBody()->getContents());
+                $data['status'] = true;
+                $data['data'] = $result;
+
+                return $data;
+            } else {
+                $error = $res->error;
+                $data['error'] = $error;
+                return $data;
+            }
+        } else {
+            $data['status'] = false;
+            return $data;
+        }*/
 }

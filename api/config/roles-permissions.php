@@ -1943,6 +1943,10 @@ return [
         "attend_index",
         "attend_update",
         "attend_view",
+        "exam-control_create",
+        "exam-control_delete",
+        "exam-control_update",
+        "exam-control_view",
     ],
 
     /* Student */

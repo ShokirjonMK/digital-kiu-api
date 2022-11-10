@@ -1044,33 +1044,46 @@ class Exam extends \yii\db\ActiveRecord
                     }
                 } */
 
-                $examAppeal = ExamAppeal::find()
+
+                $examAppealCount = ExamAppeal::find()
                     ->where([
                         'exam_id' => $exam->id,
                         'teacher_access_id' => null,
                         'lang_id' => $examAppealSmetaOne->lang_id,
-                        // 'status' => ExamStudent::STATUS_TAKED,
-                    ])
-                    ->orderBy(new Expression('rand()'))
-                    ->limit($examAppealSmetaOne->count)
-                    ->all();
+                        'teacher_access_id' => $examAppealSmetaOne->teacher_access_id,
 
-                $examAppealSmetaOne->status = ExamAppealSemeta::STATUS_IN_CHECKING;
-                if (!$examAppealSmetaOne->save()) {
-                    $errors[] = $examAppealSmetaOne->getErrorSummary(true);
+                    ])->count();
 
-                    // $errors[] = _('There is an error occurred while saving examAppealSmetaOne!');
-                }
 
-                foreach ($examAppeal as $examAppealOne) {
-                    $examAppealOne->teacher_access_id = $examAppealSmetaOne->teacher_access_id;
-                    // $examAppealOne->exam_semeta_id = $examAppealSmetaOne->id;
-                    $examAppealOne->status = ExamAppeal::STATUS_IN_CHECKING;
+                $examAppealStudentMustDist = $examAppealSmetaOne->count - $examAppealCount;
+                if ($examAppealStudentMustDist > 0) {
 
-                    if (!$examAppealOne->save()) {
+                    $examAppeal = ExamAppeal::find()
+                        ->where([
+                            'exam_id' => $exam->id,
+                            'teacher_access_id' => null,
+                            'lang_id' => $examAppealSmetaOne->lang_id,
+                            // 'status' => ExamStudent::STATUS_TAKED,
+                        ])
+                        ->orderBy(new Expression('rand()'))
+                        ->limit($examAppealStudentMustDist)
+                        ->all();
 
-                        // $errors[] = _('There is an error occurred while saving examAppealOne!');
-                        $errors[] = $examAppealOne->getErrorSummary(true);
+                    $examAppealSmetaOne->status = ExamAppealSemeta::STATUS_IN_CHECKING;
+                    if (!$examAppealSmetaOne->save()) {
+                        $errors[] = $examAppealSmetaOne->getErrorSummary(true);
+                        // $errors[] = _('There is an error occurred while saving examAppealSmetaOne!');
+                    }
+
+                    foreach ($examAppeal as $examAppealOne) {
+                        $examAppealOne->teacher_access_id = $examAppealSmetaOne->teacher_access_id;
+                        // $examAppealOne->exam_semeta_id = $examAppealSmetaOne->id;
+                        $examAppealOne->status = ExamAppeal::STATUS_IN_CHECKING;
+
+                        if (!$examAppealOne->save()) {
+                            // $errors[] = _('There is an error occurred while saving examAppealOne!');
+                            $errors[] = $examAppealOne->getErrorSummary(true);
+                        }
                     }
                 }
             }

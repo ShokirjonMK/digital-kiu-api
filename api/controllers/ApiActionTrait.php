@@ -112,7 +112,6 @@ trait ApiActionTrait
      */
     public function beforeAction($action)
     {
-
         $this->generate_access_key();
         Yii::$app->response->format = Response::FORMAT_JSON;
 

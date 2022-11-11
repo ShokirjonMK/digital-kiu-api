@@ -1044,7 +1044,6 @@ class Exam extends \yii\db\ActiveRecord
                     }
                 } */
 
-
                 $examAppealCount = ExamAppeal::find()
                     ->where([
                         'exam_id' => $exam->id,
@@ -1053,7 +1052,6 @@ class Exam extends \yii\db\ActiveRecord
                         'teacher_access_id' => $examAppealSmetaOne->teacher_access_id,
 
                     ])->count();
-
 
                 $examAppealStudentMustDist = $examAppealSmetaOne->count - $examAppealCount;
                 if ($examAppealStudentMustDist > 0) {
@@ -1112,7 +1110,6 @@ class Exam extends \yii\db\ActiveRecord
 
     public static function statusList()
     {
-
         return [
             self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
             self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),

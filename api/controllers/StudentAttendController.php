@@ -28,7 +28,9 @@ class StudentAttendController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
         ;
-       /*  $group_by = Yii::$app->request->get('group_by');
+
+
+        /*  $group_by = Yii::$app->request->get('group_by');
         if (isset($group_by)) {
             if (($group_by[0] == "'") && ($group_by[strlen($group_by) - 1] == "'")) {
                 $group_by =  substr($group_by, 1, -1);
@@ -42,8 +44,6 @@ class StudentAttendController extends ApiActiveController
             // $query = $query->orderBy(['countlike' => SORT_DESC]);
             $query = $query->orderBy(['COUNT(' . $this->table_name . '.id)' => SORT_DESC]);
         } */
-
-
 
         // filter
         $query = $this->filterAll($query, $model);

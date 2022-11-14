@@ -272,9 +272,9 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getExamControl()
     {
-        return $this->hasOne(ExamControl::className(), ['time_table_id' => 'id']);
-    } 
- 
+        return $this->hasOne(ExamControl::className(), ['time_table_id' => 'id'])->onCondition(['is_deleted' => 0]);
+    }
+
 
     public function getAttendanceDates()
     {

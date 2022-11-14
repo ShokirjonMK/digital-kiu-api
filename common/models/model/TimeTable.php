@@ -265,6 +265,7 @@ class TimeTable extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+    
     /**
      * Gets query for [[ExamControls]]. 
      * 

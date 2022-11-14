@@ -216,7 +216,6 @@ class TimeTable extends \yii\db\ActiveRecord
         return $fields;
     }
 
-
     public function extraFields()
     {
         $extraFields =  [

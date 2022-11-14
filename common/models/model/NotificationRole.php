@@ -52,7 +52,7 @@ class NotificationRole extends \yii\db\ActiveRecord
 
             [['notification_id', 'role'], 'required'],
             [['notification_id'], 'integer'],
-            [['role'], 'string', 'max' => 33],
+            [['role'], 'string', 'max' => 255],
 
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['notification_id'], 'exist', 'skipOnError' => true, 'targetClass' => Notification::className(), 'targetAttribute' => ['notification_id' => 'id']],

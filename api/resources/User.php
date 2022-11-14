@@ -13,6 +13,7 @@ use common\models\model\Profile;
 use common\models\model\EncryptPass;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
+use common\models\model\Oferta;
 use common\models\model\Region;
 use common\models\model\UserAccess;
 use common\models\model\UserAccessType;
@@ -121,6 +122,10 @@ class User extends CommonUser
 
             'kpiBall',
             'kpiMark',
+
+
+            'oferta',
+            'ofertaIsComformed',
 
             'country',
             'region',
@@ -268,6 +273,17 @@ class User extends CommonUser
         return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->sum('ball');
         // return $this->hasOne(Profile::className(), ['user_id' => 'id']);
     }
+
+    public function getOfertaIsComformed()
+    {
+        return $this->oferta ? 1 : 0;
+    }
+
+    public function getOferta()
+    {
+        return $this->hasOne(Oferta::className(), ['created_by' => 'id']);
+    }
+
 
     public function getKpiMark()
     {

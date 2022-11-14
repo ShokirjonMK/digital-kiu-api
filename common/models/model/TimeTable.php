@@ -265,7 +265,7 @@ class TimeTable extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
-    
+
     /**
      * Gets query for [[ExamControls]]. 
      * 
@@ -273,6 +273,7 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getExamControl()
     {
+        return $this->hasOne(ExamControl::className(), ['time_table_id' => 'id']);
         return $this->hasOne(ExamControl::className(), ['time_table_id' => 'id'])->onCondition(['is_deleted' => 0]);
     }
 

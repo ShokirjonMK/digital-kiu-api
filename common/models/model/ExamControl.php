@@ -257,6 +257,7 @@ class ExamControl extends \yii\db\ActiveRecord
             // 'category',
 
             'order',
+            'is_deleted',
             'status',
 
             'created_at',

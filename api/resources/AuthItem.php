@@ -36,6 +36,9 @@ class AuthItem extends CommonAuthItem
             'category' => function ($model) {
                 return $model->getParsedDesc('category');
             },
+            'pretty_name' => function ($model) {
+                return $model->getParsedDesc('description');
+            },
             'description' => function ($model) {
                 return $model->getParsedDesc('description');
             },

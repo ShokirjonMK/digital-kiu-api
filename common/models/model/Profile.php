@@ -104,6 +104,8 @@ class Profile extends \yii\db\ActiveRecord
                     'academic_degree_id',
                     'degree_info_id',
                     'partiya_id',
+                    'checked',
+                    'checked_full',
 
                     'user_id',
                     'nationality_id',

@@ -2,6 +2,7 @@
 
 namespace api\components;
 
+use common\models\model\Profile;
 use GuzzleHttp\Client;
 use yii\httpclient\Client as HttpClient;
 
@@ -12,12 +13,13 @@ class MipServiceMK
 
     private $_token = 'BF9F9B0C-9273-4072-A815-A51AC905FE9A';
 
-    public static function getData($pin, $document_issue_date)
+    public static function corrent($profile)
     {
-        // $pin = "61801045840029";
-        // $document_issue_date =  "2021-01-13";
+        $pin = $profile->passport_pin;
+        $document_issue_date = $profile->passport_given_date;
 
         $data = [];
+        $error = '';
         $data['status'] = false;
 
 
@@ -48,16 +50,103 @@ class MipServiceMK
             $res = json_decode($response->getBody()->getContents());
             if (isset($res->result)) {
                 $result = $res->result;
+
                 $photo = self::saveTo($result->photo, $result->pinpp);
                 // dd(json_decode($response->getBody()->getContents()));
                 // return  json_decode($response->getBody()->getContents());
                 $data['status'] = true;
                 $result->avatar = $photo;
-                $data['data'] = $result;
 
+                $profile->passport_seria = $result->doc_seria;
+                $profile->passport_number = $result->doc_number;
+                $profile->last_name = $result->surnamelatin;
+                $profile->first_name = $result->namelatin;
+                $profile->middle_name = $result->patronymlatin;
+                $profile->passport_issued_date = $result->docdateend;
+                $profile->birthday = $result->birthdate;
+                $profile->image = $result->avatar;
+                $profile->checked_full = 1;
+                if (!$profile->save(false)) $error = $profile->errors;
+
+                $data['data'] = $result;
+                $data['error'] = $error;
+
+                return true;
                 return $data;
             } else {
                 $error = $res->error;
+                $data['error'] = $error;
+                return false;
+                return $data;
+            }
+        } else {
+            $data['status'] = false;
+            return false;
+            return $data;
+        }
+    }
+    public static function getData($pin, $document_issue_date)
+    {
+        // $pin = "61801045840029";
+        // $document_issue_date =  "2021-01-13";
+
+        $data = [];
+        $error = [];
+        $data['status'] = false;
+
+
+        $client = new Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Api-token' => 'BF9F9B0C-9273-4072-A815-A51AC905FE9A',
+            ]
+        ]);
+
+        $response = $client->post(
+            'http://10.190.24.138:7075',
+            ['body' => json_encode(
+                [
+                    'jsonrpc' => '2.2',
+                    "id" => "ID",
+                    "method" => "adliya.get_personal_data_by_pin",
+                    "params" => [
+                        "pin" => $pin,
+                        "document_issue_date" => $document_issue_date
+                    ]
+                ]
+            )]
+        );
+
+        if ($response->getStatusCode() == 200) {
+
+            $res = json_decode($response->getBody()->getContents());
+            if (isset($res->result)) {
+                $result = $res->result;
+
+                $photo = self::saveTo($result->photo, $result->pinpp);
+                // dd(json_decode($response->getBody()->getContents()));
+                // return  json_decode($response->getBody()->getContents());
+                $data['status'] = true;
+                $result->avatar = $photo;
+
+                $profile = Profile::findOne(['passport_pin' => $pin]);
+
+                $profile->passport_seria = $result->doc_seria;
+                $profile->passport_number = $result->doc_number;
+                $profile->last_name = $result->surnamelatin;
+                $profile->first_name = $result->namelatin;
+                $profile->middle_name = $result->patronymlatin;
+                $profile->passport_issued_date = $result->docdateend;
+                $profile->birthday = $result->birthdate;
+                $profile->image = $result->avatar;
+                if (!$profile->save(false)) $error[] = $profile->errors;
+
+                $data['data'] = $result;
+                $data['error'] = $error;
+
+                return $data;
+            } else {
+                $error[] = $res->error;
                 $data['error'] = $error;
                 return $data;
             }

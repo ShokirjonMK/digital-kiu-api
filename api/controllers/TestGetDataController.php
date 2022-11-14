@@ -12,6 +12,7 @@ use base\ResponseStatus;
 use common\models\model\Attend;
 use common\models\model\Chichqoq;
 use common\models\model\LoginHistory;
+use common\models\model\Profile;
 use common\models\model\StudentAttend;
 use common\models\model\SubjectContent;
 
@@ -130,6 +131,25 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
+        $data = [];
+        $profiles = Profile::find()
+            ->where(['checked' => 0])
+            ->andWhere(['is not', 'passport_pin', null])
+            ->andWhere(['is not', 'passport_given_date', null])
+            ->limit(100)->offset(0)->all();
+
+
+        foreach ($profiles as $profile) {
+            $profile->checked = 1;
+            $mip = MipServiceMK::corrent($profile);
+            $data[] = $mip;
+            $profile->save(false);
+        }
+
+        return $this->response(1, _e('Success'), $data);
+
+
+        return 0;
 
         HemisMK::refreshToken();
         $mip = MipServiceMK::getData(61801045840029, "2021-01-13");

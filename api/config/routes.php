@@ -174,6 +174,9 @@ $routes = [
 
     /** MIP pinfl */
     'GET <lang:\w{2}>/users/get/' => 'user/get',
+    /** Oferta */
+    'POST <lang:\w{2}>/users/oferta/' => 'user/oferta',
+
 
     /** Student from Hemis via pinfl */
     'GET <lang:\w{2}>/students/get/' => 'student/get',

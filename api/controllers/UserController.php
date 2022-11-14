@@ -12,6 +12,7 @@ use common\models\model\AuthChild;
 use common\models\model\Department;
 use common\models\model\Faculty;
 use common\models\model\Kafedra;
+use common\models\model\Oferta;
 use common\models\model\Profile;
 use common\models\model\UserAccess;
 
@@ -23,9 +24,27 @@ class UserController extends ApiActiveController
     {
         return [];
     }
+
+    public function actionOferta()
+    {
+        // return $this->response(1, _e('Oferta comformed.'), current_user_roles_array(), null, ResponseStatus::CREATED);
+        $model = new Oferta();
+        $post = Yii::$app->request->post();
+        $post['role'] = current_user_roles_array();
+
+        $this->load($model, $post);
+
+        $result = Oferta::createItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('Oferta comformed.'), $model, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
     public function actionGet($pin, $document_issue_date)
     {
         $mip = MipServiceMK::getData($pin, $document_issue_date);
+
         if ($mip['status']) {
             return $this->response(1, _e('Success'), $mip['data']);
         } else {

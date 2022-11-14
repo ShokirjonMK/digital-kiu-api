@@ -98,7 +98,7 @@ class ExamControlStudentController extends ApiActiveController
         $post = Yii::$app->request->post();
 
         if (isRole('student')) {
-            if ($model->student_id != $this->studeny()) {
+            if ($model->student_id != $this->student()) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours'), ResponseStatus::UPROCESSABLE_ENTITY);
             }
             if (isset($post['exam_control_id'])) $data['exam_control_id'] = $post['exam_control_id'];

@@ -1955,6 +1955,7 @@ return [
         "user_selfget",
         "para_index",
         'student_me',
+        'user_oferta',
 
         "access-control_permissions",
         "access-control_roles",

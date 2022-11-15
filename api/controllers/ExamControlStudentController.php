@@ -108,7 +108,7 @@ class ExamControlStudentController extends ApiActiveController
             if (isset($post['answer'])) $data['answer'] = $post['answer'];
 
             $this->load($model, $data);
-            $result = ExamControlStudent::createItem($model, $data);
+            $result = ExamControlStudent::updateItem($model, $data);
         } else {
             if (isset($post['exam_control_id'])) unset($post['exam_control_id']);
             if (isset($post['upload2_file'])) unset($post['upload2_file']);
@@ -118,11 +118,11 @@ class ExamControlStudentController extends ApiActiveController
             if (isset($post['main_ball'])) unset($post['main_ball']);
 
             $this->load($model, $post);
-            $result = ExamControlStudent::createItem($model, $post);
+            $result = ExamControlStudent::updateItem($model, $post);
         }
 
-        $this->load($model, $post);
-        $result = ExamControlStudent::updateItem($model, $post);
+        // $this->load($model, $post);
+        // $result = ExamControlStudent::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {

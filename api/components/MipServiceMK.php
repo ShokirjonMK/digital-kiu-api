@@ -128,19 +128,7 @@ class MipServiceMK
                 // return  json_decode($response->getBody()->getContents());
                 $data['status'] = true;
                 $result->avatar = $photo;
-
-                $profile = Profile::findOne(['passport_pin' => $pin]);
-
-                $profile->passport_seria = $result->doc_seria;
-                $profile->passport_number = $result->doc_number;
-                $profile->last_name = $result->surnamelatin;
-                $profile->first_name = $result->namelatin;
-                $profile->middle_name = $result->patronymlatin;
-                $profile->passport_issued_date = $result->docdateend;
-                $profile->birthday = $result->birthdate;
-                $profile->image = $result->avatar;
-                if (!$profile->save(false)) $error[] = $profile->errors;
-
+                
                 $data['data'] = $result;
                 $data['error'] = $error;
 

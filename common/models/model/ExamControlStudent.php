@@ -582,7 +582,7 @@ class ExamControlStudent extends ActiveRecord
         $model->main_ball = $model->ball + $model->ball2;
 
         if ($model->save()) {
-
+            
             // answer file saqlaymiz
             $model->upload_file = UploadedFile::getInstancesByName('upload_file');
             if ($model->upload_file) {

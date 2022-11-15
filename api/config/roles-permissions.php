@@ -1363,6 +1363,7 @@ return [
         "semestr_view",
 
         "student_create",
+        "student_get",
         "student_delete",
         "student_index",
         "student_update",

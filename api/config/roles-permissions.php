@@ -4,6 +4,8 @@ return [
 
     /* Rector */
     'rector' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -57,6 +59,8 @@ return [
 
     /* Pro rektor */
     'prorector' => [
+
+        'user_oferta',
         "academic-degree_create",
         "academic-degree_delete",
         "academic-degree_index",
@@ -711,6 +715,8 @@ return [
 
     /* O'quv bo'limi Admin */
     'edu_admin' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -894,6 +900,8 @@ return [
 
     /* O'quv bo'limi kontenthisi */
     'edu_moderator' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -921,6 +929,8 @@ return [
 
     /* O'quv bo'limi nazoratchi */
     'edu_editor' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1057,6 +1067,8 @@ return [
 
     /* O'quv bo'limi yordamchi */
     'edu_viewer' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1184,6 +1196,8 @@ return [
 
     /* Talim sifati */
     'edu_quality' => [
+
+        'user_oferta',
         "access-control_roles",
         "area_index",
         "area_view",
@@ -1270,6 +1284,8 @@ return [
 
     /* Dekan huquqlari */
     'dean' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1428,6 +1444,8 @@ return [
 
     /* Zam Dekan huquqlari */
     'dean_deputy' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1488,6 +1506,8 @@ return [
 
     /* Kafedra mudiri */
     'mudir' => [
+
+        'user_oferta',
 
         "time-table_index",
         "time-table_parent-null",
@@ -1618,6 +1638,8 @@ return [
     /* tutor tarbiyachi huquqlari */
     'tutor' => [
 
+        'user_oferta',
+
         "area_index",
         "citizenship_index",
         "country_index",
@@ -1703,6 +1725,8 @@ return [
 
     /* Bo'lim boshlig'i */
     'dep_lead' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1739,6 +1763,8 @@ return [
 
     /* Kadr */
     'hr' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1842,6 +1868,8 @@ return [
 
     /* Kadr yordamchi */
     'hr_viewer' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1869,6 +1897,8 @@ return [
 
     /* Teacher */
     'teacher' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -1952,11 +1982,12 @@ return [
 
     /* Student */
     'student' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
         "para_index",
         'student_me',
-        'user_oferta',
 
         "access-control_permissions",
         "access-control_roles",
@@ -2101,6 +2132,8 @@ return [
     ],
 
     'contenter' => [
+
+        'user_oferta',
         "user_self",
         "user_selfget",
 
@@ -2143,6 +2176,8 @@ return [
 
     'time_table_plus' => [
 
+        'user_oferta',
+
         // // "time-table_create",
         // "time-table_delete",
         // // "time-table_index",
@@ -2153,6 +2188,8 @@ return [
     ],
 
     'content_assign' => [
+
+        'user_oferta',
 
         "user_self",
         "user_selfget",
@@ -2170,6 +2207,8 @@ return [
     ],
 
     'kpi_check' => [
+
+        'user_oferta',
         // "access-control_roles",
         // "kpi-category_extra",
         // "kpi-category_index",
@@ -2209,6 +2248,8 @@ return [
     ],
 
     'student_time_table_plus' => [
+
+        'user_oferta',
         // "student-time-table_create",
         // "student-time-table_delete",
         // "student-time-table_index",
@@ -2217,6 +2258,8 @@ return [
     ],
 
     'kpi_plus' => [
+
+        'user_oferta',
 
         // 'kpi-category_extra',
         // 'kpi-category_index',
@@ -2228,6 +2271,8 @@ return [
     ],
 
     'hostel' => [
+
+        'user_oferta',
 
         "user_self",
         "user_selfget",
@@ -2266,6 +2311,8 @@ return [
     ],
 
     'content_plus' => [
+
+        'user_oferta',
         // "subject-content_create",
         // "subject-content_update",
         // "subject-content_delete",
@@ -2273,6 +2320,8 @@ return [
     ],
 
     'club' => [
+
+        'user_oferta',
         "club-time_create",
         "club-time_delete",
         "club-time_index",

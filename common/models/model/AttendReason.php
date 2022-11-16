@@ -267,13 +267,14 @@ class AttendReason extends \yii\db\ActiveRecord
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-
-            $transaction->commit();
-            return true;
-        } else {
+            if ($model->save(false)) {
+                $transaction->commit();
+                return true;
+            }
+        } 
             $transaction->rollBack();
             return simplify_errors($errors);
-        }
+        
     }
 
     public static function confirmItem($model)

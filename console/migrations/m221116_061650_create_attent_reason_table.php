@@ -12,7 +12,7 @@ class m221116_061650_create_attent_reason_table extends Migration
      */
     public function safeUp()
     {
-        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
+        // $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
 
         $tableName = Yii::$app->db->tablePrefix . 'attend_reason';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
@@ -47,7 +47,7 @@ class m221116_061650_create_attent_reason_table extends Migration
         $this->addForeignKey('ars_mk_attend_reason_faculty_id', 'attend_reason', 'faculty_id', 'faculty', 'id');
         $this->addForeignKey('ars_mk_attend_reason_edu_plan_id', 'attend_reason', 'edu_plan_id', 'edu_plan', 'id');
         $this->addForeignKey('ars_mk_attend_reason_subject', 'attend_reason', 'subject_id', 'subject', 'id');
-        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
+        // $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
 
     /**

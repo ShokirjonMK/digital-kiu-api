@@ -144,6 +144,7 @@ $controllers = [
     'student-club',
 
     'attend',
+    'attend-reason',
     'student-attend',
 
     'exam-control',
@@ -187,6 +188,9 @@ $routes = [
     /** Hostel Yotoqxona */
     'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
     'GET <lang:\w{2}>/hostel-docs/not/<id>/' => 'hostel-doc/not',
+
+    /** attend-reason  */
+    'GET <lang:\w{2}>/attend-reasons/confirm/<id>/' => 'attend-reason/confirm',
 
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',

@@ -7,9 +7,13 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "edu_plan".
+ * This is the model class for table "{{%edu_plan}}".
  *
  * @property int $id
+ * @property string|null $spring_end
+ * @property string|null $spring_start
+ * @property string|null $fall_end
+ * @property string|null $fall_start
  * @property int $course
  * @property int $semestr
  * @property int $edu_year_id
@@ -23,12 +27,25 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
+ * @property int|null $edu_form_id ta-lim shakli
  *
+ * @property AttendAccess[] $attendAccesses
+ * @property AttendReason[] $attendReasons
+ * @property Attend[] $attends
+ * @property AttentAccess[] $attentAccesses
  * @property Direction $direction
- * @property EduYear $eduYear
- * @property Faculty $faculty
- * @property EduType $eduType
  * @property EduSemestr[] $eduSemestrs
+ * @property EduType $eduType
+ * @property EduYear $eduYear
+ * @property ExamControlStudent[] $examControlStudents
+ * @property ExamControl[] $examControls
+ * @property Faculty $faculty
+ * @property StudentAttend[] $studentAttends
+ * @property StudentClub[] $studentClubs
+ * @property StudentSubjectSelection[] $studentSubjectSelections
+ * @property StudentTimeOption[] $studentTimeOptions
+ * @property Student[] $students
+ * @property TimeOption[] $timeOptions
  */
 class EduPlan extends \yii\db\ActiveRecord
 {
@@ -262,8 +279,6 @@ class EduPlan extends \yii\db\ActiveRecord
 
         return $query->all();
     }
-
-
 
     /**
      * Gets query for [[Direction]].

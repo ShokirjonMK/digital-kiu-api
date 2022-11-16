@@ -206,12 +206,13 @@ class EduSemestr extends \yii\db\ActiveRecord
         return $this->hasMany(EduSemestrSubject::className(), ['edu_semestr_id' => 'id']);
     }
 
-
+    /**
+     *  Model createItem <$model, $post>
+     */
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-        // dd('a');
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

@@ -229,15 +229,15 @@ class StudentAttend extends \yii\db\ActiveRecord
     public function getCount()
     {
         return self::find()
-            ->where([ 'student_id' => $this->student_id])
+            ->where(['student_id' => $this->student_id])
             ->count();
         return count($this->studentAttends);
     }
+
     public function getStudentAttends()
     {
         return $this->hasMany(StudentAttend::className(), ['attend_id' => 'attend_id'])->onCondition(['student_id' => $this->student_id]);
     }
-
 
     /**
      * Gets query for [[Attend]].

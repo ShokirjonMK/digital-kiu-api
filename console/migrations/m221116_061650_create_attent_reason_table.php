@@ -3,15 +3,17 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%attend_reason}}`.
+ * Handles the creation of table `{{%attent_reason}}`.
  */
-class m221008_105914_create_attend_reason_table extends Migration
+class m221116_061650_create_attent_reason_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
+        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
+
         $tableName = Yii::$app->db->tablePrefix . 'attend_reason';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('attend_reason');
@@ -19,8 +21,9 @@ class m221008_105914_create_attend_reason_table extends Migration
 
         $this->createTable('{{%attend_reason}}', [
             'id' => $this->primaryKey(),
-            'start' => $this->date()->notNull(),
-            'end' => $this->date()->notNull(),
+            'is_confirmed' => $this->tinyInteger(1)->defaultValue(0),
+            'start' => $this->dateTime()->notNull(),
+            'end' => $this->dateTime()->notNull(),
             'student_id' => $this->integer()->notNull(),
 
             'subject_id' => $this->integer()->null(),
@@ -28,6 +31,7 @@ class m221008_105914_create_attend_reason_table extends Migration
             'faculty_id' => $this->integer()->null(),
             'edu_plan_id' => $this->integer()->null(),
             'file' => $this->string()->null(),
+            'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -43,6 +47,7 @@ class m221008_105914_create_attend_reason_table extends Migration
         $this->addForeignKey('ars_mk_attend_reason_faculty_id', 'attend_reason', 'faculty_id', 'faculty', 'id');
         $this->addForeignKey('ars_mk_attend_reason_edu_plan_id', 'attend_reason', 'edu_plan_id', 'edu_plan', 'id');
         $this->addForeignKey('ars_mk_attend_reason_subject', 'attend_reason', 'subject_id', 'subject', 'id');
+        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
 
     /**

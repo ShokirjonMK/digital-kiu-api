@@ -48,6 +48,8 @@ class AttendReason extends \yii\db\ActiveRecord
 
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
+    const CONFIRMED = 1;
+    const NOT_CONFIRMED = 0;
 
     const UPLOADS_FOLDER = 'uploads/attend_reason/';
     public $attend_file;
@@ -77,6 +79,7 @@ class AttendReason extends \yii\db\ActiveRecord
                 'end'
             ], 'safe'],
             [[
+                'is_confirmed',
                 'student_id',
                 'subject_id',
                 'faculty_id',
@@ -92,6 +95,9 @@ class AttendReason extends \yii\db\ActiveRecord
             [
                 ['file'], 'string',
                 'max' => 255
+            ],
+            [
+                ['description'], 'string'
             ],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
@@ -224,7 +230,6 @@ class AttendReason extends \yii\db\ActiveRecord
         return $this->hasOne(Subject::className(), ['id' => 'subject_id']);
     }
 
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -246,6 +251,7 @@ class AttendReason extends \yii\db\ActiveRecord
         }
 
         if ($model->save()) {
+
             $model->attend_file = UploadedFile::getInstancesByName('attend_file');
             if ($model->attend_file) {
                 $model->attend_file = $model->attend_file[0];
@@ -254,20 +260,6 @@ class AttendReason extends \yii\db\ActiveRecord
                     $model->file = $questionFileUrl;
                 } else {
                     $errors[] = $model->errors;
-                }
-            }
-
-            $studentAttends = StudentAttend::find()
-                ->where(['student_id' => $model->student_id])
-                ->andWhere(['>=', 'date', $model->start])
-                ->andWhere(['<=', 'date', $model->end])
-                ->all();
-
-            foreach ($studentAttends as $studentAttend) {
-                $studentAttend->attend_reason_id = $model->id;
-                $studentAttend->reason = StudentAttend::REASON_TRUE;
-                if (!$studentAttend->save()) {
-                    $errors[] = $studentAttend->errors;
                 }
             }
 
@@ -284,17 +276,79 @@ class AttendReason extends \yii\db\ActiveRecord
         }
     }
 
+    public static function confirmItem($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $studentAttends = new StudentAttend();
+        $studentAttends = $studentAttends::find();
+        $studentAttends = $studentAttends
+            ->where(['student_id' => $model->student_id])
+            ->andWhere(['>=', 'date', $model->start])
+            ->andWhere(['<=', 'date', $model->end])
+            ->all();
+
+        foreach ($studentAttends as $studentAttend) {
+
+            $t = false;
+            if ($studentAttend->date == date("Y-m-d", strtotime($model->start))) {
+                if (($studentAttend->timeTable->para->end_time >= date('H:i', strtotime($model->start)))) {
+                    $t = true;
+                }
+            } elseif ($studentAttend->date == date("Y-m-d", strtotime($model->end))) {
+                if (($studentAttend->timeTable->para->end_time >= date('H:i', strtotime($model->end)))) {
+                    $t = true;
+                }
+            } else {
+                $t = true;
+            }
+
+            if ($t) {
+                $studentAttend->attend_reason_id = $model->id;
+                $studentAttend->reason = StudentAttend::REASON_TRUE;
+
+                if (!$studentAttend->save()) {
+                    $errors[] = $studentAttend->errors;
+                }
+            }
+        }
+
+        $model->is_confirmed = self::CONFIRMED;
+        $model->save(false);
+
+        if (count($errors) > 0) {
+            $transaction->commit();
+            return true;
+        }
+
+        $transaction->rollBack();
+        return simplify_errors($errors);
+    }
+
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
+        if ($model->is_confirmed == self::CONFIRMED) {
+            $errors[] = _e('This reason confirmed!');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);
         }
 
+        $model->faculty_id = $model->student->faculty_id;
+        $model->edu_plan_id = $model->student->edu_plan_id;
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         $oldFile = $model->file;
         // attend file saqlaymiz
@@ -309,24 +363,6 @@ class AttendReason extends \yii\db\ActiveRecord
             }
         }
         // ***
-
-        $student = self::student(2);
-        if (!isset($student)) {
-            $errors[] = _e('Student not found');
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-
-        $model->student_id = $student->id;
-        $model->faculty_id = $student->faculty_id;
-        $model->edu_plan_id = $student->edu_plan_id;
-        $model->gender = $student->gender;
-
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
 
         if ($model->save()) {
             $transaction->commit();
@@ -343,7 +379,11 @@ class AttendReason extends \yii\db\ActiveRecord
         $errors = [];
 
         /** Delete reason on Student Attent */
-
+        if ($model->is_confirmed == self::CONFIRMED) {
+            $errors[] = _e('This reason confirmed!');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
         /** Logic here */
 
         if ($model->delete()) {

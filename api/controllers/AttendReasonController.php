@@ -48,6 +48,7 @@ class AttendReasonController extends ApiActiveController
     {
         $model = new AttendReason();
         $post = Yii::$app->request->post();
+        unset($post['is_confirmed']);
         $this->load($model, $post);
 
         $result = AttendReason::createItem($model, $post);
@@ -67,10 +68,28 @@ class AttendReasonController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
+        unset($post['is_confirmed']);
         $this->load($model, $post);
         $result = AttendReason::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionConfirm($lang, $id)
+    {
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+
+        $model = AttendReason::findOne($id);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $result = AttendReason::confirmItem($model);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully confirmed.'), $model, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

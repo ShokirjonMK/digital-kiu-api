@@ -649,30 +649,32 @@ class ExamControl extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        // question file saqlaymiz
+        $model->upload_file = UploadedFile::getInstancesByName('upload_file');
+        if ($model->upload_file) {
+            $model->upload_file = $model->upload_file[0];
+            $upload_FileUrl = $model->uploadFile($model->upload_file);
+            if ($upload_FileUrl) {
+                $model->question_file = $upload_FileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        // question file saqlaymiz
+        $model->upload2_file = UploadedFile::getInstancesByName('upload2_file');
+        if ($model->upload2_file) {
+            $model->upload2_file = $model->upload2_file[0];
+            $upload2_FileUrl = $model->uploadFile($model->upload2_file);
+            if ($upload2_FileUrl) {
+                $model->question2_file = $upload2_FileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+
         if ($model->save()) {
 
-            // question file saqlaymiz
-            $model->upload_file = UploadedFile::getInstancesByName('upload_file');
-            if ($model->upload_file) {
-                $model->upload_file = $model->upload_file[0];
-                $upload_FileUrl = $model->uploadFile($model->upload_file);
-                if ($upload_FileUrl) {
-                    $model->question_file = $upload_FileUrl;
-                } else {
-                    $errors[] = $model->errors;
-                }
-            }
-            // question file saqlaymiz
-            $model->upload2_file = UploadedFile::getInstancesByName('upload2_file');
-            if ($model->upload2_file) {
-                $model->upload2_file = $model->upload2_file[0];
-                $upload2_FileUrl = $model->uploadFile($model->upload2_file);
-                if ($upload2_FileUrl) {
-                    $model->question2_file = $upload2_FileUrl;
-                } else {
-                    $errors[] = $model->errors;
-                }
-            }
+
 
             if (isset($post['name'])) {
                 $has_error = Translate::checkingUpdate($post);

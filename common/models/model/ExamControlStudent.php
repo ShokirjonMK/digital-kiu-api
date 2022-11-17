@@ -387,6 +387,8 @@ class ExamControlStudent extends ActiveRecord
 
         if (isRole('student')) {
             $model->student_id = self::student();
+
+            dd($model);
             if (
                 !StudentTimeTable::find()
                     ->where(['time_table_id' => $model->examControl->time_table_id, 'student_id' => $model->student_id])

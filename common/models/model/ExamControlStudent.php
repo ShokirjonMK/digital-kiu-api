@@ -378,7 +378,7 @@ class ExamControlStudent extends ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
-dd(self::student(2));
+        // dd(self::student(2));
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
@@ -387,7 +387,7 @@ dd(self::student(2));
 
         if (isRole('student')) {
             $model->student_id = self::student();
-            
+
             if (
                 !StudentTimeTable::find()
                     ->where(['time_table_id' => $model->examControl->time_table_id, 'student_id' => $model->student_id])

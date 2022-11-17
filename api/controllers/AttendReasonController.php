@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\AttendReason;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Faculty;
 
 class AttendReasonController extends ApiActiveController
 {
@@ -29,9 +30,17 @@ class AttendReasonController extends ApiActiveController
             // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
         ;
 
-        // if (isRole('student')) {
-        //     $query->andWhere([$this->table_name . '.student_id' => $this->student()]);
-        // }
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere([
+                'faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'faculty_id' => -1
+            ]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);

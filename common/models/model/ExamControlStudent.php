@@ -102,7 +102,12 @@ class ExamControlStudent extends ActiveRecord
 
             [['upload_file', 'upload2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->answerFileMaxSize],
             [['upload_plagiat_file', 'upload_plagiat2_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->plagiatFileMaxSize],
-            ['exam_control_id', 'unique', 'targetAttribute' => ['exam_control_id', 'student_id'], 'message' => 'This student has alreadey recorded'],
+
+            [
+                'exam_control_id', 'unique', 'targetAttribute' =>
+                ['exam_control_id', 'student_id'],
+                'message' => 'This student has alreadey recorded'
+            ],
             // ['a1', 'unique', 'targetAttribute' => ['a1', 'a2']],
 
         ];
@@ -457,7 +462,7 @@ class ExamControlStudent extends ActiveRecord
         $model->direction_id = $model->examControl->direction_id;
         $model->type = $model->examControl->type;
         $model->category = $model->examControl->category;
-        
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
@@ -582,7 +587,7 @@ class ExamControlStudent extends ActiveRecord
         $model->main_ball = $model->ball + $model->ball2;
 
         if ($model->save()) {
-            
+
             // answer file saqlaymiz
             $model->upload_file = UploadedFile::getInstancesByName('upload_file');
             if ($model->upload_file) {

@@ -696,11 +696,11 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                         ->andWhere(['student_id' => self::student()])
                         ->all();
 
-                    if (count($timeTableSelectedChild) > 0) {
-                        $errors[] = _e('You are already busy in this time!');
-                        $transaction->rollBack();
-                        return simplify_errors($errors);
-                    }
+                    // if (count($timeTableSelectedChild) > 0) {
+                    //     $errors[] = _e('You are already busy in this time!');
+                    //     $transaction->rollBack();
+                    //     return simplify_errors($errors);
+                    // }
                     /** Child Shu tanlagan payt bola o'zi bo'shmi vaqti bormi */
 
                     $newModel->teacher_access_id = $timeTableOne->teacher_access_id;

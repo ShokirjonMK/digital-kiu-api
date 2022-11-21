@@ -98,7 +98,7 @@ class AttendReasonController extends ApiActiveController
 
         $result = AttendReason::confirmItem($model);
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully confirmed.'), $model, null, ResponseStatus::OK);
+            return $this->response(1, _e('Successfully confirmed.'), $model, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }

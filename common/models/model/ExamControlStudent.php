@@ -400,31 +400,32 @@ class ExamControlStudent extends ActiveRecord
         }
 
         $now = time();
-        if (isset($post['answer2']) || isset($post['upload2_file'])) {
-            if ($model->examControl->start2 > $now) {
-                $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
-                $transaction->rollBack();
-                return simplify_errors($errors);
+        if (!isRole('student')) {
+            if (isset($post['answer2']) || isset($post['upload2_file'])) {
+                if ($model->examControl->start2 > $now) {
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                if ($model->examControl->finish2 < $now) {
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            } else {
+                if ($model->examControl->start > $now) {
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                if ($model->examControl->finish < $now) {
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
             }
-            if ($model->examControl->finish2 < $now) {
-                $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-        } else {
-            if ($model->examControl->start > $now) {
-                $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-            if ($model->examControl->finish < $now) {
-                $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $model->start = $now;
         }
-
-        $model->start = $now;
 
         if (isset($post['ball'])) {
             if ($model->ball >= $model->examControl->max_ball) {
@@ -539,30 +540,34 @@ class ExamControlStudent extends ActiveRecord
         $errors = [];
 
         $now = time();
-        if (isset($post['answer2']) || isset($post['upload2_file'])) {
-            if ($model->examControl->start2 > $now) {
-                $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
-                $transaction->rollBack();
-                return simplify_errors($errors);
+        if (!isRole('student')) {
+
+
+            if (isset($post['answer2']) || isset($post['upload2_file'])) {
+                if ($model->examControl->start2 > $now) {
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                if ($model->examControl->finish2 < $now) {
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            } else {
+                if ($model->examControl->start > $now) {
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                if ($model->examControl->finish < $now) {
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
             }
-            if ($model->examControl->finish2 < $now) {
-                $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-        } else {
-            if ($model->examControl->start > $now) {
-                $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-            if ($model->examControl->finish < $now) {
-                $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $model->start = $now;
         }
-        $model->start = $now;
 
         if (isset($post['ball'])) {
             if ($model->ball >= $model->examControl->max_ball) {

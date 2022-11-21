@@ -315,7 +315,9 @@ class AttendReason extends \yii\db\ActiveRecord
         }
 
         $model->is_confirmed = self::CONFIRMED;
-        $model->save(false);
+        if ($model->save(false)) {
+            $errors[] = $model->errors;
+        }
 
         if (count($errors) > 0) {
             $transaction->commit();

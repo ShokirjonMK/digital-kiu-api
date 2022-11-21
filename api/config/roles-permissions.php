@@ -780,7 +780,6 @@ return [
         "exam-appeal-semeta_index",
         "exam-appeal-semeta_view",
 
-
         "exam-student_index",
         "exam-student_view",
         "exam-student_update",
@@ -875,7 +874,7 @@ return [
         // "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
-        // "time-table_update",
+        "time-table_update",
         "time-table_view",
 
 

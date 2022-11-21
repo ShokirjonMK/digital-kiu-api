@@ -400,7 +400,7 @@ class ExamControlStudent extends ActiveRecord
         }
 
         $now = time();
-        if (!isRole('student')) {
+        if (isRole('student')) {
             if (isset($post['answer2']) || isset($post['upload2_file'])) {
                 if ($model->examControl->start2 > $now) {
                     $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
@@ -540,7 +540,7 @@ class ExamControlStudent extends ActiveRecord
         $errors = [];
 
         $now = time();
-        if (!isRole('student')) {
+        if (isRole('student')) {
 
 
             if (isset($post['answer2']) || isset($post['upload2_file'])) {

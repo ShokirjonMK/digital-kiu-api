@@ -53,7 +53,12 @@ class FacultyStatistic extends Faculty
 
     public function getStudentsAll()
     {
-        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id']);
+        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id'])->onCondition(['!=', 'course_id', 9]);
+    }
+
+    public function getStudentsGraduated()
+    {
+        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id'])->onCondition(['course_id' => 9]);;
     }
 
     public function getStudentsCountByGender()
@@ -87,6 +92,11 @@ class FacultyStatistic extends Faculty
     public function getStudentsCount()
     {
         return count($this->studentsAll);
+    }
+
+    public function getStudentsCountGraduated()
+    {
+        return count($this->studentsGraduated);
     }
 
     public function getTeachers()

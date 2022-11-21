@@ -85,7 +85,7 @@ class ExamControl extends \yii\db\ActiveRecord
     const UPLOADS_FOLDER = 'uploads/exam_control/question/';
     public $upload_file;
     public $upload2_file;
-    public $questionFileMaxSize = 1024 * 1024 * 5; // 5 Mb
+    public $questionFileMaxSize = 1024 * 1024 * 10; // 10 Mb
 
 
     /**

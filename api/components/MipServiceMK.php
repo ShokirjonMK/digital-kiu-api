@@ -72,17 +72,17 @@ class MipServiceMK
                 $data['data'] = $result;
                 $data['error'] = $error;
 
-                return true;
+                return [$pin => true];
                 return $data;
             } else {
                 $error = $res->error;
                 $data['error'] = $error;
-                return false;
+                return [$pin => false];
                 return $data;
             }
         } else {
             $data['status'] = false;
-            return false;
+            return [$pin => false];
             return $data;
         }
     }
@@ -162,9 +162,9 @@ class MipServiceMK
     private static function saveTo($imgBase64, $pin)
     {
         // $imgBase64 = '';
-        $uploadPathMK   = STORAGE_PATH  . 'user_turniket/';
-        if (!file_exists(STORAGE_PATH  . 'user_turniket/')) {
-            mkdir(STORAGE_PATH . 'user_turniket/', 0777, true);
+        $uploadPathMK   = STORAGE_PATH  . 'user_images/';
+        if (!file_exists(STORAGE_PATH  . 'user_images/')) {
+            mkdir(STORAGE_PATH . 'user_images/', 0777, true);
         }
 
         $parts        = explode(
@@ -178,15 +178,15 @@ class MipServiceMK
 
         file_put_contents($file, $imagebase64);
 
-        return 'storage/user_turniket/' . $miniurl;
+        return 'storage/user_images/' . $miniurl;
     }
 
     private static function saveToTurniket($imgBase64, $pin, $first_name, $last_name)
     {
         // $imgBase64 = '';
-        $uploadPathMK   = STORAGE_PATH  . 'user_turniket1/';
-        if (!file_exists(STORAGE_PATH  . 'user_turniket1/')) {
-            mkdir(STORAGE_PATH . 'user_turniket1/', 0777, true);
+        $uploadPathMK   = STORAGE_PATH  . 'user_images/';
+        if (!file_exists(STORAGE_PATH  . 'user_images/')) {
+            mkdir(STORAGE_PATH . 'user_images/', 0777, true);
         }
 
         $parts        = explode(
@@ -200,6 +200,6 @@ class MipServiceMK
 
         file_put_contents($file, $imagebase64);
 
-        return 'storage/user_turniket1/' . $miniurl;
+        return 'storage/user_images/' . $miniurl;
     }
 }

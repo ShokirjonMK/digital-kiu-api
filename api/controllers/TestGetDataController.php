@@ -133,10 +133,12 @@ class TestGetDataController extends ApiActiveController
     {
         $data = [];
         $profiles = Profile::find()
-            ->where(['checked' => 1])
+            ->where(['checked' => 0])
+            ->andWhere(['checked_full' => 0])
             ->andWhere(['is not', 'passport_pin', null])
             ->andWhere(['is not', 'passport_given_date', null])
-            ->limit(100)->offset(0)->all();
+            ->limit(1000)->offset(0)
+            ->all();
 
 
         foreach ($profiles as $profile) {

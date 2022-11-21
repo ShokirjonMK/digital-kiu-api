@@ -51,7 +51,7 @@ class MipServiceMK
             if (isset($res->result)) {
                 $result = $res->result;
 
-                $photo = self::saveToTurniket($result->photo, $result->pinpp, $result->namelatin, $result->surnamelatin);
+                $photo = self::saveTo($result->photo, $result->pinpp, $result->namelatin, $result->surnamelatin);
                 // dd(json_decode($response->getBody()->getContents()));
                 // return  json_decode($response->getBody()->getContents());
                 $data['status'] = true;

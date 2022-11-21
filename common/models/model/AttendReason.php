@@ -140,6 +140,7 @@ class AttendReason extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
+            'is_confirmed',
 
             'start',
             'end',
@@ -271,10 +272,9 @@ class AttendReason extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             }
-        } 
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        
+        }
+        $transaction->rollBack();
+        return simplify_errors($errors);
     }
 
     public static function confirmItem($model)

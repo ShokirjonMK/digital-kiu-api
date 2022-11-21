@@ -70,7 +70,7 @@ class AttendReasonController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        // return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
 
         $model = AttendReason::findOne($id);
         if (!$model) {
@@ -89,7 +89,7 @@ class AttendReasonController extends ApiActiveController
 
     public function actionConfirm($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        // return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
 
         $model = AttendReason::findOne($id);
         if (!$model) {

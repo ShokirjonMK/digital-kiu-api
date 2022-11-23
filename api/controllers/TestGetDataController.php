@@ -147,7 +147,8 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-        $dataFormTable = KuvondikMasofaviy::find()->limit(10)->offset(0)->all();
+    
+        $dataFormTable = KuvondikMasofaviy::find()->limit(10)->offset(10)->all();
 
 
         foreach ($dataFormTable as $dataOne) {

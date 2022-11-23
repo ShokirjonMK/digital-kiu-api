@@ -147,7 +147,7 @@ class TestGetDataController extends ApiActiveController
     public function actionIndex($passport = null, $jshir = null)
     {
 
-    
+
         $dataFormTable = KuvondikMasofaviy::find()->all();
 
 
@@ -155,7 +155,7 @@ class TestGetDataController extends ApiActiveController
 
 
             $post = [];
-
+            $result = true;
             $post['tutor_id'] = 609;
 
             $post['role'] = 'student';

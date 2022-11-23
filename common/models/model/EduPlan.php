@@ -75,9 +75,42 @@ class EduPlan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'fall_start', 'fall_end', 'spring_start', 'spring_end'], 'required'],
-            [['edu_form_id', 'course', 'semestr', 'edu_year_id', 'faculty_id', 'direction_id', 'edu_type_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['fall_start', 'fall_end', 'spring_start', 'spring_end'], 'safe'],
+            [
+                [
+                    'course',
+                    'semestr',
+                    'edu_year_id',
+                    'faculty_id',
+                    'direction_id',
+                    'edu_type_id',
+                    'fall_start',
+                    'fall_end',
+                    'spring_start',
+                    'spring_end'
+                ], 'required'
+            ],
+            [
+                [
+                    'edu_form_id',
+                    'course',
+                    'semestr',
+                    'edu_year_id',
+                    'faculty_id',
+                    'direction_id',
+                    'edu_type_id',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
+            [[
+                'fall_start',
+                'fall_end', 'spring_start', 'spring_end'
+            ], 'safe'],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],

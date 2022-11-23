@@ -18,7 +18,7 @@ class HemisMK
         // $token = self::getToken();
 
         // return $token;
-        $token = 'HZW8NnRoEC7J-Hdv2m5kZMCXnzU';
+        $token = '4X_ePTcUhhQ4ywCfeAZYEajzAfI';
         // headers
         $headers = array(
             "Authorization: Bearer $token",

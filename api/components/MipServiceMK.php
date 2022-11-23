@@ -45,6 +45,7 @@ class MipServiceMK
             )]
         );
 
+
         if ($response->getStatusCode() == 200) {
 
             $res = json_decode($response->getBody()->getContents());
@@ -64,6 +65,8 @@ class MipServiceMK
                 $profile->middle_name = $result->patronymlatin;
                 $profile->passport_issued_date = $result->docdateend;
                 $profile->birthday = $result->birthdate;
+                $profile->passport_given_by = $result->docgiveplace;
+                $profile->passport_issued_date = $result->docdateend;
                 $profile->gender = ($result->sex == 1) ? 1 : 0;
                 $profile->image = $result->avatar;
                 $profile->checked_full = 1;
@@ -117,8 +120,8 @@ class MipServiceMK
                 ]
             )]
         );
-
         if ($response->getStatusCode() == 200) {
+            // dd($response);
 
             $res = json_decode($response->getBody()->getContents());
             if (isset($res->result)) {

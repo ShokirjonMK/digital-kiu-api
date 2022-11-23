@@ -192,22 +192,22 @@ class TestGetDataController extends ApiActiveController
             $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
             // dd("asd");
             if ($hasProfile) {
-                $model = User::findOne(['id' => $hasProfile->user_id]);
-                $student = Student::findOne(['user_id' => $hasProfile->user_id]);
+                // $model = User::findOne(['id' => $hasProfile->user_id]);
+                // $student = Student::findOne(['user_id' => $hasProfile->user_id]);
 
-                // $this->load($model, $post);
-                $this->load($hasProfile, $post);
-                if (!$student) {
-                    $student = new Student();
-                }
-                $this->load($student, $post);
-                $data[] = [$model, $student, $hasProfile];
-                if ($model) {
-                    $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
-                    // $errorAll[$post['passport_pin']] = $data;
-                } else {
-                    $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
-                }
+                // // $this->load($model, $post);
+                // $this->load($hasProfile, $post);
+                // if (!$student) {
+                //     $student = new Student();
+                // }
+                // $this->load($student, $post);
+                // $data[] = [$model, $student, $hasProfile];
+                // if ($model) {
+                //     $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
+                //     // $errorAll[$post['passport_pin']] = $data;
+                // } else {
+                //     $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
+                // }
             } else {
 
                 $model = new User();

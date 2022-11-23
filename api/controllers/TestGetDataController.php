@@ -148,7 +148,7 @@ class TestGetDataController extends ApiActiveController
     {
 
     
-        $dataFormTable = KuvondikMasofaviy::find()->limit(10)->offset(10)->all();
+        $dataFormTable = KuvondikMasofaviy::find()->limit(10)->offset(20)->all();
 
 
         foreach ($dataFormTable as $dataOne) {

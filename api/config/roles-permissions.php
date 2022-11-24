@@ -1672,6 +1672,7 @@ return [
 
         "password_index",
         "password_update",
+        "password_view",
         "region_index",
         "student-category_index",
         "student-category_view",

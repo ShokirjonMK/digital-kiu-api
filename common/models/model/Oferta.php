@@ -51,6 +51,7 @@ class Oferta extends \yii\db\ActiveRecord
             [['is_comformed', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['date', 'role'], 'safe'],
             [['date'], 'default', 'value' => date('Y-m-d H:s:i')],
+            // [['created_by'], 'unique'],
 
             // [['role'], 'string', 'max' => 255],
         ];

@@ -149,6 +149,7 @@ class AttendReason extends \yii\db\ActiveRecord
             'faculty_id',
             'edu_plan_id',
             'file',
+            'description',
 
             'order',
             'status',

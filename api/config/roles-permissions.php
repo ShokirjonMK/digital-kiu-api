@@ -1979,6 +1979,11 @@ return [
         "exam-control_delete",
         "exam-control_update",
         "exam-control_view",
+        "exam-control-student_index",
+        "exam-control-student_update",
+        "exam-control-student_view",
+
+
     ],
 
     /* Student */

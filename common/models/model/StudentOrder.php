@@ -11,7 +11,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "military ".
+ * This is the model class for table "student_order ".
  *
  * @property int $id
  * @property string $address
@@ -33,6 +33,7 @@ class StudentOrder extends \yii\db\ActiveRecord
 
     public $uploadFile;
     const UPLOADS_FOLDER = 'student_order/';
+
     public $imgMaxSize = 1024 * 1024 * 10; // 3 Mb
 
     public static $selected_language = 'uz';

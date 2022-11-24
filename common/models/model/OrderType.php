@@ -8,7 +8,7 @@ use yii\behaviors\TimestampBehavior;
 use api\resources\ResourceTrait;
 
 /**
- * This is the model class for table "military ".
+ * This is the model class for table "order_type ".
  *
  * @property int $id
  * @property string $name

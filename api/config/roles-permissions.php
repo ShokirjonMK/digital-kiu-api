@@ -1721,6 +1721,12 @@ return [
         "attend_create",
         "attend_update",
 
+        "attend-reason_create",
+        "attend-reason_delete",
+        "attend-reason_index",
+        "attend-reason_update",
+        "attend-reason_view",
+
     ],
 
 

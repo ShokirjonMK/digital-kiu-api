@@ -48,8 +48,8 @@ class OrderType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lang'],'required'],
-            [['lang'], 'string', 'max' => 255],
+            // [['lang'], 'required'],
+            [['lang'], 'string', 'max' => 2],
         ];
     }
 
@@ -61,7 +61,7 @@ class OrderType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lang'=>'Lang',
+            // 'lang' => 'Lang',
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -77,7 +77,7 @@ class OrderType extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
-            'lang',
+            // 'lang',
             'status',
             'is_deleted',
             'created_at',
@@ -108,6 +108,12 @@ class OrderType extends \yii\db\ActiveRecord
 
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
+
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
 
     public function getInfoRelation()
     {
@@ -195,4 +201,3 @@ class OrderType extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

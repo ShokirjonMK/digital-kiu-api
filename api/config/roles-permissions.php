@@ -1988,6 +1988,7 @@ return [
         "exam-control-student_index",
         "exam-control-student_update",
         "exam-control-student_view",
+        "exam-control-student_create",
 
 
     ],

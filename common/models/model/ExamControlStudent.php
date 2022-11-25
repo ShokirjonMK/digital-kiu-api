@@ -428,14 +428,14 @@ class ExamControlStudent extends ActiveRecord
         }
 
         if (isset($post['ball'])) {
-            if ($model->ball >= $model->examControl->max_ball) {
+            if ($model->ball > $model->examControl->max_ball) {
                 $errors[] = _e('incorrect ball');
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
         }
         if (isset($post['ball2'])) {
-            if ($model->ball2 >= $model->examControl->max_ball2) {
+            if ($model->ball2 > $model->examControl->max_ball2) {
                 $errors[] = _e('incorrect ball2');
                 $transaction->rollBack();
                 return simplify_errors($errors);

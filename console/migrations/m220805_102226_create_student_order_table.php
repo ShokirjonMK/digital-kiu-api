@@ -23,7 +23,7 @@ class m220805_102226_create_student_order_table extends Migration
 
             'order_type_id' => $this->integer()->notNull(),
             'date' => $this->string(11)->notNull(),
-            'file' => $this->string(255)->notNull(),
+            'file' => $this->string(255)->null(),
             'student_id' => $this->integer(11)->Null(),
             'user_id' => $this->integer(11)->notNull(),
             'description' => $this->text()->null(),

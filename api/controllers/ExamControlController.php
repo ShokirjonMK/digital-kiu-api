@@ -84,7 +84,7 @@ class ExamControlController extends ApiActiveController
             $model['finish'] = strtotime($post['finish']);
         }
         if (isset($post['start2'])) {
-            $model['start'] = strtotime($post['start2']);
+            $model['start2'] = strtotime($post['start2']);
         }
         if (isset($post['finish2'])) {
             $model['finish'] = strtotime($post['finish2']);

@@ -542,7 +542,6 @@ class ExamControlStudent extends ActiveRecord
         $now = time();
         if (isRole('student')) {
 
-
             if (isset($post['answer2']) || isset($post['upload2_file'])) {
                 if ($model->examControl->start2 > $now) {
                     $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
@@ -555,6 +554,8 @@ class ExamControlStudent extends ActiveRecord
                     return simplify_errors($errors);
                 }
             } else {
+                
+                if($model->ball >0)
                 if ($model->examControl->start > $now) {
                     $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
                     $transaction->rollBack();
@@ -590,7 +591,7 @@ class ExamControlStudent extends ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->main_ball = $model->ball + $model->ball2;
+        $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
 
         if ($model->save()) {
 

@@ -87,7 +87,7 @@ class ExamControlController extends ApiActiveController
             $model['start2'] = strtotime($post['start2']);
         }
         if (isset($post['finish2'])) {
-            $model['finish'] = strtotime($post['finish2']);
+            $model['finish2'] = strtotime($post['finish2']);
         }
 
         $result = ExamControl::createItem($model, $post);

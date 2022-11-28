@@ -131,6 +131,19 @@ trait ResourceTrait
         }
     }
 
+    public static function findStudent($id, $type = null)
+    {
+        if ($type == null) {
+            $type = 1;
+        }
+        $student = Student::findOne(['id' => $id]);
+        if ($type == 1) {
+            return  $student->user_id ?? null;
+        } elseif ($type == 2) {
+            return  $student ?? null;
+        }
+    }
+
     public static function teacher_access($type = null, $select = [], $user_id = null)
     {
         if (is_null($user_id)) {

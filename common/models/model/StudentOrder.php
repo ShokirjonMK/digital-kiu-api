@@ -30,7 +30,6 @@ use yii\web\UploadedFile;
  */
 class StudentOrder extends \yii\db\ActiveRecord
 {
-
     public $uploadFile;
     const UPLOADS_FOLDER = 'student_order/';
 
@@ -63,8 +62,8 @@ class StudentOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id','order_type_id','student_id'],'required'],
-            [['user_id','student_id'], 'integer'],
+            [['user_id', 'order_type_id', 'student_id'], 'required'],
+            [['user_id', 'student_id'], 'integer'],
             [['date',], 'date', 'format' => 'php:Y-m-d'],
             [['date'], 'default', 'value' => date('Y-m-d')],
             [['file'], 'string', 'max' => 255],
@@ -83,9 +82,9 @@ class StudentOrder extends \yii\db\ActiveRecord
     {
         return [
             'id' => _e('ID'),
-            'file'=>_e('File'),
-            'date'=>_e('Date'),
-            'order_type_id'=>_e('Order Type id'),
+            'file' => _e('File'),
+            'date' => _e('Date'),
+            'order_type_id' => _e('Order Type id'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
@@ -112,9 +111,10 @@ class StudentOrder extends \yii\db\ActiveRecord
 
     public static function createItem($model, $post)
     {
-
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $model->user_id = self::student(2)->user_id;
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
@@ -132,13 +132,13 @@ class StudentOrder extends \yii\db\ActiveRecord
                 }
             }
 
-                $model->save();
-                $transaction->commit();
-                return true;
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $model->save();
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
     }
 
 
@@ -171,7 +171,6 @@ class StudentOrder extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
     }
 
     public function uploadFile()
@@ -195,7 +194,7 @@ class StudentOrder extends \yii\db\ActiveRecord
     public function deleteFile($oldFile = NULL)
     {
         if (isset($oldFile)) {
-            if (file_exists( $oldFile)) {
+            if (file_exists($oldFile)) {
                 unlink($oldFile);
             }
         }
@@ -231,4 +230,3 @@ class StudentOrder extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 }
-

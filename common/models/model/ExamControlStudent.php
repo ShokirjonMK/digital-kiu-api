@@ -85,7 +85,7 @@ class ExamControlStudent extends ActiveRecord
                 ], 'string',
                 'max' => 255
             ],
-            [['ball', 'ball2', 'main_ball',], 'default', 'value' => 0],
+            // [['ball', 'ball2', 'main_ball',], 'default', 'value' => 0],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],

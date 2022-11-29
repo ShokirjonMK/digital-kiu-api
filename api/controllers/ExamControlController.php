@@ -128,6 +128,14 @@ class ExamControlController extends ApiActiveController
             $min = isset($duration[1]) ? $duration[1] : 0;
             $post['duration'] = (int)$hours * 3600 + (int)$min * 60;
         }
+        if (isset($post['duration2'])) {
+            $post['duration2'] =  str_replace("'", "", $post['duration2']);
+            $post['duration2'] =  str_replace('"', "", $post['duration2']);
+            $duration2 = explode(":", $post['duration2']);
+            $hours = isset($duration2[0]) ? $duration2[0] : 0;
+            $min = isset($duration2[1]) ? $duration2[1] : 0;
+            $post['duration2'] = (int)$hours * 3600 + (int)$min * 60;
+        }
 
         $this->load($model, $post);
         if (isset($post['start'])) {

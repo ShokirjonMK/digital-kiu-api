@@ -158,7 +158,7 @@ class StudentOrder extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $model->user_id = self::findStudent($model->student_id);
+        $model->user_id = self::findByStudentId($model->student_id);
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

@@ -131,7 +131,7 @@ trait ResourceTrait
         }
     }
 
-    public static function findStudent($id, $type = null)
+    public static function findByStudentId($id, $type = null)
     {
         if ($type == null) {
             $type = 1;

@@ -60,7 +60,7 @@ class StudentOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['student_id', 'order_type_id', 'created_at', 'updated_at'], 'required'],
+            [['student_id', 'order_type_id'], 'required'],
             [['student_id', 'order_type_id', 'user_id', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['date'], 'safe'],
             [['description'], 'string'],

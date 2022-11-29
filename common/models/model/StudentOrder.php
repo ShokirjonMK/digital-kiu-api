@@ -117,6 +117,42 @@ class StudentOrder extends \yii\db\ActiveRecord
         return $fields;
     }
 
+    public function extraFields()
+    {
+        $extraFields =  [
+
+            'users',
+            'student',
+            'orderType',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
+    }
+
+
+
+    #region rel
+    public function getUsers()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public function getStudent()
+    {
+        return $this->hasOne(Student::class, ['id' => 'student_id']);
+    }
+
+    public function getOrderType()
+    {
+        return $this->hasOne(OrderType::class, ['id' => 'order_type_id']);
+    }
+
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -211,24 +247,8 @@ class StudentOrder extends \yii\db\ActiveRecord
     }
 
 
-    #region rel
-    public function getUsers()
-    {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
-    }
-    public function getStudents()
-    {
-        return $this->hasOne(\common\models\model\Student::class, ['id' => 'student_id']);
-    }
-
-    public function getOrTyps()
-    {
-        return $this->hasOne(\common\models\model\OrderType::class, ['id' => 'order_type_id']);
-    }
 
     #endregion
-
-
     public function beforeSave($insert)
     {
         if ($insert) {

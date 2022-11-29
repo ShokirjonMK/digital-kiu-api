@@ -44,7 +44,7 @@ class m211120_113134_create_student_answer_table extends Migration
 
         $this->addForeignKey('ses_exam_student_answer_exam', 'exam_student_answer', 'exam_id', 'exam', 'id');
         $this->addForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer', 'exam_student_id', 'exam_student', 'id');
-        $this->addForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer', 'question_id', 'question', 'id');
+        // $this->addForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer', 'question_id', 'question', 'id');
         $this->addForeignKey('ses_exam_student_answer_student', 'exam_student_answer', 'student_id', 'student', 'id');
         $this->addForeignKey('ses_exam_student_answer_option', 'exam_student_answer', 'option_id', 'question_option', 'id');
         $this->addForeignKey('ses_exam_student_answer_teacher_access', 'exam_student_answer', 'teacher_access_id', 'teacher_access', 'id');
@@ -58,7 +58,7 @@ class m211120_113134_create_student_answer_table extends Migration
 
         $this->dropForeignKey('ses_exam_student_answer_exam', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer');
-        $this->dropForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer');
+        // $this->dropForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_student', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_option', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_teacher_access', 'exam_student_answer');

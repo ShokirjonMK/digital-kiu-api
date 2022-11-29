@@ -14,6 +14,7 @@ class m211120_113134_create_student_answer_table extends Migration
     {
         $this->createTable('{{%exam_student_answer}}', [
             'id' => $this->primaryKey(),
+            'exam_student_id' => $this->integer()->null(),
             'file' => $this->string(255)->Null(),
             'exam_id' => $this->integer()->notNull(),
             'question_id' => $this->integer()->notNull(),
@@ -24,7 +25,7 @@ class m211120_113134_create_student_answer_table extends Migration
             'teacher_access_id' => $this->integer()->Null(),
             'attempt' => $this->integer()->defaultValue(1),
             'type' => $this->tinyInteger(1)->notNull(),
-            
+
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -36,6 +37,7 @@ class m211120_113134_create_student_answer_table extends Migration
         ]);
 
         $this->addForeignKey('ses_exam_student_answer_exam', 'exam_student_answer', 'exam_id', 'exam', 'id');
+        $this->addForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer', 'exam_student_id', 'exam_student', 'id');
         $this->addForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer', 'question_id', 'question', 'id');
         $this->addForeignKey('ses_exam_student_answer_student', 'exam_student_answer', 'student_id', 'student', 'id');
         $this->addForeignKey('ses_exam_student_answer_option', 'exam_student_answer', 'option_id', 'question_option', 'id');
@@ -49,6 +51,7 @@ class m211120_113134_create_student_answer_table extends Migration
     {
 
         $this->dropForeignKey('ses_exam_student_answer_exam', 'exam_student_answer');
+        $this->dropForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_student', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_option', 'exam_student_answer');

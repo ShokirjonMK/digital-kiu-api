@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%student_order}}`.
  */
-class m220805_102226_create_student_order_table extends Migration
+class m221129_102216_create_student_order_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,6 @@ class m220805_102226_create_student_order_table extends Migration
         $this->dropTable('student_order');
         $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
 
-
         $tableName = Yii::$app->db->tablePrefix . 'student_order';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('student_order');
@@ -24,12 +23,11 @@ class m220805_102226_create_student_order_table extends Migration
 
         $this->createTable('{{%student_order}}', [
             'id' => $this->primaryKey(),
-
+            'student_id' => $this->integer(11)->notNull(),
             'order_type_id' => $this->integer()->notNull(),
-            'date' => $this->string(11)->notNull(),
+            'user_id' => $this->integer(11)->null(),
+            'date' => $this->date()->null(),
             'file' => $this->string(255)->null(),
-            'student_id' => $this->integer(11)->Null(),
-            'user_id' => $this->integer(11)->notNull(),
             'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
@@ -42,7 +40,8 @@ class m220805_102226_create_student_order_table extends Migration
         //        // Student
         //        $this->addForeignKey('sos_student_order_student_id', 'student_order', 'student_id', 'student', 'id');
         // User
-        $this->addForeignKey('sou_student_order_user_id', 'student_order', 'user_id', 'users', 'id');
+        $this->addForeignKey('sto_student_order_student_id', 'student_order', 'student_id', 'student', 'id');
+        $this->addForeignKey('sto_student_order_order_type_id', 'student_order', 'order_type_id', 'order_type', 'id');
     }
 
     /**
@@ -50,12 +49,8 @@ class m220805_102226_create_student_order_table extends Migration
      */
     public function safeDown()
     {
-        //        // student
-        //        $this->dropForeignKey('sos_student_order_student_id', 'sport_certificate');
-
-        // user
-        $this->dropForeignKey('sou_student_order_user_id', 'sport_certificate');
-
+        $this->dropForeignKey('sto_student_order_student_id', 'student_order');
+        $this->dropForeignKey('sto_student_order_order_type_id', 'student_order');
 
         $this->dropTable('{{%student_order}}');
     }

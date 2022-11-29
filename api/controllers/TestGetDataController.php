@@ -146,119 +146,15 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex($passport = null, $jshir = null)
     {
-
-
-        $dataFormTable = KuvondikMasofaviy::find()->all();
-
-
-        foreach ($dataFormTable as $dataOne) {
-
-
-            $post = [];
-            $result = true;
-            $post['tutor_id'] = 609;
-
-            $post['role'] = 'student';
-            $post['status'] = 10;
-
-            $post['passport_pin'] = $dataOne->passport_pin;
-            $post['last_name'] = $dataOne->last_name;
-            $post['first_name'] = $dataOne->first_name;
-            $post['middle_name'] = $dataOne->middle_name;
-            $post['citizenship_id'] = $dataOne->citizenship_id;
-            $post['country_id'] = $dataOne->country_id;
-            $post['nationality_id'] = $dataOne->nationality_id;
-            $post['gender'] = $dataOne->gender;
-            $post['birthday'] = $dataOne->birthday;
-            $post['passport_given_date'] = $dataOne->passport_given_date;
-            $post['course_id'] = $dataOne->course_id;
-            $post['faculty_id'] = $dataOne->faculty_id;
-            $post['direction_id'] = $dataOne->direction_id;
-            $post['edu_year_id'] = $dataOne->edu_year_id;
-            $post['edu_plan_id'] = $dataOne->edu_plan_id;
-            $post['edu_type_id'] = $dataOne->edu_type_id;
-            $post['edu_lang_id'] = $dataOne->edu_lang_id;
-            $post['edu_form_id'] = $dataOne->edu_form_id;
-            $post['is_contract'] = $dataOne->is_contract;
-            $post['student_category_id'] = $dataOne->student_category_id;
-
-            $post['passport_pin'] = (int)$post['passport_pin'];
-            $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
-            $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
-
-            // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
-            // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
-
-            $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
-            // dd("asd");
-            if ($hasProfile) {
-                // $model = User::findOne(['id' => $hasProfile->user_id]);
-                // $student = Student::findOne(['user_id' => $hasProfile->user_id]);
-
-                // // $this->load($model, $post);
-                // $this->load($hasProfile, $post);
-                // if (!$student) {
-                //     $student = new Student();
-                // }
-                // $this->load($student, $post);
-                // $data[] = [$model, $student, $hasProfile];
-                // if ($model) {
-                //     $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
-                //     // $errorAll[$post['passport_pin']] = $data;
-                // } else {
-                //     $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
-                // }
-            } else {
-
-                $model = new User();
-                $profile = new Profile();
-                $student = new Student();
-                $users = Student::find()->count();
-                $count = $users + 10001;
-                $std = Student::find()->orderBy(['id' => SORT_DESC])->one();
-                $count = $users + 10001;
-                if ($std) {
-                    $count = $std->id + 10001;
-                }
-
-                $post['username'] = 'tsul_std_' . $count;
-                $post['email'] = 'tsul_std_' . $count . '@tsul.uz';
-                $this->load($model, $post);
-                $this->load($profile, $post);
-                $this->load($student, $post);
-
-                $result = StudentUser::createItemImport($model, $profile, $student, $post);
-                // return 1112;
-                if (is_array($result)) {
-                    $errorAll[$post['passport_pin']] = $result;
-                }
-
-
-
-                $data[] = [$model, $student, $profile];
-            }
-
-
-
-            if (is_array($result)) {
-                $errorAll[$post['passport_pin']] = $result;
-            } else {
-                // $errorAll[$post['passport_pin']] = $data;
-            }
-        }
-
-
-
         //////  Profile get from MIP
         $data = [];
         $profiles = Profile::find()
             ->where(['checked' => 0])
-            ->andWhere(['checked_full' => 0])
+            // ->andWhere(['checked_full' => 0])
             ->andWhere(['is not', 'passport_pin', null])
             ->andWhere(['is not', 'passport_given_date', null])
             ->limit(1000)->offset(0)
             ->all();
-
 
         foreach ($profiles as $profile) {
             $profile->checked = 1;
@@ -361,6 +257,107 @@ class TestGetDataController extends ApiActiveController
         }
     }
 
+    public function actionStudentExportKuvondik()
+    {
+        $dataFormTable = KuvondikMasofaviy::find()->all();
+
+
+        foreach ($dataFormTable as $dataOne) {
+
+
+            $post = [];
+            $result = true;
+            $post['tutor_id'] = 609;
+
+            $post['role'] = 'student';
+            $post['status'] = 10;
+
+            $post['passport_pin'] = $dataOne->passport_pin;
+            $post['last_name'] = $dataOne->last_name;
+            $post['first_name'] = $dataOne->first_name;
+            $post['middle_name'] = $dataOne->middle_name;
+            $post['citizenship_id'] = $dataOne->citizenship_id;
+            $post['country_id'] = $dataOne->country_id;
+            $post['nationality_id'] = $dataOne->nationality_id;
+            $post['gender'] = $dataOne->gender;
+            $post['birthday'] = $dataOne->birthday;
+            $post['passport_given_date'] = $dataOne->passport_given_date;
+            $post['course_id'] = $dataOne->course_id;
+            $post['faculty_id'] = $dataOne->faculty_id;
+            $post['direction_id'] = $dataOne->direction_id;
+            $post['edu_year_id'] = $dataOne->edu_year_id;
+            $post['edu_plan_id'] = $dataOne->edu_plan_id;
+            $post['edu_type_id'] = $dataOne->edu_type_id;
+            $post['edu_lang_id'] = $dataOne->edu_lang_id;
+            $post['edu_form_id'] = $dataOne->edu_form_id;
+            $post['is_contract'] = $dataOne->is_contract;
+            $post['student_category_id'] = $dataOne->student_category_id;
+
+            $post['passport_pin'] = (int)$post['passport_pin'];
+            $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+            $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
+
+            // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+            // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+
+            $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
+            // dd("asd");
+            if ($hasProfile) {
+                // $model = User::findOne(['id' => $hasProfile->user_id]);
+                // $student = Student::findOne(['user_id' => $hasProfile->user_id]);
+
+                // // $this->load($model, $post);
+                // $this->load($hasProfile, $post);
+                // if (!$student) {
+                //     $student = new Student();
+                // }
+                // $this->load($student, $post);
+                // $data[] = [$model, $student, $hasProfile];
+                // if ($model) {
+                //     $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
+                //     // $errorAll[$post['passport_pin']] = $data;
+                // } else {
+                //     $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
+                // }
+            } else {
+
+                $model = new User();
+                $profile = new Profile();
+                $student = new Student();
+                $users = Student::find()->count();
+                $count = $users + 10001;
+                $std = Student::find()->orderBy(['id' => SORT_DESC])->one();
+                $count = $users + 10001;
+                if ($std) {
+                    $count = $std->id + 10001;
+                }
+
+                $post['username'] = 'tsul_std_' . $count;
+                $post['email'] = 'tsul_std_' . $count . '@tsul.uz';
+                $this->load($model, $post);
+                $this->load($profile, $post);
+                $this->load($student, $post);
+
+                $result = StudentUser::createItemImport($model, $profile, $student, $post);
+                // return 1112;
+                if (is_array($result)) {
+                    $errorAll[$post['passport_pin']] = $result;
+                }
+
+
+
+                $data[] = [$model, $student, $profile];
+            }
+
+
+
+            if (is_array($result)) {
+                $errorAll[$post['passport_pin']] = $result;
+            } else {
+                // $errorAll[$post['passport_pin']] = $data;
+            }
+        }
+    }
     public function actionView()
     {
     }

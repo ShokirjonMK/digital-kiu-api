@@ -52,9 +52,8 @@ class MipServiceMK
             if (isset($res->result)) {
                 $result = $res->result;
 
-                $photo = self::saveTo($result->photo, $result->pinpp, $result->namelatin, $result->surnamelatin);
-                // dd(json_decode($response->getBody()->getContents()));
-                // return  json_decode($response->getBody()->getContents());
+                $photo = self::saveToTurniket($result->photo, $result->pinpp, $result->namelatin, $result->surnamelatin);
+               
                 $data['status'] = true;
                 $result->avatar = $photo;
 
@@ -187,9 +186,9 @@ class MipServiceMK
     private static function saveToTurniket($imgBase64, $pin, $first_name, $last_name)
     {
         // $imgBase64 = '';
-        $uploadPathMK   = STORAGE_PATH  . 'user_images/';
-        if (!file_exists(STORAGE_PATH  . 'user_images/')) {
-            mkdir(STORAGE_PATH . 'user_images/', 0777, true);
+        $uploadPathMK   = STORAGE_PATH  . 'turniket_001/';
+        if (!file_exists(STORAGE_PATH  . 'turniket_001/')) {
+            mkdir(STORAGE_PATH . 'turniket_001/', 0777, true);
         }
 
         $parts        = explode(
@@ -203,6 +202,6 @@ class MipServiceMK
 
         file_put_contents($file, $imagebase64);
 
-        return 'storage/user_images/' . $miniurl;
+        return 'storage/turniket_001/' . $miniurl;
     }
 }

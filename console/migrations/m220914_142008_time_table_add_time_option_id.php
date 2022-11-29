@@ -13,7 +13,7 @@ class m220914_142008_time_table_add_time_option_id extends Migration
     public function safeUp()
     {
         $this->addColumn('time_table', 'time_option_id', $this->integer()->null()->after('status'));
-        $this->addForeignKey('time_table_time_option_id', 'time_table', 'time_table_option_id', 'time_option', 'id');
+        $this->addForeignKey('time_table_time_option_id', 'time_table', 'time_option_id', 'time_option', 'id');
 
    }
 

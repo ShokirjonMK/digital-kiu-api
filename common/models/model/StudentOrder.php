@@ -11,18 +11,17 @@ use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "student_order ".
+ * This is the model class for table "{{%student_order}}".
  *
  * @property int $id
- * @property string $address
- * @property string $year
- * @property string $lang
- * @property Date $date
- * @property int $type
  * @property int $student_id
- * @property int $user_id
- * @property int $status
- * @property int $is_deleted
+ * @property int $order_type_id
+ * @property int|null $user_id
+ * @property string|null $date
+ * @property string|null $file
+ * @property string|null $description
+ * @property int|null $status
+ * @property int|null $is_deleted
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
@@ -58,48 +57,57 @@ class StudentOrder extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-
     public function rules()
     {
         return [
-            [['user_id', 'order_type_id', 'student_id'], 'required'],
-            [['user_id', 'student_id'], 'integer'],
-            [['date',], 'date', 'format' => 'php:Y-m-d'],
-            [['date'], 'default', 'value' => date('Y-m-d')],
+            [['student_id', 'order_type_id', 'created_at', 'updated_at'], 'required'],
+            [['student_id', 'order_type_id', 'user_id', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['date'], 'safe'],
+            [['description'], 'string'],
             [['file'], 'string', 'max' => 255],
             [['uploadFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,png,jpg', 'maxSize' => $this->imgMaxSize],
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\Student::class, 'targetAttribute' => ['student_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['order_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\model\OrderType::class, 'targetAttribute' => ['order_type_id' => 'id']],
+
         ];
     }
+
 
     /**
      * {@inheritdoc}
      */
-
     public function attributeLabels()
     {
         return [
             'id' => _e('ID'),
-            'file' => _e('File'),
+            'order_type_id' => _e('Order Type ID'),
             'date' => _e('Date'),
-            'order_type_id' => _e('Order Type id'),
+            'file' => _e('File'),
+            'student_id' => _e('Student ID'),
+            'user_id' => _e('User ID'),
+            'description' => _e('Description'),
             'status' => _e('Status'),
             'is_deleted' => _e('Is Deleted'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
         ];
     }
 
     public function fields()
     {
         $fields = [
+            'id',
+            'order_type_id',
             'date',
             'file',
+            'student_id',
             'user_id',
+            'description',
             'status',
+
             'is_deleted',
             'created_at',
             'updated_at',
@@ -115,6 +123,7 @@ class StudentOrder extends \yii\db\ActiveRecord
         $errors = [];
 
         $model->user_id = self::findStudent($model->student_id);
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }

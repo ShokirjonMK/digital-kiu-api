@@ -12,7 +12,7 @@ class m220325_145549_alter_exam_student_answer_table_add_exam_student_id extends
      */
     public function safeUp()
     {
-        $this->execute("ALTER TABLE `exam_student_answer` ADD `exam_student_id` int  NULL  AFTER `id`;");
+        // $this->execute("ALTER TABLE `exam_student_answer` ADD `exam_student_id` int  NULL  AFTER `id`;");
     }
 
     /**

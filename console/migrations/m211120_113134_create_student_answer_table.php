@@ -18,7 +18,6 @@ class m211120_113134_create_student_answer_table extends Migration
             $this->dropTable('exam_student_answer');
         }
 
-
         $this->createTable('{{%exam_student_answer}}', [
             'id' => $this->primaryKey(),
             'exam_student_id' => $this->integer()->null(),

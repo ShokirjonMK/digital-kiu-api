@@ -12,10 +12,6 @@ class m221129_102216_create_student_order_table extends Migration
      */
     public function safeUp()
     {
-        $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
-        $this->dropTable('student_order');
-        $this->execute("SET FOREIGN_KEY_CHECKS = 1;");
-
         $tableName = Yii::$app->db->tablePrefix . 'student_order';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('student_order');

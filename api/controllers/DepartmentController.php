@@ -86,7 +86,7 @@ class DepartmentController extends ApiActiveController
         }
         
         if ($this->checkLead($model, self::ROLE)) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+            return $this->response(0, _e('You can not change.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
         $post = Yii::$app->request->post();

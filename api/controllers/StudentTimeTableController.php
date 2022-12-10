@@ -164,7 +164,7 @@ class  StudentTimeTableController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        if (isRole('admin')) {
+        if (isRole('admin') || isRole('edu_admin')) {
             $result = StudentTimeTable::deleteItem($model);
             if (!is_array($result)) {
                 return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);

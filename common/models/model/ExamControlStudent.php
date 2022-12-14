@@ -46,6 +46,10 @@ class ExamControlStudent extends ActiveRecord
         return [
             [['exam_control_id'], 'required'],
             [[
+                'appeal',
+                'appeal2',
+                'appeal_status',
+                'appeal2_status',
                 'exam_control_id',
                 'student_id',
                 'course_id',
@@ -74,7 +78,14 @@ class ExamControlStudent extends ActiveRecord
                 'updated_by',
                 'is_deleted'
             ], 'integer'],
-            [['answer', 'conclution', 'answer2', 'conclution2'], 'string'],
+            [[
+                'appeal_text',
+                'appeal2_text',
+
+                'appeal_conclution',
+                'appeal2_conclution',
+                'answer', 'conclution', 'answer2', 'conclution2'
+            ], 'string'],
             [['ball', 'ball2', 'main_ball', 'plagiat_percent', 'plagiat2_percent'], 'number'],
             [
                 [
@@ -178,6 +189,15 @@ class ExamControlStudent extends ActiveRecord
             'answer2',
             'answer2_file',
             'conclution2',
+            'appeal_text',
+            'appeal2_text',
+            'appeal',
+            'appeal2',
+            'appeal_status',
+            'appeal2_status',
+            'appeal_conclution',
+            'appeal2_conclution',
+
             'course_id',
             'semester_id',
             'edu_year_id',
@@ -373,7 +393,6 @@ class ExamControlStudent extends ActiveRecord
         return $this->hasOne(TimeTable::className(), ['id' => 'teacher_user_id']);
     }
 
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -534,6 +553,61 @@ class ExamControlStudent extends ActiveRecord
         return simplify_errors($errors);
     }
 
+    public static function appealNew($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $now = time();
+// dd($post['appeal_text']);
+        
+        if (isset($post['appeal_text'])) {
+            if ($model->examControl->status == ExamControl::STATUS_ANNOUNCED) {
+                // dd('sdfsdsdfesdfwefwervwerv werv sdfdf');
+
+                if ($model->examControl->appeal_at >= $now) {
+
+                    $model->appeal_text = $post['appeal_text'];
+                    $model->appeal = 1;
+                } else {
+                    $errors[] = _e('Time is up for first control');
+                }
+            } else {
+                $errors[] = _e('Time is up for first control');
+            }
+        }
+        if (isset($post['appeal2_text'])) {
+            if ($model->examControl->status2 == 2) {
+
+                if ($model->examControl->appeal2_at >= $now) {
+
+                    $model->appeal2_text = $post['appeal2_text'];
+                    $model->appeal2 = 1;
+                } else {
+                    $errors[] = _e('Time is up for second control');
+                }
+            } else {
+                $errors[] = _e('Time is up for second control');
+            }
+        }
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (count($errors) == 0)
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        $transaction->rollBack();
+        return simplify_errors($errors);
+    }
+
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -554,13 +628,13 @@ class ExamControlStudent extends ActiveRecord
                     return simplify_errors($errors);
                 }
             } else {
-                
-                if($model->ball >0)
-                if ($model->examControl->start > $now) {
-                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
-                }
+
+                if ($model->ball > 0)
+                    if ($model->examControl->start > $now) {
+                        $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
                 if ($model->examControl->finish < $now) {
                     $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
                     $transaction->rollBack();

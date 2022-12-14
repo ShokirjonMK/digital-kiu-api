@@ -79,14 +79,17 @@ class ExamControl extends \yii\db\ActiveRecord
     }
 
     const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_ANNOUNCED = 2;
+    const STATUS_FINISHED = 3;
+
+    const appeal_time = 3 * 24 * 60 * 60; // 3 kun soat
 
     const UPLOADS_FOLDER = 'uploads/exam_control/question/';
     public $upload_file;
     public $upload2_file;
     public $questionFileMaxSize = 1024 * 1024 * 10; // 10 Mb
-
 
     /**
      * {@inheritdoc}
@@ -116,6 +119,9 @@ class ExamControl extends \yii\db\ActiveRecord
             ],
             [
                 [
+                    'appeal_at',
+                    'appeal2_at',
+                    'status2',
                     'time_table_id',
                     'teacher_access_id',
                     'start',
@@ -227,6 +233,7 @@ class ExamControl extends \yii\db\ActiveRecord
                 return $model->translate->name ?? $this->subject->translate->name . ' ' . _e('control work') . ' ' . $this->eduSemester->semestr_id . ' - sm';
             },
             'time_table_id',
+
             'start',
             'start2',
             'finish',
@@ -258,7 +265,10 @@ class ExamControl extends \yii\db\ActiveRecord
 
             'order',
             'is_deleted',
+            'appeal_at',
+            'appeal2_at',
             'status',
+            'status2',
 
             'created_at',
             'updated_at',
@@ -642,6 +652,15 @@ class ExamControl extends \yii\db\ActiveRecord
         $model->direction_id = $model->timeTable->eduPlan->direction_id;
         $model->teacher_access_id = $model->timeTable->teacher_access_id;
 
+        if ($model->status == 2) {
+            if (is_null($model->appeal_at))
+                $model->appeal_at = time() + self::appeal_time;
+        }
+
+        if ($model->status2 == 2) {
+            if (is_null($model->appeal2_at))
+                $model->appeal2_at = time() + self::appeal_time;
+        }
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

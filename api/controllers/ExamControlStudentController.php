@@ -129,6 +129,43 @@ class ExamControlStudentController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
+    public function actionAppeal($lang, $id)
+    {
+        $model = ExamControlStudent::findOne($id);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        
+        $data = [];
+        $post = Yii::$app->request->post();
+        
+        if (isRole('student')) {
+            if ($model->student_id != $this->student()) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours'), ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+
+            // $this->load($model, $post);
+            $result = ExamControlStudent::appealNew($model, $post);
+        } else {
+            if (isset($post['exam_control_id'])) unset($post['exam_control_id']);
+            if (isset($post['upload2_file'])) unset($post['upload2_file']);
+            if (isset($post['upload_file'])) unset($post['upload_file']);
+            if (isset($post['answer2'])) unset($post['answer2']);
+            if (isset($post['answer'])) unset($post['answer']);
+            if (isset($post['main_ball'])) unset($post['main_ball']);
+
+            $this->load($model, $post);
+            $result = ExamControlStudent::updateItem($model, $post);
+        }
+
+        // $this->load($model, $post);
+        // $result = ExamControlStudent::updateItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
 
     public function actionView($lang, $id)
     {

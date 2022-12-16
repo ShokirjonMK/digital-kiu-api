@@ -558,8 +558,8 @@ class ExamControlStudent extends ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         $now = time();
-// dd($post['appeal_text']);
-        
+        // dd($post['appeal_text']);
+
         if (isset($post['appeal_text'])) {
             if ($model->examControl->status == ExamControl::STATUS_ANNOUNCED) {
                 // dd('sdfsdsdfesdfwefwervwerv werv sdfdf');
@@ -572,7 +572,7 @@ class ExamControlStudent extends ActiveRecord
                     $errors[] = _e('Time is up for first control');
                 }
             } else {
-                $errors[] = _e('Time is up for first control');
+                $errors[] = _e('First Control is not be ennounced');
             }
         }
         if (isset($post['appeal2_text'])) {
@@ -586,7 +586,7 @@ class ExamControlStudent extends ActiveRecord
                     $errors[] = _e('Time is up for second control');
                 }
             } else {
-                $errors[] = _e('Time is up for second control');
+                $errors[] = _e('Second Control is not be ennounced');
             }
         }
 

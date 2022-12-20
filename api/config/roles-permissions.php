@@ -1739,7 +1739,7 @@ return [
 
         "notification_index",
         "notification_my",
-        "notification_vie",
+        "notification_view",
         "user_create",
         "user_delete",
         "user_get",

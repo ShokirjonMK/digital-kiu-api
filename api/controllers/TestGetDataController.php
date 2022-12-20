@@ -144,6 +144,30 @@ class TestGetDataController extends ApiActiveController
         return $this->response(1, _e('Success'), $errors);
     } */
 
+    public function actionView()
+    {
+        $profiles = Profile::find()
+            ->where(['checked' => 0])
+            // ->andWhere(['checked_full' => 0])
+            ->andWhere(['is not', 'passport_pin', null])
+            ->andWhere(['is not', 'passport_given_date', null])
+            ->limit(1000)->offset(0)
+            ->all();
+
+        foreach ($profiles as $profile) {
+            $hemis = new HemisMK();
+
+            $data = $hemis->getHemis($profile->passport_pin);
+            $profile->checked = 1;
+            $mip = MipServiceMK::corrent($profile);
+            $data[] = $mip;
+            $profile->save(false);
+        }
+
+        return $this->response(1, _e('Success'), $data);
+
+    }
+
     public function actionIndex($passport = null, $jshir = null)
     {
         //////  Profile get from MIP
@@ -358,7 +382,5 @@ class TestGetDataController extends ApiActiveController
             }
         }
     }
-    public function actionView()
-    {
-    }
+
 }

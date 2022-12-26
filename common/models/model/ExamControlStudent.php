@@ -26,6 +26,11 @@ class ExamControlStudent extends ActiveRecord
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
+    const APPEAL_TYPE_ASOSLI = 1;
+    const APPEAL_TYPE_ASOSSIZ = 2;
+    const APPEAL_TYPE_TEXNIK = 3;
+    const APPEAL_TYPE_ASOSLI_TEXNIK = 4;
+
 
     const UPLOADS_FOLDER = 'uploads/exam_control/student_answer/';
     public $upload_plagiat_file;
@@ -44,49 +49,61 @@ class ExamControlStudent extends ActiveRecord
     public function rules()
     {
         return [
-            [['exam_control_id'], 'required'],
-            [[
-                'appeal',
-                'appeal2',
-                'appeal_status',
-                'appeal2_status',
-                'exam_control_id',
-                'student_id',
-                'course_id',
-                'start',
-                'semester_id',
-                'edu_year_id',
-                'subject_id',
-                'language_id',
-                'edu_plan_id',
-                'teacher_user_id',
-                'edu_semester_id',
-                'subject_category_id',
-                'archived',
-                'old_exam_control_id',
-                'duration',
-                'faculty_id',
-                'direction_id',
-                'type',
-                'category',
-                'is_checked',
-                'status',
-                'order',
-                'created_at',
-                'updated_at',
-                'created_by',
-                'updated_by',
-                'is_deleted'
-            ], 'integer'],
-            [[
-                'appeal_text',
-                'appeal2_text',
+            [
+                ['exam_control_id'], 'required'
+            ],
+            [
+                [
+                    'appeal',
+                    'appeal2',
+                    'appeal_status',
+                    'appeal2_status',
+                    'exam_control_id',
+                    'student_id',
+                    'course_id',
+                    'start',
+                    'semester_id',
+                    'edu_year_id',
+                    'subject_id',
+                    'language_id',
+                    'edu_plan_id',
+                    'teacher_user_id',
+                    'edu_semester_id',
+                    'subject_category_id',
+                    'archived',
+                    'old_exam_control_id',
+                    'duration',
+                    'faculty_id',
+                    'direction_id',
+                    'type',
+                    'category',
+                    'is_checked',
+                    'status',
+                    'order',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
+            [
+                [
+                    'appeal_text',
+                    'appeal2_text',
 
-                'appeal_conclution',
-                'appeal2_conclution',
-                'answer', 'conclution', 'answer2', 'conclution2'
-            ], 'string'],
-            [['ball', 'ball2', 'main_ball', 'plagiat_percent', 'plagiat2_percent'], 'number'],
+                    'appeal_conclution',
+                    'appeal2_conclution',
+                    'answer', 'conclution', 'answer2', 'conclution2'
+                ], 'string'
+            ],
+            [
+                [
+                    "old_ball",
+                    "old_ball2",
+                    'ball', 'ball2', 'main_ball', 'plagiat_percent', 'plagiat2_percent'
+                ], 'number'
+            ],
             [
                 [
                     'answer_file',
@@ -553,6 +570,60 @@ class ExamControlStudent extends ActiveRecord
         return simplify_errors($errors);
     }
 
+    public static function appealCheck($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $now = time();
+
+        if (isset($post['appeal_conclution'])) {
+
+            $model->appeal_conclution = $post['appeal_conclution'];
+
+            if ($model->ball < $post['ball']) {
+                $model->appeal_status = self::APPEAL_TYPE_ASOSLI;
+            } else {
+                $model->appeal_status = $post['appeal_status'];
+            }
+            if (!$model->old_ball > 0)
+                $model->old_ball = $model->ball;
+
+            $model->ball = $post['ball'];
+        }
+
+        if (isset($post['appeal2_conclution'])) {
+
+            $model->appeal2_conclution = $post['appeal2_conclution'];
+
+            if ($model->ball2 < $post['ball2']) {
+                $model->appeal2_status = self::APPEAL_TYPE_ASOSLI;
+            } else {
+                $model->appeal2_status = $post['appeal2_status'];
+            }
+            if (!$model->old_ball2 > 0)
+                $model->old_ball2 = $model->ball2;
+
+            $model->ball2 = $post['ball2'];
+        }
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (count($errors) == 0)
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        $transaction->rollBack();
+        return simplify_errors($errors);
+    }
+
     public static function appealNew($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -766,5 +837,14 @@ class ExamControlStudent extends ActiveRecord
             }
         }
         return true;
+    }
+
+    public static function statusList()
+    {
+        return [
+            self::STATUS_INACTIVE => _e('STATUS_INACTIVE'),
+            self::STATUS_ACTIVE => _e('STATUS_ACTIVE'),
+
+        ];
     }
 }

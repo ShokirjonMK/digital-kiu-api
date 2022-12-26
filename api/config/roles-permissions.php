@@ -2376,4 +2376,19 @@ return [
         "week_view",
 
     ],
+
+    'exam_control' => [
+
+        "user_oferta",
+        "exam-control_create",
+        "exam-control_delete",
+        "exam-control_index",
+        "exam-control_update",
+        "exam-control_view",
+        "exam-control-student_index",
+        "exam-control-student_update",
+        "exam-control-student_view",
+        "exam-control-student_create",
+
+    ],
 ];

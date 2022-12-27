@@ -226,8 +226,10 @@ class ExamControlStudent extends ActiveRecord
             'subject_category_id',
             'archived',
             'old_exam_control_id',
+            'old_ball',
             'ball',
             'ball2',
+            'old_ball2',
             'main_ball',
             'plagiat_percent',
             'plagiat2_percent',
@@ -606,6 +608,8 @@ class ExamControlStudent extends ActiveRecord
 
             $model->ball2 = $post['ball2'] ?? $model->ball2;
         }
+
+        $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

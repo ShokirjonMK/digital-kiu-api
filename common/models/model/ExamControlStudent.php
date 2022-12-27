@@ -26,6 +26,8 @@ class ExamControlStudent extends ActiveRecord
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
 
+    const APPEAL_CHECKED = 2;
+
     const APPEAL_TYPE_ASOSLI = 1;
     const APPEAL_TYPE_ASOSSIZ = 2;
     const APPEAL_TYPE_TEXNIK = 3;
@@ -592,6 +594,7 @@ class ExamControlStudent extends ActiveRecord
                 $model->old_ball = $model->ball;
 
             $model->ball = $post['ball'] ?? $model->ball;
+            $model->appeal = self::APPEAL_CHECKED;
         }
 
         if (isset($post['appeal2_conclution'])) {
@@ -607,6 +610,7 @@ class ExamControlStudent extends ActiveRecord
                 $model->old_ball2 = $model->ball2;
 
             $model->ball2 = $post['ball2'] ?? $model->ball2;
+            $model->appeal2 = self::APPEAL_CHECKED;
         }
 
         $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;

@@ -579,31 +579,32 @@ class ExamControlStudent extends ActiveRecord
         if (isset($post['appeal_conclution'])) {
 
             $model->appeal_conclution = $post['appeal_conclution'];
+            if (isset($post['ball']))
 
-            if ($model->ball < $post['ball']) {
-                $model->appeal_status = self::APPEAL_TYPE_ASOSLI;
-            } else {
-                $model->appeal_status = $post['appeal_status'];
-            }
+                if ($model->ball < $post['ball']) {
+                    $model->appeal_status = self::APPEAL_TYPE_ASOSLI;
+                } else {
+                    $model->appeal_status = $post['appeal_status'] ?? self::APPEAL_TYPE_ASOSSIZ;
+                }
             if (!$model->old_ball > 0)
                 $model->old_ball = $model->ball;
 
-            $model->ball = $post['ball'];
+            $model->ball = $post['ball'] ?? $model->ball;
         }
 
         if (isset($post['appeal2_conclution'])) {
 
             $model->appeal2_conclution = $post['appeal2_conclution'];
-
-            if ($model->ball2 < $post['ball2']) {
-                $model->appeal2_status = self::APPEAL_TYPE_ASOSLI;
-            } else {
-                $model->appeal2_status = $post['appeal2_status'];
-            }
+            if (isset($post['ball']))
+                if ($model->ball2 < $post['ball2']) {
+                    $model->appeal2_status = self::APPEAL_TYPE_ASOSLI;
+                } else {
+                    $model->appeal2_status = $post['appeal2_status'] ?? self::APPEAL_TYPE_ASOSSIZ;
+                }
             if (!$model->old_ball2 > 0)
                 $model->old_ball2 = $model->ball2;
 
-            $model->ball2 = $post['ball2'];
+            $model->ball2 = $post['ball2'] ?? $model->ball2;
         }
 
         if (!($model->validate())) {

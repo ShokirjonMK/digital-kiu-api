@@ -19,7 +19,13 @@ class m221227_044617_create_student_mark_table extends Migration
 
         $this->createTable('{{%student_mark}}', [
             'id' => $this->primaryKey(),
+
             'student_id' => $this->integer(11)->notNull(),
+            'subject_id' => $this->integer(11)->notNull(),
+            'course_id' => $this->integer(11)->null(),
+            'semestr_id' => $this->integer(11)->null(),
+
+            'edu_year_id' => $this->integer(11)->null(),
 
 
 
@@ -34,7 +40,9 @@ class m221227_044617_create_student_mark_table extends Migration
 
         ]);
 
-        $this->addForeignKey('sto_student_order_student_id', 'student_order', 'student_id', 'student', 'id');
+        $this->addForeignKey('mark_student_mark_student_id', 'student_mark', 'student_id', 'student', 'id');
+        $this->addForeignKey('mark_student_mark_subject_id', 'student_mark', 'subject_id', 'subject', 'id');
+        $this->addForeignKey('mark_student_mark_edu_year_id', 'student_mark', 'edu_year_id', 'edu_year', 'id');
     }
 
     /**

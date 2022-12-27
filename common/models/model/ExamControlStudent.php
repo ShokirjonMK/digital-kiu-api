@@ -600,7 +600,7 @@ class ExamControlStudent extends ActiveRecord
         if (isset($post['appeal2_conclution'])) {
 
             $model->appeal2_conclution = $post['appeal2_conclution'];
-            if (isset($post['ball']))
+            if (isset($post['ball2']))
                 if ($model->ball2 < $post['ball2']) {
                     $model->appeal2_status = self::APPEAL_TYPE_ASOSLI;
                 } else {

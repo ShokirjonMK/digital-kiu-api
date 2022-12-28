@@ -489,7 +489,6 @@ class ExamControlStudent extends ActiveRecord
         }
 
 
-        $model->main_ball = $model->ball + $model->ball2;
         $model->course_id = $model->examControl->course_id;
         $model->semester_id = $model->examControl->semester_id;
         $model->edu_year_id = $model->examControl->edu_year_id;
@@ -504,12 +503,134 @@ class ExamControlStudent extends ActiveRecord
         $model->direction_id = $model->examControl->direction_id;
         $model->type = $model->examControl->type;
         $model->category = $model->examControl->category;
+        $model->main_ball = ($model->ball ?? 0) + ($model->ball2 ?? 0);
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        if ($model->save()) {
+
+            // answer file saqlaymiz
+            $model->upload_file = UploadedFile::getInstancesByName('upload_file');
+            if ($model->upload_file) {
+                $model->upload_file = $model->upload_file[0];
+                $upload_FileUrl = $model->uploadFile($model->upload_file);
+                if ($upload_FileUrl) {
+                    $model->answer_file = $upload_FileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+
+            // answer file saqlaymiz
+            $model->upload2_file = UploadedFile::getInstancesByName('upload2_file');
+            if ($model->upload2_file) {
+                $model->upload2_file = $model->upload2_file[0];
+                $upload2_FileUrl = $model->uploadFile($model->upload2_file);
+                if ($upload2_FileUrl) {
+                    $model->answer2_file = $upload2_FileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+
+            // aplagiat file saqlaymiz
+            $model->upload_plagiat_file = UploadedFile::getInstancesByName('upload_plagiat_file');
+            if ($model->upload_plagiat_file) {
+                $model->upload_plagiat_file = $model->upload_plagiat_file[0];
+                $upload_plagiat_fileUrl = $model->uploadFile($model->upload_plagiat_file);
+                if ($upload_plagiat_fileUrl) {
+                    $model->plagiat_file = $upload_plagiat_fileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+
+            // aplagiat file saqlaymiz
+            $model->upload_plagiat2_file = UploadedFile::getInstancesByName('upload_plagiat2_file');
+            if ($model->upload_plagiat2_file) {
+                $model->upload_plagiat2_file = $model->upload_plagiat2_file[0];
+                $upload_plagiat2_fileUrl = $model->uploadFile($model->upload_plagiat2_file);
+                if ($upload_plagiat2_fileUrl) {
+                    $model->plagiat2_file = $upload_plagiat2_fileUrl;
+                } else {
+                    $errors[] = $model->errors;
+                }
+            }
+
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            }
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        $transaction->rollBack();
+        return simplify_errors($errors);
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        $now = time();
+        if (isRole('student')) {
+
+            if (isset($post['answer2']) || isset($post['upload2_file'])) {
+                if ($model->examControl->start2 > $now) {
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                if ($model->examControl->finish2 < $now) {
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            } else {
+
+                if ($model->ball > 0)
+                    if ($model->examControl->start > $now) {
+                        $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
+                if ($model->examControl->finish < $now) {
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            }
+            $model->start = $now;
+        }
+
+        if (isset($post['ball'])) {
+            if ($model->ball > $model->examControl->max_ball) {
+                $errors[] = _e('incorrect ball');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+        if (isset($post['ball2'])) {
+            if ($model->ball2 > $model->examControl->max_ball2) {
+                $errors[] = _e('incorrect ball2');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
 
         if ($model->save()) {
 
@@ -688,127 +809,6 @@ class ExamControlStudent extends ActiveRecord
         return simplify_errors($errors);
     }
 
-    public static function updateItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-
-        $now = time();
-        if (isRole('student')) {
-
-            if (isset($post['answer2']) || isset($post['upload2_file'])) {
-                if ($model->examControl->start2 > $now) {
-                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
-                }
-                if ($model->examControl->finish2 < $now) {
-                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
-                }
-            } else {
-
-                if ($model->ball > 0)
-                    if ($model->examControl->start > $now) {
-                        $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
-                        $transaction->rollBack();
-                        return simplify_errors($errors);
-                    }
-                if ($model->examControl->finish < $now) {
-                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
-                }
-            }
-            $model->start = $now;
-        }
-
-        if (isset($post['ball'])) {
-            if ($model->ball > $model->examControl->max_ball) {
-                $errors[] = _e('incorrect ball');
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-        }
-        if (isset($post['ball2'])) {
-            if ($model->ball2 > $model->examControl->max_ball2) {
-                $errors[] = _e('incorrect ball2');
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
-        }
-
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-
-        $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
-
-        if ($model->save()) {
-
-            // answer file saqlaymiz
-            $model->upload_file = UploadedFile::getInstancesByName('upload_file');
-            if ($model->upload_file) {
-                $model->upload_file = $model->upload_file[0];
-                $upload_FileUrl = $model->uploadFile($model->upload_file);
-                if ($upload_FileUrl) {
-                    $model->answer_file = $upload_FileUrl;
-                } else {
-                    $errors[] = $model->errors;
-                }
-            }
-
-            // answer file saqlaymiz
-            $model->upload2_file = UploadedFile::getInstancesByName('upload2_file');
-            if ($model->upload2_file) {
-                $model->upload2_file = $model->upload2_file[0];
-                $upload2_FileUrl = $model->uploadFile($model->upload2_file);
-                if ($upload2_FileUrl) {
-                    $model->answer2_file = $upload2_FileUrl;
-                } else {
-                    $errors[] = $model->errors;
-                }
-            }
-
-            // aplagiat file saqlaymiz
-            $model->upload_plagiat_file = UploadedFile::getInstancesByName('upload_plagiat_file');
-            if ($model->upload_plagiat_file) {
-                $model->upload_plagiat_file = $model->upload_plagiat_file[0];
-                $upload_plagiat_fileUrl = $model->uploadFile($model->upload_plagiat_file);
-                if ($upload_plagiat_fileUrl) {
-                    $model->plagiat_file = $upload_plagiat_fileUrl;
-                } else {
-                    $errors[] = $model->errors;
-                }
-            }
-
-            // aplagiat file saqlaymiz
-            $model->upload_plagiat2_file = UploadedFile::getInstancesByName('upload_plagiat2_file');
-            if ($model->upload_plagiat2_file) {
-                $model->upload_plagiat2_file = $model->upload_plagiat2_file[0];
-                $upload_plagiat2_fileUrl = $model->uploadFile($model->upload_plagiat2_file);
-                if ($upload_plagiat2_fileUrl) {
-                    $model->plagiat2_file = $upload_plagiat2_fileUrl;
-                } else {
-                    $errors[] = $model->errors;
-                }
-            }
-
-
-            if ($model->save()) {
-                $transaction->commit();
-                return true;
-            }
-        } else {
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-        $transaction->rollBack();
-        return simplify_errors($errors);
-    }
 
     public function beforeSave($insert)
     {

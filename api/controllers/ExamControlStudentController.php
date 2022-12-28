@@ -44,6 +44,10 @@ class ExamControlStudentController extends ApiActiveController
             ]);
         }
 
+        if (isRole("mudir") || isRole("teacher")) {
+            $query->andWhere(['in', $this->table_name . '.subject_id', $this->subject_ids()]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 

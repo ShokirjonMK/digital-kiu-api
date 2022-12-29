@@ -1630,6 +1630,7 @@ return [
         "user_status-list",
         "user_update",
         "user_view",
+        "exam-control-student_appeal",
 
     ],
 

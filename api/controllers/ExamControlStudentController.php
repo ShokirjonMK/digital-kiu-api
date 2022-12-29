@@ -44,6 +44,10 @@ class ExamControlStudentController extends ApiActiveController
             ]);
         }
 
+        if (isRole("mudir") || isRole("teacher")) {
+            $query->andWhere(['in', $this->table_name . '.subject_id', $this->subject_ids()]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -119,6 +123,37 @@ class ExamControlStudentController extends ApiActiveController
 
             $this->load($model, $post);
             $result = ExamControlStudent::updateItem($model, $post);
+        }
+
+        // $this->load($model, $post);
+        // $result = ExamControlStudent::updateItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+    public function actionAppeal($lang, $id)
+    {
+        $model = ExamControlStudent::findOne($id);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $data = [];
+        $post = Yii::$app->request->post();
+
+        if (isRole('student')) {
+            if ($model->student_id != $this->student()) {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, _e('This is not yours'), ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+
+            // $this->load($model, $post);
+            $result = ExamControlStudent::appealNew($model, $post);
+        } else {
+
+            // $this->load($model, $post);
+            $result = ExamControlStudent::appealCheck($model, $post);
         }
 
         // $this->load($model, $post);

@@ -195,8 +195,10 @@ $routes = [
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',
     'POST <lang:\w{2}>/subject-contents/order' => 'subject-content/order',
-
     /** Code Correctors */
+    
+    /** exam control student appeal 1 va 2  */
+    'POST <lang:\w{2}>/exam-control-students/appeal/<id>/' => 'exam-control-student/appeal',
 
     /* statistics all */
     // statistic student-count-by-faculty

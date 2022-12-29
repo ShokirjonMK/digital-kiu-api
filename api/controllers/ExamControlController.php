@@ -137,6 +137,24 @@ class ExamControlController extends ApiActiveController
             $post['duration2'] = (int)$hours * 3600 + (int)$min * 60;
         }
 
+        if (isset($post['appeal2_at'])) {
+            $post['appeal2_at'] = strtotime($post['appeal2_at']);
+        }
+
+        if (isset($post['appeal_at'])) {
+            $post['appeal_at'] = strtotime($post['appeal_at']);
+        }
+
+        if (isset($post['status'])) {
+            if ($model->status == 2 && $post['status'] == 2)
+                unset($post['status']);
+        }
+
+        if (isset($post['status2'])) {
+            if ($model->status2 == 2 && $post['status2'] == 2)
+                unset($post['status2']);
+        }
+
         $this->load($model, $post);
         if (isset($post['start'])) {
             $model['start'] = strtotime($post['start']);

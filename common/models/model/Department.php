@@ -38,6 +38,7 @@ class Department extends \yii\db\ActiveRecord
     const TYPE_CHAIR = 3;
     const TYPE_DEANERY = 4;
     const TYPE_RECTORATE = 5;
+    const TYPE_REGISTRATOR_OFFICE = 6;
 
     use ResourceTrait;
 
@@ -306,6 +307,7 @@ class Department extends \yii\db\ActiveRecord
             self::TYPE_CHAIR => 'TYPE_CHAIR',
             self::TYPE_DEANERY => 'TYPE_DEANERY',
             self::TYPE_RECTORATE => 'TYPE_RECTORATE',
+            self::TYPE_REGISTRATOR_OFFICE => 'TYPE_REGISTRATOR_OFFICE',
         ];
 
         if (isset($array[$key])) {

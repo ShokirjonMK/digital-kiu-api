@@ -85,8 +85,8 @@ class DepartmentController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         
-        if ($this->checkLead($model, self::ROLE)) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        if (!$this->checkLead($model, self::ROLE)) {
+            return $this->response(0, _e('You can not change.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
         $post = Yii::$app->request->post();

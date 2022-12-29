@@ -284,10 +284,12 @@ class AttendReason extends \yii\db\ActiveRecord
         $errors = [];
         $studentAttends = new StudentAttend();
         $studentAttends = $studentAttends::find();
+        $reasonStart = date("Y-m-d", strtotime($model->start));
+        $reasonEnd = date("Y-m-d", strtotime($model->end));
         $studentAttends = $studentAttends
             ->where(['student_id' => $model->student_id])
-            ->andWhere(['>=', 'date', $model->start])
-            ->andWhere(['<=', 'date', $model->end])
+            ->andWhere(['>=', 'date', $reasonStart])
+            ->andWhere(['<=', 'date', $reasonEnd])
             ->all();
 
         foreach ($studentAttends as $studentAttend) {

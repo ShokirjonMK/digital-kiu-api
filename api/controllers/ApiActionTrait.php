@@ -7,6 +7,7 @@ use app\components\AuthorCheck;
 use app\components\PermissonCheck;
 use base\ResponseStatus;
 use common\models\model\ActionLog;
+use common\models\model\Kafedra;
 use common\models\model\Student;
 use common\models\model\Subject;
 use common\models\model\TeacherAccess;
@@ -122,7 +123,7 @@ trait ApiActionTrait
             return false;
         }
 
-      //  echo "Please wait!!"; die(); return 0;
+        //  echo "Please wait!!"; die(); return 0;
 
         $lang = Yii::$app->request->get('lang');
 
@@ -339,6 +340,69 @@ trait ApiActionTrait
 
                 ->all();
         }
+    }
+
+    public function subject_ids($type = null, $select = [], $user_id = null)
+    {
+        if (is_null($user_id)) {
+            $user_id = current_user_id();
+        }
+
+        if (is_null($type)) {
+            $type = 1;
+        }
+
+        if (empty($select)) {
+            $select = ['id'];
+        }
+
+        if (isRole("mudir", $user_id)) {
+            return Subject::find()
+                ->where(['is_deleted' => 0])
+                ->where(['in', 'kafedra_id', Kafedra::find()
+                    ->where(['is_deleted' => 0, 'user_id' => $user_id])
+                    ->select('id')])
+                ->select($select);
+        }
+
+        if (isRole("teacher", $user_id)) {
+            return Subject::find()
+                ->where(['is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', TeacherAccess::find()
+                    ->where(['user_id' => $user_id, 'is_deleted ' => 0])
+                    ->andWhere(['in', 'subject_id', Subject::find()
+                        ->where(['is_deleted' => 0])
+                        ->select('id')])
+                    ->select(['subject_id'])])
+                ->select($select);
+        }
+
+
+        return Subject::find()
+            ->where(['is_deleted' => 0])
+            ->select($select);
+
+
+        if ($type == 1) {
+            return TeacherAccess::find()
+                ->where(['user_id' => $user_id, 'is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', Subject::find()
+                    ->where(['is_deleted' => 0])
+                    ->select('id')])
+                ->select($select);
+        } elseif ($type == 2) {
+            return TeacherAccess::find()
+                ->asArray()
+                ->where(['user_id' => $user_id, 'is_deleted' => 0])
+                ->andWhere(['in', 'subject_id', Subject::find()
+                    ->where(['is_deleted' => 0])
+                    ->select('id')])
+                ->select($select)
+
+                ->all();
+        }
+
+        return null;
     }
 
     public function isSelf($userAccessTypeId, $type = null)

@@ -2161,6 +2161,9 @@ return [
         "exam-control-student_update",
         "exam-control-student_create",
         // "exam-control-student_appeal",
+
+        "student-attend_index",
+        "student-attend_view",
     ],
 
     'contenter' => [

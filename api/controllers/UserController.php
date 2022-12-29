@@ -142,22 +142,22 @@ class UserController extends ApiActiveController
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
 
         // dd($query->createCommand()->getRawSql());
-        $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
+        $query = $query->andWhere(['<>', 'auth_assignment.item_name', "admin"]);
 
 
-        $userIds = AuthAssignment::find()->select('user_id')->where([
-            'in', 'auth_assignment.item_name',
-            AuthChild::find()->select('child')->where([
-                'in', 'parent',
-                AuthAssignment::find()->select("item_name")->where([
-                    'user_id' => current_user_id()
-                ])
-            ])
-        ]);
+        // $userIds = AuthAssignment::find()->select('user_id')->where([
+        //     'in', 'auth_assignment.item_name',
+        //     AuthChild::find()->select('child')->where([
+        //         'in', 'parent',
+        //         AuthAssignment::find()->select("item_name")->where([
+        //             'user_id' => current_user_id()
+        //         ])
+        //     ])
+        // ]);
 
-        $query->andFilterWhere([
-            'in', 'users.id', $userIds
-        ]);
+        // $query->andFilterWhere([
+        //     'in', 'users.id', $userIds
+        // ]);
 
         /*  is Self  */
         // if(isRole('dean')){

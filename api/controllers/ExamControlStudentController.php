@@ -54,6 +54,9 @@ class ExamControlStudentController extends ApiActiveController
         // sort
         $query = $this->sort($query);
 
+
+        dd($query->createCommand()->getRawSql());
+
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);

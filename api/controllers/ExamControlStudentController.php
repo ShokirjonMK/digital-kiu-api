@@ -5,6 +5,7 @@ namespace api\controllers;
 use base\ResponseStatus;
 use common\models\model\ExamControlStudent;
 use common\models\model\Faculty;
+use common\models\model\Subject;
 use Yii;
 use yii\rest\ActiveController;
 
@@ -43,6 +44,18 @@ class ExamControlStudentController extends ApiActiveController
         //         'faculty_id' => -1
         //     ]);
         // }
+
+
+        if (null !==  Yii::$app->request->get('kafedra_id')) {
+            $query->andWhere([
+                'in', $this->table_name . '.subject_id',
+                Subject::find()
+                    ->select('id')
+                    ->where(
+                        ['kafedra_id' => Yii::$app->request->get('kafedra_id')]
+                    )
+            ]);
+        }
 
         if (isRole("mudir") || isRole("teacher")) {
             $query->andWhere(['in', $this->table_name . '.subject_id', $this->subject_ids()]);

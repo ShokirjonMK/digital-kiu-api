@@ -2123,10 +2123,10 @@ return [
         'hostel-doc_delete',
 
         'student-subject-selection_index',
-        'student-subject-selection_create',
-        'student-subject-selection_update',
+        // 'student-subject-selection_create',
+        // 'student-subject-selection_update',
         'student-subject-selection_view',
-        'student-subject-selection_delete',
+        // 'student-subject-selection_delete',
 
         'hostel-category-type_index',
         'hostel-category_index',

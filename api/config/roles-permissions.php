@@ -1436,7 +1436,19 @@ return [
 
         'statistic_checking',
 
-
+        "residence-status_index",
+        "residence-status_view",
+        "category-of-cohabitant_index",
+        "category-of-cohabitant_view",
+        "social-category_index",
+        "social-category_view",
+        "order-type_index",
+        "order-type_view",
+        "student-order_index",
+        "student-order_view",
+        "student-order_create",
+        "student-order_delete",
+        "student-order_update",
 
     ],
     /* Dekan huquqlari */
@@ -1728,6 +1740,21 @@ return [
         "attend-reason_update",
         "attend-reason_view",
 
+        "residence-status_index",
+        "residence-status_view",
+        "category-of-cohabitant_index",
+        "category-of-cohabitant_view",
+        "social-category_index",
+        "social-category_view",
+        "order-type_index",
+        "order-type_view",
+       
+        "student-order_index",
+        "student-order_view",
+        "student-order_create",
+        "student-order_delete",
+        "student-order_update",
+
     ],
 
 
@@ -1999,7 +2026,7 @@ return [
         "para_index",
         "attend_create",
         "attend_index",
-        "attend_update",
+        // "attend_update",
         "attend_view",
         // "exam-control_create",
         // "exam-control_delete",

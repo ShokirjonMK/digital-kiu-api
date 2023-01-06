@@ -1450,6 +1450,16 @@ return [
         "student-order_delete",
         "student-order_update",
 
+        "attend-reason_confirm",
+        "attend-reason_create",
+        "attend-reason_index",
+        "attend-reason_update",
+        "attend-reason_view",
+        "student-time-option_index",
+        "student-time-option_view",
+        "student-time-table_index",
+        "student-time-table_view",
+
     ],
     /* Dekan huquqlari */
 
@@ -1748,7 +1758,7 @@ return [
         "social-category_view",
         "order-type_index",
         "order-type_view",
-       
+
         "student-order_index",
         "student-order_view",
         "student-order_create",

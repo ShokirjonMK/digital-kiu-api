@@ -276,7 +276,7 @@ class QuestionController extends ApiActiveController
             if (!(in_array($model->status, $statusList, TRUE))) {
                 return $this->response(0, _e('Now you can not change!.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
-            $status = $post['status'];
+            $status = $post['status'] ?? 0;
             $post = [];
             $post['status'] = $status;
         }

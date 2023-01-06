@@ -52,7 +52,12 @@ class SubjectController extends ApiActiveController
             return $this->response(1, _e('Success'), $data);
         }
 
-        if (isRole('mudir')) {
+        if (isRole("dean")) {
+            $k = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($k['status'] == 1) {
+                $query->andFilterWhere(['in', 'kafedra_id', Kafedra::find()->where(['faculty_id' => $k['UserAccess']->table_id])->select('id')]);
+            }
+        } elseif (isRole('mudir')) {
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
             if ($k['status'] == 1) {
                 // $kafedraIds = Kafedra::find()->where(['faculty_id' => $t['UserAccess']->table_id])->select('id');
@@ -80,8 +85,7 @@ class SubjectController extends ApiActiveController
             /*  is Self  */
             $k = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($k['status'] == 1) {
-                $kafedraIds = Kafedra::find()->where(['faculty_id' => $k['UserAccess']->table_id])->select('id');
-                $query->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
+                $query->andFilterWhere(['in', 'kafedra_id', Kafedra::find()->where(['faculty_id' => $k['UserAccess']->table_id])->select('id')]);
                 // $query->andFilterWhere([
                 //     'kafedra_id' => $k['UserAccess']->table_id
                 // ]);

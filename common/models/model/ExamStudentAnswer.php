@@ -318,6 +318,30 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         ->orderBy('id desc')
                         ->one();
 
+                    $studentAttendCountAll = StudentAttend::find()
+                        ->where([
+                            'subject_id' => $exam->eduSemestrSubject->subject_id,
+                            'student_id' => $student_id,
+                            "edu_semestr_id" => $exam->eduSemestrSubject->edu_semestr_id,
+                            "edu_year_id" => $exam->eduSemestrSubject->eduSemestr->edu_year_id,
+                            // "reason" => 0
+                        ])
+                        ->count();
+                    $studentAttendCount = StudentAttend::find()
+                        ->where([
+                            'subject_id' => $exam->eduSemestrSubject->subject_id,
+                            'student_id' => $student_id,
+                            "edu_semestr_id" => $exam->eduSemestrSubject->edu_semestr_id,
+                            "edu_year_id" => $exam->eduSemestrSubject->eduSemestr->edu_year_id,
+                            "reason" => 0
+                        ])
+                        ->count();
+
+                    if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_exam']) {
+                        $errors[] = _e("You miss a lot of class") + " ($studentAttendCount/$studentAttendCountAll";
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
                     if ($exam->is_protected == 1) {
@@ -740,6 +764,32 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->orderBy('id desc')
                     ->one();
                 $now_second = time();
+
+                $studentAttendCountAll = StudentAttend::find()
+                    ->where([
+                        'subject_id' => $exam->eduSemestrSubject->subject_id,
+                        'student_id' => $student_id,
+                        "edu_semestr_id" => $exam->eduSemestrSubject->edu_semestr_id,
+                        "edu_year_id" => $exam->eduSemestrSubject->eduSemestr->edu_year_id,
+                        // "reason" => 0
+                    ])
+                    ->count();
+                $studentAttendCount = StudentAttend::find()
+                    ->where([
+                        'subject_id' => $exam->eduSemestrSubject->subject_id,
+                        'student_id' => $student_id,
+                        "edu_semestr_id" => $exam->eduSemestrSubject->edu_semestr_id,
+                        "edu_year_id" => $exam->eduSemestrSubject->eduSemestr->edu_year_id,
+                        "reason" => 0
+                    ])
+                    ->count();
+
+                if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_exam']) {
+                    $errors[] = _e("You miss a lot of class") + " ($studentAttendCount/$studentAttendCountAll";
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
                 if ($examStudent) {
                     $finishExamStudent = $examStudent->start + $exam->duration + $examStudent->duration;
 

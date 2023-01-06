@@ -894,7 +894,15 @@ return [
         "user_update",
         "user_view",
         "week_index",
-        "week_view"
+        "week_view",
+
+
+        "student-time-option_delete",
+        "student-time-option_index",
+        "student-time-option_view",
+        "student-time-table_delete",
+        "student-time-table_index",
+        "student-time-table_view",
     ],
 
     /* O'quv bo'limi kontenthisi */

@@ -896,7 +896,6 @@ return [
         "week_index",
         "week_view",
 
-
         "student-time-option_delete",
         "student-time-option_index",
         "student-time-option_view",

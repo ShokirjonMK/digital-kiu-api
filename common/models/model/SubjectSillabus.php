@@ -76,7 +76,8 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             ],
             [
                 [
-                    'credit'
+                    'credit',
+                    'all_ball_yuklama',
                 ],
                 'double'
             ],

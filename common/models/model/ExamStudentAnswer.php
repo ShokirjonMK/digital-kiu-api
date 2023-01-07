@@ -337,8 +337,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         ])
                         ->count();
 
-                    if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_exam']) {
-                        $errors[] = _e("You miss a lot of class") + " ($studentAttendCount/$studentAttendCountAll";
+                    // if ($studentAttendCount >= $exam->subject->subjectSillabus->all_ball_yuklama) {
+
+                    if (
+                        $studentAttendCount <= ((int)$exam->subject->subjectSillabus->all_ball_yuklama * Yii::$app->params['student_attent_access_percent'] / 100)
+                    ) {
+
+                        $errors[] = _e("You miss a lot of classes") + " ($studentAttendCount/$studentAttendCountAll";
                         $transaction->rollBack();
                         return simplify_errors($errors);
                     }
@@ -774,6 +779,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         // "reason" => 0
                     ])
                     ->count();
+
                 $studentAttendCount = StudentAttend::find()
                     ->where([
                         'subject_id' => $exam->eduSemestrSubject->subject_id,
@@ -784,8 +790,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ])
                     ->count();
 
-                if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_exam']) {
-                    $errors[] = _e("You miss a lot of class") + " ($studentAttendCount/$studentAttendCountAll";
+                // if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_exam']) {
+                // if ($studentAttendCount >= $exam->subject->subjectSillabus->all_ball_yuklama) {
+                // if ($studentAttendCount <= ((int)$->subject->subjectSillabus->all_ball_yuklama / Yii::$app->params[''])) {
+                if ($studentAttendCount <= ((int)$exam->subject->subjectSillabus->all_ball_yuklama * Yii::$app->params['student_attent_access_percent'] / 100)) {
+
+
+                    $errors[] = _e("You miss a lot of classes") + " ($studentAttendCount/$studentAttendCountAll";
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }

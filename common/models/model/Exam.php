@@ -239,6 +239,7 @@ class Exam extends \yii\db\ActiveRecord
 
 
             'key',
+            'hasAccess',
             'surveyStatus',
             'surveyAnswer',
 
@@ -251,6 +252,48 @@ class Exam extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getHasAccess()
+    {
+        $studentAttendCountAll = StudentAttend::find()
+            ->where([
+                "subject_id" => $this->eduSemestrSubject->subject_id,
+                "student_id" => $this->student(),
+                "edu_semestr_id" => $this->eduSemestrSubject->edu_semestr_id,
+                "edu_year_id" => $this->eduSemestrSubject->eduSemestr->edu_year_id,
+                // "reason" => 0
+            ])
+            ->count();
+
+        $studentAttendCount = StudentAttend::find()
+            ->where([
+                "subject_id" => $this->eduSemestrSubject->subject_id,
+                "student_id" => $this->student(),
+                "edu_semestr_id" => $this->eduSemestrSubject->edu_semestr_id,
+                "edu_year_id" => $this->eduSemestrSubject->eduSemestr->edu_year_id,
+                "reason" => 0
+            ])
+            ->count();
+
+        // if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_this']) {
+        if ($studentAttendCount <= ((int)$this->subject->subjectSillabus->all_ball_yuklama * Yii::$app->params['student_attent_access_percent'] / 100)) {
+            return [
+                'all' => $this->subject->subjectSillabus->all_ball_yuklama,
+                'attend_all' => $studentAttendCountAll,
+                'reason' => $studentAttendCount,
+                'access' => 1
+            ];
+            return 1;
+        }
+
+        return [
+            'all' => $this->subject->subjectSillabus->all_ball_yuklama,
+            'attend_all' => $studentAttendCountAll,
+            'reason' => $studentAttendCount,
+            'access' => 0
+        ];
+        return 0;
     }
 
     public function getIsConfirmed()

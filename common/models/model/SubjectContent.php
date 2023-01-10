@@ -272,6 +272,7 @@ class SubjectContent extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $errors[] = "SSSSS";
             $transaction->rollBack();
             return simplify_errors($errors);
         }

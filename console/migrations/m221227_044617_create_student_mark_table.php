@@ -27,8 +27,6 @@ class m221227_044617_create_student_mark_table extends Migration
 
             'edu_year_id' => $this->integer(11)->null(),
 
-
-
             'description' => $this->text()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),

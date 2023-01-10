@@ -79,6 +79,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
                     'credit',
                     'all_ball_yuklama',
                     'max_ball',
+                    'auditory_time'
                 ],
                 'double'
             ],
@@ -111,6 +112,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             'all_ball_yuklama' => 'All Ball Yuklama',
             'max_ball' => 'Max Ball',
             'credit' => 'Credit',
+            'auditory_time' => 'auditory_time',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -133,6 +135,7 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             'edu_semestr_subject_category_times',
             'all_ball_yuklama',
             'max_ball',
+            'auditory_time',
             'credit',
 
             'order',

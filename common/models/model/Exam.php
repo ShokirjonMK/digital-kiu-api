@@ -102,7 +102,8 @@ class Exam extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
-                    'archived'
+                    'archived',
+                    'password',
                 ], 'integer'
             ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
@@ -145,6 +146,7 @@ class Exam extends \yii\db\ActiveRecord
             'appeal_start' => 'appeal_start',
             'appeal_finish' => 'appeal_finish',
             'category' => 'category',
+            'password' => 'password',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -600,7 +602,7 @@ class Exam extends \yii\db\ActiveRecord
         return $this->hasOne(Exam::className(), ['old_exam_id' => 'id']);
     }
 
-    public static function generatePasswords($post)
+    public static function generatePasswords1($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -737,6 +739,55 @@ class Exam extends \yii\db\ActiveRecord
             return true;
         }
     }
+    public static function generatePasswords($post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $examId = isset($post['exam_id']) ?  $post['exam_id'] : null;
+
+        if (isset($examId)) {
+            $exam = Exam::findOne($examId);
+            if (isset($exam)) {
+                $eduSemestrSubject = EduSemestrSubject::findOne($exam->edu_semestr_subject_id);
+                if (isset($eduSemestrSubject)) {
+
+                    /** Student generate Password and create ExamStudent begin */
+
+                    $eduPlan_id = $exam->eduSemestrSubject->eduSemestr->edu_plan_id;
+
+                    $studentsonThisEduPlan = Student::find()
+                        ->where(['edu_plan_id' => $eduPlan_id])
+                        ->all();
+
+                    $examPassword = _random_string('numeric', 6);
+
+                    $exam->password = $examPassword;
+                    /** Student generate Password and create ExamStudent end */
+
+                    if ($exam->save(false)) {
+                        $transaction->commit();
+                        return true;
+                    } else {
+                        $errors[] = _e("Error on saving password");
+                    }
+                    ////
+                } else {
+                    $errors[] = _e("This subject does not belongs to this smester");
+                }
+            } else {
+                $errors[] = _e("Exam not found");
+            }
+        } else {
+            $errors[] = _e("Exam Id is required");
+        }
+        if (count($errors) > 0) {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        } else {
+            $transaction->commit();
+            return true;
+        }
+    }
 
     public static function getPasswords($post)
     {
@@ -759,7 +810,7 @@ class Exam extends \yii\db\ActiveRecord
                     $oneStd = [];
                     $oneStd['full_name'] = Profile::getFullname($examStudentOne->student->profile);
                     $oneStd['direction'] = $examStudentOne->student->direction->translate->name ?? null;
-                    $oneStd['password'] = $examStudentOne->password;
+                    // $oneStd['password'] = $examStudentOne->password;
                     $data['students'][] = $oneStd;
                 }
                 $eduSemestrSubject = EduSemestrSubject::findOne($exam->edu_semestr_subject_id);
@@ -768,6 +819,7 @@ class Exam extends \yii\db\ActiveRecord
                     $info['subject'] = $eduSemestrSubject->subject->translate->name;
                     $info['start'] = $exam->start;
                     $info['finish'] = $exam->finish;
+                    $info['password'] = $exam->password;
                     $info['exam_type'] = $exam->examType->translate->name;
 
                     $data['info'] = $info;

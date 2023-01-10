@@ -894,7 +894,14 @@ return [
         "user_update",
         "user_view",
         "week_index",
-        "week_view"
+        "week_view",
+
+        "student-time-option_delete",
+        "student-time-option_index",
+        "student-time-option_view",
+        "student-time-table_delete",
+        "student-time-table_index",
+        "student-time-table_view",
     ],
 
     /* O'quv bo'limi kontenthisi */
@@ -1436,7 +1443,29 @@ return [
 
         'statistic_checking',
 
+        "residence-status_index",
+        "residence-status_view",
+        "category-of-cohabitant_index",
+        "category-of-cohabitant_view",
+        "social-category_index",
+        "social-category_view",
+        "order-type_index",
+        "order-type_view",
+        "student-order_index",
+        "student-order_view",
+        "student-order_create",
+        "student-order_delete",
+        "student-order_update",
 
+        "attend-reason_confirm",
+        "attend-reason_create",
+        "attend-reason_index",
+        "attend-reason_update",
+        "attend-reason_view",
+        "student-time-option_index",
+        "student-time-option_view",
+        "student-time-table_index",
+        "student-time-table_view",
 
     ],
     /* Dekan huquqlari */
@@ -1630,6 +1659,7 @@ return [
         "user_status-list",
         "user_update",
         "user_view",
+        "exam-control-student_appeal",
 
     ],
 
@@ -1726,6 +1756,21 @@ return [
         "attend-reason_index",
         "attend-reason_update",
         "attend-reason_view",
+
+        "residence-status_index",
+        "residence-status_view",
+        "category-of-cohabitant_index",
+        "category-of-cohabitant_view",
+        "social-category_index",
+        "social-category_view",
+        "order-type_index",
+        "order-type_view",
+
+        "student-order_index",
+        "student-order_view",
+        "student-order_create",
+        "student-order_delete",
+        "student-order_update",
 
     ],
 
@@ -1998,7 +2043,7 @@ return [
         "para_index",
         "attend_create",
         "attend_index",
-        "attend_update",
+        // "attend_update",
         "attend_view",
         // "exam-control_create",
         // "exam-control_delete",
@@ -2122,10 +2167,10 @@ return [
         'hostel-doc_delete',
 
         'student-subject-selection_index',
-        'student-subject-selection_create',
-        'student-subject-selection_update',
+        // 'student-subject-selection_create',
+        // 'student-subject-selection_update',
         'student-subject-selection_view',
-        'student-subject-selection_delete',
+        // 'student-subject-selection_delete',
 
         'hostel-category-type_index',
         'hostel-category_index',
@@ -2161,6 +2206,9 @@ return [
         "exam-control-student_update",
         "exam-control-student_create",
         // "exam-control-student_appeal",
+
+        "student-attend_index",
+        "student-attend_view",
     ],
 
     'contenter' => [

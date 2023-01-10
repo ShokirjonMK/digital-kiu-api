@@ -24,7 +24,7 @@ class EduSemestrController extends ApiActiveController
 
         $student = Student::findOne(['user_id' => current_user_id()]);
 
-        if ($student) {
+        if ($student && isRole('student')) {
             $query = $model->find()
                 ->andWhere(['is_deleted' => 0])
                 ->andWhere(['edu_plan_id' => $student->edu_plan_id])
@@ -35,7 +35,7 @@ class EduSemestrController extends ApiActiveController
                 ->andFilterWhere(['like', 'edu_semestr.name', Yii::$app->request->get('q')]);
 
             /*  is Self  */
-           /*  $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            /*  $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             if ($t['status'] == 1) {
                 $eduPlan = EduPlan::find()->where(['faculty_id'=> $t['UserAccess']->table_id])->select('id');
                 $query->andWhere(['in', 'edu_plan_id', $eduPlan]);

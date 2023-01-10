@@ -115,6 +115,7 @@ trait ResourceTrait
             return  $student ?? null;
         }
     }
+    
     public static function student($type = null, $user_id = null)
     {
         if ($user_id == null) {

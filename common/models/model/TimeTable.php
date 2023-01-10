@@ -661,7 +661,7 @@ class TimeTable extends \yii\db\ActiveRecord
      */
     public function getTeacher()
     {
-        return Profile::find()->select(['id', 'first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id ?? null])->one();
+        return Profile::find()->select(['user_id', 'first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id ?? null])->one();
     }
 
     /**

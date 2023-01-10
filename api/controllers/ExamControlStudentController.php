@@ -5,6 +5,7 @@ namespace api\controllers;
 use base\ResponseStatus;
 use common\models\model\ExamControlStudent;
 use common\models\model\Faculty;
+use common\models\model\Subject;
 use Yii;
 use yii\rest\ActiveController;
 
@@ -33,14 +34,26 @@ class ExamControlStudentController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // is Self 
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $query->andFilterWhere([
-                'faculty_id' => $t['UserAccess']->table_id
-            ]);
-        } elseif ($t['status'] == 2) {
-            $query->andFilterWhere([
-                'faculty_id' => -1
+        // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+        //     $query->andFilterWhere([
+        //         'faculty_id' => $t['UserAccess']->table_id
+        //     ]);
+        // } elseif ($t['status'] == 2) {
+        //     $query->andFilterWhere([
+        //         'faculty_id' => -1
+        //     ]);
+        // }
+
+
+        if (null !==  Yii::$app->request->get('kafedra_id')) {
+            $query->andWhere([
+                'in', $this->table_name . '.subject_id',
+                Subject::find()
+                    ->select('id')
+                    ->where(
+                        ['kafedra_id' => Yii::$app->request->get('kafedra_id')]
+                    )
             ]);
         }
 
@@ -53,6 +66,9 @@ class ExamControlStudentController extends ApiActiveController
 
         // sort
         $query = $this->sort($query);
+
+
+        // dd($query->createCommand()->getRawSql());
 
         // data
         $data =  $this->getData($query);

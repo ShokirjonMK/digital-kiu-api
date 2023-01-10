@@ -131,6 +131,25 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'created_by' => _e('Created By'),
             'updated_by' => _e('Updated By'),
             'is_deleted' => _e('Is Deleted'),
+
+            'teacher_access_id',
+            'language_id',
+            'course_id',
+            'semester_id',
+            'edu_year_id',
+            'subject_id',
+            'room_id',
+            'para_id',
+            'week_id',
+            'edu_semester_id',
+            'subject_category_id',
+
+            'time_table_parent_id',
+            'time_table_lecture_id',
+            'teacher_user_id',
+            'edu_plan_id',
+            'order',
+            'status',
         ];
     }
 

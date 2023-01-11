@@ -15,7 +15,7 @@ class m211012_130418_subject_category extends Migration
         $this->createTable('subject_category', [
             'id' => $this->primaryKey(),
             'name'=>$this->string(255)->notNull(),
-
+            'type'=>$this->tinyInteger(1)->defaultValue(1)->comment('1 nb ga hisoblanadi, 0 hisoblanmidi'),
 
             'order'=>$this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

@@ -57,10 +57,33 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_semestr_id', 'subject_id'], 'required'],
+            [
+                [
+                    'edu_semestr_id',
+                    'subject_id'
+                ], 'required'
+            ],
             //    [['edu_semestr_id', 'subject_id', 'subject_type_id', 'credit', 'all_ball_yuklama', 'is_checked', 'max_ball'], 'required'],
-            [['edu_semestr_id', 'faculty_id', 'direction_id', 'subject_id', 'subject_type_id', 'all_ball_yuklama', 'is_checked', 'max_ball', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            [['credit'], 'double'],
+            [
+                [
+                    'edu_semestr_id',
+                    'faculty_id',
+                    'direction_id',
+                    'subject_id',
+                    'subject_type_id',
+                    'all_ball_yuklama',
+                    'is_checked',
+                    'max_ball',
+                    'order',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                    'created_by',
+                    'updated_by',
+                    'is_deleted'
+                ], 'integer'
+            ],
+            [['credit', 'auditory_time'], 'double'],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['subject_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubjectType::className(), 'targetAttribute' => ['subject_type_id' => 'id']],
@@ -83,6 +106,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             'subject_id' => 'Subject ID',
             'subject_type_id' => 'Subject Type ID',
             'credit' => 'Credit',
+            'auditory_time' => 'auditory_time',
             'all_ball_yuklama' => 'All Ball Yuklama',
             'is_checked' => 'Is Checked',
             'max_ball' => 'Max Ball',
@@ -105,6 +129,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             'edu_semestr_id',
             'subject_id',
             'subject_type_id',
+            'auditory_time',
             'credit',
             'all_ball_yuklama',
             'is_checked',
@@ -179,7 +204,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Direction::className(), ['direction_id' => 'id']);
     }
-    
+
     /**
      * Gets query for [[EduSemestrExamsTypes]].
      *
@@ -304,6 +329,7 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                 $model->max_ball = $max_ball;
                 $model->subject_type_id = $subjectSillabus->subject_type_id;
                 $model->credit = $subjectSillabus->credit;
+                $model->auditory_time = $subjectSillabus->auditory_time;
             }
             $model->update();
             $transaction->commit();

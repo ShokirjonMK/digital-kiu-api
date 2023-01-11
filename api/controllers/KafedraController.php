@@ -67,7 +67,7 @@ class KafedraController extends ApiActiveController
 
         /*  is Self  */
         $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-        if ($k['status'] == 1) {
+        if ($k['status'] == 1 && !isRole("deean")) {
 
             // return $k['UserAccess']->table_id;
             $query->where([

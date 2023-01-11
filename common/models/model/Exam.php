@@ -449,7 +449,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getKey()
     {
-        return $this->examStudentMain[0]->password ?? '';
+        return $this->password ?? '';
     }
 
     public function getExamStudent()
@@ -752,12 +752,6 @@ class Exam extends \yii\db\ActiveRecord
                 if (isset($eduSemestrSubject)) {
 
                     /** Student generate Password and create ExamStudent begin */
-
-                    $eduPlan_id = $exam->eduSemestrSubject->eduSemestr->edu_plan_id;
-
-                    $studentsonThisEduPlan = Student::find()
-                        ->where(['edu_plan_id' => $eduPlan_id])
-                        ->all();
 
                     $examPassword = _random_string('numeric', 6);
 

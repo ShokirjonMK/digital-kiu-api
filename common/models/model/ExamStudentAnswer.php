@@ -353,7 +353,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         if ($ExamStudentHas) {
                             if (isset($post["password"])) {
                                 $password = $post["password"];
-                                if ($password == $ExamStudentHas->password) {
+                                if ($password == $exam->password) {
                                     $t = true;
                                 } else {
                                     $t = false;

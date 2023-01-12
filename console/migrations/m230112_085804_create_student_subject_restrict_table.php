@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%student_subject_restrict}}`.
  */
-class m230112_081119_create_student_subject_restrict_table extends Migration
+class m230112_085804_create_student_subject_restrict_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -21,10 +21,10 @@ class m230112_081119_create_student_subject_restrict_table extends Migration
             'id' => $this->primaryKey(),
 
             'student_id' => $this->integer(11)->notNull(),
-            'edu_semestr_subject_id' => $this->integer(11)->null(),
+            'edu_semestr_subject_id' => $this->integer(11)->notNull(),
             'description' => $this->text()->null(),
 
-            'subject_id' => $this->integer(11)->notNull(),
+            'subject_id' => $this->integer(11)->null(),
 
             'semestr_id' => $this->integer(11)->null(),
             'edu_semestr_id' => $this->integer(11)->null(),

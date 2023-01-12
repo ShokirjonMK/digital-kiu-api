@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property string $name
  * @property int|null $order
+ * @property int|null $type // for auditory time
  * @property int|null $status
  * @property int $created_at
  * @property int $updated_at
@@ -50,7 +51,7 @@ class SubjectCategory extends \yii\db\ActiveRecord
     {
         return [
             //            [['name'], 'required'],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['order', 'status', 'type', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             //            [['name'], 'string', 'max' => 255],
         ];
     }
@@ -64,6 +65,7 @@ class SubjectCategory extends \yii\db\ActiveRecord
             'id' => 'ID',
             //            'name' => 'Name'/,
             'order' => _e('Order'),
+            'type' => _e('type'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
@@ -81,6 +83,7 @@ class SubjectCategory extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'order',
+            'type',  
             'status',
             'created_at',
             'updated_at',

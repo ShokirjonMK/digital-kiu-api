@@ -351,6 +351,8 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
         if ($model->save()) {
             $all_ball_yuklama = 0;
             $max_ball = 0;
+            $auditory_time = 0;
+
             if (isset($post['SubjectCategory'])) {
                 $SubjectCategory = json_decode(str_replace("'", "", $post['SubjectCategory']));
                 EduSemestrSubjectCategoryTime::deleteAll(['edu_semestr_subject_id' => $model->id]);
@@ -360,9 +362,22 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
                     $EduSemestrSubjectCategoryTime->subject_category_id = $subjectCatId;
                     $EduSemestrSubjectCategoryTime->hours = $subjectCatValues;
                     $EduSemestrSubjectCategoryTime->save();
+
+                    if (SubjectCategory::find()
+                        ->where([
+                            'id' => $subjectCatId,
+                            'type' => 1
+                        ])
+                        ->exists()
+                    ) {
+                        $auditory_time += $subjectCatValues;
+                    }
                     $all_ball_yuklama = $all_ball_yuklama + $subjectCatValues;
                 }
             }
+
+            $model->auditory_time = $auditory_time;
+
             if (isset($post['EduSemestrExamType'])) {
                 $EduSemestrExamType = json_decode(str_replace("'", "", $post['EduSemestrExamType']));
                 EduSemestrExamsType::deleteAll(['edu_semestr_subject_id' => $model->id]);

@@ -48,7 +48,9 @@ class m221227_044617_create_student_mark_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('sto_student_order_student_id', 'student_order');
+        $this->dropForeignKey('mark_student_mark_student_id', 'student_order');
+        $this->dropForeignKey('mark_student_mark_subject_id', 'student_order');
+        $this->dropForeignKey('mark_student_mark_edu_year_id', 'student_order');
 
         $this->dropTable('{{%student_mark}}');
     }

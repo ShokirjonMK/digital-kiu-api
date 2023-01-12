@@ -286,6 +286,7 @@ class AttendReason extends \yii\db\ActiveRecord
         $studentAttends = $studentAttends::find();
         $reasonStart = date("Y-m-d", strtotime($model->start));
         $reasonEnd = date("Y-m-d", strtotime($model->end));
+        
         $studentAttends = $studentAttends
             ->where(['student_id' => $model->student_id])
             ->andWhere(['>=', 'date', $reasonStart])

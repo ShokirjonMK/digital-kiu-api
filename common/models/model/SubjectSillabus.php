@@ -217,6 +217,21 @@ class SubjectSillabus extends \yii\db\ActiveRecord
             $errors[] = $json_errors;
         }
 
+        $auditory_time = 0;
+        foreach (json_decode($post['edu_semestr_subject_category_times'])
+            as $edu_semestr_subject_category_times_key => $edu_semestr_subject_category_times_value) {
+            if (SubjectCategory::find()
+                ->where([
+                    'id' => $edu_semestr_subject_category_times_key,
+                    'type' => 1
+                ])
+                ->exists()
+            ) {
+                $auditory_time += $edu_semestr_subject_category_times_value;
+            }
+        }
+        $model->auditory_time = $auditory_time;
+
         /*    $edu_semestr_exams_typesMODEL = new EduSemestrExamsType();
            //  [['edu_semestr_subject_id', 'exams_type_id', 'max_ball'], 'required']
            foreach (json_decode($post['edu_semestr_exams_types']) as $examsTypeId => $examsTypeMaxBal) {
@@ -308,6 +323,20 @@ class SubjectSillabus extends \yii\db\ActiveRecord
                  } */
 
                 $model->edu_semestr_subject_category_times = $post['edu_semestr_subject_category_times'];
+                $auditory_time = 0;
+                foreach (json_decode($post['edu_semestr_subject_category_times'])
+                    as $edu_semestr_subject_category_times_key => $edu_semestr_subject_category_times_value) {
+                    if (SubjectCategory::find()
+                        ->where([
+                            'id' => $edu_semestr_subject_category_times_key,
+                            'type' => 1
+                        ])
+                        ->exists()
+                    ) {
+                        $auditory_time += $edu_semestr_subject_category_times_value;
+                    }
+                }
+                $model->auditory_time = $auditory_time;
             }
         }
 

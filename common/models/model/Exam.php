@@ -103,8 +103,13 @@ class Exam extends \yii\db\ActiveRecord
                     'updated_by',
                     'is_deleted',
                     'archived',
-                    'password',
+                    // 'password',
                 ], 'integer'
+            ],
+            // [['name', 'table_name', 'description'], 'string', 'max' => 255],
+
+            [
+                ['password'], 'string', 'max' => 255
             ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'double'],

@@ -19,7 +19,7 @@ class m211110_061104_create_exam_table extends Migration
             'edu_semestr_subject_id' => $this->integer()->notNull(),
             'start' => $this->dateTime()->notNull(),
             'finish' => $this->dateTime()->notNull(),
-            'password' => $this->integer()->Null(),
+            'password' => $this->string()->Null(),
             'max_ball' => $this->double()->defaultValue(0),
             'min_ball' => $this->double()->defaultValue(0),
             'category' => $this->integer()->Null(),

@@ -1467,6 +1467,12 @@ return [
         "student-time-table_index",
         "student-time-table_view",
 
+        "student-subject-restrict_index",
+        "student-subject-restrict_create",
+        "student-subject-restrict_view",
+        "student-subject-restrict_update",
+        "student-subject-restrict_delete",
+
     ],
     /* Dekan huquqlari */
 
@@ -1530,6 +1536,11 @@ return [
         'area_index',
         'area_view',
 
+        "student-subject-restrict_index",
+        "student-subject-restrict_create",
+        "student-subject-restrict_view",
+        "student-subject-restrict_update",
+        "student-subject-restrict_delete",
     ],
 
     /* Kafedra mudiri */
@@ -2047,7 +2058,7 @@ return [
         "attend_view",
         // "exam-control_create",
         // "exam-control_delete",
-        // "exam-control_update",
+        "exam-control_update",
         "exam-control_view",
         "exam-control-student_index",
         // "exam-control-student_update",

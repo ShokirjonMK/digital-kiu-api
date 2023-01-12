@@ -30,7 +30,7 @@ class m230112_085804_create_student_subject_restrict_table extends Migration
             'edu_semestr_id' => $this->integer(11)->null(),
             'edu_plan_id' => $this->integer(11)->null(),
             'faculty_id' => $this->integer(11)->null(),
-
+            'edu_year_id' => $this->integer(11)->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
@@ -48,6 +48,7 @@ class m230112_085804_create_student_subject_restrict_table extends Migration
         $this->addForeignKey('mark_student_subject_restrict___edu_semestr_id', 'student_subject_restrict', 'edu_semestr_id', 'edu_semestr', 'id');
         $this->addForeignKey('mark_student_subject_restrict___edu_plan_id', 'student_subject_restrict', 'edu_plan_id', 'edu_plan', 'id');
         $this->addForeignKey('mark_student_subject_restrict___faculty_id', 'student_subject_restrict', 'faculty_id', 'faculty', 'id');
+        $this->addForeignKey('mark_student_subject_restrict___edu_year_id', 'student_subject_restrict', 'edu_year_id', 'edu_year', 'id');
     }
 
     /**
@@ -62,6 +63,7 @@ class m230112_085804_create_student_subject_restrict_table extends Migration
         $this->dropForeignKey('mark_student_subject_restrict___edu_semestr_id', 'student_subject_restrict');
         $this->dropForeignKey('mark_student_subject_restrict___edu_plan_id', 'student_subject_restrict');
         $this->dropForeignKey('mark_student_subject_restrict___faculty_id', 'student_subject_restrict');
+        $this->dropForeignKey('mark_student_subject_restrict___edu_year_id', 'student_subject_restrict');
 
         $this->dropTable('{{%student_subject_restrict}}');
     }

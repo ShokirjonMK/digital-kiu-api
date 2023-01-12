@@ -18,6 +18,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int|null $edu_semestr_id
  * @property int|null $edu_plan_id
  * @property int|null $faculty_id
+ * @property int|null $edu_year_id
  * @property int|null $status
  * @property int|null $is_deleted
  * @property int $created_at
@@ -59,7 +60,7 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'edu_semestr_subject_id',], 'required'],
-            [['student_id', 'edu_semestr_subject_id', 'subject_id', 'semestr_id', 'edu_semestr_id', 'edu_plan_id', 'faculty_id', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['student_id', 'edu_semestr_subject_id', 'subject_id', 'semestr_id', 'edu_semestr_id', 'edu_plan_id', 'faculty_id', 'edu_year_id', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['description'], 'string'],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
             [['edu_semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduSemestr::className(), 'targetAttribute' => ['edu_semestr_id' => 'id']],
@@ -68,6 +69,10 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
+
+            [['student_id'], 'unique', 'targetAttribute' => ['edu_semestr_subject_id', 'student_id'], 'message' => "This student already restricted for this eduSemestrSubject!"],
+
         ];
     }
 
@@ -77,21 +82,22 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'student_id' => Yii::t('app', 'Student ID'),
-            'edu_semestr_subject_id' => Yii::t('app', 'Edu Semestr Subject ID'),
-            'description' => Yii::t('app', 'Description'),
-            'subject_id' => Yii::t('app', 'Subject ID'),
-            'semestr_id' => Yii::t('app', 'Semestr ID'),
-            'edu_semestr_id' => Yii::t('app', 'Edu Semestr ID'),
-            'edu_plan_id' => Yii::t('app', 'Edu Plan ID'),
-            'faculty_id' => Yii::t('app', 'Faculty ID'),
-            'status' => Yii::t('app', 'Status'),
-            'is_deleted' => Yii::t('app', 'Is Deleted'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-            'created_by' => Yii::t('app', 'Created By'),
-            'updated_by' => Yii::t('app', 'Updated By'),
+            'id' => _e('ID'),
+            'student_id' => _e('Student ID'),
+            'edu_semestr_subject_id' => _e('Edu Semestr Subject ID'),
+            'description' => _e('Description'),
+            'subject_id' => _e('Subject ID'),
+            'semestr_id' => _e('Semestr ID'),
+            'edu_semestr_id' => _e('Edu Semestr ID'),
+            'edu_plan_id' => _e('Edu Plan ID'),
+            'faculty_id' => _e('Faculty ID'),
+            'edu_year_id' => _e('edu_year_id'),
+            'status' => _e('Status'),
+            'is_deleted' => _e('Is Deleted'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
         ];
     }
 
@@ -110,6 +116,7 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             'edu_semestr_id',
             'edu_plan_id',
             'faculty_id',
+            'edu_year_id',
             'status',
             'is_deleted',
             'created_at',
@@ -130,6 +137,7 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             'semestr',
             'student',
             'subject',
+            'eduYear',
 
             'createdBy',
             'updatedBy',
@@ -182,6 +190,16 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Faculty]].
+     *
+     * @return \yii\db\ActiveQuery|EduYearQuery
+     */
+    public function getEduYear()
+    {
+        return $this->hasOne(EduYear::className(), ['id' => 'edu_year_id']);
+    }
+
+    /**
      * Gets query for [[Semestr]].
      *
      * @return \yii\db\ActiveQuery|SemestrQuery
@@ -224,11 +242,18 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->student->edu_plan_id != $model->eduSemestrSubject->eduSemestr->edu_plan_id) {
+            $errors[] = _e('This student is not releted to this subject');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         $model->subject_id = $model->eduSemestrSubject->subject_id;
         $model->semestr_id = $model->eduSemestrSubject->eduSemestr->semestr_id;
         $model->edu_semestr_id = $model->eduSemestrSubject->edu_semestr_id;
-        $model->edu_plan_id = $model->eduSemestrSubject->edu_plan_id;
+        $model->edu_plan_id = $model->eduSemestrSubject->eduSemestr->edu_plan_id;
         $model->faculty_id = $model->eduSemestrSubject->faculty_id;
+        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -258,11 +283,7 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->subject_id = $model->eduSemestrSubject->subject_id;
-        $model->semestr_id = $model->eduSemestrSubject->eduSemestr->semestr_id;
-        $model->edu_semestr_id = $model->eduSemestrSubject->edu_semestr_id;
-        $model->edu_plan_id = $model->eduSemestrSubject->edu_plan_id;
-        $model->faculty_id = $model->eduSemestrSubject->faculty_id;
+        $model->description = $post['description'] ?? $model->description;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -277,5 +298,15 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->created_by = Current_user_id();
+        } else {
+            $this->updated_by = Current_user_id();
+        }
+        return parent::beforeSave($insert);
     }
 }

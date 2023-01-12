@@ -318,6 +318,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         ->orderBy('id desc')
                         ->one();
 
+                    /*
                     $studentAttendCountAll = StudentAttend::find()
                         ->where([
                             'subject_id' => $exam->eduSemestrSubject->subject_id,
@@ -347,6 +348,15 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $transaction->rollBack();
                         return simplify_errors($errors);
                     }
+*/
+                    // if(StudentSubjectRestrict::find()->where(['']))
+
+                    if ($exam->studentSubjectRestrict->exists()) {
+                        $errors[] = _e("You are not allowed to this exxam");
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
+
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
                     if ($exam->is_protected == 1) {
@@ -770,6 +780,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->one();
                 $now_second = time();
 
+                /*
                 $studentAttendCountAll = StudentAttend::find()
                     ->where([
                         'subject_id' => $exam->eduSemestrSubject->subject_id,
@@ -797,6 +808,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
 
                     $errors[] = _e("You miss a lot of classes") + " ($studentAttendCount/$studentAttendCountAll";
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                */
+
+                if ($exam->studentSubjectRestrict->exists()) {
+                    $errors[] = _e("You are not allowed to this exxam");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }

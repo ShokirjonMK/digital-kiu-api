@@ -239,12 +239,12 @@ class Exam extends \yii\db\ActiveRecord
             'questionCount',
             'question',
 
-
             'key',
             'hasAccess',
             'surveyStatus',
             'surveyAnswer',
 
+            'studentSubjectRestrict',
 
             'description',
             'createdBy',
@@ -357,10 +357,24 @@ class Exam extends \yii\db\ActiveRecord
         return $this->translate->description ?? '';
     }
 
-
     public function getEduSemestrSubject()
     {
         return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
+    }
+
+    public function getStudentSubjectRestrict()
+    {
+        if (isRole('student')) {
+            return $this->hasOne(
+                StudentSubjectRestrict::className(),
+                ['edu_semestr_subject_id' => 'edu_semestr_subject_id']
+            )->onCondition(['is_deleted' => 0]);
+        }
+        return $this->hasMany(
+            StudentSubjectRestrict::className(),
+            ['id' => 'edu_semestr_subject_id']
+        )
+            ->onCondition(['is_deleted' => 0]);
     }
 
     public function getAppeal()
@@ -739,6 +753,7 @@ class Exam extends \yii\db\ActiveRecord
             return true;
         }
     }
+
     public static function generatePasswords($post)
     {
         $transaction = Yii::$app->db->beginTransaction();

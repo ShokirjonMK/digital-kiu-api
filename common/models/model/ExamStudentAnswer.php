@@ -813,7 +813,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 }
                 */
 
-                if ($exam->studentSubjectRestrict->exists()) {
+                if ($exam->studentSubjectRestrict->exists() != NULL) {
                     $errors[] = _e("You are not allowed to this exxam");
                     $transaction->rollBack();
                     return simplify_errors($errors);

@@ -390,7 +390,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $getQuestionModel = new ExamStudentAnswer();
                             $getQuestion = $getQuestionModel->find()
                                 ->with(['question'])
-                                ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
+                                ->andWhere([
+                                    'exam_id' => $exam_id,
+                                    'student_id' => $student_id,
+                                    'parent_id' => null
+                                ])
                                 ->all();
 
                             $data['questions'] = $getQuestion;

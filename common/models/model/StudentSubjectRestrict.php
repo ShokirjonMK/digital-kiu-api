@@ -71,7 +71,7 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
 
-            [['student_id'], 'unique', 'targetAttribute' => ['edu_semestr_subject_id', 'student_id'], 'message' => "This student already restricted for this eduSemestrSubject!"],
+            [['student_id'], 'unique', 'targetAttribute' => ['edu_semestr_subject_id', 'student_id', 'is_deleted'], 'message' => "This student already restricted for this eduSemestrSubject!"],
 
         ];
     }

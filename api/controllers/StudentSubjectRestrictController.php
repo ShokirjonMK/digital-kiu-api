@@ -71,7 +71,10 @@ class StudentSubjectRestrictController extends ApiActiveController
     public function actionView($lang, $id)
     {
         $model = StudentSubjectRestrict::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->andWhere([
+                'id' => $id,
+                'is_deleted' => 0
+            ])
             ->one();
 
         if (!$model) {
@@ -83,7 +86,10 @@ class StudentSubjectRestrictController extends ApiActiveController
     public function actionDelete($lang, $id)
     {
         $model = StudentSubjectRestrict::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->andWhere([
+                'id' => $id,
+                'is_deleted' => 0
+            ])
             ->one();
 
         if (!$model) {

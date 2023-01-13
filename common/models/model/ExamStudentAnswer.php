@@ -354,13 +354,14 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     $studentSubjectRestrict = StudentSubjectRestrict::find()
                         ->where([
                             'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                            'student_id' => self::student(),
                             'is_deleted' => 0
                         ])
                         ->one();
 
                     if ($studentSubjectRestrict) {
                         // if ($exam->studentSubjectRestrict->exists() ) {
-                        $errors[] = _e("You are not allowed to this exxam");
+                        $errors[] = _e("You are not allowed to this exam");
                         $transaction->rollBack();
                         return simplify_errors($errors);
                     }
@@ -825,11 +826,21 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 }
                 */
 
-                if ($exam->studentSubjectRestrict->exists() != NULL) {
-                    $errors[] = _e("You are not allowed to this exxam");
+                $studentSubjectRestrict = StudentSubjectRestrict::find()
+                    ->where([
+                        'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                        'student_id' => self::student(),
+                        'is_deleted' => 0
+                    ])
+                    ->one();
+
+                if ($studentSubjectRestrict) {
+                    // if ($exam->studentSubjectRestrict->exists() ) {
+                    $errors[] = _e("You are not allowed to this exam");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
+
 
                 if ($examStudent) {
                     $finishExamStudent = $examStudent->start + $exam->duration + $examStudent->duration;

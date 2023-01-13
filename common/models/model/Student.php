@@ -286,6 +286,39 @@ class Student extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getStudentSubjectRestrict()
+    {
+
+        if (null !==  Yii::$app->request->get('subject_id')) {
+            return $this->hasMany(
+                StudentSubjectRestrict::className(),
+                ['student_id' => 'id']
+            )
+                ->onCondition([
+                    'subject_id' => Yii::$app->request->get('subject_id'),
+                    'is_deleted' => 0
+                ]);
+        }
+
+        if (null !==  Yii::$app->request->get('edu_semestr_subject_id')) {
+            return $this->hasMany(
+                StudentSubjectRestrict::className(),
+                ['student_id' => 'id']
+            )
+                ->onCondition([
+                    'edu_semestr_subject_id' => Yii::$app->request->get('edu_semestr_subject_id'),
+                    'is_deleted' => 0
+                ]);
+        }
+
+        return $this->hasMany(
+            StudentSubjectRestrict::className(),
+            [
+                'student_id' => 'id',
+            ]
+        )
+            ->onCondition(['is_deleted' => 0]);
+    }
 
     /**
      * Gets query for [[StudentAttends]].
@@ -326,8 +359,6 @@ class Student extends \yii\db\ActiveRecord
         return count($this->studentAttends);
     }
 
-
-
     public function getAttends()
     {
         return $this->hasMany(StudentAttend::className(), ['student_id' => 'id']);
@@ -342,7 +373,6 @@ class Student extends \yii\db\ActiveRecord
 
     public function getPassword()
     {
-
         return $this->usernamePass['password'];
     }
 

@@ -25,4 +25,5 @@
   'FEMALE' => 'Ayol',
 
   'control work' => 'oraliq nazorat',
+  'You are not allowed to this exam' => 'Sizga bu imtihonga ruxsat berilmagan',
 ];

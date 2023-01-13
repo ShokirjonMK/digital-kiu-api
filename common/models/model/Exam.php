@@ -251,6 +251,8 @@ class Exam extends \yii\db\ActiveRecord
 
             'studentSubjectRestrict',
 
+            // 'allow',
+
             'description',
             'createdBy',
             'updatedBy',
@@ -263,43 +265,9 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getHasAccess()
     {
-        $studentAttendCountAll = StudentAttend::find()
-            ->where([
-                "subject_id" => $this->eduSemestrSubject->subject_id,
-                "student_id" => $this->student(),
-                "edu_semestr_id" => $this->eduSemestrSubject->edu_semestr_id,
-                "edu_year_id" => $this->eduSemestrSubject->eduSemestr->edu_year_id,
-                // "reason" => 0
-            ])
-            ->count();
-
-        $studentAttendCount = StudentAttend::find()
-            ->where([
-                "subject_id" => $this->eduSemestrSubject->subject_id,
-                "student_id" => $this->student(),
-                "edu_semestr_id" => $this->eduSemestrSubject->edu_semestr_id,
-                "edu_year_id" => $this->eduSemestrSubject->eduSemestr->edu_year_id,
-                "reason" => 0
-            ])
-            ->count();
-
-        // if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_this']) {
-        if ($studentAttendCount <= ((int)$this->subject->subjectSillabus->all_ball_yuklama * Yii::$app->params['student_attent_access_percent'] / 100)) {
-            return [
-                'all' => $this->subject->subjectSillabus->all_ball_yuklama,
-                'attend_all' => $studentAttendCountAll,
-                'reason' => $studentAttendCount,
-                'access' => 1
-            ];
+        if (is_null($this->studentSubjectRestrict())) {
             return 1;
         }
-
-        return [
-            'all' => $this->subject->subjectSillabus->all_ball_yuklama,
-            'attend_all' => $studentAttendCountAll,
-            'reason' => $studentAttendCount,
-            'access' => 0
-        ];
         return 0;
     }
 
@@ -372,7 +340,10 @@ class Exam extends \yii\db\ActiveRecord
         if (isRole('student')) {
             return $this->hasOne(
                 StudentSubjectRestrict::className(),
-                ['edu_semestr_subject_id' => 'edu_semestr_subject_id']
+                [
+                    'edu_semestr_subject_id' => 'edu_semestr_subject_id',
+                    'student_id' => self::student(),
+                ]
             )->onCondition(['is_deleted' => 0]);
         }
         return $this->hasMany(

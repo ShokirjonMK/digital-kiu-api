@@ -1372,6 +1372,8 @@ return [
         "question_update",
         "question_view",
 
+        "question-type_index",
+        "question-type_view",
         'question_status-list',
 
         "region_index",
@@ -1457,7 +1459,8 @@ return [
         "student-order_delete",
         "student-order_update",
 
-        "attend-reason_confirm",
+        // "attend-reason_confirm",
+        
         "attend-reason_create",
         "attend-reason_index",
         "attend-reason_update",

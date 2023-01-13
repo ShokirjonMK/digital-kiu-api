@@ -351,8 +351,15 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 */
                     // if(StudentSubjectRestrict::find()->where(['']))
 
-                    if ($exam->studentSubjectRestrict->exists() != NULL) {
-                    // if ($exam->studentSubjectRestrict->exists() ) {
+                    $studentSubjectRestrict = StudentSubjectRestrict::find()
+                        ->where([
+                            'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                            'is_deleted' => 0
+                        ])
+                        ->one();
+
+                    if ($studentSubjectRestrict) {
+                        // if ($exam->studentSubjectRestrict->exists() ) {
                         $errors[] = _e("You are not allowed to this exxam");
                         $transaction->rollBack();
                         return simplify_errors($errors);

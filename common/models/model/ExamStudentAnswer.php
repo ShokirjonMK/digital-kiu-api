@@ -359,7 +359,14 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         ])
                         ->one();
 
-                    if ($studentSubjectRestrict) {
+                    // if ($studentSubjectRestrict) {
+                    if (StudentSubjectRestrict::find()
+                        ->where([
+                            'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                            'student_id' => self::student(),
+                            'is_deleted' => 0
+                        ])->exists()
+                    ) {
                         // if ($exam->studentSubjectRestrict->exists() ) {
                         $errors[] = _e("You are not allowed to this exam");
                         $transaction->rollBack();

@@ -341,10 +341,12 @@ class Exam extends \yii\db\ActiveRecord
             return $this->hasOne(
                 StudentSubjectRestrict::className(),
                 [
-                    'edu_semestr_subject_id' => 'edu_semestr_subject_id',
-                    'student_id' => self::student(),
+                    'edu_semestr_subject_id' => 'edu_semestr_subject_id'
                 ]
-            )->onCondition(['is_deleted' => 0]);
+            )->onCondition([
+                'student_id' => self::student(),
+                'is_deleted' => 0
+            ]);
         }
         return $this->hasMany(
             StudentSubjectRestrict::className(),

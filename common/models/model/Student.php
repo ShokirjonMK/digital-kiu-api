@@ -277,6 +277,8 @@ class Student extends \yii\db\ActiveRecord
             'studentAttendReasonCount',
             'attends',
 
+            'studentSubjectRestrict',
+
             'createdBy',
             'updatedBy',
             'createdAt',

@@ -265,10 +265,18 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getHasAccess()
     {
-        if ($this->studentSubjectRestrict() != null) {
-            return 1;
+        if (isRole('student')) {
+
+            if (StudentSubjectRestrict::find()->where([
+                'edu_semestr_subject_id' => $this->edu_semestr_subject_id,
+                'student_id' => self::student(),
+                'is_deleted' => 0,
+            ])->exists()) {
+                return 1;
+            }
+            return 0;
         }
-        return 0;
+        return 1;
     }
 
     public function getIsConfirmed()

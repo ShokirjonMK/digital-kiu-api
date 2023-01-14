@@ -103,8 +103,13 @@ class Exam extends \yii\db\ActiveRecord
                     'updated_by',
                     'is_deleted',
                     'archived',
-                    'password',
+                    // 'password',
                 ], 'integer'
+            ],
+            // [['name', 'table_name', 'description'], 'string', 'max' => 255],
+
+            [
+                ['password'], 'string', 'max' => 255
             ],
             [['start', 'finish'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
             [['max_ball', 'min_ball'], 'double'],
@@ -239,12 +244,14 @@ class Exam extends \yii\db\ActiveRecord
             'questionCount',
             'question',
 
-
             'key',
             'hasAccess',
             'surveyStatus',
             'surveyAnswer',
 
+            'studentSubjectRestrict',
+
+            // 'allow',
 
             'description',
             'createdBy',
@@ -258,44 +265,18 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getHasAccess()
     {
-        $studentAttendCountAll = StudentAttend::find()
-            ->where([
-                "subject_id" => $this->eduSemestrSubject->subject_id,
-                "student_id" => $this->student(),
-                "edu_semestr_id" => $this->eduSemestrSubject->edu_semestr_id,
-                "edu_year_id" => $this->eduSemestrSubject->eduSemestr->edu_year_id,
-                // "reason" => 0
-            ])
-            ->count();
+        if (isRole('student')) {
 
-        $studentAttendCount = StudentAttend::find()
-            ->where([
-                "subject_id" => $this->eduSemestrSubject->subject_id,
-                "student_id" => $this->student(),
-                "edu_semestr_id" => $this->eduSemestrSubject->edu_semestr_id,
-                "edu_year_id" => $this->eduSemestrSubject->eduSemestr->edu_year_id,
-                "reason" => 0
-            ])
-            ->count();
-
-        // if ($studentAttendCount >= Yii::$app->params['student_attent_max_count_for_this']) {
-        if ($studentAttendCount <= ((int)$this->subject->subjectSillabus->all_ball_yuklama * Yii::$app->params['student_attent_access_percent'] / 100)) {
-            return [
-                'all' => $this->subject->subjectSillabus->all_ball_yuklama,
-                'attend_all' => $studentAttendCountAll,
-                'reason' => $studentAttendCount,
-                'access' => 1
-            ];
-            return 1;
+            if (StudentSubjectRestrict::find()->where([
+                'edu_semestr_subject_id' => $this->edu_semestr_subject_id,
+                'student_id' => self::student(),
+                'is_deleted' => 0,
+            ])->exists()) {
+                return 1;
+            }
+            return 0;
         }
-
-        return [
-            'all' => $this->subject->subjectSillabus->all_ball_yuklama,
-            'attend_all' => $studentAttendCountAll,
-            'reason' => $studentAttendCount,
-            'access' => 0
-        ];
-        return 0;
+        return 1;
     }
 
     public function getIsConfirmed()
@@ -357,10 +338,29 @@ class Exam extends \yii\db\ActiveRecord
         return $this->translate->description ?? '';
     }
 
-
     public function getEduSemestrSubject()
     {
         return $this->hasOne(EduSemestrSubject::className(), ['id' => 'edu_semestr_subject_id']);
+    }
+
+    public function getStudentSubjectRestrict()
+    {
+        if (isRole('student')) {
+            return $this->hasOne(
+                StudentSubjectRestrict::className(),
+                [
+                    'edu_semestr_subject_id' => 'edu_semestr_subject_id'
+                ]
+            )->onCondition([
+                'student_id' => self::student(),
+                'is_deleted' => 0
+            ]);
+        }
+        return $this->hasMany(
+            StudentSubjectRestrict::className(),
+            ['id' => 'edu_semestr_subject_id']
+        )
+            ->onCondition(['is_deleted' => 0]);
     }
 
     public function getAppeal()
@@ -449,7 +449,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getKey()
     {
-        return $this->examStudentMain[0]->password ?? '';
+        return $this->password ?? '';
     }
 
     public function getExamStudent()
@@ -739,6 +739,7 @@ class Exam extends \yii\db\ActiveRecord
             return true;
         }
     }
+
     public static function generatePasswords($post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -752,12 +753,6 @@ class Exam extends \yii\db\ActiveRecord
                 if (isset($eduSemestrSubject)) {
 
                     /** Student generate Password and create ExamStudent begin */
-
-                    $eduPlan_id = $exam->eduSemestrSubject->eduSemestr->edu_plan_id;
-
-                    $studentsonThisEduPlan = Student::find()
-                        ->where(['edu_plan_id' => $eduPlan_id])
-                        ->all();
 
                     $examPassword = _random_string('numeric', 6);
 

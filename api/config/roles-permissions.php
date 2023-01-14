@@ -1372,6 +1372,8 @@ return [
         "question_update",
         "question_view",
 
+        "question-type_index",
+        "question-type_view",
         'question_status-list',
 
         "region_index",
@@ -1457,7 +1459,8 @@ return [
         "student-order_delete",
         "student-order_update",
 
-        "attend-reason_confirm",
+        // "attend-reason_confirm",
+        
         "attend-reason_create",
         "attend-reason_index",
         "attend-reason_update",
@@ -1466,6 +1469,12 @@ return [
         "student-time-option_view",
         "student-time-table_index",
         "student-time-table_view",
+
+        "student-subject-restrict_index",
+        "student-subject-restrict_create",
+        "student-subject-restrict_view",
+        "student-subject-restrict_update",
+        "student-subject-restrict_delete",
 
     ],
     /* Dekan huquqlari */
@@ -1530,6 +1539,11 @@ return [
         'area_index',
         'area_view',
 
+        "student-subject-restrict_index",
+        "student-subject-restrict_create",
+        "student-subject-restrict_view",
+        "student-subject-restrict_update",
+        "student-subject-restrict_delete",
     ],
 
     /* Kafedra mudiri */
@@ -2041,18 +2055,18 @@ return [
         "time-table_view",
         "week_index",
         "para_index",
-        "attend_create",
+        // "attend_create",
         "attend_index",
         // "attend_update",
-        "attend_view",
-        // "exam-control_create",
+        // "attend_view",
+        "exam-control_create",
         // "exam-control_delete",
-        // "exam-control_update",
+        "exam-control_update",
         "exam-control_view",
         "exam-control-student_index",
-        // "exam-control-student_update",
+        "exam-control-student_update",
         "exam-control-student_view",
-        // "exam-control-student_create",
+        "exam-control-student_create",
 
 
     ],

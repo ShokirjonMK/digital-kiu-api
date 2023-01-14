@@ -272,6 +272,9 @@ class Student extends \yii\db\ActiveRecord
 
             // attent
             'studentAttends',
+            'studentAttendReason',
+            'studentAttendsCount',
+            'studentAttendReasonCount',
             'attends',
 
             'createdBy',
@@ -283,6 +286,39 @@ class Student extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getStudentSubjectRestrict()
+    {
+
+        if (null !==  Yii::$app->request->get('subject_id')) {
+            return $this->hasMany(
+                StudentSubjectRestrict::className(),
+                ['student_id' => 'id']
+            )
+                ->onCondition([
+                    'subject_id' => Yii::$app->request->get('subject_id'),
+                    'is_deleted' => 0
+                ]);
+        }
+
+        if (null !==  Yii::$app->request->get('edu_semestr_subject_id')) {
+            return $this->hasMany(
+                StudentSubjectRestrict::className(),
+                ['student_id' => 'id']
+            )
+                ->onCondition([
+                    'edu_semestr_subject_id' => Yii::$app->request->get('edu_semestr_subject_id'),
+                    'is_deleted' => 0
+                ]);
+        }
+
+        return $this->hasMany(
+            StudentSubjectRestrict::className(),
+            [
+                'student_id' => 'id',
+            ]
+        )
+            ->onCondition(['is_deleted' => 0]);
+    }
 
     /**
      * Gets query for [[StudentAttends]].
@@ -291,7 +327,36 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getStudentAttends()
     {
+        if (null !==  Yii::$app->request->get('subject_id')) {
+            return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])
+                ->onCondition(['subject_id' => Yii::$app->request->get('subject_id')]);
+        }
         return $this->hasMany(StudentAttend::className(), ['student_id' => 'id']);
+    }
+    public function getStudentAttendsCount()
+    {
+        return count($this->studentAttends);
+    }
+
+    /**
+     * Gets query for [[StudentAttendReason]].
+     *
+     * @return \yii\db\ActiveQuery|StudentAttendQuery
+     */
+    public function getStudentAttendReason()
+    {
+        if (null !==  Yii::$app->request->get('subject_id')) {
+            return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])
+                ->onCondition([
+                    'subject_id' => Yii::$app->request->get('subject_id'),
+                    'reason' => 1
+                ]);
+        }
+        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])->onCondition(['reason' => 1]);
+    }
+    public function getStudentAttendReasonCount()
+    {
+        return count($this->studentAttends);
     }
 
     public function getAttends()
@@ -308,7 +373,6 @@ class Student extends \yii\db\ActiveRecord
 
     public function getPassword()
     {
-
         return $this->usernamePass['password'];
     }
 

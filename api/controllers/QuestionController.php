@@ -40,6 +40,18 @@ class QuestionController extends ApiActiveController
             ]);
         }
 
+        if (null !==  Yii::$app->request->get('kafedra_id')) {
+            $query->andFilterWhere([
+                'in', $this->table_name . '.subject_id',
+                Subject::find()
+                    ->select('id')
+                    ->where(
+                        ['kafedra_id' => Yii::$app->request->get('kafedra_id')]
+                    )
+            ]);
+        }
+
+
         // return $statuses;
         if (isRole('dean')) {
             $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID, 2);

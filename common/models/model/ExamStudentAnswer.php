@@ -318,6 +318,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         ->orderBy('id desc')
                         ->one();
 
+                    /*
                     $studentAttendCountAll = StudentAttend::find()
                         ->where([
                             'subject_id' => $exam->eduSemestrSubject->subject_id,
@@ -347,13 +348,38 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         $transaction->rollBack();
                         return simplify_errors($errors);
                     }
+*/
+                    // if(StudentSubjectRestrict::find()->where(['']))
+
+                    $studentSubjectRestrict = StudentSubjectRestrict::find()
+                        ->where([
+                            'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                            'student_id' => self::student(),
+                            'is_deleted' => 0
+                        ])
+                        ->one();
+
+                    // if ($studentSubjectRestrict) {
+                    if (StudentSubjectRestrict::find()
+                        ->where([
+                            'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                            'student_id' => self::student(),
+                            'is_deleted' => 0
+                        ])->exists()
+                    ) {
+                        // if ($exam->studentSubjectRestrict->exists() ) {
+                        $errors[] = _e("You are not allowed to this exam");
+                        $transaction->rollBack();
+                        return simplify_errors($errors);
+                    }
+
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
                     if ($exam->is_protected == 1) {
                         if ($ExamStudentHas) {
                             if (isset($post["password"])) {
                                 $password = $post["password"];
-                                if ($password == $ExamStudentHas->password) {
+                                if ($password == $exam->password) {
                                     $t = true;
                                 } else {
                                     $t = false;
@@ -372,7 +398,11 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $getQuestionModel = new ExamStudentAnswer();
                             $getQuestion = $getQuestionModel->find()
                                 ->with(['question'])
-                                ->andWhere(['exam_id' => $exam_id, 'student_id' => $student_id, 'parent_id' => null])
+                                ->andWhere([
+                                    'exam_id' => $exam_id,
+                                    'student_id' => $student_id,
+                                    'parent_id' => null
+                                ])
                                 ->all();
 
                             $data['questions'] = $getQuestion;
@@ -770,6 +800,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     ->one();
                 $now_second = time();
 
+                /*
                 $studentAttendCountAll = StudentAttend::find()
                     ->where([
                         'subject_id' => $exam->eduSemestrSubject->subject_id,
@@ -800,6 +831,23 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
+                */
+
+                $studentSubjectRestrict = StudentSubjectRestrict::find()
+                    ->where([
+                        'edu_semestr_subject_id' => $exam->edu_semestr_subject_id,
+                        'student_id' => self::student(),
+                        'is_deleted' => 0
+                    ])
+                    ->one();
+
+                if ($studentSubjectRestrict) {
+                    // if ($exam->studentSubjectRestrict->exists() ) {
+                    $errors[] = _e("You are not allowed to this exam");
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
 
                 if ($examStudent) {
                     $finishExamStudent = $examStudent->start + $exam->duration + $examStudent->duration;

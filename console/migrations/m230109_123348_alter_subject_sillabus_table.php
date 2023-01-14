@@ -13,7 +13,7 @@ class m230109_123348_alter_subject_sillabus_table extends Migration
     public function safeUp()
     {
         $this->addColumn('subject_sillabus', 'auditory_time', $this->double()->null()->after('id'));
-
+        $this->addColumn('edu_semestr_subject', 'auditory_time', $this->double()->null()->after('id'));
     }
 
     /**
@@ -25,19 +25,4 @@ class m230109_123348_alter_subject_sillabus_table extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m230109_123348_alter_subject_sillabus_table cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

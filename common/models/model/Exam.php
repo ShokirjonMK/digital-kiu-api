@@ -265,7 +265,7 @@ class Exam extends \yii\db\ActiveRecord
 
     public function getHasAccess()
     {
-        if (is_null($this->studentSubjectRestrict())) {
+        if ($this->studentSubjectRestrict() != null) {
             return 1;
         }
         return 0;

@@ -376,7 +376,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
                     if ($exam->is_protected == 1) {
-                        if ($ExamStudentHas) {
+                        // if ($ExamStudentHas) {
                             if (isset($post["password"])) {
                                 $password = $post["password"];
                                 if ($password == $exam->password) {
@@ -387,9 +387,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             } else {
                                 $errors[] = _e("Password required!");
                             }
-                        } else {
-                            $errors[] = _e("Not Generated!");
-                        }
+                        // } else {
+                        //     $errors[] = _e("Not Generated!");
+                        // }
                     }
 
                     if ($t) {

@@ -57,27 +57,27 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex()
     {
-        $subjectSillabus = SubjectSillabus::find()->all();
+        // $subjectSillabus = SubjectSillabus::find()->all();
 
-        foreach ($subjectSillabus as $model) {
-            $auditory_time = 0;
-            foreach (json_decode($model->edu_semestr_subject_category_times)
-                as $edu_semestr_subject_category_times_key => $edu_semestr_subject_category_times_value) {
-                if (SubjectCategory::find()
-                    ->where([
-                        'id' => $edu_semestr_subject_category_times_key,
-                        'type' => 1
-                    ])
-                    ->exists()
-                ) {
-                    $auditory_time += $edu_semestr_subject_category_times_value;
-                }
-            }
-            $model->auditory_time = $auditory_time;
-            $model->save();
-        }
+        // foreach ($subjectSillabus as $model) {
+        //     $auditory_time = 0;
+        //     foreach (json_decode($model->edu_semestr_subject_category_times)
+        //         as $edu_semestr_subject_category_times_key => $edu_semestr_subject_category_times_value) {
+        //         if (SubjectCategory::find()
+        //             ->where([
+        //                 'id' => $edu_semestr_subject_category_times_key,
+        //                 'type' => 1
+        //             ])
+        //             ->exists()
+        //         ) {
+        //             $auditory_time += $edu_semestr_subject_category_times_value;
+        //         }
+        //     }
+        //     $model->auditory_time = $auditory_time;
+        //     $model->save();
+        // }
 
-        return "Success";
+        return "no thing";
     }
 
     // public function actionIndex111($i)

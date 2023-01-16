@@ -331,9 +331,10 @@ class Student extends \yii\db\ActiveRecord
     {
         if (null !==  Yii::$app->request->get('subject_id')) {
             return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])
-                ->onCondition(['subject_id' => Yii::$app->request->get('subject_id')]);
+                ->onCondition(['subject_id' => Yii::$app->request->get('subject_id')])
+                ->orderBy(['date']);
         }
-        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id']);
+        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])->orderBy(['date']);
     }
     public function getStudentAttendsCount()
     {

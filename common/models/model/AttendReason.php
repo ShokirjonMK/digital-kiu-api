@@ -297,11 +297,11 @@ class AttendReason extends \yii\db\ActiveRecord
 
             $t = false;
             if ($studentAttend->date == date("Y-m-d", strtotime($model->start))) {
-                if (($studentAttend->timeTable->para->start_time >= date('H:i', strtotime($model->start)))) {
+                if (($studentAttend->timeTable->para->start_time <= date('H:i', strtotime($model->start)))) {
                     $t = true;
                 }
             } elseif ($studentAttend->date == date("Y-m-d", strtotime($model->end))) {
-                if (($studentAttend->timeTable->para->end_time >= date('H:i', strtotime($model->end)))) {
+                if (($studentAttend->timeTable->para->end_time <= date('H:i', strtotime($model->end)))) {
                     $t = true;
                 }
             } else {

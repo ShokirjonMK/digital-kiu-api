@@ -342,6 +342,7 @@ class AttendReason extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+        
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

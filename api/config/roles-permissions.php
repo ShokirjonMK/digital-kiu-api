@@ -1459,7 +1459,7 @@ return [
         "student-order_delete",
         "student-order_update",
 
-        // "attend-reason_confirm",
+        "attend-reason_confirm",
         
         "attend-reason_create",
         "attend-reason_index",
@@ -1762,8 +1762,8 @@ return [
         "student-time-option_view",
 
         "attend_index",
-        "attend_create",
-        "attend_update",
+        // "attend_create",
+        // "attend_update",
 
         "attend-reason_create",
         "attend-reason_delete",

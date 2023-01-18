@@ -1460,7 +1460,7 @@ return [
         "student-order_update",
 
         "attend-reason_confirm",
-        
+
         "attend-reason_create",
         "attend-reason_index",
         "attend-reason_update",
@@ -1475,6 +1475,18 @@ return [
         "student-subject-restrict_view",
         "student-subject-restrict_update",
         "student-subject-restrict_delete",
+
+        "partiya_index",
+        "partiya_view",
+        "degree-info_index",
+        "degree-info_view",
+        "degree_index",
+        "degree_view",
+        "diploma-type_index",
+        "diploma-type_view",
+        "academic-degree_index",
+        "academic-degree_view",
+
 
     ],
     /* Dekan huquqlari */

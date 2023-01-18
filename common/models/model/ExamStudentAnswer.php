@@ -377,16 +377,16 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     $t = true;
                     if ($exam->is_protected == 1) {
                         // if ($ExamStudentHas) {
-                            if (isset($post["password"])) {
-                                $password = $post["password"];
-                                if ($password == $exam->password) {
-                                    $t = true;
-                                } else {
-                                    $t = false;
-                                }
+                        if (isset($post["password"])) {
+                            $password = $post["password"];
+                            if ($password == $exam->password) {
+                                $t = true;
                             } else {
-                                $errors[] = _e("Password required!");
+                                $t = false;
                             }
+                        } else {
+                            $errors[] = _e("Password required!");
+                        }
                         // } else {
                         //     $errors[] = _e("Not Generated!");
                         // }
@@ -555,8 +555,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         } else {
                             if (strtotime($exam->start) > $now_second) {
                                 $errors[] = _e("This exam`s time is not starts");
+                                $errors[] = ["status" => false];
                             } elseif (strtotime($exam->finish) < $now_second) {
                                 $errors[] = _e("This exam`s time expired");
+                                $errors[] = ["status" => false];
                             }
                             // $errors[] = $exam;
                         }
@@ -903,6 +905,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     // dd(json_encode($post['subQuestionAnswers']));
                                     // dd('ss');
                                     // $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
+
+                                    
                                     if (!isJsonMK($post['subQuestionAnswers'])) {
                                         $errors['subQuestionAnswers'] = [_e('Must be Json')];
                                     } else {
@@ -941,21 +945,27 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 }
                             } else {
                                 $errors[] = _e("This exam already finished for you!");
+                                $errors[] = ["status" => false];
                             }
                         } else {
                             $errors[] = _e("This exam`s time expired");
+                            $errors[] = ["status" => false];
                         }
                     } else {
                         $errors[] = _e("This exam`s time is not starts");
+                        $errors[] = ["status" => false];
                     }
                 } else {
                     $errors[] = _e("This exam is not for you!");
+                    $errors[] = ["status" => false];
                 }
             } else {
                 $errors[] = _e("This exam not found!");
+                $errors[] = ["status" => false];
             }
         } else {
             $errors[] = _e("This exam not found!");
+            $errors[] = ["status" => false];
         }
 
         if (count($errors) == 0) {

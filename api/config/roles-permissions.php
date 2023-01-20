@@ -1235,7 +1235,7 @@ return [
         "notification_status-list",
         "notification_view",
         "password_index",
-        "password_view",
+        // "password_view",
         "region_index",
         "region_view",
         "room_index",

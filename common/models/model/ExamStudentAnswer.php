@@ -777,6 +777,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         // attemp esdan chiqmasin
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        $exam_times = [];
         // studentni answer file ni saqlaymiz
 
         $student = Student::findOne(['user_id' => current_user_id()]);
@@ -852,6 +853,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
 
                 if ($examStudent) {
+
                     $finishExamStudent = $examStudent->start + $exam->duration + $examStudent->duration;
 
                     /*  if (
@@ -906,7 +908,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     // dd('ss');
                                     // $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
 
-                                    
+
                                     if (!isJsonMK($post['subQuestionAnswers'])) {
                                         $errors['subQuestionAnswers'] = [_e('Must be Json')];
                                     } else {
@@ -944,8 +946,36 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $errors[] = $model->errors;
                                 }
                             } else {
+
+                                $exam_times['start'] = date("Y-m-d H:i:s", $examStudent->start);
+                                $exam_times['duration'] = $exam->duration;
+
+                                /** */
+                                if ($examStudent->finish > 0) {
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", $examStudent->finish);
+                                } else {
+                                    $exam_finish = $examStudent->start + $exam->duration + (int)$examStudent->duration;
+                                    if ($exam_finish > strtotime($exam->finish)) {
+                                        $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
+                                    } else {
+                                        $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                    }
+                                }
+                                /** */
+                                if ($examStudent->finish > 0) {
+                                    $exam_times['finish'] = date("Y-m-d H:i:s", $examStudent->finish);
+                                } else {
+                                    $exam_finish = $examStudent->start + $exam->duration + (int)$examStudent->duration;
+                                    if ($exam_finish > strtotime($exam->finish)) {
+                                        $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
+                                    } else {
+                                        $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                    }
+                                }
+
                                 $errors[] = _e("This exam already finished for you!");
                                 $errors[] = ["status" => false];
+                                $errors[] = ["times" => $exam_times];
                             }
                         } else {
                             $errors[] = _e("This exam`s time expired");

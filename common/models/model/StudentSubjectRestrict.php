@@ -139,6 +139,10 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             'subject',
             'eduYear',
 
+
+            'studentAttend',
+            'studentAttendCount',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -148,6 +152,26 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+
+    /**
+     * Gets query for [[StudentAttend]].
+     *
+     * @return \yii\db\ActiveQuery|StudentAttendQuery
+     */
+    public function getStudentAttend()
+    {
+        return $this->hasMany(StudentAttend::className(), ['student_id' => 'student_id'])
+            ->onCondition([
+                'subject_id' => $this->subject_id,
+                'edu_semestr_id' => $this->edu_semestr_id,
+                'reason' => 0
+            ]);
+    }
+
+    public function getStudentAttendCount()
+    {
+        return count($this->studentAttend);
+    }
 
     /**
      * Gets query for [[EduPlan]].

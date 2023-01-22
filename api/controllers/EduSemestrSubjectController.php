@@ -29,7 +29,7 @@ class EduSemestrSubjectController extends ApiActiveController
         $model = new EduSemestrSubject();
 
         $student = Student::findOne(['user_id' => Current_user_id()]);
-        if (isset($student)) {
+        if (isset($student) && isRole('student')) {
 
             $errors = [];/* 
             if (!StudentTimeTable::chekTime()) {
@@ -37,7 +37,6 @@ class EduSemestrSubjectController extends ApiActiveController
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
             } */
 
-            
             $eduSemesterIds = EduSemestr::find()
                 ->select('id')
                 ->where(['edu_plan_id' => $student->edu_plan_id]);
@@ -79,22 +78,24 @@ class EduSemestrSubjectController extends ApiActiveController
                 } else {
                     $subject->andFilterWhere(['kafedra_id' => -1]);
                 }
-            } else {
-                /*  is Self  */
-                $k1 = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-                if ($k1['status'] == 1) {
-                    $kafedraIds = Kafedra::find()->where(['faculty_id' => $k1['UserAccess']->table_id])->select('id');
-                    $subject->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
-                    // $subject->andFilterWhere([
-                    //     'kafedra_id' => $k1['UserAccess']->table_id
-                    // ]);
-                } elseif ($k1['status'] == 2) {
-                    $subject->andFilterWhere([
-                        'kafedra_id' => -1
-                    ]);
-                }
-                /*  is Self  */
             }
+
+            // else {
+            //     /*  is Self  */
+            //     $k1 = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            //     if ($k1['status'] == 1) {
+            //         $kafedraIds = Kafedra::find()->where(['faculty_id' => $k1['UserAccess']->table_id])->select('id');
+            //         $subject->andFilterWhere(['in', 'kafedra_id', $kafedraIds]);
+            //         // $subject->andFilterWhere([
+            //         //     'kafedra_id' => $k1['UserAccess']->table_id
+            //         // ]);
+            //     } elseif ($k1['status'] == 2) {
+            //         $subject->andFilterWhere([
+            //             'kafedra_id' => -1
+            //         ]);
+            //     }
+            //     /*  is Self  */
+            // }
 
             $subjectIds = $subject->select('id');
             $query->andFilterWhere([

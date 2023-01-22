@@ -28,6 +28,9 @@ class EduSemestrSubjectController extends ApiActiveController
     {
         $model = new EduSemestrSubject();
 
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0]);
+
         if (!isRole('dean')) {
 
 
@@ -44,12 +47,8 @@ class EduSemestrSubjectController extends ApiActiveController
                     ->select('id')
                     ->where(['edu_plan_id' => $student->edu_plan_id]);
 
-                $query = $model->find()
-                    ->andWhere(['is_deleted' => 0])
-                    ->andWhere(['in', 'edu_semestr_id', $eduSemesterIds]);
+                $query->andWhere(['in', 'edu_semestr_id', $eduSemesterIds]);
             } else {
-                $query = $model->find()
-                    ->andWhere(['is_deleted' => 0]);
 
                 $subjectModel = new Subject();
                 $subject = $subjectModel->find()

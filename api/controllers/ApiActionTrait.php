@@ -74,36 +74,36 @@ trait ApiActionTrait
      * @return void
      */
 
-    public function afterAction($action, $result)
-    {
+    // public function afterAction($action, $result)
+    // {
 
-        // vdd(Yii::$app->request);
-        // vdd(get_host());
-        // vdd(getIpAddressData());
+    //     // vdd(Yii::$app->request);
+    //     // vdd(get_host());
+    //     // vdd(getIpAddressData());
 
-        $action_log = Yii::$app->session->get('action_log');
-        $action_log->user_id = current_user_id();
-        $action_log->status = isset($result['status']) ? $result['status'] : 'Failed';
-        $action_log->message = isset($result['message']) ? $result['message'] : 'Failed';
-        $action_log->browser = json_encode(getBrowser());
-        // $action_log->ip_address = getIpMK();
-        $action_log->host = get_host();
-        // $action_log->ip_address_data = json_encode(getIpAddressData());
+    //     $action_log = Yii::$app->session->get('action_log');
+    //     $action_log->user_id = current_user_id();
+    //     $action_log->status = isset($result['status']) ? $result['status'] : 'Failed';
+    //     $action_log->message = isset($result['message']) ? $result['message'] : 'Failed';
+    //     $action_log->browser = json_encode(getBrowser());
+    //     // $action_log->ip_address = getIpMK();
+    //     $action_log->host = get_host();
+    //     // $action_log->ip_address_data = json_encode(getIpAddressData());
 
-        if (isset($result['errors'])) {
-            $action_log->errors = json_encode($result['errors']);
-        }
-        $result = parent::afterAction($action, $result);
+    //     if (isset($result['errors'])) {
+    //         $action_log->errors = json_encode($result['errors']);
+    //     }
+    //     $result = parent::afterAction($action, $result);
 
-        if (isset($result['data'])) {
-            $action_log->data = json_encode($result['data']);
-        }
+    //     if (isset($result['data'])) {
+    //         $action_log->data = json_encode($result['data']);
+    //     }
 
-        $action_log->created_on = date("Y-m-d H:i:s");
-        $action_log->save(false);
-        // dd(json_encode($result));
-        return $result;
-    }
+    //     $action_log->created_on = date("Y-m-d H:i:s");
+    //     $action_log->save(false);
+    //     // dd(json_encode($result));
+    //     return $result;
+    // }
 
     /**
      * Before action
@@ -133,27 +133,31 @@ trait ApiActionTrait
         }
         if (!in_array($lang, $langCodes)) {
             $this->asJson($this->response(0, _e('Wrong language code selected (' . $lang . ').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
-        } else {
-
-
-            // dd("asdasd");
-            // vdd(Yii::$app->request->get());
-            // vdd(Yii::$app->request->post());
-
-            $action_log = new ActionLog();
-            $action_log->user_id = current_user_id();
-            $action_log->controller = Yii::$app->controller->id;
-            $action_log->action = Yii::$app->controller->action->id;
-            $action_log->method = $_SERVER['REQUEST_METHOD'];
-            $action_log->get_data = json_encode(Yii::$app->request->get());
-            $action_log->post_data = json_encode(Yii::$app->request->post());
-            $action_log->save(false);
-            Yii::$app->session->set('action_log', $action_log);
-
-            // dd(current_user_id());
-            Yii::$app->language = $lang;
-            return parent::beforeAction($action);
         }
+        
+        
+        
+        //  else {
+
+
+        //     // dd("asdasd");
+        //     // vdd(Yii::$app->request->get());
+        //     // vdd(Yii::$app->request->post());
+
+        //     $action_log = new ActionLog();
+        //     $action_log->user_id = current_user_id();
+        //     $action_log->controller = Yii::$app->controller->id;
+        //     $action_log->action = Yii::$app->controller->action->id;
+        //     $action_log->method = $_SERVER['REQUEST_METHOD'];
+        //     $action_log->get_data = json_encode(Yii::$app->request->get());
+        //     $action_log->post_data = json_encode(Yii::$app->request->post());
+        //     $action_log->save(false);
+        //     Yii::$app->session->set('action_log', $action_log);
+
+        //     // dd(current_user_id());
+        //     Yii::$app->language = $lang;
+        //     return parent::beforeAction($action);
+        // }
     }
 
 

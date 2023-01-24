@@ -109,8 +109,7 @@ trait ApiActionTrait
      * Before action
      *
      * @param $action
-     * @return void
-     */
+     * @return void     */
     public function beforeAction($action)
     {
         $this->generate_access_key();
@@ -123,7 +122,7 @@ trait ApiActionTrait
             return false;
         }
 
-        echo "Please wait!!"; die(); return 0;
+     //   echo "Please wait!!"; die(); return 0;
 
         $lang = Yii::$app->request->get('lang');
 

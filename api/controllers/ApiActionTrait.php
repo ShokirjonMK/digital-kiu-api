@@ -137,27 +137,27 @@ trait ApiActionTrait
         
         
         
-        //  else {
+         else {
 
 
-        //     // dd("asdasd");
-        //     // vdd(Yii::$app->request->get());
-        //     // vdd(Yii::$app->request->post());
+            // dd("asdasd");
+            // vdd(Yii::$app->request->get());
+            // vdd(Yii::$app->request->post());
 
-        //     $action_log = new ActionLog();
-        //     $action_log->user_id = current_user_id();
-        //     $action_log->controller = Yii::$app->controller->id;
-        //     $action_log->action = Yii::$app->controller->action->id;
-        //     $action_log->method = $_SERVER['REQUEST_METHOD'];
-        //     $action_log->get_data = json_encode(Yii::$app->request->get());
-        //     $action_log->post_data = json_encode(Yii::$app->request->post());
-        //     $action_log->save(false);
-        //     Yii::$app->session->set('action_log', $action_log);
+            $action_log = new ActionLog();
+            $action_log->user_id = current_user_id();
+            $action_log->controller = Yii::$app->controller->id;
+            $action_log->action = Yii::$app->controller->action->id;
+            $action_log->method = $_SERVER['REQUEST_METHOD'];
+            $action_log->get_data = json_encode(Yii::$app->request->get());
+            $action_log->post_data = json_encode(Yii::$app->request->post());
+            $action_log->save(false);
+            Yii::$app->session->set('action_log', $action_log);
 
-        //     // dd(current_user_id());
-        //     Yii::$app->language = $lang;
-        //     return parent::beforeAction($action);
-        // }
+            // dd(current_user_id());
+            Yii::$app->language = $lang;
+            return parent::beforeAction($action);
+        }
     }
 
 

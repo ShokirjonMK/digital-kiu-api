@@ -171,30 +171,35 @@ class TestGetDataController extends ApiActiveController
         return $this->response(1, _e('Success'), $errors);
     } */
 
-    public function actionView()
-    {
-        $profiles = Profile::find()
-            ->where(['checked' => 0])
-            // ->andWhere(['checked_full' => 0])
-            ->andWhere(['is not', 'passport_pin', null])
-            ->andWhere(['is not', 'passport_given_date', null])
-            ->limit(1000)->offset(0)
-            ->all();
+    // public function actionView()
+    // {
 
-        foreach ($profiles as $profile) {
-            $hemis = new HemisMK();
+    //     $profiles = Profile::find()
+    //         ->where(['checked' => 0])
+    //         // ->andWhere(['checked_full' => 0])
+    //         ->andWhere(['is not', 'passport_pin', null])
+    //         ->andWhere(['is not', 'passport_given_date', null])
+    //         ->limit(10)
+    //         // ->offset(0)
+    //         ->orderBy(['id' => SORT_DESC])
+    //         ->all();
 
-            $data = $hemis->getHemis($profile->passport_pin);
-            $profile->checked = 1;
-            $mip = MipServiceMK::corrent($profile);
-            $data[] = $mip;
-            $profile->save(false);
-        }
+    //     foreach ($profiles as $profile) {
+    //         $hemis = new HemisMK();
 
-        return $this->response(1, _e('Success'), $data);
-    }
+    //         $data = $hemis->getHemis($profile->passport_pin);
+    //         $profile->checked = 1;
+    //         $mip = MipServiceMK::corrent($profile);
+    //         $data[] = $mip;
+    //         $profile->save(false);
+    //     }
 
-    public function actionProfileMip($passport = null, $jshir = null)
+    //     return $this->response(1, _e('Success'), $data);
+    // }
+
+
+    // public function actionProfileMip($passport = null, $jshir = null)
+    public function actionView($passport = null, $jshir = null)
     {
         //////  Profile get from MIP
         $data = [];
@@ -203,7 +208,9 @@ class TestGetDataController extends ApiActiveController
             // ->andWhere(['checked_full' => 0])
             ->andWhere(['is not', 'passport_pin', null])
             ->andWhere(['is not', 'passport_given_date', null])
-            ->limit(1000)->offset(0)
+            ->limit(1000)
+            // ->offset(0)
+            ->orderBy(['id' => SORT_DESC])
             ->all();
 
         foreach ($profiles as $profile) {

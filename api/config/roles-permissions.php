@@ -2419,10 +2419,10 @@ return [
     'content_plus' => [
 
         'user_oferta',
-        // "subject-content_create",
-        // "subject-content_update",
-        // "subject-content_delete",
-        // "subject-content_view",
+        "subject-content_create",
+        "subject-content_update",
+        "subject-content_delete",
+        "subject-content_view",
     ],
 
     'club' => [

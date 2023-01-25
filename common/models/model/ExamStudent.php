@@ -237,6 +237,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
             'appeal',
 
+            'finishedAt',
             'startedAt',
             'createdBy',
             'updatedBy',
@@ -283,17 +284,20 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getFinishedAt()
     {
+
         // return $this->finish ??
         if ($this->finish > 0) {
-            $exam_times['finish'] = date("Y-m-d H:i:s", $this->finish);
+            return date("Y-m-d H:i:s", $this->finish);
         } else {
             $exam_finish = $this->start + $this->exam->duration + (int)$this->duration;
             if ($exam_finish > strtotime($this->exam->finish)) {
-                $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($this->exam->finish));
+                return date("Y-m-d H:i:s", strtotime($this->exam->finish));
             } else {
-                $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                return date("Y-m-d H:i:s", $exam_finish);
             }
         }
+
+        return "Undefined";
     }
 
     public function getAccessKey()

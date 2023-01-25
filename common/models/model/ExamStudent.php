@@ -176,7 +176,6 @@ class ExamStudent extends \yii\db\ActiveRecord
             'lang_id',
             'teacher_access_id',
             'ball',
-            'start',
             'attempt',
             'password',
             'is_plagiat',
@@ -184,6 +183,10 @@ class ExamStudent extends \yii\db\ActiveRecord
             // 'finish',
             'finish' => function ($model) {
                 return $model->finishedAt;
+            },
+            // 'start',
+            'start' => function ($model) {
+                return $model->startedAt;
             },
 
             'type',

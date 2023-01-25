@@ -181,7 +181,11 @@ class ExamStudent extends \yii\db\ActiveRecord
             'password',
             'is_plagiat',
             'duration',
-            'finish',
+            // 'finish',
+            'finish' => function ($model) {
+                return $model->finishedAt;
+            },
+
             'type',
             'on1',
             'on2',
@@ -275,6 +279,21 @@ class ExamStudent extends \yii\db\ActiveRecord
             ->sum('old_ball');
 
         return  $query;
+    }
+
+    public function getFinishedAt()
+    {
+        // return $this->finish ??
+        if ($this->finish > 0) {
+            $exam_times['finish'] = date("Y-m-d H:i:s", $this->finish);
+        } else {
+            $exam_finish = $this->start + $this->exam->duration + (int)$this->duration;
+            if ($exam_finish > strtotime($this->exam->finish)) {
+                $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($this->exam->finish));
+            } else {
+                $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+            }
+        }
     }
 
     public function getAccessKey()

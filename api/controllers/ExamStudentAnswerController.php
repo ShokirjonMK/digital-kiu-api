@@ -28,7 +28,7 @@ class ExamStudentAnswerController extends ApiActiveController
         $post = Yii::$app->request->post();
 
         if (!checkAllowedIP()) {
-            return $this->response(0, _e('Not allowed to this computers.'), null, [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
+            return $this->response(0, _e('Not allowed to this computers.'), getIpAddressData(), [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
         }
         $result = ExamStudentAnswer::randomQuestions($post);
 

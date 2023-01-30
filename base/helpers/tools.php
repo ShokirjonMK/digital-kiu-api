@@ -491,9 +491,7 @@ function checkAllowedIP()
 
     if (in_array($userIp, $allowedIps)) {
         return true;
-    }
-
-    if (str_starts_with($userIp, $ado)) {
+    } elseif (str_starts_with($userIp, $ado)) {
         return true;
     }
 

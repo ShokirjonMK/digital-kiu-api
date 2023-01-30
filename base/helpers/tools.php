@@ -481,7 +481,7 @@ function getIpAddressData($ip_address = null)
 // Is IP in allowed  List
 function checkAllowedIP()
 {
-    $userIp = getIpAddressData();
+    $userIp = getIpMK();
 
     $ado = '172.25';
     // $ado = '10.1.2';

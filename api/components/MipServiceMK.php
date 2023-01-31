@@ -89,6 +89,7 @@ class MipServiceMK
             return $data;
         }
     }
+    
     public static function getData($pin, $document_issue_date)
     {
         // $pin = "61801045840029";

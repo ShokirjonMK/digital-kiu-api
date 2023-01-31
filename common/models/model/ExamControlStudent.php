@@ -511,6 +511,14 @@ class ExamControlStudent extends ActiveRecord
             return simplify_errors($errors);
         }
 
+        // faqat sirtqi uchun 
+        if (!in_array($model->edu_plan_id, [55, 131])) {
+            $errors[] = ["Faqat sirtqi uchun ruxsat berilgan"];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        // faqat sirtqi uchun 
+
         if ($model->save()) {
 
             // answer file saqlaymiz
@@ -631,6 +639,14 @@ class ExamControlStudent extends ActiveRecord
         }
 
         $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
+
+        // faqat sirtqi uchun 
+        if (!in_array($model->edu_plan_id, [55, 131])) {
+            $errors[] = ["Faqat sirtqi uchun ruxsat berilgan"];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        // faqat sirtqi uchun 
 
         if ($model->save()) {
 

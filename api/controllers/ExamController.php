@@ -90,7 +90,7 @@ class ExamController extends ApiActiveController
                 ->select('id')]);
         }
 
-        if ($student) {
+        if ($student && isRole('student')) {
             //            dd($student->edu_plan_id);
             if (isset($eduSmesterId)) {
                 $query = $query->andWhere([

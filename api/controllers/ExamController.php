@@ -121,13 +121,13 @@ class ExamController extends ApiActiveController
         }
 
         if (isRole('teacher') && !isRole('mudir')) {
-            $query = $query->andFilterWhere([
-                'in', 'edu_semestr_subject_id',
-                EduSemestrSubject::find()
-                    ->where(['subject_id' => $this->teacher_access(1, ['subject_id'])])
-                    ->andWhere(['is_deleted' => 0])
-                    ->select('id')
-            ]);
+            // $query = $query->andFilterWhere([
+            //     'in', 'edu_semestr_subject_id',
+            //     EduSemestrSubject::find()
+            //         ->where(['subject_id' => $this->teacher_access(1, ['subject_id'])])
+            //         ->andWhere(['is_deleted' => 0])
+            //         ->select('id')
+            // ]);
 
             // $query = $query->andWhere([
             //     $this->table_name . '.status' => Exam::STATUS_DISTRIBUTED

@@ -514,7 +514,7 @@ class ExamControlStudent extends ActiveRecord
         // faqat sirtqi uchun 
         if (
             !in_array($model->edu_plan_id, [55, 131, 132])
-            || current_user_id() != 7456
+            || current_user_id() == 7456
         ) {
             $errors[] = ["Faqat sirtqi uchun ruxsat berilgan"];
             $transaction->rollBack();

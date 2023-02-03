@@ -513,7 +513,8 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat sirtqi uchun 
         if (
-            !in_array($model->edu_plan_id, [55, 131, 132]) && current_user_id() != 4270
+            !in_array($model->edu_plan_id, [55, 131, 132]) 
+            // && current_user_id() != 4270
         ) {
             $errors[] = ["Faqat sirtqi uchun ruxsat berilgan"];
             $transaction->rollBack();
@@ -644,7 +645,8 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat sirtqi uchun 
         if (
-            !in_array($model->edu_plan_id, [55, 131, 132]) && current_user_id() != 4270
+            !in_array($model->edu_plan_id, [55, 131, 132])
+            //  && current_user_id() != 4270
         ) {
             $errors[] = ["Faqat sirtqi uchun ruxsat berilgan"];
             $transaction->rollBack();

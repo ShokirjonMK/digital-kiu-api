@@ -95,6 +95,8 @@ class TeacherAccessController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
+
+        // sirtqi uchun ochildi
         if (isset($teacheIds)) {
             $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
         }

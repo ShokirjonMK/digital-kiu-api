@@ -561,14 +561,17 @@ class StudentTimeTable extends \yii\db\ActiveRecord
          */
         ///
 
-        $student = Student::findOne(['user_id' => Current_user_id()]);
-        if (!isset($student)) {
-            $errors[] = _e('Student not found');
-            $transaction->rollBack();
-            return simplify_errors($errors);
+        if (!($model->student_id > 0)) {
+            $student = Student::findOne(['user_id' => Current_user_id()]);
+            if (!isset($student)) {
+                $errors[] = _e('Student not found');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            $model->student_id = self::student();
         }
 
-        $model->student_id = self::student();
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

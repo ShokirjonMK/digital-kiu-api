@@ -606,19 +606,18 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         /**
          *  Student Edu Plan bo'yicha tekshirish
          */
+        // if (isset($timeTableCheck)) {
+        //     if ($timeTableCheck->eduSemestr) {
+        //         if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
+        //             $errors[] = $timeTableCheck->eduSemestr;
+        //             $errors[] = $studentCheck->edu_plan_id;
 
-        if (isset($timeTableCheck)) {
-            if ($timeTableCheck->eduSemestr) {
-                if ($timeTableCheck->eduSemestr->edu_plan_id != $studentCheck->edu_plan_id) {
-                    $errors[] = $timeTableCheck->eduSemestr;
-                    $errors[] = $studentCheck->edu_plan_id;
-
-                    $errors[] = _e('This Time Table is not for you');
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
-                }
-            }
-        }
+        //             $errors[] = _e('This Time Table is not for you');
+        //             $transaction->rollBack();
+        //             return simplify_errors($errors);
+        //         }
+        //     }
+        // }
 
         if (isset($hasModel)) {
             $errors[] = _e('This Student Time Table already exists');

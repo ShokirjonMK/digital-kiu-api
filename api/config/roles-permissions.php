@@ -782,8 +782,8 @@ return [
 
         "exam-student_index",
         "exam-student_view",
-        "exam-student_update",
-        "exam-student_create",
+        // "exam-student_update",
+        // "exam-student_create",
         "exams-type_create",
         "exams-type_index",
         "exams-type_update",
@@ -902,6 +902,8 @@ return [
         "student-time-table_delete",
         "student-time-table_index",
         "student-time-table_view",
+        "student-time-table_create",
+
     ],
 
     /* O'quv bo'limi kontenthisi */
@@ -1235,7 +1237,7 @@ return [
         "notification_status-list",
         "notification_view",
         "password_index",
-        "password_view",
+        // "password_view",
         "region_index",
         "region_view",
         "room_index",
@@ -1459,8 +1461,8 @@ return [
         "student-order_delete",
         "student-order_update",
 
-        // "attend-reason_confirm",
-        
+        "attend-reason_confirm",
+
         "attend-reason_create",
         "attend-reason_index",
         "attend-reason_update",
@@ -1475,6 +1477,18 @@ return [
         "student-subject-restrict_view",
         "student-subject-restrict_update",
         "student-subject-restrict_delete",
+
+        "partiya_index",
+        "partiya_view",
+        "degree-info_index",
+        "degree-info_view",
+        "degree_index",
+        "degree_view",
+        "diploma-type_index",
+        "diploma-type_view",
+        "academic-degree_index",
+        "academic-degree_view",
+
 
     ],
     /* Dekan huquqlari */
@@ -1762,8 +1776,8 @@ return [
         "student-time-option_view",
 
         "attend_index",
-        "attend_create",
-        "attend_update",
+        // "attend_create",
+        // "attend_update",
 
         "attend-reason_create",
         "attend-reason_delete",
@@ -2407,10 +2421,10 @@ return [
     'content_plus' => [
 
         'user_oferta',
-        // "subject-content_create",
-        // "subject-content_update",
-        // "subject-content_delete",
-        // "subject-content_view",
+        "subject-content_create",
+        "subject-content_update",
+        "subject-content_delete",
+        "subject-content_view",
     ],
 
     'club' => [

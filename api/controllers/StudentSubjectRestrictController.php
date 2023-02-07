@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\StudentSubjectRestrict;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Faculty;
 
 class StudentSubjectRestrictController extends ApiActiveController
 {
@@ -24,6 +25,26 @@ class StudentSubjectRestrictController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere([
+                'faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'faculty_id' => -1
+            ]);
+        }
+
+        // /*  is Role check  */
+        // if (isRole('tutor')) {
+        //     $query = $query->andWhere([
+        //         'tutor_id' => current_user_id()
+        //     ]);
+        // }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -99,10 +120,12 @@ class StudentSubjectRestrictController extends ApiActiveController
         // remove model
         if ($model) {
             $model->is_deleted = 1;
-            $model->update();
+            if ($model->update())
+                return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
 
-            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+            return $this->response(0, _e($this->controller_name . ' failed.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 }

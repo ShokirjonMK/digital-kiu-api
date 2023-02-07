@@ -27,6 +27,8 @@ use common\models\model\KuvondikMasofaviy;
 use common\models\model\Student;
 use common\models\model\StudentExport;
 use common\models\model\StudentPinn;
+use common\models\model\SubjectCategory;
+use common\models\model\SubjectSillabus;
 use Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
@@ -51,6 +53,31 @@ class TestGetDataController extends ApiActiveController
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $data->data, ResponseStatus::FORBIDDEN);
         }
+    }
+
+    public function actionIndex()
+    {
+        // $subjectSillabus = SubjectSillabus::find()->all();
+
+        // foreach ($subjectSillabus as $model) {
+        //     $auditory_time = 0;
+        //     foreach (json_decode($model->edu_semestr_subject_category_times)
+        //         as $edu_semestr_subject_category_times_key => $edu_semestr_subject_category_times_value) {
+        //         if (SubjectCategory::find()
+        //             ->where([
+        //                 'id' => $edu_semestr_subject_category_times_key,
+        //                 'type' => 1
+        //             ])
+        //             ->exists()
+        //         ) {
+        //             $auditory_time += $edu_semestr_subject_category_times_value;
+        //         }
+        //     }
+        //     $model->auditory_time = $auditory_time;
+        //     $model->save();
+        // }
+
+        return "no thing";
     }
 
     // public function actionIndex111($i)
@@ -144,40 +171,47 @@ class TestGetDataController extends ApiActiveController
         return $this->response(1, _e('Success'), $errors);
     } */
 
-    public function actionView()
-    {
-        $profiles = Profile::find()
-            ->where(['checked' => 0])
-            // ->andWhere(['checked_full' => 0])
-            ->andWhere(['is not', 'passport_pin', null])
-            ->andWhere(['is not', 'passport_given_date', null])
-            ->limit(1000)->offset(0)
-            ->all();
+    // public function actionView()
+    // {
 
-        foreach ($profiles as $profile) {
-            $hemis = new HemisMK();
+    //     $profiles = Profile::find()
+    //         ->where(['checked' => 0])
+    //         // ->andWhere(['checked_full' => 0])
+    //         ->andWhere(['is not', 'passport_pin', null])
+    //         ->andWhere(['is not', 'passport_given_date', null])
+    //         ->limit(10)
+    //         // ->offset(0)
+    //         ->orderBy(['id' => SORT_DESC])
+    //         ->all();
 
-            $data = $hemis->getHemis($profile->passport_pin);
-            $profile->checked = 1;
-            $mip = MipServiceMK::corrent($profile);
-            $data[] = $mip;
-            $profile->save(false);
-        }
+    //     foreach ($profiles as $profile) {
+    //         $hemis = new HemisMK();
 
-        return $this->response(1, _e('Success'), $data);
+    //         $data = $hemis->getHemis($profile->passport_pin);
+    //         $profile->checked = 1;
+    //         $mip = MipServiceMK::corrent($profile);
+    //         $data[] = $mip;
+    //         $profile->save(false);
+    //     }
 
-    }
+    //     return $this->response(1, _e('Success'), $data);
+    // }
 
-    public function actionIndex($passport = null, $jshir = null)
+
+    // public function actionProfileMip($passport = null, $jshir = null)
+    public function actionView($passport = null, $jshir = null)
     {
         //////  Profile get from MIP
         $data = [];
         $profiles = Profile::find()
             ->where(['checked' => 0])
+            ->andWhere(['checked_full' => 0])
             // ->andWhere(['checked_full' => 0])
             ->andWhere(['is not', 'passport_pin', null])
             ->andWhere(['is not', 'passport_given_date', null])
-            ->limit(1000)->offset(0)
+            ->limit(1000)
+            // ->offset(0)
+            ->orderBy(['id' => SORT_DESC])
             ->all();
 
         foreach ($profiles as $profile) {
@@ -382,5 +416,4 @@ class TestGetDataController extends ApiActiveController
             }
         }
     }
-
 }

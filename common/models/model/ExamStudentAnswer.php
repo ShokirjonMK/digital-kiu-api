@@ -377,16 +377,16 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     $t = true;
                     if ($exam->is_protected == 1) {
                         // if ($ExamStudentHas) {
-                            if (isset($post["password"])) {
-                                $password = $post["password"];
-                                if ($password == $exam->password) {
-                                    $t = true;
-                                } else {
-                                    $t = false;
-                                }
+                        if (isset($post["password"])) {
+                            $password = $post["password"];
+                            if ($password == $exam->password) {
+                                $t = true;
                             } else {
-                                $errors[] = _e("Password required!");
+                                $t = false;
                             }
+                        } else {
+                            $errors[] = _e("Password required!");
+                        }
                         // } else {
                         //     $errors[] = _e("Not Generated!");
                         // }
@@ -555,8 +555,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                         } else {
                             if (strtotime($exam->start) > $now_second) {
                                 $errors[] = _e("This exam`s time is not starts");
+                                $errors[] = ["status" => false];
                             } elseif (strtotime($exam->finish) < $now_second) {
                                 $errors[] = _e("This exam`s time expired");
+                                $errors[] = ["status" => false];
                             }
                             // $errors[] = $exam;
                         }
@@ -775,6 +777,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         // attemp esdan chiqmasin
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        $exam_times = [];
         // studentni answer file ni saqlaymiz
 
         $student = Student::findOne(['user_id' => current_user_id()]);
@@ -850,6 +853,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
 
                 if ($examStudent) {
+
                     $finishExamStudent = $examStudent->start + $exam->duration + $examStudent->duration;
 
                     /*  if (
@@ -903,6 +907,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     // dd(json_encode($post['subQuestionAnswers']));
                                     // dd('ss');
                                     // $post['subQuestionAnswers'] = str_replace("'", "", $post['subQuestionAnswers']);
+
+
                                     if (!isJsonMK($post['subQuestionAnswers'])) {
                                         $errors['subQuestionAnswers'] = [_e('Must be Json')];
                                     } else {
@@ -940,22 +946,56 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                     $errors[] = $model->errors;
                                 }
                             } else {
+
+                                // $exam_times['start'] = date("Y-m-d H:i:s", $examStudent->start);
+                                // $exam_times['duration'] = $exam->duration;
+
+                                // /** */
+                                // if ($examStudent->finish > 0) {
+                                //     $exam_times['finish'] = date("Y-m-d H:i:s", $examStudent->finish);
+                                // } else {
+                                //     $exam_finish = $examStudent->start + $exam->duration + (int)$examStudent->duration;
+                                //     if ($exam_finish > strtotime($exam->finish)) {
+                                //         $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
+                                //     } else {
+                                //         $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                //     }
+                                // }
+                                // /** */
+                                // if ($examStudent->finish > 0) {
+                                //     $exam_times['finish'] = date("Y-m-d H:i:s", $examStudent->finish);
+                                // } else {
+                                //     $exam_finish = $examStudent->start + $exam->duration + (int)$examStudent->duration;
+                                //     if ($exam_finish > strtotime($exam->finish)) {
+                                //         $exam_times['finish'] = date("Y-m-d H:i:s", strtotime($exam->finish));
+                                //     } else {
+                                //         $exam_times['finish'] = date("Y-m-d H:i:s", $exam_finish);
+                                //     }
+                                // }
+                                // $errors[] = ["times" => $exam_times];
+
                                 $errors[] = _e("This exam already finished for you!");
+                                $errors[] = ["status" => false];
                             }
                         } else {
                             $errors[] = _e("This exam`s time expired");
+                            $errors[] = ["status" => false];
                         }
                     } else {
                         $errors[] = _e("This exam`s time is not starts");
+                        $errors[] = ["status" => false];
                     }
                 } else {
                     $errors[] = _e("This exam is not for you!");
+                    $errors[] = ["status" => false];
                 }
             } else {
                 $errors[] = _e("This exam not found!");
+                $errors[] = ["status" => false];
             }
         } else {
             $errors[] = _e("This exam not found!");
+            $errors[] = ["status" => false];
         }
 
         if (count($errors) == 0) {

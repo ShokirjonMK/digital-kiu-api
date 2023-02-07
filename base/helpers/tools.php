@@ -478,6 +478,26 @@ function getIpAddressData($ip_address = null)
     }
 }
 
+// Is IP in allowed  List
+function checkAllowedIP()
+{
+    $userIp = getIpMK();
+
+    $ado = '172.25';
+    // $ado = '10.1.2';
+    $allowedIps = [
+        '195.158.3.204',
+    ];
+
+    if (in_array($userIp, $allowedIps)) {
+        return true;
+    } elseif (str_starts_with($userIp, $ado)) {
+        return true;
+    }
+
+    return false;
+}
+
 // Delete files in dir
 function delete_files_in_dir($dir)
 {

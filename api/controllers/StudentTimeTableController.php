@@ -36,11 +36,7 @@ class  StudentTimeTableController extends ApiActiveController
 
         $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
 
-
         if ($student && isRole('student')) {
-
-            // dd("asdasd");
-
             if ($semester) {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
             } else {
@@ -48,7 +44,6 @@ class  StudentTimeTableController extends ApiActiveController
             }
             // return $eduSemestr;
             if ($eduSemestr) {
-
                 $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
                     ->select('id')
                     ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);

@@ -286,7 +286,7 @@ class AttendReason extends \yii\db\ActiveRecord
         $studentAttends = $studentAttends::find();
         $reasonStart = date("Y-m-d", strtotime($model->start));
         $reasonEnd = date("Y-m-d", strtotime($model->end));
-        
+
         $studentAttends = $studentAttends
             ->where(['student_id' => $model->student_id])
             ->andWhere(['>=', 'date', $reasonStart])
@@ -297,11 +297,11 @@ class AttendReason extends \yii\db\ActiveRecord
 
             $t = false;
             if ($studentAttend->date == date("Y-m-d", strtotime($model->start))) {
-                if (($studentAttend->timeTable->para->end_time >= date('H:i', strtotime($model->start)))) {
+                if (($studentAttend->timeTable->para->start_time >= date('H:i', strtotime($model->start)))) {
                     $t = true;
                 }
             } elseif ($studentAttend->date == date("Y-m-d", strtotime($model->end))) {
-                if (($studentAttend->timeTable->para->end_time >= date('H:i', strtotime($model->end)))) {
+                if (($studentAttend->timeTable->para->end_time <= date('H:i', strtotime($model->end)))) {
                     $t = true;
                 }
             } else {
@@ -342,6 +342,7 @@ class AttendReason extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+        
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

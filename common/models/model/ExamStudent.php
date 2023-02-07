@@ -176,12 +176,19 @@ class ExamStudent extends \yii\db\ActiveRecord
             'lang_id',
             'teacher_access_id',
             'ball',
-            'start',
             'attempt',
             'password',
             'is_plagiat',
             'duration',
-            'finish',
+            // 'finish',
+            'finish' => function ($model) {
+                return $model->finishedAt;
+            },
+            // 'start',
+            'start' => function ($model) {
+                return $model->startedAt;
+            },
+
             'type',
             'on1',
             'on2',
@@ -226,13 +233,14 @@ class ExamStudent extends \yii\db\ActiveRecord
             'oldAllBall',
 
             'statusName',
-            'teacherAccess',
+            // 'teacherAccess',
             'examSemeta',
 
             'accessKey',
 
             'appeal',
 
+            'finishedAt',
             'startedAt',
             'createdBy',
             'updatedBy',
@@ -275,6 +283,24 @@ class ExamStudent extends \yii\db\ActiveRecord
             ->sum('old_ball');
 
         return  $query;
+    }
+
+    public function getFinishedAt()
+    {
+
+        // return $this->finish ??
+        if ($this->finish > 0) {
+            return date("Y-m-d H:i:s", $this->finish);
+        } else {
+            $exam_finish = $this->start + $this->exam->duration + (int)$this->duration;
+            if ($exam_finish > strtotime($this->exam->finish)) {
+                return date("Y-m-d H:i:s", strtotime($this->exam->finish));
+            } else {
+                return date("Y-m-d H:i:s", $exam_finish);
+            }
+        }
+
+        return "Undefined";
     }
 
     public function getAccessKey()
@@ -601,15 +627,15 @@ class ExamStudent extends \yii\db\ActiveRecord
         }
     }
 
-    // public function beforeSave($insert)
-    // {
-    //     if ($insert) {
-    //         $this->created_by = current_user_id();
-    //     } else {
-    //         $this->updated_by = current_user_id();
-    //     }
-    //     return parent::beforeSave($insert);
-    // }
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->created_by = current_user_id();
+        } else {
+            $this->updated_by = current_user_id();
+        }
+        return parent::beforeSave($insert);
+    }
 
     public function uploadFile()
     {

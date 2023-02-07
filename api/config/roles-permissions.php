@@ -902,6 +902,8 @@ return [
         "student-time-table_delete",
         "student-time-table_index",
         "student-time-table_view",
+        "student-time-table_create",
+
     ],
 
     /* O'quv bo'limi kontenthisi */

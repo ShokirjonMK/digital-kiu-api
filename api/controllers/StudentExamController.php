@@ -26,6 +26,10 @@ class StudentExamController extends ApiActiveController
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
+        if (isRole('student')) {
+            $query->andWhere([$this->table_name . 'student_id' => $this->student()]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 
@@ -97,7 +101,4 @@ class StudentExamController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
-
-
-
 }

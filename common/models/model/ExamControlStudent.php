@@ -655,7 +655,7 @@ class ExamControlStudent extends ActiveRecord
         // faqat sirtqi uchun 
         if (
             !in_array($model->edu_plan_id, [55, 131, 132])
-            && !in_array($model->student->profile->passport_pin, [
+            || !in_array($model->student->profile->passport_pin, [
                 31605986070038,
                 30306932610102,
                 62809046590045,

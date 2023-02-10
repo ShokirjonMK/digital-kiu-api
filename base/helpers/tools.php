@@ -487,6 +487,7 @@ function checkAllowedIP()
     // $ado = '10.1.2';
     $allowedIps = [
         '195.158.3.204',
+        '195.158.24.189',
     ];
 
     if (in_array($userIp, $allowedIps)) {

@@ -59,6 +59,7 @@ class PasswordController extends ApiActiveController
                     // $model->savePassword($passwordNew, current_user_id());
                     //**** */
                     $model->password_hash = \Yii::$app->security->generatePasswordHash($passwordNew);
+                    $model->is_changed = User::PASSWORD_CHANED;
 
                     if ($model->save()) {
                         return $this->response(1, _e('Password successfully changed!'), null, null, ResponseStatus::OK);

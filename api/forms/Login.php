@@ -140,6 +140,7 @@ class Login extends Model
                         'first_name' => $profile->first_name,
                         'role' => $user->getRolesNoStudent(),
                         'oferta' => $user->getOfertaIsComformed(),
+                        'is_changed' => $user->is_changed,
                         'permissions' => $user->permissionsNoStudent,
                         'access_token' => $user->access_token,
                         'expire_time' => date("Y-m-d H:i:s", $user->expireTime),

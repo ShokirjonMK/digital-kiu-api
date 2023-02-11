@@ -27,6 +27,8 @@ class User extends CommonUser
     use ResourceTrait;
 
     const UPLOADS_FOLDER = 'uploads/user-images/';
+    const PASSWORD_CHANED = 1;
+    const PASSWORD_NO_CHANED = 0;
     // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
     public $avatar;
     public $passport_file;
@@ -61,6 +63,9 @@ class User extends CommonUser
             [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png, jpg', 'maxSize' => $this->passportFileMaxSize],
             [['deleted'], 'default', 'value' => 0],
             [['template', 'layout', 'view'], 'default', 'value' => ''],
+            [['is_changed'], 'integer'],
+            ['is_changed', 'in', 'range' => [self::PASSWORD_CHANED, self::PASSWORD_NO_CHANED]],
+
         ];
     }
 

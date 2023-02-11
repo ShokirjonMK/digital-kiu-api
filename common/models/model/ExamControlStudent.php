@@ -525,7 +525,7 @@ class ExamControlStudent extends ActiveRecord
 
             ])
         ) {
-            $errors[] = ["Ruxsat berilgan"];
+            $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
             return simplify_errors($errors);
         }
@@ -666,7 +666,7 @@ class ExamControlStudent extends ActiveRecord
 
             ])
         ) {
-            $errors[] = ["Ruxsat berilgan"];
+            $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
             return simplify_errors($errors);
         }

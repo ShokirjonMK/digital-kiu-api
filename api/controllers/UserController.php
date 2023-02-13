@@ -72,6 +72,7 @@ class UserController extends ApiActiveController
                         // 'role' => $user->getRoles(),
                         'role' => $user->getRolesStudent(),
                         'oferta' => $user->getOfertaIsComformed(),
+                        'is_changed' => $user->is_changed,
                         // 'role' => $user->roleItem,
                         'permissions' => $user->permissionsStudent,
                         'access_token' => $user->access_token,

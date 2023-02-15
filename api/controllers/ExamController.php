@@ -82,6 +82,8 @@ class ExamController extends ApiActiveController
         }
 
 
+
+
         $subjectId = Yii::$app->request->get('subject_id');
         if ($subjectId) {
             $query = $query->andFilterWhere(['in', 'edu_semestr_subject_id', EduSemestrSubject::find()
@@ -90,7 +92,11 @@ class ExamController extends ApiActiveController
                 ->select('id')]);
         }
 
-        if ($student && isRole('student')) {
+        if (current_user_id() == 5510) {
+            $query = $query->andFilterWhere([
+                'in', 'id', [51]
+            ]);
+        } elseif ($student && isRole('student')) {
             //            dd($student->edu_plan_id);
             if (isset($eduSmesterId)) {
                 $query = $query->andWhere([

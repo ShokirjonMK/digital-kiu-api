@@ -87,7 +87,7 @@ class RoomController extends ApiActiveController
                 'para_id' => $para->id,
                 'edu_year_id' => $eduYear->id,
                 'week_id' => $week->id,
-                'archive' => 0
+                'archive' => 1
 
             ])->andWhere(['in', 'semester_id', $semester_ids]);
 

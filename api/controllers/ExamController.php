@@ -94,7 +94,7 @@ class ExamController extends ApiActiveController
 
         if (current_user_id() == 5510) {
             $query = $query->andFilterWhere([
-                'in', 'id', [51]
+                'in', $this->table_name . '.id', [51]
             ]);
         } elseif ($student && isRole('student')) {
             //            dd($student->edu_plan_id);

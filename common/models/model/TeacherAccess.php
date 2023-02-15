@@ -193,7 +193,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
 
         // return $data;
 
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->onCondition(['is_deleted' => 0]); //->select(['first_name', 'last_name', 'middle_name']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']); //->onCondition(['is_deleted' => 0]); //->select(['first_name', 'last_name', 'middle_name']);
     }
 
     public function getProfile()

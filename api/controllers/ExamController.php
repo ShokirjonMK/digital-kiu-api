@@ -72,6 +72,19 @@ class ExamController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
+        if (current_user_id() == 5510) {
+            $query = $query->andFilterWhere([
+                'in', $this->table_name . '.edu_semestr_subject_id', [569]
+            ]);
+            // filter
+            $query = $this->filterAll($query, $model);
+            // sort
+            $query = $this->sort($query);
+            // data
+            $data = $this->getData($query);
+            return $this->response(1, _e('Success'), $data);
+        }
+
         $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
 
         if ($statuses) {
@@ -92,11 +105,7 @@ class ExamController extends ApiActiveController
                 ->select('id')]);
         }
 
-        if (current_user_id() == 5510) {
-            $query = $query->andFilterWhere([
-                'in', $this->table_name . '.edu_semestr_subject_id', [569]
-            ]);
-        } elseif ($student && isRole('student')) {
+        if ($student && isRole('student')) {
             //            dd($student->edu_plan_id);
             if (isset($eduSmesterId)) {
                 $query = $query->andWhere([

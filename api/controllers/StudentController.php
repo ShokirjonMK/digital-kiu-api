@@ -231,6 +231,11 @@ class  StudentController extends ApiActiveController
         return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
     }
 
+
+
+    /********
+     *  SALOM SALOM
+     */
     public function actionGet($pinfl)
     {
         $hemis = new HemisMK();

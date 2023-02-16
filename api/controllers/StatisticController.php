@@ -253,6 +253,8 @@ class StatisticController extends ApiActiveController
 
         return $this->response(1, _e('Success'), $data);
     }
+
+    
     public function actionCheckingChala($lang)
     {
         $model = new UserStatistic1();

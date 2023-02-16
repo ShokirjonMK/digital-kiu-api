@@ -365,9 +365,9 @@ class KpiCategory extends \yii\db\ActiveRecord
         return
             [
                 1 => _e("1 year"),
-                2 => _e("6 month"),
-                3 => _e('Bir kalendar yil davomida'),
-                4 => _e('Sertifikat muddati davomida'),
+                2 => _e("6 month"), //1
+                3 => _e('Bir kalendar yil davomida'), //1
+                4 => _e('Sertifikat muddati davomida'), // check
                 5 => _e('Taribdan chiqarilgunga qadar'),
             ];
     }

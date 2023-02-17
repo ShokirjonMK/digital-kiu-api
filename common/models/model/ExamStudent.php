@@ -233,7 +233,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'oldAllBall',
 
             'statusName',
-            // 'teacherAccess',
+            'teacherAccess',
             'examSemeta',
 
             'accessKey',
@@ -436,7 +436,11 @@ class ExamStudent extends \yii\db\ActiveRecord
      */
     public function getTeacherAccess()
     {
-        return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+        if (current_user_id() == 1) {
+            return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+        }
+
+        return null;
     }
 
     /**

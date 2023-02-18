@@ -192,13 +192,15 @@ class UserController extends ApiActiveController
             $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
 
             // faculty
-            if ($f['status'] == 1) {
-                $query->andFilterWhere([
-                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                        'table_id' => $f['UserAccess']->table_id,
-                        'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
-                    ])
-                ]);
+            if (!isRole('mudir')) {
+                if ($f['status'] == 1) {
+                    $query->andFilterWhere([
+                        'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                            'table_id' => $f['UserAccess']->table_id,
+                            'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                        ])
+                    ]);
+                }
             }
 
             // kafedra

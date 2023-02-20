@@ -202,16 +202,18 @@ class UserController extends ApiActiveController
                     ]);
                 }
 
-                // kafedra
-                if ($k['status'] == 1) {
-                    $query->andFilterWhere([
-                        'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                            'table_id' => $k['UserAccess']->table_id,
-                            'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
-                        ])
-                    ]);
-                }
-            } else {
+                // // kafedra
+                // if ($k['status'] == 1) {
+                //     $query->andFilterWhere([
+                //         'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                //             'table_id' => $k['UserAccess']->table_id,
+                //             'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                //         ])
+                //     ]);
+                // }
+            }
+
+            if (isRole('dean')) {
                 // kafedra
                 if ($k['status'] == 1) {
                     $query->orFilterWhere([
@@ -283,7 +285,7 @@ class UserController extends ApiActiveController
         $query = $this->filterAll($query, $model);
 
         // sort
-        $query = $this->sort($query); 
+        $query = $this->sort($query);
 
         // dd($query->createCommand()->getRawSql());
 

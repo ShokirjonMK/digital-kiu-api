@@ -18,6 +18,7 @@ use common\models\model\Profile;
 use common\models\model\Student;
 use common\models\model\StudentExport;
 use common\models\model\StudentPinn;
+use common\models\model\StudentTimeOption;
 use Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
@@ -364,6 +365,7 @@ class  StudentController extends ApiActiveController
         //  Filter from Profile 
         $profile = new Profile();
         $user = new User();
+        $student_time_option = new StudentTimeOption();
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {
@@ -371,6 +373,9 @@ class  StudentController extends ApiActiveController
                 }
                 if (in_array($attribute, $user->attributes())) {
                     $query = $query->andFilterWhere(['users.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $student_time_option->attributes())) {
+                    $query = $query->andFilterWhere(['student_time_option.' . $attribute => $id]);
                 }
             }
         }

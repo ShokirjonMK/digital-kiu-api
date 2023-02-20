@@ -411,7 +411,7 @@ class ExamControlStudent extends ActiveRecord
      */
     public function getTeacherUser()
     {
-        return $this->hasOne(TimeTable::className(), ['id' => 'teacher_user_id']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'teacher_user_id']);
     }
 
     public static function createItem($model, $post)

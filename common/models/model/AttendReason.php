@@ -72,7 +72,8 @@ class AttendReason extends \yii\db\ActiveRecord
             [[
                 'start',
                 'end',
-                'student_id'
+                'student_id',
+                'edu_year_id',
             ], 'required'],
             [[
                 'start',
@@ -84,6 +85,7 @@ class AttendReason extends \yii\db\ActiveRecord
                 'subject_id',
                 'faculty_id',
                 'edu_plan_id',
+                'edu_year_id',
                 'status',
                 'order',
                 'created_at',
@@ -103,6 +105,7 @@ class AttendReason extends \yii\db\ActiveRecord
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
 
             [['attend_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->attendFileMaxSize],
 
@@ -148,6 +151,7 @@ class AttendReason extends \yii\db\ActiveRecord
             'subject_id',
             'faculty_id',
             'edu_plan_id',
+            'edu_year_id',
             'file',
             'description',
 
@@ -171,6 +175,7 @@ class AttendReason extends \yii\db\ActiveRecord
             'student',
             'studentAttends',
             'subject',
+            'eduYear',
 
             'createdBy',
             'updatedBy',
@@ -182,6 +187,15 @@ class AttendReason extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * Gets query for [[EduYear]].
+     *
+     * @return \yii\db\ActiveQuery|EduYearQuery
+     */
+    public function getEduYear()
+    {
+        return $this->hasOne(EduYear::className(), ['id' => 'edu_year_id']);
+    }
     /**
      * Gets query for [[EduPlan]].
      *
@@ -342,7 +356,7 @@ class AttendReason extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

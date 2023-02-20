@@ -50,9 +50,18 @@ class EduYear extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['year'], 'required',],
+            [['year', 'type'], 'required',],
             // [['year'], 'unique',],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [[
+                'order',
+                'status',
+                'type',
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by',
+                'is_deleted'
+            ], 'integer'],
             [['year'], 'integer'],
         ];
     }
@@ -68,6 +77,7 @@ class EduYear extends \yii\db\ActiveRecord
             'order' => _e('Order'),
             'status' => _e('Status'),
             'year' => 'Year',
+            'type' => 'Type',
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
@@ -82,8 +92,9 @@ class EduYear extends \yii\db\ActiveRecord
             'id',
             'name' => function ($model) {
                 // return $model->translate->name ?? $model->year . '-' . date('Y', strtotime($model->year));
-                return  $model->year . '-' .( $model->year+1 )." - " .$model->type;
+                return  $model->year . '-' . ($model->year + 1) . " - " . $model->type;
             },
+            'type',
             'order',
             'year',
             'status',

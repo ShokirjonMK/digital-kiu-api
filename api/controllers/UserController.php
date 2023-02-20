@@ -174,7 +174,7 @@ class UserController extends ApiActiveController
                 ])
             ]);
         }
-        
+
         $facultyId = Yii::$app->request->get('faculty_id');
         if (isset($facultyId)) {
             $query->andFilterWhere([
@@ -201,17 +201,29 @@ class UserController extends ApiActiveController
                         ])
                     ]);
                 }
+
+                // kafedra
+                if ($k['status'] == 1) {
+                    $query->andFilterWhere([
+                        'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                            'table_id' => $k['UserAccess']->table_id,
+                            'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                        ])
+                    ]);
+                }
+            } else {
+                // kafedra
+                if ($k['status'] == 1) {
+                    $query->orFilterWhere([
+                        'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                            'table_id' => $k['UserAccess']->table_id,
+                            'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                        ])
+                    ]);
+                }
             }
 
-            // kafedra
-            if ($k['status'] == 1) {
-                $query->andFilterWhere([
-                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                        'table_id' => $k['UserAccess']->table_id,
-                        'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
-                    ])
-                ]);
-            }
+
 
             // department
             if ($d['status'] == 1) {
@@ -273,7 +285,7 @@ class UserController extends ApiActiveController
         // sort
         $query = $this->sort($query);
 
-        // dd($query->createCommand()->getRawSql());
+        dd($query->createCommand()->getRawSql());
 
         // data
         $data = $this->getData($query);

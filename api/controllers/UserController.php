@@ -283,7 +283,7 @@ class UserController extends ApiActiveController
         $query = $this->filterAll($query, $model);
 
         // sort
-        $query = $this->sort($query);
+        // $query = $this->sort($query);
 
         dd($query->createCommand()->getRawSql());
 

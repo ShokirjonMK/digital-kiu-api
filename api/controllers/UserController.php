@@ -163,7 +163,6 @@ class UserController extends ApiActiveController
 
         /*  is Self  */
         // if(isRole('dean')){
-
         // }
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
@@ -175,6 +174,7 @@ class UserController extends ApiActiveController
                 ])
             ]);
         }
+        
         $facultyId = Yii::$app->request->get('faculty_id');
         if (isset($facultyId)) {
             $query->andFilterWhere([

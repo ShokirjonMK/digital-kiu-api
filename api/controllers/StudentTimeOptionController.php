@@ -146,6 +146,8 @@ class StudentTimeOptionController extends ApiActiveController
     {
         $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {
+            return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 

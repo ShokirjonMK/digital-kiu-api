@@ -156,11 +156,13 @@ class StudentTimeOptionController extends ApiActiveController
 
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-        
-        // remove model
-        $result = $model->delete();
 
-        if ($result) {
+        // remove model
+        // $result = ;
+
+        if ($model->delete()) {
+            return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
+
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);

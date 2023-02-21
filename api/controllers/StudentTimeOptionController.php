@@ -150,7 +150,13 @@ class StudentTimeOptionController extends ApiActiveController
         }
 
         // remove model
-        $result = $model->delete();
+        $result = StudentTimeOption::deleteItem($model);
+
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
 
         if ($result) {
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);

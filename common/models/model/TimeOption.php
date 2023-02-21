@@ -88,6 +88,7 @@ class TimeOption extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
+                    'archived',
                     'is_deleted'
                 ], 'integer'
             ],
@@ -138,6 +139,7 @@ class TimeOption extends \yii\db\ActiveRecord
             'faculty_id',
             'type',
             'description',
+            'archived',
 
             // 'order' => _e('Order'),
             'status' => _e('Status'),

@@ -332,6 +332,20 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         }
     }
 
+    public static function deleteItem($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (StudentTimeTable::deleteAll(['time_option_id' => $model->id]) && $model->delete()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) {

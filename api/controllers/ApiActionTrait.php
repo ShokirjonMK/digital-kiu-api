@@ -122,7 +122,9 @@ trait ApiActionTrait
             return false;
         }
 
-        //   echo "Please wait!!"; die(); return 0;
+        echo "Please wait!!";
+        die();
+        return 0;
 
         $lang = Yii::$app->request->get('lang');
 

@@ -149,6 +149,9 @@ class StudentTimeOptionController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        if ($model->timeOption->archived != 0) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
         // remove model
         $result = StudentTimeOption::deleteItem($model);
 

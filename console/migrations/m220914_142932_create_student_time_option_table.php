@@ -27,7 +27,7 @@ class m220914_142932_create_student_time_option_table extends Migration
             'edu_plan_id' => $this->integer()->null(),
             'edu_semester_id' => $this->integer()->null(),
             'language_id' => $this->integer()->null(),
-        
+
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
@@ -36,6 +36,7 @@ class m220914_142932_create_student_time_option_table extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
+            'archived' => $this->integer()->notNull()->defaultValue(0),
         ]);
 
         $this->addForeignKey('student_time_option_faculty_id', 'student_time_option', 'faculty_id', 'faculty', 'id');

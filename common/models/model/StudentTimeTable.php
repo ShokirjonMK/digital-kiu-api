@@ -104,6 +104,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
+
+                    'archived',
+
                     'is_deleted'
                 ], 'integer'
             ],
@@ -141,6 +144,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'room_id',
             'para_id',
             'week_id',
+            'archived',
             'edu_semester_id',
             'subject_category_id',
 
@@ -183,10 +187,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             'subjectCategory',
             'isBusy',
 
-
             'studentAttends',
-
-
 
             'student',
             'timeTable',
@@ -353,7 +354,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TimeTable::className(), ['id' => 'time_table_id']);
     }
-
 
     public static function createItemForOption($model, $post = null)
     {
@@ -556,11 +556,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        /**
-         *  Faqat  Student user
-         */
-        ///
-
+        /** Faqat  Student user */ ///
         if (!($model->student_id > 0)) {
             $student = Student::findOne(['user_id' => Current_user_id()]);
             if (!isset($student)) {
@@ -571,7 +567,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
             $model->student_id = self::student();
         }
-
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -624,8 +619,6 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-
-        //
 
         /** Shu fanni tanlaganmi */
         $timeTableSame = TimeTable::find()->where([

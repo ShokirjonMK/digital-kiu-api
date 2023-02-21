@@ -337,7 +337,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        if (StudentTimeTable::deleteAll(['time_option_id' => $model->id]) && $model->delete()) {
+        if (StudentTimeTable::deleteAll(['student_time_option_id' => $model->id]) && $model->delete()) {
             $transaction->commit();
             return true;
         } else {

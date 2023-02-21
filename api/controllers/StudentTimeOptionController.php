@@ -135,7 +135,7 @@ class StudentTimeOptionController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = StudentTimeOption::findOne(['id' => $id, 'is_deleted' => 0]);
+        $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -146,12 +146,13 @@ class StudentTimeOptionController extends ApiActiveController
     {
         $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {
-            return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
 
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
         if ($model->timeOption->archived != 0) {
+            return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
         // remove model

@@ -161,7 +161,12 @@ class  StudentTimeTableController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        if (isRole('admin') || isRole('edu_admin')) {
+
+        if ($model->timeTable->archived != 0) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if (isRole('admin') || isRole('edu_admin') || isRole('turor')) {
             $result = StudentTimeTable::deleteItem($model);
             if (!is_array($result)) {
                 return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
@@ -185,14 +190,6 @@ class  StudentTimeTableController extends ApiActiveController
             return $this->response(0, _e('There is an error occurred while processing.'), null, _e('You can delete only seminars!'), ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
-
-
-        // remove model
-        $result = StudentTimeTable::findOne($id)->delete();
-
-        if ($result) {
-            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
-        }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 }

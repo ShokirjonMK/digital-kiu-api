@@ -166,7 +166,7 @@ class  StudentTimeTableController extends ApiActiveController
             return $this->response(0, _e('Old Student Time  can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
-        if (isRole('admin') || isRole('edu_admin') || isRole('turor')) {
+        if (isRole('admin') || isRole('edu_admin') || isRole('tutor')) {
             $result = StudentTimeTable::deleteItem($model);
             if (!is_array($result)) {
                 return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);

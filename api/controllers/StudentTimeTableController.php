@@ -163,7 +163,7 @@ class  StudentTimeTableController extends ApiActiveController
         }
 
         if ($model->timeTable->archived != 0) {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
 
         if (isRole('admin') || isRole('edu_admin') || isRole('turor')) {

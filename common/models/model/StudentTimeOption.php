@@ -341,6 +341,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $errors[] = "Nothing is deleted";
             $transaction->rollBack();
             return simplify_errors($errors);
         }

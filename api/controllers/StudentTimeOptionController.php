@@ -135,7 +135,7 @@ class StudentTimeOptionController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = StudentTimeOption::findOne(['id' => $id]);
+        $model = StudentTimeOption::findOne(['id' => $id, 'is_deleted' => 0]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
@@ -143,6 +143,31 @@ class StudentTimeOptionController extends ApiActiveController
     }
 
     public function actionDelete($lang, $id)
+    {
+        $model = StudentTimeOption::findOne(['id' => $id]);
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+
+
+        if ($model->timeOption->archived != 0) {
+            return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        
+        // remove model
+        $result = $model->delete();
+
+        if ($result) {
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+    }
+
+
+    public function actionDelete22123123($lang, $id)
     {
         $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {
@@ -169,4 +194,5 @@ class StudentTimeOptionController extends ApiActiveController
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
+
 }

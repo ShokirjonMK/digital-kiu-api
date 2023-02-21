@@ -461,6 +461,11 @@ class Exam extends \yii\db\ActiveRecord
                 ->andWhere(['in', 'teacher_access_id', self::teacher_access()])
                 ->all();
         }
+
+        $student_id = Yii::$app->request->get('student_id');
+        if (isset($student_id)) {
+            return $this->hasOne(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $student_id]);
+        }
         return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
     }
 

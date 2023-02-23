@@ -30,7 +30,9 @@ use common\models\model\StudentPinn;
 use common\models\model\SubjectCategory;
 use common\models\model\SubjectSillabus;
 use Exception;
+use GuzzleHttp\Client;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 class TestGetDataController extends ApiActiveController
@@ -57,6 +59,52 @@ class TestGetDataController extends ApiActiveController
 
     public function actionIndex()
     {
+        $data = [];
+
+        $profiles = Profile::find()
+            // ->where(['checked' => 0])
+            // ->where(['checked_full' => 1])
+            // ->andWhere(['checked_full' => 0])
+            ->andWhere(['is not', 'passport_pin', null])
+            ->andWhere(['is not', 'passport_given_date', null])
+            // ->limit(1000)
+            // ->offset(8000)
+            // ->orderBy(['id' => SORT_DESC])
+            ->all();
+
+        $fileFolder = STORAGE_PATH  . '1111/';
+        foreach ($profiles as $profile) {
+            $oldFilePath = $fileFolder . $profile->passport_pin . '.png';
+            $newFileName = $profile->last_name . "+" . $profile->first_name . "_" . $profile->passport_pin;
+
+            $newFolderPath = STORAGE_PATH  . 'turniket_tahlandiiii1111111/';
+
+            if (file_exists($oldFilePath)) {
+                // Get the file extension
+                $fileExtension = pathinfo($oldFilePath, PATHINFO_EXTENSION);
+
+                // Generate the new file path
+                $newFilePath = $newFolderPath . $newFileName . '.' . $fileExtension;
+
+                // Create the new folder if it doesn't exist
+                FileHelper::createDirectory($newFolderPath);
+
+                // Rename the file
+                rename($oldFilePath, $newFilePath);
+                $data[] = [$profile->passport_pin => true];
+            } else {
+                $data[] = [$profile->passport_pin => false];
+
+                // fayl yo'q, bundan so'ng qandaydir muvaffaqiyatsizlik xabarini ko'rsatishingiz mumkin
+            }
+        }
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
+
+    public function actionIndexSubjectSillabusAuditoryTime()
+    {
         // $subjectSillabus = SubjectSillabus::find()->all();
 
         // foreach ($subjectSillabus as $model) {
@@ -80,59 +128,59 @@ class TestGetDataController extends ApiActiveController
         return "no thing";
     }
 
-    // public function actionIndex111($i)
-    // {
-    //     $errors = [];
-    //     $soni = $i * 500;
+    public function actionIndex111($i)
+    {
+        //     $errors = [];
+        //     $soni = $i * 500;
 
-    //     // return $this->response(1, _e('Success'), $soni);
+        //     // return $this->response(1, _e('Success'), $soni);
 
-    //     $attends = Attend::find()
-    //         ->limit(500)->offset($soni)->all();
-
-
-    //     foreach ($attends as $one) {
+        //     $attends = Attend::find()
+        //         ->limit(500)->offset($soni)->all();
 
 
-    //         foreach ($one->student_ids as $student_id) {
-    //             /** new Student Attent here */
+        //     foreach ($attends as $one) {
 
-    //             /** Checking student is really choos this time table */
 
-    //             /** Checking student is really choos this time table */
-    //             $newStudentAttend = new StudentAttend();
-    //             $newStudentAttend->student_id = $student_id;
-    //             $newStudentAttend->attend_id = $one->id;
-    //             $newStudentAttend->time_table_id = $one->time_table_id;
-    //             $newStudentAttend->subject_id = $one->subject_id;
-    //             $newStudentAttend->date = $one->date;
-    //             $newStudentAttend->subject_category_id = $one->subject_category_id;
-    //             $newStudentAttend->edu_year_id = $one->edu_year_id;
-    //             $newStudentAttend->time_option_id = $one->time_option_id;
-    //             $newStudentAttend->edu_semestr_id = $one->edu_semestr_id;
-    //             $newStudentAttend->faculty_id = $one->faculty_id;
-    //             $newStudentAttend->course_id = $one->timeTable->course_id;
-    //             $newStudentAttend->edu_plan_id = $one->edu_plan_id;
-    //             $newStudentAttend->type = $one->type;
-    //             $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
+        //         foreach ($one->student_ids as $student_id) {
+        //             /** new Student Attent here */
 
-    //             $newStudentAttend->updated_by = $one->updated_by;
-    //             $newStudentAttend->created_by = $one->created_by;
-    //             $newStudentAttend->updated_at = $one->updated_at;
-    //             $newStudentAttend->created_at = $one->created_at;
+        //             /** Checking student is really choos this time table */
 
-    //             // return $this->response(1, _e('Success'), $newStudentAttend->created_at);
+        //             /** Checking student is really choos this time table */
+        //             $newStudentAttend = new StudentAttend();
+        //             $newStudentAttend->student_id = $student_id;
+        //             $newStudentAttend->attend_id = $one->id;
+        //             $newStudentAttend->time_table_id = $one->time_table_id;
+        //             $newStudentAttend->subject_id = $one->subject_id;
+        //             $newStudentAttend->date = $one->date;
+        //             $newStudentAttend->subject_category_id = $one->subject_category_id;
+        //             $newStudentAttend->edu_year_id = $one->edu_year_id;
+        //             $newStudentAttend->time_option_id = $one->time_option_id;
+        //             $newStudentAttend->edu_semestr_id = $one->edu_semestr_id;
+        //             $newStudentAttend->faculty_id = $one->faculty_id;
+        //             $newStudentAttend->course_id = $one->timeTable->course_id;
+        //             $newStudentAttend->edu_plan_id = $one->edu_plan_id;
+        //             $newStudentAttend->type = $one->type;
+        //             $newStudentAttend->semestr_id = $one->eduSemestr->semestr_id;
 
-    //             // $newStudentAttend->reason = $one->reason;
-    //             if (!$newStudentAttend->save()) {
-    //                 $errors[] = [$student_id => $newStudentAttend->errors];
-    //             }
-    //             /** new Student Attent here */
-    //         }
-    //     }
+        //             $newStudentAttend->updated_by = $one->updated_by;
+        //             $newStudentAttend->created_by = $one->created_by;
+        //             $newStudentAttend->updated_at = $one->updated_at;
+        //             $newStudentAttend->created_at = $one->created_at;
 
-    //     return $this->response(1, _e('Success'), $errors);
-    // }
+        //             // return $this->response(1, _e('Success'), $newStudentAttend->created_at);
+
+        //             // $newStudentAttend->reason = $one->reason;
+        //             if (!$newStudentAttend->save()) {
+        //                 $errors[] = [$student_id => $newStudentAttend->errors];
+        //             }
+        //             /** new Student Attent here */
+        //         }
+        //     }
+
+        //     return $this->response(1, _e('Success'), $errors);
+    }
 
 
 
@@ -171,32 +219,61 @@ class TestGetDataController extends ApiActiveController
         return $this->response(1, _e('Success'), $errors);
     } */
 
-    // public function actionView()
-    // {
+    public function actionViewss()
+    {
 
-    //     $profiles = Profile::find()
-    //         ->where(['checked' => 0])
-    //         // ->andWhere(['checked_full' => 0])
-    //         ->andWhere(['is not', 'passport_pin', null])
-    //         ->andWhere(['is not', 'passport_given_date', null])
-    //         ->limit(10)
-    //         // ->offset(0)
-    //         ->orderBy(['id' => SORT_DESC])
-    //         ->all();
+        //     $profiles = Profile::find()
+        //         ->where(['checked' => 0])
+        //         // ->andWhere(['checked_full' => 0])
+        //         ->andWhere(['is not', 'passport_pin', null])
+        //         ->andWhere(['is not', 'passport_given_date', null])
+        //         ->limit(10)
+        //         // ->offset(0)
+        //         ->orderBy(['id' => SORT_DESC])
+        //         ->all();
 
-    //     foreach ($profiles as $profile) {
-    //         $hemis = new HemisMK();
+        //     foreach ($profiles as $profile) {
+        //         $hemis = new HemisMK();
 
-    //         $data = $hemis->getHemis($profile->passport_pin);
-    //         $profile->checked = 1;
-    //         $mip = MipServiceMK::corrent($profile);
-    //         $data[] = $mip;
-    //         $profile->save(false);
-    //     }
+        //         $data = $hemis->getHemis($profile->passport_pin);
+        //         $profile->checked = 1;
+        //         $mip = MipServiceMK::corrent($profile);
+        //         $data[] = $mip;
+        //         $profile->save(false);
+        //     }
 
-    //     return $this->response(1, _e('Success'), $data);
-    // }
+        //     return $this->response(1, _e('Success'), $data);
+    }
 
+
+    // public function actionProfileMip($passport = null, $jshir = null)
+    public function actionViewfreeMahalladan()
+    {
+
+        //////  Profile get from MIP
+        $data = [];
+        $profiles = Profile::find()
+            ->where(['checked' => 0])
+            // ->where(['checked_full' => 1])
+            ->andWhere(['checked_full' => 0])
+            ->andWhere(['is not', 'birthday', null])
+            ->andWhere(['is not', 'passport_number', null])
+            ->andWhere(['is not', 'passport_seria', null])
+            ->limit(1000)
+            // ->offset(0)
+            // ->orderBy(['id' => SORT_DESC])
+            ->all();
+
+        foreach ($profiles as $profile) {
+
+            $profile->checked = 1;
+            $mip = MipServiceMK::freeMahalladan($profile);
+            $data[] = $mip;
+            $profile->save(false);
+        }
+
+        return $this->response(1, _e('Success'), $data);
+    }
 
     // public function actionProfileMip($passport = null, $jshir = null)
     public function actionView($passport = null, $jshir = null)
@@ -205,16 +282,17 @@ class TestGetDataController extends ApiActiveController
         $data = [];
         $profiles = Profile::find()
             ->where(['checked' => 0])
+            // ->where(['checked_full' => 1])
             ->andWhere(['checked_full' => 0])
-            // ->andWhere(['checked_full' => 0])
             ->andWhere(['is not', 'passport_pin', null])
             ->andWhere(['is not', 'passport_given_date', null])
             ->limit(1000)
             // ->offset(0)
-            ->orderBy(['id' => SORT_DESC])
+            // ->orderBy(['id' => SORT_DESC])
             ->all();
 
         foreach ($profiles as $profile) {
+
             $profile->checked = 1;
             $mip = MipServiceMK::corrent($profile);
             $data[] = $mip;

@@ -40,6 +40,7 @@ class m221024_124202_create_attend_access_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
         $this->addForeignKey('mk_a_a_attend_access_time_table_id', 'attend_access', 'time_table_id', 'time_table', 'id');

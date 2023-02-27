@@ -4,8 +4,8 @@ namespace api\components;
 
 class HemisMK
 {
-    protected $urlToken = 'http://ministry.hemis.uz/app/rest/v2/oauth/token';
-    protected $urlStudent = 'http://ministry.hemis.uz/app/rest/v2/services/student/get?pinfl=';
+    protected $urlToken = 'https://ministry.hemis.uz/app/rest/v2/oauth/token';
+    protected $urlStudent = 'https://ministry.hemis.uz/app/rest/v2/services/student/get?pinfl=';
     protected $userName = 'ulaw';
     protected $password = 'tmeF3qFKmet8Y7D';
 

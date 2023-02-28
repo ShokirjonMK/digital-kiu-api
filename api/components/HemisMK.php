@@ -2,6 +2,9 @@
 
 namespace api\components;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
 class HemisMK
 {
     protected $urlToken = 'https://ministry.hemis.uz/app/rest/v2/oauth/token';
@@ -10,6 +13,39 @@ class HemisMK
     protected $password = 'tmeF3qFKmet8Y7D';
 
     public function getHemis($pinfl)
+    {
+        try {
+            $token = 'y4BRVRU6U2eHM6E3P7P28Yp7mNc';
+            $url = $this->urlStudent . $pinfl;
+
+            $client = new Client();
+            $response = $client->request('GET', $url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json; charset=UTF-8',
+                ],
+            ]);
+
+            $content = $response->getBody()->getContents();
+            $getContentJson = json_decode($content);
+            // dd($response->getStatusCode());
+
+            return $getContentJson;
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+                $statusCode = $response->getStatusCode();
+                $errorMessage = $response->getBody()->getContents();
+                return $errorMessage;
+            }
+            return $e->getMessage();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $pinfl;
+    }
+    public function getHemissss($pinfl)
     {
         $url = $this->urlStudent . $pinfl;
         $mk_curl = curl_init();

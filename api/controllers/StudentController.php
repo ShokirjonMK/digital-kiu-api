@@ -243,13 +243,15 @@ class  StudentController extends ApiActiveController
 
         $data = $hemis->getHemis($pinfl);
 
-
+        // return $data->success;
         // return $data;
-        if (isset($data->success)) {
+        if ($data->success) {
             if (isset($data->data))
                 return $this->response(1, _e('Success'), $data->data);
+
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $data, ResponseStatus::NOT_FOUND);
+            return $this->response(0, _e($data->data), null, null, ResponseStatus::NOT_FOUND);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
     }

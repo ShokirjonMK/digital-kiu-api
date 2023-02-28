@@ -498,8 +498,8 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isRole('student')) {
             return $this->hasMany(StudentAttend::className(), ['time_table_id' => 'id'])->onCondition(['student_id' => $this->student()]);
         }
+
         $filter = json_decode(str_replace("'", "", Yii::$app->request->get('filter')));
-        
         if (isset($filter->student_id)) {
             return $this->hasMany(StudentAttend::className(), ['time_table_id' => 'id'])->onCondition(['student_id' => $filter->student_id]);
         }

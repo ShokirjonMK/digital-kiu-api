@@ -437,6 +437,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                                     ->limit($question_count_with_ball->count)
                                     ->all();
 
+                                // var_dump($question_count_with_ball->count);
                                 if (count($questionAll) == $question_count_with_ball->count) {
                                     // if (count($questionAll) > 0) {
                                     foreach ($questionAll as $question) {
@@ -461,6 +462,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                                     return simplify_errors($errors);
                                 }
                             }
+
                             $getQuestionModel = new ExamStudentAnswer();
                             $getQuestion = $getQuestionModel->find()
                                 ->with(['question'])

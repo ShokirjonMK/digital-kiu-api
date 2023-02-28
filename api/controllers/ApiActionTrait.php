@@ -122,7 +122,7 @@ trait ApiActionTrait
             return false;
         }
 
-    //   echo "Please wait!!"; die(); return 0;
+        //   echo "Please wait!!"; die(); return 0;
 
         $lang = Yii::$app->request->get('lang');
 
@@ -133,11 +133,7 @@ trait ApiActionTrait
         }
         if (!in_array($lang, $langCodes)) {
             $this->asJson($this->response(0, _e('Wrong language code selected (' . $lang . ').'), null, null, ResponseStatus::UPROCESSABLE_ENTITY));
-        }
-        
-        
-        
-         else {
+        } else {
 
 
             // dd("asdasd");

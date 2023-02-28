@@ -42,6 +42,7 @@ class m221008_102604_create_attend_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
         $this->addForeignKey('amk_attend_time_table', 'attend', 'time_table_id', 'time_table', 'id');
         $this->addForeignKey('amk_attend_subject', 'attend', 'subject_id', 'subject', 'id');

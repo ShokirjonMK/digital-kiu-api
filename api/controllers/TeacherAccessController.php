@@ -85,7 +85,9 @@ class TeacherAccessController extends ApiActiveController
             ->where([
                 'para_id' => Yii::$app->request->get('para_id'),
                 'edu_year_id' => Yii::$app->request->get('edu_year_id'),
-                'week_id' => Yii::$app->request->get('week_id')
+                'week_id' => Yii::$app->request->get('week_id'),
+                'is_deleted' => 0,
+                'archived' => 0
 
             ])->andWhere(['in', 'semester_id', $semester_ids]);
 
@@ -95,6 +97,8 @@ class TeacherAccessController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
+
+        // sirtqi uchun ochildi
         if (isset($teacheIds)) {
             $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
         }

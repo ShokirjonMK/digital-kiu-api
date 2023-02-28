@@ -72,6 +72,7 @@ class UserController extends ApiActiveController
                         // 'role' => $user->getRoles(),
                         'role' => $user->getRolesStudent(),
                         'oferta' => $user->getOfertaIsComformed(),
+                        // 'is_changed' => $user->is_changed,
                         // 'role' => $user->roleItem,
                         'permissions' => $user->permissionsStudent,
                         'access_token' => $user->access_token,
@@ -86,6 +87,7 @@ class UserController extends ApiActiveController
                         // 'role' => $user->getRoles(),
                         'role' => $user->getRolesNoStudent(),
                         'oferta' => $user->getOfertaIsComformed(),
+                        'is_changed' => $user->is_changed,
                         // 'role' => $user->roleItem,
                         'permissions' => $user->permissionsNoStudent,
                         'access_token' => $user->access_token,
@@ -161,7 +163,6 @@ class UserController extends ApiActiveController
 
         /*  is Self  */
         // if(isRole('dean')){
-
         // }
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
@@ -173,6 +174,7 @@ class UserController extends ApiActiveController
                 ])
             ]);
         }
+
         $facultyId = Yii::$app->request->get('faculty_id');
         if (isset($facultyId)) {
             $query->andFilterWhere([
@@ -190,24 +192,40 @@ class UserController extends ApiActiveController
             $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);
 
             // faculty
-            if ($f['status'] == 1) {
-                $query->andFilterWhere([
-                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                        'table_id' => $f['UserAccess']->table_id,
-                        'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
-                    ])
-                ]);
+            if (!isRole('mudir')) {
+                if ($f['status'] == 1) {
+                    $query->andFilterWhere([
+                        'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                            'table_id' => $f['UserAccess']->table_id,
+                            'user_access_type_id' => Faculty::USER_ACCESS_TYPE_ID,
+                        ])
+                    ]);
+                }
+
+                // // kafedra
+                // if ($k['status'] == 1) {
+                //     $query->andFilterWhere([
+                //         'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                //             'table_id' => $k['UserAccess']->table_id,
+                //             'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                //         ])
+                //     ]);
+                // }
             }
 
-            // kafedra
-            if ($k['status'] == 1) {
-                $query->andFilterWhere([
-                    'in', 'users.id', UserAccess::find()->select('user_id')->where([
-                        'table_id' => $k['UserAccess']->table_id,
-                        'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
-                    ])
-                ]);
+            if (isRole('dean')) {
+                // kafedra
+                if ($k['status'] == 1) {
+                    $query->orFilterWhere([
+                        'in', 'users.id', UserAccess::find()->select('user_id')->where([
+                            'table_id' => $k['UserAccess']->table_id,
+                            'user_access_type_id' => Kafedra::USER_ACCESS_TYPE_ID,
+                        ])
+                    ]);
+                }
             }
+
+
 
             // department
             if ($d['status'] == 1) {

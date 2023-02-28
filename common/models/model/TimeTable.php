@@ -91,6 +91,7 @@ class TimeTable extends \yii\db\ActiveRecord
                     'edu_plan_id',
                     'building_id',
                     'time_option_id',
+                    'archived',
 
                     'order',
                     'status',
@@ -703,6 +704,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'para_id' => $model->para_id,
             'week_id' => $model->week_id,
             'edu_year_id' => $eduSemester->edu_year_id,
+            'archived' => 0,
         ]);
 
         $model->semester_id = $eduSemester->semestr_id;
@@ -728,6 +730,7 @@ class TimeTable extends \yii\db\ActiveRecord
             'edu_year_id' => $eduSemester->edu_year_id,
             'week_id' => $model->week_id,
             'teacher_access_id' => $model->teacher_access_id,
+            'archived' => 0,
         ]);
 
         if (isset($checkTeacherTimeTable)) {

@@ -12,7 +12,7 @@ class m211109_164136_create_student_time_table extends Migration
      */
     public function safeUp()
     {
-  
+
         $this->createTable('{{%student_time_table}}', [
             'id' => $this->primaryKey(),
             'student_id' => $this->integer()->notNull(),
@@ -24,11 +24,11 @@ class m211109_164136_create_student_time_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
         $this->addForeignKey('pe_student_time_table_student_id', 'student_time_table', 'student_id', 'student', 'id');
         $this->addForeignKey('ce_student_time_table_time_table_id', 'student_time_table', 'time_table_id', 'time_table', 'id');
-
     }
 
     /**
@@ -40,5 +40,4 @@ class m211109_164136_create_student_time_table extends Migration
         $this->dropForeignKey('ce_student_time_table_time_table_id', 'student_time_table');
         $this->dropTable('{{%student_time_table}}');
     }
-    
 }

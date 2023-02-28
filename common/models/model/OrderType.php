@@ -48,7 +48,7 @@ class OrderType extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            // [['lang'], 'required'],
+            [['lang'], 'required'],
             [['lang'], 'string', 'max' => 2],
         ];
     }

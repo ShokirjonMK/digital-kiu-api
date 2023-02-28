@@ -56,7 +56,8 @@ class TimeTableController extends ApiActiveController
 
         if (isset($mudirSelf))
             if ($mudirSelf == 1)  $query->andFilterWhere([
-                'teacher_user_id' => current_user_id()
+                'teacher_user_id' => current_user_id(),
+                'archived' => 0,
             ]);
 
         $kafedraId = Yii::$app->request->get('kafedra_id');

@@ -80,12 +80,12 @@ class FacultyStatistic extends Faculty
 
     public function getGenderMale()
     {
-        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id'])->andOnCondition(['gender' => Gender::MALE]);
+        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id'])->andOnCondition(['!=', 'course_id', 9])->andWhere(['gender' => Gender::MALE]);
     }
 
     public function getGenderFemale()
     {
-        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id'])->andOnCondition(['gender' => Gender::FEMALE]);
+        return $this->hasMany(StudentStatistic::className(), ['faculty_id' => 'id'])->andOnCondition(['!=', 'course_id', 9])->andWhere(['gender' => Gender::FEMALE]);
     }
 
 

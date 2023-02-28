@@ -389,6 +389,7 @@ class EduPlan extends \yii\db\ActiveRecord
                 'faculty_id' => $model->faculty_id,
                 'direction_id' => $model->direction_id,
                 'edu_type_id' => $model->edu_type_id,
+                'edu_form_id' => $model->edu_form_id,
                 'edu_year_id' => $model->edu_year_id,
                 'is_deleted' => 0
             ]);

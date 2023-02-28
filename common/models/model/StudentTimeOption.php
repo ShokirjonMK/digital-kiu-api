@@ -77,6 +77,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
                 'created_at',
                 'updated_at',
                 'created_by',
+                'archived',
                 'updated_by'
             ], 'integer'],
 
@@ -135,6 +136,7 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             'edu_plan_id',
             'edu_semester_id',
             'language_id',
+            'archived',
 
             // 'order' => _e('Order'),
             'status' => _e('Status'),
@@ -327,6 +329,21 @@ class StudentTimeOption extends \yii\db\ActiveRecord
             $transaction->commit();
             return true;
         } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function deleteItem($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (StudentTimeTable::deleteAll(['student_time_option_id' => $model->id]) && $model->delete()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $errors[] = "Nothing is deleted";
             $transaction->rollBack();
             return simplify_errors($errors);
         }

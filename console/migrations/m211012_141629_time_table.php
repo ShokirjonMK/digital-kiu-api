@@ -31,6 +31,7 @@ class m211012_141629_time_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
         ]);
 
         $this->addForeignKey('tt_time_table_teacher_access_id', 'time_table', 'teacher_access_id', 'teacher_access', 'id');

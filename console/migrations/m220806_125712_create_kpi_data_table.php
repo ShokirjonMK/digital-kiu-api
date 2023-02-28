@@ -55,6 +55,7 @@ class m220806_125712_create_kpi_data_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'is_deleted_org' => $this->integer()->defaultValue(0),
 
         ]);
 

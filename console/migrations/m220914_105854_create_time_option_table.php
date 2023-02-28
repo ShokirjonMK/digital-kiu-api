@@ -31,6 +31,7 @@ class m220914_105854_create_time_option_table extends Migration
             'type' => $this->integer()->null(),
             'description' => $this->text()->null(),
 
+            'archived' => $this->tinyInteger(1)->defaultValue(0),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->integer()->defaultValue(1),

@@ -470,7 +470,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         $model->type = $model->exam->eduSemestrSubject->eduSemestr->type ?? 1;
         $model->edu_year_id = $model->exam->eduSemestrSubject->eduSemestr->edu_year_id;
-        $model->subject_id = $model->exam->eduSemestrSubject->subject_id;
+        // $model->subject_id = $model->exam->eduSemestrSubject->subject_id;
 
         // $model->exam_id = $examId;
         $model->edu_year_id = $model->exam->eduSemestrSubject->eduSemestr->edu_year_id;

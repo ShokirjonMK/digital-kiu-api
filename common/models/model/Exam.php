@@ -251,6 +251,9 @@ class Exam extends \yii\db\ActiveRecord
 
             // 'allow',
 
+
+            'examStudentNo',
+
             'description',
             'createdBy',
             'updatedBy',
@@ -448,6 +451,19 @@ class Exam extends \yii\db\ActiveRecord
     public function getKey()
     {
         return $this->password ?? '';
+    }
+
+    public function getExamStudentNo()
+    {
+        return Student::find()
+            ->where(['edu_plan_id' => $this->eduSemestrSubject->eduSemestr->edu_plan_id])
+            ->andWhere([
+                'not in', 'id',
+                ExamStudent::find()
+                    ->select('student_id')
+                    ->where(['exam_id' => $this->id])
+            ])
+            ->all();
     }
 
     public function getExamStudent()

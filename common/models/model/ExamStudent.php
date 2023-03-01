@@ -465,8 +465,22 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            return simplify_errors($errors);
         }
 
+        $model->type = $model->exam->eduSemestrSubject->eduSemestr->type ?? 1;
+        $model->edu_year_id = $model->exam->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->exam->eduSemestrSubject->subject_id;
+
+        // $model->exam_id = $examId;
+        $model->edu_year_id = $model->exam->eduSemestrSubject->eduSemestr->edu_year_id;
+        // $model->student_id = $student_id;
+        $model->lang_id = $model->student->edu_lang_id;
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            return simplify_errors($errors);
+        }
         if ($model->save()) {
             $transaction->commit();
             return true;

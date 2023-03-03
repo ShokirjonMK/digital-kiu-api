@@ -247,6 +247,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
         // dd($model->errors);
@@ -302,6 +303,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
 
@@ -324,6 +327,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
 

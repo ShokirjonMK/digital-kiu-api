@@ -651,16 +651,6 @@ class TimeTable extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[EduSemestr]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEduSemestr()
-    {
-        return $this->hasOne(EduSemestr::className(), ['id' => 'edu_semester_id']);
-    }
-
-    /**
      * Gets query for [[profile]].
      *
      * @return \yii\db\ActiveQuery
@@ -668,6 +658,16 @@ class TimeTable extends \yii\db\ActiveRecord
     public function getTeacher()
     {
         return Profile::find()->select(['user_id', 'first_name', 'last_name', 'middle_name'])->where(['user_id' => $this->teacherAccess->user_id ?? null])->one();
+    }
+
+    /**
+     * Gets query for [[EduSemestr]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEduSemestr()
+    {
+        return $this->hasOne(EduSemestr::className(), ['id' => 'edu_semester_id']);
     }
 
     /**

@@ -465,6 +465,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
 
@@ -479,6 +480,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
         if ($model->save()) {

@@ -33,6 +33,7 @@ class ElectionController extends ApiActiveController
             // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            
 
 
         // if (!isRole('admin')) {

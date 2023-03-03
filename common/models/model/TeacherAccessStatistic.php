@@ -168,7 +168,7 @@ class TeacherAccessStatistic extends TeacherAccess
             // ->groupBy('exam_student.id')
         ;
 
-        dd($query->createCommand()->getRawSql());
+        // dd($query->createCommand()->getRawSql());
         // dd("qweqwe");
         // return 122;
         return count($query->all());

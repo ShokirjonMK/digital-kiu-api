@@ -233,7 +233,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'oldAllBall',
 
             'statusName',
-            'teacherAccess',
+            // 'teacherAccess',
             'examSemeta',
 
             'accessKey',

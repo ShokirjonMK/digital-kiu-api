@@ -43,7 +43,7 @@ class SurveyAnswerController extends ApiActiveController
 
         $post['user_id'] = current_user_id();
         $post['student_id'] = $this->student();
-        $post['student_id'] = 2;
+        // $post['student_id'] = 2;
 
         $this->load($model, $post);
 

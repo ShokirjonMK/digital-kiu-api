@@ -285,6 +285,9 @@ $routes = [
     /**  */
 
 
+    // Student Attendees By
+    'GET <lang:\w{2}>/student-attends/by-date' => 'student-attend/by-date',
+
     // Student Get me
     'GET <lang:\w{2}>/students/me' => 'student/me',
 

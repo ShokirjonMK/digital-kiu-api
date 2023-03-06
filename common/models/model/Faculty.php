@@ -6,6 +6,7 @@ use api\resources\ResourceTrait;
 use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Query;
 
 /**
  * This is the model class for table "faculty".
@@ -104,7 +105,15 @@ class Faculty extends \yii\db\ActiveRecord
             'userAccess',
             'kafedras',
             'eduPlans',
-            'eirections',
+            'directions',
+
+            'students',
+            'studentsCount',
+            'studentsAll',
+            'studentsCountAll', // barcha studentlar o'chkanlariham 
+
+            'attendStudentByDay',
+
             'description',
             'createdBy',
             'updatedBy',
@@ -113,6 +122,49 @@ class Faculty extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getAttendStudentByDay()
+    {
+        $date = Yii::$app->request->get('date') ?? date('Y-m-d');
+        $date = date("Y-m-d", strtotime($date));
+
+        $query = (new \yii\db\Query())
+            ->select([
+                'COUNT(DISTINCT student_id) AS student_count'
+            ])
+            ->from('student_attend')
+            ->where([
+                'date' => $date,
+                'faculty_id' => $this->id,
+            ]);
+
+        $result = $query->one();
+        return [
+            'student_count' => $result['student_count'],
+            'date' => $date,
+        ];
+        return $result['student_count'];
+    }
+
+    public function getAttendStudentByDay001()
+    {
+        $date = Yii::$app->request->get('date') ?? date('Y-m-d');
+        $date = date("Y-m-d", strtotime($date));
+
+        $query = (new \yii\db\Query())
+            ->select([
+                'COUNT(DISTINCT student_id) AS student_count'
+            ])
+            ->from('student_attend')
+            ->where([
+                'date' => $date,
+                'faculty_id' => $this->id,
+            ])
+            ->indexBy('faculty_id')
+            ->column();
+
+        return $query;
     }
 
     public function getDescription()
@@ -157,6 +209,47 @@ class Faculty extends \yii\db\ActiveRecord
         return $this->hasMany(Direction::className(), ['faculty_id' => 'id']);
     }
 
+
+    /**
+     * Gets query for [[AttendReasons]].
+     *
+     * @return \yii\db\ActiveQuery|AttendReasonQuery
+     */
+    public function getAttendReasons()
+    {
+        return $this->hasMany(AttendReason::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Attends]].
+     *
+     * @return \yii\db\ActiveQuery|AttendQuery
+     */
+    public function getAttends()
+    {
+        return $this->hasMany(Attend::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[EduSemestrSubjects]].
+     *
+     * @return \yii\db\ActiveQuery|EduSemestrSubjectQuery
+     */
+    public function getEduSemestrSubjects()
+    {
+        return $this->hasMany(EduSemestrSubject::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Exams]].
+     *
+     * @return \yii\db\ActiveQuery|ExamQuery
+     */
+    public function getExams()
+    {
+        return $this->hasMany(Exam::className(), ['faculty_id' => 'id']);
+    }
+
     /**
      * Gets query for [[EduPlans]].
      *
@@ -175,6 +268,86 @@ class Faculty extends \yii\db\ActiveRecord
     public function getKafedras()
     {
         return $this->hasMany(Kafedra::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[StudentAttends]].
+     *
+     * @return \yii\db\ActiveQuery|StudentAttendQuery
+     */
+    public function getStudentAttends()
+    {
+        return $this->hasMany(StudentAttend::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[StudentClubs]].
+     *
+     * @return \yii\db\ActiveQuery|StudentClubQuery
+     */
+    public function getStudentClubs()
+    {
+        return $this->hasMany(StudentClub::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[StudentSubjectSelections]].
+     *
+     * @return \yii\db\ActiveQuery|StudentSubjectSelectionQuery
+     */
+    public function getStudentSubjectSelections()
+    {
+        return $this->hasMany(StudentSubjectSelection::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[StudentTimeOptions]].
+     *
+     * @return \yii\db\ActiveQuery|StudentTimeOptionQuery
+     */
+    public function getStudentTimeOptions()
+    {
+        return $this->hasMany(StudentTimeOption::className(), ['faculty_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Students]].
+     *
+     * @return \yii\db\ActiveQuery|StudentQuery
+     */
+    public function getStudents()
+    {
+        return $this->hasMany(Student::className(), ['faculty_id' => 'id'])
+            ->onCondition([
+                'status' => 10,
+                'is_deleted' => 0
+            ])
+            ->andWhere(['!=', 'course_id', 9]);
+    }
+
+    public function getStudentsCount()
+    {
+        return count($this->students);
+    }
+
+    public function getStudentsAll()
+    {
+        return $this->hasMany(Student::className(), ['faculty_id' => 'id']);
+    }
+
+    public function getStudentsCountAll()
+    {
+        return count($this->studentsAll);
+    }
+
+    /**
+     * Gets query for [[TimeOptions]].
+     *
+     * @return \yii\db\ActiveQuery|TimeOptionQuery
+     */
+    public function getTimeOptions()
+    {
+        return $this->hasMany(TimeOption::className(), ['faculty_id' => 'id']);
     }
 
     /**

@@ -246,7 +246,7 @@ class TestGetDataController extends ApiActiveController
     }
 
 
-    // public function actionProfileMip($passport = null, $jshir = null)
+    // public function actionProfileMipss($passport = null, $jshir = null)
     public function actionViewfreeMahalladan()
     {
 
@@ -275,7 +275,7 @@ class TestGetDataController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-    // public function actionProfileMip($passport = null, $jshir = null)
+    // public function actionProfileMips($passport = null, $jshir = null)
     public function actionView($passport = null, $jshir = null)
     {
         //////  Profile get from MIP

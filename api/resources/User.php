@@ -272,12 +272,16 @@ class User extends CommonUser
         }
     }
 
-
     public function getKpiBall()
     {
-        return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->sum('ball');
-        // return $this->hasOne(Profile::className(), ['user_id' => 'id']);
+        return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->andWhere(['is_deleted' => 1])->sum('ball');
     }
+
+
+    // public function getKpiBall()
+    // {
+    //     return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->sum('ball');
+    // }
 
     public function getOfertaIsComformed()
     {

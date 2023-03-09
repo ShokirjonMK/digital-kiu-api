@@ -187,10 +187,10 @@ class ElectionVote extends \yii\db\ActiveRecord
         // dd($model->electionCondidate);
         $model->election_id = $model->electionCondidate->election_id;
 
-        if (!in_array($model->election->role, current_user_roles_array())) {
-            $errors[] = "This election not for you";
-            return simplify_errors($errors);
-        }
+        // if (!in_array($model->election->role, current_user_roles_array())) {
+        //     $errors[] = "This election not for you";
+        //     return simplify_errors($errors);
+        // }
 
         $now_time = time();
 

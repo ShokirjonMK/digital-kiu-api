@@ -201,6 +201,7 @@ class HostelDoc extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
 
@@ -234,6 +235,7 @@ class HostelDoc extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
             return simplify_errors($errors);
         }
 

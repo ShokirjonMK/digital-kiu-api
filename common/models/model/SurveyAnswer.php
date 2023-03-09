@@ -214,6 +214,7 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         }
 
         $model->edu_semestr_subject_id = $model->exam->edu_semestr_subject_id;
+        $model->subject_id = $model->exam->edu_semestr_subject_id->subject_id;
 
         if ($model->save()) {
             $transaction->commit();

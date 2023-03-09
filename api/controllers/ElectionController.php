@@ -33,12 +33,12 @@ class ElectionController extends ApiActiveController
             // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['tr.tabel_name' => 'faculty'])
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            
 
 
-        // return current_user_roles_array();
-        if (!isRole('admin')) {
-            $query = $query->andWhere(['in', 'role', current_user_roles_array()]);
-        }
+        // if (!isRole('admin')) {
+        //     $query = $query->andWhere(['in', 'role', current_user_roles_array()]);
+        // }
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -90,6 +90,8 @@ class ElectionController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
         if ($model->password == Yii::$app->request->get('password')) {
             return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
         } else {

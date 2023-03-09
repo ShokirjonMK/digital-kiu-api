@@ -61,10 +61,20 @@ class TimeTableController extends ApiActiveController
             ]);
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
+
         if (isset($kafedraId)) {
             $query->andFilterWhere([
                 'in', 'subject_id', Subject::find()->where([
                     'kafedra_id' => $kafedraId
+                ])->select('id')
+            ]);
+        }
+
+        $facultyId = Yii::$app->request->get('faculty_id');
+        if (isset($kafedraId)) {
+            $query->andFilterWhere([
+                'in', 'subject_id', Subject::find()->where([
+                    'kafedra_id' => Kafedra::find()->where(['faculty_id' => $facultyId])->select('id')
                 ])->select('id')
             ]);
         }

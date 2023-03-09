@@ -79,6 +79,13 @@ class AttendReason extends \yii\db\ActiveRecord
                 'start',
                 'end'
             ], 'safe'],
+            [
+                ['end'],
+                'compare',
+                'compareValue' => date("Y-m-d H:i:s", strtotime('-1 month')),
+                'operator' => '>=',
+                'message' => _e('The date must be within the last month.')
+            ],
             [[
                 'is_confirmed',
                 'student_id',
@@ -253,6 +260,7 @@ class AttendReason extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+
             $transaction->rollBack();
             return simplify_errors($errors);
         }

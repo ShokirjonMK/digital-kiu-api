@@ -40,7 +40,7 @@ class SubjectController extends ApiActiveController
                 ->select('id')]);
         }
         
-        if (isRole('content_assign') || isRole('tutor')) {
+        if (isRole('content_assign') || isRole('edu_quality')) {
 
             // filter
             $query = $this->filterAll($query, $model);

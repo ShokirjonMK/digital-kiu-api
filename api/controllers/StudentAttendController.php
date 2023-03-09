@@ -5,6 +5,8 @@ namespace api\controllers;
 use common\models\model\StudentAttend;
 use Yii;
 use base\ResponseStatus;
+use yii\data\ActiveDataProvider;
+use yii\db\Query;
 
 class StudentAttendController extends ApiActiveController
 {
@@ -54,6 +56,53 @@ class StudentAttendController extends ApiActiveController
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionByDate($date)
+    {
+        $date = date("Y-m-d", strtotime($date));
+
+        /* $dataProvider = new ActiveDataProvider([
+            'query' => StudentAttend::find()
+                ->select(['student_id', 'faculty_id', 'COUNT(*) AS count'])
+                ->where(['status' => 1])
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['date' => $date])
+                ->groupBy(['student_id', 'faculty_id'])
+        ]); */
+
+
+        /* $query = new Query();
+        $query->select([
+            'student_id',
+            'date',
+            'faculty_id',
+            'COUNT(*) AS total_attendances',
+        ])
+            ->from('student_attend')
+            ->groupBy(['student_id'])
+            ->where(['status' => 1, 'date' => $date]);
+        $result = $query->all(); */
+
+        /* $result = StudentAttend::find()
+        ->select(['date', 'faculty_id', 'student_id', 'COUNT(*) as count'])
+        ->where(['date' => $date]) // $date o'zgaruvchisiga izoh qo'yishingiz kerak
+            ->groupBy(['date', 'faculty_id', 'student_id'])
+            ->asArray()
+            ->all(); */
+
+
+        $query = (new \yii\db\Query())
+            ->select([
+                'faculty_id', 'COUNT(DISTINCT student_id) AS student_count'
+            ])
+            ->from('student_attend')
+            ->where(['date' => $date])
+            ->groupBy('faculty_id');
+        $result = $query->all();
+        // dd($result);
+        return $this->response(1, ($this->controller_name . ' successfully created.'), $result, null, ResponseStatus::CREATED);
+        // return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
     }
 
     public function actionCreate($lang)

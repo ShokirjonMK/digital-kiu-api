@@ -669,7 +669,7 @@ class ExamControlStudent extends ActiveRecord
         $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
 
         // faqat sirtqi uchun 
-        if (
+        /* if (
             !in_array($model->edu_plan_id, [55, 131, 132])
             && !in_array($model->student->profile->passport_pin, [
                 31605986070038,
@@ -698,7 +698,7 @@ class ExamControlStudent extends ActiveRecord
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
             return simplify_errors($errors);
-        }
+        } */
         // faqat sirtqi uchun 
 
         if ($model->save()) {

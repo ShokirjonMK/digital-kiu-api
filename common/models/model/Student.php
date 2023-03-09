@@ -364,7 +364,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getAttends()
     {
-        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id']);
+        return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])->onCondition(['archived' => 1]);
     }
 
     public function getUsernamePass()

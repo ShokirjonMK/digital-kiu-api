@@ -51,6 +51,10 @@ class FacultyController extends ApiController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
         // is Self 
+
+        // if (isRole('justice')) {
+        // }
+
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
             $query->where([

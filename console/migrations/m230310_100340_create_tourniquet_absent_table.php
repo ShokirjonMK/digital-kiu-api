@@ -25,8 +25,8 @@ class m230310_100340_create_tourniquet_absent_table extends Migration
             'passport_pin' => $this->string(255)->notNull(),
             'date' => $this->date()->null(),
             'date_time' => $this->dateTime()->null(),
-            'date_out' => $this->time()->notNull(),
-            'date_in' => $this->time()->notNull(),
+            'date_out' => $this->time()->null(),
+            'date_in' => $this->time()->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

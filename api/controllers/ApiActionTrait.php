@@ -446,6 +446,11 @@ trait ApiActionTrait
             return $t;
         }
 
+
+        if (property_exists($roles, 'justice')) {
+            return $t;
+        }
+
         if ($userAccess && !(property_exists($roles, 'admin'))) {
             $t['status'] = 1;
             $t['UserAccess'] = $userAccess;

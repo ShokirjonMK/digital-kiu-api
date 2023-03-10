@@ -154,6 +154,7 @@ $controllers = [
 
     'telegram',
     'test-get-data',
+    'tourniquet-absent'
 ];
 
 $controllerRoutes = [];

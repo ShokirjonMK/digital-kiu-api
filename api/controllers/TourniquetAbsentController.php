@@ -75,12 +75,11 @@ class TourniquetAbsentController extends ApiActiveController
             $objectPhpExcel = $objReader->load($file[0]->tempName);;
 
             $sheetDatas = [];
-            dd($sheetDatas);
+
             $sheetDatas = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
 
-            if (true) {
-                $sheetDatas = $this->executeArrayLabel($sheetDatas);
-            }
+            $sheetDatas = $this->executeArrayLabel($sheetDatas);
+
 
             if (!empty($this->getOnlyRecordByIndex)) {
                 $sheetDatas = $this->executeGetOnlyRecords($sheetDatas, $this->getOnlyRecordByIndex);
@@ -90,12 +89,15 @@ class TourniquetAbsentController extends ApiActiveController
             }
 
             foreach ($sheetDatas as $value) {
+                // dd($value);
+
                 $profile = Profile::findOne(['passport_pin' => $value['ID']]);
                 if ($value['ID'] !== null) {
                     $model = new TourniquetAbsent();
                     $model->passport_pin = (int)$value['ID'];
-                    $model->roles = current_user_roles($profile->user_id);
+                    $model['roles'] = current_user_roles($profile->user_id);
                     $model->user_id = $profile->user_id;
+                
                     $model->save(false);
                 }
             }

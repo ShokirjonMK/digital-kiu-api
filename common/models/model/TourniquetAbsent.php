@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -29,7 +30,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class TourniquetAbsent extends \yii\db\ActiveRecord
 {
-    // use ResourceTrait;
+    use ResourceTrait;
 
     public function behaviors()
     {
@@ -54,7 +55,8 @@ class TourniquetAbsent extends \yii\db\ActiveRecord
         return [
             [['user_id', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['passport_pin'], 'required'],
-            [['date'], 'default' => date("Y-m-d")],
+            [['date'], 'default', 'value' => date('Y-m-d')],
+            // [['date'], 'default', 'value' => date('Y-m-d')],
             [['date', 'date_time', 'date_out', 'date_in'], 'safe'],
             [['roles', 'passport_pin'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],

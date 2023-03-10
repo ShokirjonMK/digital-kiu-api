@@ -88,24 +88,18 @@ class TourniquetAbsentController extends ApiActiveController
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
 
-            foreach ($sheetDatas as $value) {
-                // dd($value);
-
-                $profile = Profile::findOne(['passport_pin' => $value['ID']]);
-                if ($value['ID'] !== null) {
-                    $model = new TourniquetAbsent();
-                    $model->passport_pin = (int)$value['ID'];
-                    $model['roles'] = current_user_roles($profile->user_id);
-                    $model->user_id = $profile->user_id;
-                
-                    $model->save(false);
-                }
-            }
+            $result = TourniquetAbsent::createItem($sheetDatas, $post);
 
             if (count($errorAll) > 0) {
                 return $errorAll;
             }
-            return $data;
+
+            if (!is_array($result)) {
+                return $this->response(1, _e($this->controller_name . ' successfully updated.'), 'okey', null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+            
         } catch (\Exception $e) {
             // $transaction->rollBack();
         }

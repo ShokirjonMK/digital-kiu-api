@@ -140,22 +140,68 @@ class TourniquetAbsent extends \yii\db\ActiveRecord
     /**
      * TourniquetAbsent createItem <$model, $post>
      */
-    public static function createItem($model, $post)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        if (!($model->validate())) {
-            $errors[] = $model->errors;
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
 
-        if ($model->save()) {
-            $transaction->commit();
-            return true;
-        } else {
+    public static function createItem($sheetDatas, $post)
+    {
+        $errors = [];
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            foreach ($sheetDatas as $value) {
+                if ($value['ID'] !== null) {
+                    $profile = Profile::findOne(['passport_pin' => $value['ID']]);
+                    if ($profile) {
+                        $newModel = new TourniquetAbsent();
+                        $newModel->passport_pin = (int)$value['ID'];
+                        $roles = current_user_roles($profile->user_id);
+                        $newModel->roles = json_encode(array_keys($roles));
+                        $newModel->date = date('Y-m-d');
+                        $newModel->user_id = $profile->user_id;
+                        if (!$newModel->save(false)) {
+                            $errors[$value['ID']] = $newModel->errors;
+                        }
+                    } else {
+                        $errors[$value['ID']] = "Profile not found for ID: " . $value['ID'];
+                    }
+                }
+            }
+
+            if (count($errors) === 0) {
+                $transaction->commit();
+                return true;
+            } else {
+                throw new \Exception('Failed to save some items');
+            }
+        } catch (\Exception $e) {
             $transaction->rollBack();
-            return simplify_errors($errors);
+            return $errors;
+        }
+    }
+
+
+    public static function createItem0($sheetDatas, $post)
+    {
+        $errors = [];
+
+        foreach ($sheetDatas as $value) {
+            if ($value['ID'] !== null) { // ID null bo'lmasa
+                $profile = Profile::findOne(['passport_pin' => $value['ID']]);
+                if ($profile) { // Profil topilganda
+                    $newModel = new TourniquetAbsent();
+                    $newModel->passport_pin = (int)$value['ID'];
+                    $roles = current_user_roles($profile->user_id);
+                    $newModel->roles = json_encode(array_keys($roles));
+                    $newModel->date = date('Y-m-d');
+                    $newModel->user_id = $profile->user_id;
+
+                    if (!$newModel->save(false)) { // Ma'lumot saqlanmagan bo'lsa
+                        $errors[] = $newModel->errors; // Xatolarni qaytarib berish
+                    }
+                } else { // Profil topilmagan bo'lsa
+                    $errors[] = "Profile not found for ID: " . $value['ID']; // Xatolarni qaytarib berish
+                }
+            }
         }
     }
 

@@ -673,16 +673,22 @@ class StatisticController extends ApiActiveController
                 ])
                 ->count();
 
-            $created_by  = 7656; // bosit oka
+            $created_by  = 591; // bosit oka
 
             if ($count > 0) {
 
-                $hasKpiMark = KpiMark::findOne(['user_id' => $userOne->id, 'kpi_category_id' => 12]);
+                $hasKpiMark = KpiMark::findOne([
+                    'user_id' => $userOne->id,
+                    'kpi_category_id' => 12,
+                    'is_deleted' => 0
+                ]);
+
                 if ($hasKpiMark) {
                     $newKpiMark = $hasKpiMark;
                 } else {
                     $newKpiMark = new KpiMark();
                 }
+
                 $newKpiMark->type = 1;
                 $newKpiMark->created_by = $created_by;
                 $newKpiMark->kpi_category_id = 12;

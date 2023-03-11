@@ -559,6 +559,8 @@ class StatisticController extends ApiActiveController
             ->with(['profile'])
             ->andWhere(['users.deleted' => 0])
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->limit(1000)
+            ->offset(0)
             ->groupBy('users.id');
 
         // dd($query->createCommand()->getRawSql());

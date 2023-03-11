@@ -11,6 +11,7 @@ use common\models\model\Profile;
 use common\models\model\UserAccess;
 
 use common\models\model\EduPlan;
+use common\models\model\EduSemestrSubject;
 use common\models\model\ExamStudent;
 use common\models\model\ExamStudentAnswer;
 use common\models\model\ExamStudentAnswerSubQuestion;
@@ -19,6 +20,7 @@ use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
 use common\models\model\KpiMark;
 use common\models\model\SubjectContentMark;
+use common\models\model\SurveyAnswer;
 use common\models\model\TeacherAccess;
 use common\models\model\UserStatistic1;
 use common\models\User;
@@ -254,7 +256,7 @@ class StatisticController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-    
+
     public function actionCheckingChala($lang)
     {
         $model = new UserStatistic1();
@@ -550,6 +552,7 @@ class StatisticController extends ApiActiveController
 
     public function actionKpiContentStore()
     {
+        // return "ok";
         $model = new UserStatistic();
 
         $query = $model->find()
@@ -568,13 +571,24 @@ class StatisticController extends ApiActiveController
         foreach ($users as $userOne) {
 
             $summ = SubjectContentMark::find()
-                ->where(['user_id' => $userOne->id])
+                ->where([
+                    'user_id' => $userOne->id,
+                    'is_deleted' => 0
+                ])
                 ->sum('ball');
+
             $count = SubjectContentMark::find()
-                ->where(['user_id' => $userOne->id])
+                ->where([
+                    'user_id' => $userOne->id,
+                    'is_deleted' => 0
+                ])
                 ->count();
 
-            $created = SubjectContentMark::findOne(['user_id' => $userOne->id]);
+            $created = SubjectContentMark::findOne([
+                'user_id' => $userOne->id,
+                'is_deleted' => 0
+            ]);
+
             if ($created) $created_by  = $created->created_by;
 
             // $data[$userOne->id]['sum'] = $summ;
@@ -592,6 +606,83 @@ class StatisticController extends ApiActiveController
                 $newKpiMark->kpi_category_id = 8;
                 $newKpiMark->user_id = $userOne->id;
                 $newKpiMark->edu_year_id = 16;
+                $newKpiMark->ball = round($summ / $count);
+                $result = KpiMark::createItemStat($newKpiMark);
+                if (is_array($result)) {
+                    $errors[] = [$userOne->id => [$newKpiMark, $result]];
+                }
+            }
+        }
+
+        if (count($errors) > 0) {
+            return $errors;
+        }
+        return "ok";
+    }
+
+    public function actionKpiSurveyStore()
+    {
+        // return "ok";
+        $model = new UserStatistic();
+
+        $query = $model->find()
+            ->with(['profile'])
+            ->andWhere(['users.deleted' => 0])
+            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->groupBy('users.id');
+
+        // dd($query->createCommand()->getRawSql());
+        $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+        $data = [];
+        $errors = [];
+        $created_by = 7457;
+        $users = $query->all();
+        foreach ($users as $userOne) {
+
+            $summ = SurveyAnswer::find()
+                ->where([
+                    'in',  'edu_semestr_subject_id',
+                    EduSemestrSubject::find()->select('id')->where([
+                        'in', 'subject_id',
+                        TeacherAccess::find()->select('subject_id')
+                            ->where([
+                                'user_id' => $userOne->id,
+                                'is_deleted' => 0
+                            ])
+                    ])
+                ])
+                ->sum('ball');
+
+            $count = SurveyAnswer::find()
+                ->where([
+                    'in',  'edu_semestr_subject_id',
+                    EduSemestrSubject::find()->select('id')->where([
+                        'in', 'subject_id',
+                        TeacherAccess::find()->select('subject_id')
+                            ->where([
+                                'user_id' => $userOne->id,
+                                'is_deleted' => 0
+                            ])
+                    ])
+                ])
+                ->count();
+
+            $created_by  = 7656; // bosit oka
+
+            if ($count > 0) {
+
+                $hasKpiMark = KpiMark::findOne(['user_id' => $userOne->id, 'kpi_category_id' => 12]);
+                if ($hasKpiMark) {
+                    $newKpiMark = $hasKpiMark;
+                } else {
+                    $newKpiMark = new KpiMark();
+                }
+                $newKpiMark->type = 1;
+                $newKpiMark->created_by = $created_by;
+                $newKpiMark->kpi_category_id = 12;
+                $newKpiMark->user_id = $userOne->id;
+                $newKpiMark->edu_year_id = 17;
                 $newKpiMark->ball = round($summ / $count);
                 $result = KpiMark::createItemStat($newKpiMark);
                 if (is_array($result)) {

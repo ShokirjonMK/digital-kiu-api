@@ -60,6 +60,8 @@ class TourniquetAbsent extends \yii\db\ActiveRecord
             [['date', 'date_time', 'date_out', 'date_in'], 'safe'],
             [['roles', 'passport_pin'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+
+            ['passport_pin', 'unique', 'targetAttribute' => ['passport_pin', 'date']],
         ];
     }
 
@@ -166,15 +168,16 @@ class TourniquetAbsent extends \yii\db\ActiveRecord
                     }
                 }
             }
+            $transaction->commit();
 
             if (count($errors) === 0) {
-                $transaction->commit();
+
                 return true;
             } else {
                 throw new \Exception('Failed to save some items');
             }
         } catch (\Exception $e) {
-            $transaction->rollBack();
+            // $transaction->rollBack();
             return $errors;
         }
     }

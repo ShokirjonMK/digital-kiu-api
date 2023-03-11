@@ -595,7 +595,12 @@ class StatisticController extends ApiActiveController
             // $data[$userOne->id]['count'] = $count;
             if ($count > 0) {
 
-                $hasKpiMark = KpiMark::findOne(['user_id' => $userOne->id, 'kpi_category_id' => 8]);
+                $hasKpiMark = KpiMark::findOne([
+                    'user_id' => $userOne->id,
+                    'kpi_category_id' => 8,
+                    'is_deleted' => 0
+                ]);
+
                 if ($hasKpiMark) {
                     $newKpiMark = $hasKpiMark;
                 } else {

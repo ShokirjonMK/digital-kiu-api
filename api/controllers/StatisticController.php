@@ -553,13 +553,13 @@ class StatisticController extends ApiActiveController
     public function actionKpiContentStore()
     {
         // return "ok";
-        $model = new UserStatistic();
+        $model = new User();
 
         $query = $model->find()
-            ->with(['profile'])
-            ->andWhere(['users.deleted' => 0])
+            ->where(['users.deleted' => 0])
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
-            ->groupBy('users.id');
+            // ->groupBy('users.id')
+        ;
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);

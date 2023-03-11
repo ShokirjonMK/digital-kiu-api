@@ -639,7 +639,7 @@ class StatisticController extends ApiActiveController
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
 
-        $query = $query->limit(500)
+        $query = $query->limit(100)
             ->offset(0);
 
         $data = [];

@@ -559,15 +559,10 @@ class StatisticController extends ApiActiveController
             ->with(['profile'])
             ->andWhere(['users.deleted' => 0])
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
-            ->limit(1000)
-            ->offset(0)
             ->groupBy('users.id');
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
-
-        $query = $query->limit(500)
-            ->offset(0);
 
         $data = [];
         $errors = [];
@@ -643,6 +638,9 @@ class StatisticController extends ApiActiveController
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+        $query = $query->limit(500)
+            ->offset(0);
 
         $data = [];
         $errors = [];

@@ -625,9 +625,12 @@ class StatisticController extends ApiActiveController
         return "ok";
     }
 
-    public function actionKpiSurveyStore()
+    public function actionKpiSurveyStore($i)
     {
         // return "ok";
+
+
+
         $model = new UserStatistic();
 
         $query = $model->find()
@@ -639,8 +642,10 @@ class StatisticController extends ApiActiveController
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
 
         $query = $query->orderBy(['users.id' => SORT_DESC]);
-        $query = $query->limit(50)
-            ->offset(0);
+        $soni = $i * 50;
+        $query = $query->limit(50)->offset($soni);
+
+
 
         $data = [];
         $errors = [];

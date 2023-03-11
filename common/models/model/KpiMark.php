@@ -58,7 +58,7 @@ class KpiMark extends \yii\db\ActiveRecord
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::class, 'targetAttribute' => ['edu_year_id' => 'id']],
 
 
-            [['kpi_category_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'user_id', 'kpi_category_id']],
+            [['kpi_category_id'], 'unique', 'targetAttribute' => ['edu_year_id', 'user_id', 'kpi_category_id', 'is_deleted'],],
 
         ];
     }

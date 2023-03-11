@@ -636,15 +636,18 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id');
 
-        // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
 
+        $query = $query->orderBy(['users.id' => SORT_DESC]);
         $query = $query->limit(50)
             ->offset(0);
 
         $data = [];
         $errors = [];
         $created_by = 7457;
+
+        // dd($query->createCommand()->getRawSql());
+
         $users = $query->all();
         foreach ($users as $userOne) {
 

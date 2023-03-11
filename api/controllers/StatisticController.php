@@ -566,6 +566,9 @@ class StatisticController extends ApiActiveController
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
 
+        $query = $query->limit(500)
+            ->offset(0);
+
         $data = [];
         $errors = [];
         $created_by = 7457;

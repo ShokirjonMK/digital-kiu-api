@@ -637,6 +637,7 @@ class StatisticController extends ApiActiveController
             ->with(['profile'])
             ->andWhere(['users.deleted' => 0])
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->groupBy('users.id');
 
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);

@@ -142,6 +142,37 @@ class TourniquetAbsent extends \yii\db\ActiveRecord
     /**
      * TourniquetAbsent createItem <$model, $post>
      */
+    public static function createItemPGT($sheetDatas, $post)
+    {
+        $errors = [];
+        $profiles = Profile::find()
+            ->andWhere(['in', 'passport_pin', array_column($sheetDatas, 'ID')])
+            ->joinWith(['user'])
+            ->andWhere(['users.deleted' => 0])
+            ->all();
+
+        foreach ($sheetDatas as $value) {
+            if ($value['ID'] !== null) {
+                $profile = array_filter($profiles, function ($p) use ($value) {
+                    return $p->passport_pin == $value['ID'];
+                });
+                if (count($profile) > 0) {
+                    $newModel = new TourniquetAbsent();
+                    $newModel->passport_pin = (int)$value['ID'];
+                    $roles = current_user_roles(current($profile)->user_id);
+                    $newModel->roles = json_encode(array_keys($roles));
+                    $newModel->date = date('Y-m-d');
+                    $newModel->user_id = current($profile)->user_id;
+                    if (!$newModel->save(false)) {
+                        $errors[] = ['ID' => $value['ID'], 'error' => $newModel->errors];
+                    }
+                } else {
+                    $errors[] = ['ID' => $value['ID'], 'error' => "Profile not found"];
+                }
+            }
+        }
+        return (count($errors) > 0) ? $errors : true;
+    }
 
     public static function createItem($sheetDatas, $post)
     {
@@ -181,6 +212,8 @@ class TourniquetAbsent extends \yii\db\ActiveRecord
             return $errors;
         }
     }
+
+
 
 
     public static function createItem0($sheetDatas, $post)

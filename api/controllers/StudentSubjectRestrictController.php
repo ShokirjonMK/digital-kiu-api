@@ -120,7 +120,7 @@ class StudentSubjectRestrictController extends ApiActiveController
         // remove model
         if ($model) {
             $model->is_deleted = 1;
-            if ($model->update())
+            if ($model->save(false))
                 return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
 
             return $this->response(0, _e($this->controller_name . ' failed.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);

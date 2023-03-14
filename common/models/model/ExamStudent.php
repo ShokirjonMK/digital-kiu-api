@@ -233,12 +233,13 @@ class ExamStudent extends \yii\db\ActiveRecord
             'oldAllBall',
 
             'statusName',
-            // 'teacherAccess',
+            'teacherAccess',
             'examSemeta',
 
             'accessKey',
 
             'appeal',
+            'teacher',
 
             'finishedAt',
             'startedAt',
@@ -346,7 +347,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
         $query->andWhere([
-            'and',
+            'or',
             [$model->tableName() . '.ball' => null],
             [$model->tableName() . '.teacher_conclusion' => null]
         ]);
@@ -437,6 +438,14 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getTeacherAccess()
     {
         return $this->hasOne(TeacherAccess::className(), ['id' => 'teacher_access_id']);
+        if (current_user_id() == 1) {
+        }
+
+        return null;
+    }
+    public function getTeacher()
+    {
+        return $this->teacherAccess->profile;
         if (current_user_id() == 1) {
         }
 

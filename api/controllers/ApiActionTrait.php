@@ -95,9 +95,9 @@ trait ApiActionTrait
         }
         $result = parent::afterAction($action, $result);
 
-        if (isset($result['data'])) {
+       /*  if (isset($result['data'])) {
             $action_log->data = json_encode($result['data']);
-        }
+        } */
 
         $action_log->created_on = date("Y-m-d H:i:s");
         $action_log->save(false);
@@ -443,6 +443,11 @@ trait ApiActionTrait
         }
 
         if (property_exists($roles, 'hostel')) {
+            return $t;
+        }
+
+
+        if (property_exists($roles, 'justice')) {
             return $t;
         }
 

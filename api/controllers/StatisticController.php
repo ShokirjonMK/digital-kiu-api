@@ -19,11 +19,15 @@ use common\models\model\Faculty;
 use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
 use common\models\model\KpiMark;
+use common\models\model\StudentTimeTable;
 use common\models\model\SubjectContentMark;
 use common\models\model\SurveyAnswer;
 use common\models\model\TeacherAccess;
+use common\models\model\TimeTable;
 use common\models\model\UserStatistic1;
 use common\models\User;
+use yii\db\Expression;
+use yii\db\Query;
 
 class StatisticController extends ApiActiveController
 {
@@ -628,9 +632,93 @@ class StatisticController extends ApiActiveController
     public function actionKpiSurveyStore($i)
     {
         // return "ok";
+        $model = new UserStatistic();
+
+        $query = $model->find()
+            ->with(['profile'])
+            ->andWhere(['users.deleted' => 0])
+            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
+            ->groupBy('users.id');
+
+        $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+        $query = $query->orderBy(['users.id' => SORT_DESC]);
+        $soni = $i * 50;
+        $query = $query->limit(50)->offset($soni);
 
 
 
+        $data = [];
+        $errors = [];
+        $created_by = 7457;
+
+        // dd($query->createCommand()->getRawSql());
+
+        $users = $query->all();
+        foreach ($users as $userOne) {
+
+            $surveyAnswerAverage = SurveyAnswer::find()
+                ->where(['in', 'created_by', StudentTimeTable::find()
+                    ->where(['in', 'time_table_id', TimeTable::find()
+                        ->where([
+                            'teacher_user_id' => $userOne->id,
+                            'archived' => 1
+                        ])
+                        ->select('id')])
+                    ->select('created_by')])
+                ->andWhere([
+                    'in',  'edu_semestr_subject_id',
+                    EduSemestrSubject::find()->select('id')->where([
+                        'in', 'subject_id',
+                        TeacherAccess::find()->select('subject_id')
+                            ->where([
+                                'user_id' => $userOne->id
+                            ])
+                    ])
+                ]); //->average('ball');
+
+
+            dd($surveyAnswerAverage->createCommand()->getRawSql());
+
+
+
+
+            $created_by  = 591; // bosit oka
+
+            $hasKpiMark = KpiMark::findOne([
+                'user_id' => $userOne->id,
+                'kpi_category_id' => 12,
+                'is_deleted' => 0
+            ]);
+
+            if ($hasKpiMark) {
+                $newKpiMark = $hasKpiMark;
+            } else {
+                $newKpiMark = new KpiMark();
+            }
+
+            $newKpiMark->type = 1;
+            $newKpiMark->created_by = $created_by;
+            $newKpiMark->kpi_category_id = 12;
+            $newKpiMark->user_id = $userOne->id;
+            $newKpiMark->edu_year_id = 17;
+            $newKpiMark->ball = round($summ / $count);
+            $result = KpiMark::createItemStat($newKpiMark);
+            if (is_array($result)) {
+                $errors[] = [$userOne->id => [$newKpiMark, $result]];
+            }
+        }
+
+        if (count($errors) > 0) {
+            return $errors;
+        }
+        return "ok";
+    }
+
+    public function actionKpiSurveyStore00($i)
+    {
+        // return "ok";
         $model = new UserStatistic();
 
         $query = $model->find()

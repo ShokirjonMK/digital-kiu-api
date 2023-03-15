@@ -233,7 +233,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'oldAllBall',
 
             'statusName',
-            'teacherAccess',
+            // 'teacherAccess',
             'examSemeta',
 
             'accessKey',
@@ -383,7 +383,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         // dd(ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id]));
         // dd($query->createCommand()->getSql());
 
-        // dd(count($query->all()));
+        // dd(count($query->all()));jaxcore
 
         if (count($query->all()) > 0) {
             return 1;

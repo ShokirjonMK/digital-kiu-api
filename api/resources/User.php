@@ -383,14 +383,14 @@ class User extends CommonUser
     {
         $userAccess = UserAccess::find()->where(['user_id' => $this->id, 'user_access_type_id' => 2])->with('kafedra')->one();
 
-        return $userAccess->kafedra->translate->name;
+        return $userAccess->kafedra->translate->name ?? null;
     }
 
     public function getFacultyName()
     {
         $userAccess = UserAccess::find()->where(['user_id' => $this->id, 'user_access_type_id' => 1])->with('faculty')->one();
 
-        return $userAccess->faculty->translate->name;
+        return $userAccess->faculty->translate->name ?? null;
     }
     // Kaferda
     public function getKafedra()

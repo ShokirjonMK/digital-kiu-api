@@ -193,6 +193,12 @@ class UserAccess extends \yii\db\ActiveRecord
             return $this->hasOne(Faculty::className(), ['id' => 'table_id']);
         return null;
     }
+    // public function getDepartment()
+    // {
+    //     if ($this->user_access_type_id == 3)
+    //         return $this->hasOne(Department::className(), ['id' => 'table_id']);
+    //     return null;
+    // }
     /**
      * Gets query for [[User]].
      *

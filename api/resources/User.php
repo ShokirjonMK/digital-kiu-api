@@ -274,7 +274,7 @@ class User extends CommonUser
 
     public function getKpiBall()
     {
-        return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->andWhere(['is_deleted' => 0])->sum('ball');
+        return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->andWhere(['archived' => 0, 'is_deleted' => 0])->sum('ball');
     }
 
 
@@ -296,7 +296,7 @@ class User extends CommonUser
 
     public function getKpiMark()
     {
-        return $this->hasMany(KpiMark::className(), ['user_id' => 'id']);
+        return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->onCondition(['archived' => 0, 'is_deleted' => 0]);
     }
 
     // public function getKafedra()

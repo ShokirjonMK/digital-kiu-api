@@ -381,12 +381,12 @@ class User extends CommonUser
     // KafedraName
     public function getKafedraName()
     {
-        return Kafedra::findOne(['id' => UserAccess::findOne(['user_id' => $this->id, 'user_acces_type_id' => 2])])->translate->name;
+        return Kafedra::findOne(['id' => UserAccess::findOne(['user_id' => $this->id, 'user_acces_type_id' => 2])->table_id])->translate->name;
     }
     // FacultyName
     public function getFacultyName()
     {
-        return Faculty::findOne(['id' => UserAccess::findOne(['user_id' => $this->id, 'user_acces_type_id' => 1])])->translate->name;
+        return Faculty::findOne(['id' => UserAccess::findOne(['user_id' => $this->id, 'user_acces_type_id' => 1])->table_id])->translate->name;
     }
     // Kaferda
     public function getKafedra()

@@ -183,11 +183,15 @@ class UserAccess extends \yii\db\ActiveRecord
 
     public function getKafedra()
     {
-        return $this->hasOne(Kafedra::className(), ['id' => 'table_id'])->onCondition(['user_access_type_id' => 2]);
+        if ($this->user_access_type_id == 2)
+            return $this->hasOne(Kafedra::className(), ['id' => 'table_id']);
+        return null;
     }
     public function getFaculty()
     {
-        return $this->hasOne(Faculty::className(), ['id' => 'table_id'])->onCondition(['user_access_type_id' => 1]);
+        if ($this->user_access_type_id == 2)
+            return $this->hasOne(Faculty::className(), ['id' => 'table_id']);
+        return null;
     }
     /**
      * Gets query for [[User]].

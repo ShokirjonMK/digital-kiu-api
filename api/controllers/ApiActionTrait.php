@@ -446,6 +446,10 @@ trait ApiActionTrait
             return $t;
         }
 
+        if (property_exists($roles, 'corruption')) {
+            return $t;
+        }
+
 
         if (property_exists($roles, 'justice')) {
             return $t;

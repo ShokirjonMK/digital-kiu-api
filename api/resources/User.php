@@ -11,6 +11,8 @@ use Yii;
 //use api\resources\Profile;
 use common\models\model\Profile;
 use common\models\model\EncryptPass;
+use common\models\model\Faculty;
+use common\models\model\Kafedra;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
 use common\models\model\Oferta;
@@ -120,6 +122,8 @@ class User extends CommonUser
             'userAccess',
             'department',
             'departmentName',
+            'kafedraName',
+            'FacultyName',
             'here',
 
             'roles',
@@ -373,6 +377,26 @@ class User extends CommonUser
         $user_access_type = $this->userAccess ? UserAccessType::findOne($this->userAccess[0]->user_access_type_id) : null;
 
         return $user_access_type ? $user_access_type->table_name::findOne(['id' => $this->userAccess[0]->table_id]) : [];
+    }
+    // KafedraName
+    public function getKafedraName()
+    {
+        return Kafedra::findOne(['id' => UserAccess::findOne(['user_id' => $this->id, 'user_acces_type_id' => 2])])->translate->name;
+    }
+    // FacultyName
+    public function getFacultyName()
+    {
+        return Faculty::findOne(['id' => UserAccess::findOne(['user_id' => $this->id, 'user_acces_type_id' => 1])])->translate->name;
+    }
+    // Kaferda
+    public function getKafedra()
+    {
+        return $this->hasOne(UserAccess::className(), ['user_id' => 'id'])->onCondition(['user_access_type_id' => 2]);
+    }
+    // Faculty
+    public function getFaculty()
+    {
+        return $this->hasOne(UserAccess::className(), ['user_id' => 'id'])->onCondition(['user_access_type_id' => 2]);
     }
 
     // UserAccess

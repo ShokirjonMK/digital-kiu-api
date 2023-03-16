@@ -385,7 +385,7 @@ class User extends CommonUser
 
         return $userAccess->kafedra->translate->name ?? null;
     }
-
+    // FacultyName
     public function getFacultyName()
     {
         $userAccess = UserAccess::find()->where(['user_id' => $this->id, 'user_access_type_id' => 1])->with('faculty')->one();

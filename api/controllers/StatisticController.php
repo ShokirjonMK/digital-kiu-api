@@ -67,6 +67,7 @@ class StatisticController extends ApiActiveController
 
     public function actionKafedra($lang)
     {
+        return "ok";
         $model = new KafedraStatistic();
 
         $table_name = 'kafedra';
@@ -94,6 +95,7 @@ class StatisticController extends ApiActiveController
 
     public function actionEduPlan($lang)
     {
+        return "ok";
         $model = new EduPlan();
         $table_name = 'edu_plan';
         $query = $model->find()
@@ -132,6 +134,7 @@ class StatisticController extends ApiActiveController
 
     public function actionChecking($lang)
     {
+        return "ok";
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
@@ -263,6 +266,7 @@ class StatisticController extends ApiActiveController
 
     public function actionCheckingChala($lang)
     {
+        return "ok";
         $model = new UserStatistic1();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
@@ -393,6 +397,7 @@ class StatisticController extends ApiActiveController
 
     public function actionExamChecking($lang)
     {
+        return "ok";
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
@@ -556,7 +561,7 @@ class StatisticController extends ApiActiveController
 
     public function actionKpiContentStore()
     {
-        // return "ok";
+        return "ok";
         $model = new UserStatistic();
 
         $query = $model->find()
@@ -631,7 +636,7 @@ class StatisticController extends ApiActiveController
 
     public function actionKpiSurveyStore($i)
     {
-        // return "ok";
+        return "ok";
         $model = new UserStatistic();
 
         $query = $model->find()

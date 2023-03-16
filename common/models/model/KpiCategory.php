@@ -112,17 +112,17 @@ class KpiCategory extends \yii\db\ActiveRecord
                 return $model->info->name ?? '';
             },
 
-            'fields',
-            'max_ball',
-            'termName',
-            'tab',
+            // 'fields',
+            // 'max_ball',
+            // 'termName',
+            // 'tab',
 
-            'order',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
+            // 'order',
+            // 'status',
+            // 'created_at',
+            // 'updated_at',
+            // 'created_by',
+            // 'updated_by',
 
         ];
 

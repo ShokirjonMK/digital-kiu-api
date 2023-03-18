@@ -561,7 +561,7 @@ class StatisticController extends ApiActiveController
 
     public function actionKpiContentStore()
     {
-        return "ok";
+        // return "ok";
         $model = new UserStatistic();
 
         $query = $model->find()

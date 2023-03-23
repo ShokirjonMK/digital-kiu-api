@@ -269,7 +269,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'student_id' => $this->student_id,
             'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
             'subject_id' => $this->exam->eduSemestrSubject->subject_id,
-        ])->ball;
+        ])->ball ?? null;
 
         if (is_null($this->on1)) {
             $this->on1 = $on1;
@@ -284,7 +284,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'student_id' => $this->student_id,
             'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
             'subject_id' => $this->exam->eduSemestrSubject->subject_id,
-        ])->ball2;
+        ])->ball2 ?? null;
 
         if (is_null($this->on2)) {
             $this->on2 = $on2;

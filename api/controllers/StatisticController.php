@@ -397,7 +397,7 @@ class StatisticController extends ApiActiveController
 
     public function actionExamChecking($lang)
     {
-        return "ok";
+        // return "ok";
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));

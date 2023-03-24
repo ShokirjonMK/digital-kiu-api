@@ -116,16 +116,17 @@ class ExamController extends ApiActiveController
                 ]);
             } else {
 
-                // $query = $query->andWhere([
-                //     'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
-                //         ->where(['in', 'edu_semestr_id', EduSemestr::find()
-                //             ->where(['edu_plan_id' => $student->edu_plan_id])
-                //             ->andWhere(['is_deleted' => 0])
-                //             ->select('id')])
-                //         ->andWhere(['is_deleted' => 0])
-                //         ->select('id')
-                // ]);
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->where(['in', 'edu_semestr_id', EduSemestr::find()
+                            ->where(['edu_plan_id' => $student->edu_plan_id])
+                            ->andWhere(['is_deleted' => 0])
+                            ->select('id')])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
+                ]);
             }
+
             // filter
             $query = $this->filterAll($query, $model);
             // sort

@@ -257,12 +257,15 @@ class ExamAppeal extends \yii\db\ActiveRecord
         }
 
         $model->student_id = $model->examStudent->student_id;
+
+
+        // if (is_null($model->examStudent->teacher_access_id) || !is_null($model->type)) {
+
         if (is_null($model->examStudent->teacher_access_id)) {
+            
             $errors[] = _e('This exam is not checked!');
             return simplify_errors($errors);
         }
-
-
 
 
         // exam appeal appelatsiya berish vaqti

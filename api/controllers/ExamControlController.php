@@ -193,7 +193,10 @@ class ExamControlController extends ApiActiveController
     public function actionDelete($lang, $id)
     {
         $model = ExamControl::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->andWhere([
+                'id' => $id,
+                'is_deleted' => 0
+            ])
             ->one();
 
         if (!$model) {

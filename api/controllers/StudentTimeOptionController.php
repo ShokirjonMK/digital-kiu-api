@@ -142,14 +142,12 @@ class StudentTimeOptionController extends ApiActiveController
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
-    public function actionDelete($lang, $id)
+    public function actionDelete1($lang, $id)
     {
         $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-
-
 
         if ($model->timeOption->archived != 0) {
             return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
@@ -168,6 +166,34 @@ class StudentTimeOptionController extends ApiActiveController
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 
+
+    public function actionDelete($lang, $id)
+    {
+        $model = StudentTimeOption::findOne(['id' => $id]);
+        if (!$model) {
+
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if ($model->timeOption->archived != 0) {
+            return $this->response(0, _e('Old Option can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        // remove model
+        $result = StudentTimeOption::deleteItemWithRels($model);
+
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        if ($result) {
+            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::NO_CONTENT);
+        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+    }
 
     public function actionDelete22123123($lang, $id)
     {

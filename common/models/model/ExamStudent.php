@@ -24,7 +24,7 @@ use yii\web\UploadedFile;
  * @property int $updated_by
  * @property int $is_deleted
  *
- * @property Student $exam
+ * @property Exam $exam
  * @property Student $student
  * @property TeacherAccess $teacherAccess
  * @property Student $exam0
@@ -191,7 +191,14 @@ class ExamStudent extends \yii\db\ActiveRecord
 
             'type',
             'on1',
+            //  => function ($model) {
+            //     return $model->oraliq1;
+            // },
             'on2',
+            //  => function ($model) {
+            //     return $model->oraliq2;
+            // },
+            'correct',
             'archived',
 
             'conclusion',
@@ -238,6 +245,8 @@ class ExamStudent extends \yii\db\ActiveRecord
 
             'accessKey',
 
+            'examControlStudent',
+
             'appeal',
             'teacher',
 
@@ -255,6 +264,80 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getStartedAt()
     {
         return $this->start ? date('Y-m-d H:i:s', $this->start) : '';
+    }
+
+    public function getCorrect()
+    {
+        $on1 = ExamControlStudent::findOne([
+            'student_id' => $this->student_id,
+            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+        ])->ball ?? null;
+
+        if (is_null($this->on1)) {
+            $this->on1 = $on1;
+            $this->save();
+        }
+
+        $on2 = ExamControlStudent::findOne([
+            'student_id' => $this->student_id,
+            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+        ])->ball2 ?? null;
+
+        if (is_null($this->on2)) {
+            $this->on2 = $on2;
+            $this->save();
+        }
+
+        return 1;
+    }
+
+    public function getOraliq1()
+    {
+        $on1 = ExamControlStudent::findOne([
+            'student_id' => $this->student_id,
+            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+        ])->ball ?? null;
+
+        if (is_null($this->on1)) {
+            $this->on1 = $on1;
+            $this->save();
+        }
+        return $this->on1;
+    }
+
+    public function getOraliq2()
+    {
+        $on2 = ExamControlStudent::findOne([
+            'student_id' => $this->student_id,
+            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+        ])->ball2 ?? null;
+
+        if (is_null($this->on2)) {
+            $this->on2 = $on2;
+            $this->save();
+        }
+        return $this->on2;
+    }
+
+    public function getExamControlStudent()
+    {
+        return ExamControlStudent::findOne([
+            'student_id' => $this->student_id,
+            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semester_id,
+            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+        ]);
+    }
+
+    public function getExamControl()
+    {
+        return ExamControl::findOne([
+            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semester_id,
+            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+        ]);
     }
 
     public function getAllBall()

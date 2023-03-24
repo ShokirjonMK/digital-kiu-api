@@ -142,7 +142,7 @@ class StudentTimeOptionController extends ApiActiveController
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
-    public function actionDelete1($lang, $id)
+    public function actionDelete($lang, $id)
     {
         $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {
@@ -167,7 +167,7 @@ class StudentTimeOptionController extends ApiActiveController
     }
 
 
-    public function actionDelete($lang, $id)
+    public function actionDelete1($lang, $id)
     {
         $model = StudentTimeOption::findOne(['id' => $id]);
         if (!$model) {

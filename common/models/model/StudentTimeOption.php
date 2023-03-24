@@ -349,6 +349,33 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         }
     }
 
+    public static function deleteItemWithRels($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        foreach (StudentTimeTable::findAll(['student_time_option_id' => $model->id]) as $row) {
+            if ($row->delete()) {
+                $errors[] = $row->errors;
+            }
+        }
+
+        if (count($errors) > 0) {
+            $errors[] = "Nothing is deleted";
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        } else {
+            if ($model->delete()) {
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = "Nothing is deleted";
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) {

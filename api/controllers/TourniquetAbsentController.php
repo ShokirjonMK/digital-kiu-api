@@ -60,41 +60,41 @@ class TourniquetAbsentController extends ApiActiveController
     public function actionCreateGPT()
     {
         $errorAll = [];
-    
+        $post = [];
+
         $file = UploadedFile::getInstancesByName('file_excel');
         if (!$file) {
             return $this->response(0, _e('Excel file required'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-    
+
         try {
             $inputFileType = IOFactory::identify($file[0]->tempName);
             $objReader = IOFactory::createReader($inputFileType);
             $objectPhpExcel = $objReader->load($file[0]->tempName);;
-    
+
             $sheetDatas = $objectPhpExcel->getActiveSheet()->toArray(null, true, true, true);
-    
+
             $sheetDatas = $this->executeArrayLabel($sheetDatas);
-    
+
             if (!empty($this->getOnlyRecordByIndex)) {
                 $sheetDatas = $this->executeGetOnlyRecords($sheetDatas, $this->getOnlyRecordByIndex);
             }
             if (!empty($this->leaveRecordByIndex)) {
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
-    
+
             $result = TourniquetAbsent::createItem($sheetDatas, $post);
-    
+
             if (is_array($result)) {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-            } 
-    
+            }
+
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), 'okey', null, ResponseStatus::OK);
-                
         } catch (\Exception $e) {
-             // $transaction->rollBack();
+            // $transaction->rollBack();
         }
     }
-    
+
     public function actionCreate()
     {
         $data = [];
@@ -137,7 +137,6 @@ class TourniquetAbsentController extends ApiActiveController
             } else {
                 return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
             }
-            
         } catch (\Exception $e) {
             // $transaction->rollBack();
         }

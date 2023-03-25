@@ -7,6 +7,7 @@ use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\Profile;
+use yii\db\Query;
 
 class ExamStudentController extends ApiActiveController
 {
@@ -42,13 +43,24 @@ class ExamStudentController extends ApiActiveController
     public function actionBall($lang, $key)
     {
 
-        ExamStudent::correct($key);
+        $result = ExamStudent::find()
+            ->select([
+                'faculty_id',
+                'COUNT(CASE WHEN main_ball < 56 THEN 1 ELSE 0 END) AS count_below_56',
+                'COUNT(CASE WHEN main_ball BETWEEN 56 AND 70 THEN 1 ELSE 0 END) AS count_56_70',
+                'COUNT(CASE WHEN main_ball BETWEEN 71 AND 85 THEN 1 ELSE 0 END) AS count_71_85',
+                'COUNT(CASE WHEN main_ball > 85 THEN 1 ELSE 0 END) AS count_above_85',
+            ])
+            ->groupBy('faculty_id')
+            ->asArray()
+            ->all();
 
-        return "Success";
+        return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
     }
 
     public function actionIndex($lang)
     {
+        /** */
         $model = new ExamStudent();
 
         $query = $model->find()
@@ -190,6 +202,32 @@ class ExamStudentController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
+
+        // return 1;
+        if (null !==  Yii::$app->request->get('ball')) {
+            $subquery = (new Query())
+                ->select([
+                    'less_than_56' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                    'between_56_and_70' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                    'between_71_and_85' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                    'greater_than_85' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                    'all_count' => 'COUNT(*)'
+                ])
+                ->from('exam_student');
+
+            $result = (new Query())
+                ->select([
+                    'less_than_56',
+                    'between_56_and_70',
+                    'between_71_and_85',
+                    'greater_than_85',
+                    'all_count'
+                ])
+                ->from(['subquery' => $subquery])
+                ->one();
+
+            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+        }
         if (isRole('teacher')) {
             $model = ExamNoStudent::find()
                 ->andWhere(['id' => $id, 'is_deleted' => 0])

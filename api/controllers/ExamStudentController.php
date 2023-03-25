@@ -39,6 +39,14 @@ class ExamStudentController extends ApiActiveController
         return "Success";
     }
 
+    public function actionBall($lang, $key)
+    {
+
+        ExamStudent::correct($key);
+
+        return "Success";
+    }
+
     public function actionIndex($lang)
     {
         $model = new ExamStudent();

@@ -675,7 +675,8 @@ class StudentTimeTable extends \yii\db\ActiveRecord
         $model->building_id = $model->timeTable->room->building_id;
         $model->para_id = $model->timeTable->para_id;
         $model->week_id = $model->timeTable->week_id;
-        $model->edu_semester_id = $model->timeTable->edu_semester_id;
+        $model->edu_semester_id = $model->edu_semester_id ?? $model->timeTable->edu_semester_id;
+
         $model->edu_plan_id = $model->timeTable->eduSemestr->edu_plan_id;
         $model->subject_category_id = $model->timeTable->subject_category_id;
 
@@ -726,7 +727,9 @@ class StudentTimeTable extends \yii\db\ActiveRecord
                     $newModel->room_id = $timeTableOne->room_id;
                     $newModel->para_id = $timeTableOne->para_id;
                     $newModel->week_id = $timeTableOne->week_id;
-                    $newModel->edu_semester_id = $timeTableOne->edu_semester_id;
+                    // $newModel->edu_semester_id = $timeTableOne->edu_semester_id;
+                    $newModel->edu_semester_id = $model->edu_semester_id ?? $timeTableOne->edu_semester_id;
+
                     $newModel->subject_category_id = $timeTableOne->subject_category_id;
 
                     $newModel->time_table_parent_id = $timeTableOne->parent_id;

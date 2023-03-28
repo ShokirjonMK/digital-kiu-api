@@ -271,57 +271,23 @@ class ExamStudentController extends ApiActiveController
             return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
         }
 
-        // return 1;
-        if (null !==  Yii::$app->request->get('ball')) {
-            $subquery = (new Query())
-                ->select([
-                    'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
-                    'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
-                    'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
-                    'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
-                    'all' => 'COUNT(*)'
-                ])
-                ->from('exam_student');
+        $query = (new Query())
+            ->select([
+                'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                'all' => 'COUNT(*)'
+            ])
+            ->from('exam_student');
 
-            $result = (new Query())
-                ->select([
-                    'two',
-                    'three',
-                    'four',
-                    'five',
-                    'all'
-                ])
-                ->from(['subquery' => $subquery])
-                ->one();
+        $result = $query->all();
 
-            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
-        }
+        return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
     }
 
     public function actionView($lang, $id)
     {
-        if (null !==  Yii::$app->request->get('kafedra')) {
-            $query = (new Query())
-                ->select([
-                    'subject.kafedra_id',
-                    'tr.name AS kafedra_name',
-                    'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
-                    'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
-                    'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
-                    'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
-                    'all' => 'COUNT(*)'
-                ])
-                ->from('exam_student')
-                ->join('JOIN', 'exam', 'exam_student.exam_id = exam.id')
-                ->join('JOIN', 'subject', 'subject.id = exam.subject_id')
-                ->join('JOIN', 'translate tr', 'subject.kafedra_id = tr.model_id AND tr.`language`=\'uz\' and tr.table_name =\'kafedra\'')
-                ->groupBy('subject.kafedra_id');
-
-            $result = $query->all();
-
-            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
-        }
-
         if (isRole('teacher')) {
             $model = ExamNoStudent::find()
                 ->andWhere(['id' => $id, 'is_deleted' => 0])

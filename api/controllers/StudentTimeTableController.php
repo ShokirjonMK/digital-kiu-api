@@ -38,12 +38,12 @@ class  StudentTimeTableController extends ApiActiveController
 
         if ($student && isRole('student')) {
             if ($semester) {
-                $query->andWhere([$this->table_name . 'semester_id' => $semester]);
+                $query->andWhere([$this->table_name . '.semester_id' => $semester]);
                 // $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
             } else {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
                 if ($eduSemestr) {
-                    $query->andWhere([$this->table_name . 'semester_id' => $eduSemestr->id]);
+                    $query->andWhere([$this->table_name . '.semester_id' => $eduSemestr->id]);
 
                     // $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
                     //     ->select('id')
@@ -56,7 +56,7 @@ class  StudentTimeTableController extends ApiActiveController
         } else {
             if ($semester) {
 
-                $query->andWhere([$this->table_name . 'semester_id' => $semester]);
+                $query->andWhere([$this->table_name . '.semester_id' => $semester]);
 
                /*  $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
                 if ($eduSemestr) {

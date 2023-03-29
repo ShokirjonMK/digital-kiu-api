@@ -296,15 +296,15 @@ class ExamStudentController extends ApiActiveController
             $model = ExamStudent::find()
                 ->andWhere(['id' => $id, 'is_deleted' => 0])
                 ->one();
+            if (isset($model->type))
+                if ($model->type > 0) {
+                    $model->ball = $model->allBall;
+                    $model->is_checked = $model->isChecked;
+                    $model->is_checked_full = $model->isCheckedFull;
+                    $model->has_answer = $model->hasAnswer;
 
-            if ($model->type > 0) {
-                $model->ball = $model->allBall;
-                $model->is_checked = $model->isChecked;
-                $model->is_checked_full = $model->isCheckedFull;
-                $model->has_answer = $model->hasAnswer;
-
-                $model->update();
-            }
+                    $model->update();
+                }
         }
 
         if (!$model) {

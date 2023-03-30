@@ -369,6 +369,9 @@ class Attend extends \yii\db\ActiveRecord
 
     public static function createItem($model, $post)
     {
+
+        sleep(3);
+
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 

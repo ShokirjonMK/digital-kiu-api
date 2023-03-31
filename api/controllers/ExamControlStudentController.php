@@ -125,7 +125,6 @@ class ExamControlStudentController extends ApiActiveController
             }
         }
 
-
         $data = [];
         $post = Yii::$app->request->post();
 

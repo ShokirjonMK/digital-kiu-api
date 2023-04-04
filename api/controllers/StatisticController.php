@@ -397,7 +397,7 @@ class StatisticController extends ApiActiveController
 
     public function actionExamChecking($lang)
     {
-        return "ok";
+        // return "ok";
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
@@ -637,6 +637,22 @@ class StatisticController extends ApiActiveController
     public function actionKpiSurveyStore($i)
     {
         return "ok";
+
+        /*     SELECT
+	time_table.teacher_user_id,
+	ROUND( AVG( survey_answer.ball ), 0 ) AS average_ball ,
+	AVG( survey_answer.ball )
+FROM
+	time_table
+	INNER JOIN student_time_table ON time_table.id = student_time_table.time_table_id
+	INNER JOIN survey_answer ON student_time_table.student_id = survey_answer.student_id 
+	AND time_table.subject_id = survey_answer.subject_id 
+WHERE
+	time_table.archived = 1 
+-- 	and time_table.teacher_user_id = 8177
+GROUP BY
+	time_table.teacher_user_id */
+
         $model = new UserStatistic();
 
         $query = $model->find()

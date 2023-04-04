@@ -7,6 +7,7 @@ use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\Profile;
+use yii\db\Query;
 
 class ExamStudentController extends ApiActiveController
 {
@@ -39,8 +40,10 @@ class ExamStudentController extends ApiActiveController
         return "Success";
     }
 
+
     public function actionIndex($lang)
     {
+        /** */
         $model = new ExamStudent();
 
         $query = $model->find()
@@ -180,6 +183,109 @@ class ExamStudentController extends ApiActiveController
         }
     }
 
+    public function actionBall($lang)
+    {
+        if (null !==  Yii::$app->request->get('faculty')) {
+            $query = (new Query())
+                ->select([
+                    'exam.faculty_id',
+                    'tr.name AS faculty_name',
+                    'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                    'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                    'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                    'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                    'all' => 'COUNT(*)'
+                ])
+                ->from('exam_student')
+                ->join('JOIN', 'exam', 'exam_student.exam_id = exam.id')
+                ->join('JOIN', 'translate tr', 'exam.faculty_id = tr.model_id AND tr.`language`=\'uz\' and tr.table_name =\'faculty\'')
+                ->groupBy('exam.faculty_id');
+
+            $result = $query->all();
+
+            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+        }
+
+        if (null !==  Yii::$app->request->get('subject')) {
+            $query = (new Query())
+                ->select([
+                    'exam.subject_id',
+                    'tr.name AS subject_name',
+                    'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                    'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                    'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                    'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                    'all' => 'COUNT(*)'
+                ])
+                ->from('exam_student')
+                ->join('JOIN', 'exam', 'exam_student.exam_id = exam.id')
+                ->join('JOIN', 'translate tr', 'exam.subject_id = tr.model_id AND tr.`language`=\'uz\' and tr.table_name =\'subject\'')
+                ->groupBy('exam.subject_id');
+
+            $result = $query->all();
+
+            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+        }
+
+        if (null !==  Yii::$app->request->get('kafedra')) {
+            $query = (new Query())
+                ->select([
+                    'exam.subject_id',
+                    'tr.name AS subject_name',
+                    'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                    'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                    'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                    'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                    'all' => 'COUNT(*)'
+                ])
+                ->from('exam_student')
+                ->join('JOIN', 'exam', 'exam_student.exam_id = exam.id')
+                ->join('JOIN', 'translate tr', 'exam.subject_id = tr.model_id AND tr.`language`=\'uz\' and tr.table_name =\'subject\'')
+                ->groupBy('exam.subject_id');
+
+            $result = $query->all();
+
+            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+        }
+
+        if (null !==  Yii::$app->request->get('teacher')) {
+            $query = (new Query())
+                ->select([
+                    'teacher_access.user_id as teacher_user_id',
+                    'profile.last_name',
+                    'profile.first_name',
+                    'profile.middle_name',
+                    'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                    'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                    'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                    'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                    'all' => 'COUNT(*)'
+                ])
+                ->from('exam_student')
+                ->join('JOIN', 'teacher_access', 'exam_student.teacher_access_id = teacher_access.id')
+                ->join('JOIN', 'profile', 'profile.user_id = teacher_access.user_id')
+                ->groupBy('teacher_access.user_id');
+
+            $result = $query->all();
+
+            return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+        }
+
+        $query = (new Query())
+            ->select([
+                'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+                'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+                'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+                'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+                'all' => 'COUNT(*)'
+            ])
+            ->from('exam_student');
+
+        $result = $query->all();
+
+        return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+    }
+
     public function actionView($lang, $id)
     {
         if (isRole('teacher')) {
@@ -190,15 +296,15 @@ class ExamStudentController extends ApiActiveController
             $model = ExamStudent::find()
                 ->andWhere(['id' => $id, 'is_deleted' => 0])
                 ->one();
+            if (isset($model->type))
+                if ($model->type > 0) {
+                    $model->ball = $model->allBall;
+                    $model->is_checked = $model->isChecked;
+                    $model->is_checked_full = $model->isCheckedFull;
+                    $model->has_answer = $model->hasAnswer;
 
-            if ($model->type > 0) {
-                $model->ball = $model->allBall;
-                $model->is_checked = $model->isChecked;
-                $model->is_checked_full = $model->isCheckedFull;
-                $model->has_answer = $model->hasAnswer;
-
-                $model->update();
-            }
+                    $model->update();
+                }
         }
 
         if (!$model) {

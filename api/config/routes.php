@@ -215,6 +215,8 @@ $routes = [
     'GET <lang:\w{2}>/statistics/checking-chala' => 'statistic/checking-chala',
     'GET <lang:\w{2}>/statistics/exam-checking' => 'statistic/exam-checking',
 
+    // ball statistics two, three, four, five
+    'GET <lang:\w{2}>/exam-students/ball' => 'exam-student/ball',
     /* statistics all */
 
     // election password generator

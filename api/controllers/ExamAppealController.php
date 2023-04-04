@@ -35,21 +35,23 @@ class ExamAppealController extends ApiActiveController
 
 
         //  Filter from Profile 
-        $profile = new Profile();
-        if (isset($filter)) {
-            foreach ($filter as $attribute => $id) {
-                if (in_array($attribute, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+        if (isRole('admin')) {
+            $profile = new Profile();
+            if (isset($filter)) {
+                foreach ($filter as $attribute => $id) {
+                    if (in_array($attribute, $profile->attributes())) {
+                        $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                    }
                 }
             }
-        }
 
-        $queryfilter = Yii::$app->request->get('filter-like');
-        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
-        if (isset($queryfilter)) {
-            foreach ($queryfilter as $attributeq => $word) {
-                if (in_array($attributeq, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+            $queryfilter = Yii::$app->request->get('filter-like');
+            $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+            if (isset($queryfilter)) {
+                foreach ($queryfilter as $attributeq => $word) {
+                    if (in_array($attributeq, $profile->attributes())) {
+                        $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                    }
                 }
             }
         }

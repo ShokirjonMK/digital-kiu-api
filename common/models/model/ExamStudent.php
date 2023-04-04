@@ -550,6 +550,21 @@ class ExamStudent extends \yii\db\ActiveRecord
         return   $this->statusList()[$this->status];
     }
 
+
+    protected static function actionUpdateExamModel($model)
+    {
+        if ($model->type > 0) {
+            $model->ball = $model->allBall;
+            $model->is_checked = $model->isChecked;
+            $model->is_checked_full = $model->isCheckedFull;
+            $model->has_answer = $model->hasAnswer;
+
+            $model->update();
+        }
+
+        return $model;
+    }
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();

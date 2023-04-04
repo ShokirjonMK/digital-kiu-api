@@ -38,20 +38,27 @@ class  StudentTimeTableController extends ApiActiveController
 
         if ($student && isRole('student')) {
             if ($semester) {
-                $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
+                $query->andWhere([$this->table_name . '.semester_id' => $semester]);
+                // $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
             } else {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
+                if ($eduSemestr) {
+                    $query->andWhere([$this->table_name . '.semester_id' => $eduSemestr->id]);
+
+                    // $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
+                    //     ->select('id')
+                    //     ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);
+                }
             }
             // return $eduSemestr;
-            if ($eduSemestr) {
-                $query->andWhere(['in', $this->table_name . '.time_table_id', TimeTable::find()
-                    ->select('id')
-                    ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])]);
-            }
+
             $query->andWhere([$this->table_name . '.student_id' => $student->id]);
         } else {
             if ($semester) {
-                $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
+
+                $query->andWhere([$this->table_name . '.semester_id' => $semester]);
+
+               /*  $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
                 if ($eduSemestr) {
 
                     $query->andWhere([
@@ -59,7 +66,7 @@ class  StudentTimeTableController extends ApiActiveController
                             ->select('id')
                             ->where([$this->table_name . '.edu_semester_id' => $eduSemestr->id])
                     ]);
-                }
+                } */
             }
         }
 

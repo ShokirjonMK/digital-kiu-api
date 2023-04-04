@@ -558,3 +558,24 @@ function _e($message, $params = array())
         return $translation;
     }
 }
+
+
+// xmlParseToArrayMK
+function xmlParseToArrayMK($xml)
+{
+    try {
+        $xmlparser = xml_parser_create();
+        xml_parse_into_struct($xmlparser, $xml, $values);
+        xml_parser_free($xmlparser);
+        return $values;
+    } catch (\Exception $exception) {
+        // ApiBug::create([
+        //     'error' => $exception->getMessage(),
+        //     'status_code' => $exception->getCode()
+        // ]);
+        return  array(
+            'status_code' => $exception->getCode(),
+            'error' => $exception->getMessage()
+        );
+    }
+}

@@ -666,7 +666,8 @@ class ExamControlStudent extends ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
+        // $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
+        $model->main_ball = ($model->ball ?? 0) + ($model->ball2 ?? 0);
 
         // faqat sirtqi uchun 
         /* if (

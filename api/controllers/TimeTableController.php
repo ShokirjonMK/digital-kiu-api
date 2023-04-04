@@ -61,6 +61,7 @@ class TimeTableController extends ApiActiveController
             ]);
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
+        dd($query->createCommand()->getRawSql());
 
         if (isset($kafedraId)) {
             $query->andFilterWhere([

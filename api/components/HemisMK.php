@@ -15,7 +15,9 @@ class HemisMK
     public function getHemis($pinfl)
     {
         try {
-            $token = 'y4BRVRU6U2eHM6E3P7P28Yp7mNc';
+            $getToken = self::getToken();
+            if (!$getToken['status']) return false;
+            $token = $getToken['access_token'];
             $url = $this->urlStudent . $pinfl;
 
             $client = new Client();
@@ -45,6 +47,45 @@ class HemisMK
 
         return $pinfl;
     }
+
+
+    public function getToken()
+    {
+        // dd("ssss");
+        $client = new Client([
+            'base_uri' => $this->urlToken,
+            'headers' => [
+                'Authorization' => 'Basic Y2xpZW50OnNlY3JldA==',
+                'Content-Type' => 'multipart/form-data; boundary=<calculated when request is sent>'
+            ],
+            'timeout' => 30,
+        ]);
+
+        try {
+            $response = $client->post('', [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'username' => $this->userName,
+                    'password' => $this->password
+                ]
+            ]);
+
+            $responseContent = $response->getBody()->getContents();
+            $contentJson = json_decode($responseContent);
+
+            return [
+                'status' => true,
+                'access_token' => $contentJson->access_token,
+                'message' => 'Success',
+            ];
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     public function getHemissss($pinfl)
     {
         $url = $this->urlStudent . $pinfl;
@@ -83,10 +124,6 @@ class HemisMK
             curl_close($mk_curl);
             return $error_msg;
         } else {
-
-            // return $response;
-
-
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
             $getContentJson = json_decode($getContent);
@@ -123,18 +160,12 @@ class HemisMK
         curl_setopt_array($mk_curl, $defaults);
 
         $response = curl_exec($mk_curl);
-        dd('edede');
-
 
         if (curl_errno($mk_curl)) {
             $error_msg = curl_error($mk_curl);
             curl_close($mk_curl);
             return $error_msg;
         } else {
-
-            dd(json_encode($response));
-
-
             list($getHeader, $getContent) = explode("\r\n\r\n", $response, 2);
             curl_close($mk_curl);
             $getContentJson = json_decode($getContent);
@@ -144,14 +175,13 @@ class HemisMK
         return 0;
     }
 
-    public function getToken()
+    public function getTokenCurl()
     {
         // headers
         $headers = array(
             "Authorization: Basic Y2xpZW50OnNlY3JldA==",
             'Content-Type: multipart/form-data; boundary=<calculated when request is sent>'
         );
-
 
         $defaults = array(
             CURLOPT_URL => $this->urlToken,

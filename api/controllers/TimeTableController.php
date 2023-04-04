@@ -61,7 +61,6 @@ class TimeTableController extends ApiActiveController
             ]);
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
-        dd($query->createCommand()->getRawSql());
 
         if (isset($kafedraId)) {
             $query->andFilterWhere([
@@ -85,7 +84,7 @@ class TimeTableController extends ApiActiveController
 
         // sort
         $query = $this->sort($query);
-        dd($query->createCommand()->getRawSql());
+        // dd($query->createCommand()->getRawSql());
 
         // data
         $data =  $this->getData($query);

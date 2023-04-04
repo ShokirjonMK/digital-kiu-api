@@ -653,7 +653,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
         $timeTableSelected = self::find()
             ->where(['in', 'time_table_id', $timeTableSameBusy])
-            ->andWhere(['student_id' => self::student()])
+            ->andWhere(['student_id' => $model->student_id])
             ->all();
 
         if (count($timeTableSelected) > 0) {
@@ -708,7 +708,7 @@ class StudentTimeTable extends \yii\db\ActiveRecord
 
                     $timeTableSelectedChild = self::find()
                         ->where(['in', 'time_table_id', $timeTableSameBusyChild])
-                        ->andWhere(['student_id' => self::student()])
+                        ->andWhere(['student_id' => $model->student_id])
                         ->all();
 
                     if (count($timeTableSelectedChild) > 0) {

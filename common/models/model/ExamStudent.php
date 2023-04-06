@@ -360,10 +360,12 @@ class ExamStudent extends \yii\db\ActiveRecord
         $model = new ExamStudentAnswerSubQuestion();
         $query = $model->find();
 
-        $query = $query->andWhere([
-            'in', $model->tableName() . '.exam_student_answer_id',
-            ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
-        ])
+        $query = $query
+            ->select(['total_ball' => 'SUM(COALESCE(old_ball, ball))'])
+            ->andWhere([
+                'in', $model->tableName() . '.exam_student_answer_id',
+                ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+            ])
             ->sum('old_ball');
 
         return  $query;

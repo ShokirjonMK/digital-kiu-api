@@ -111,6 +111,11 @@ class ExamAppealController extends ApiActiveController
         }
     }
 
+    public function actionStat($lang, $id)
+    {
+    }
+
+
     public function actionUpdate($lang, $id)
     {
         $model = ExamAppeal::findOne($id);

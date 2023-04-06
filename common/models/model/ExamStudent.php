@@ -357,7 +357,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getOldAllBall()
     {
-        $model = new ExamStudentAnswerSubQuestion();
+        /* $model = new ExamStudentAnswerSubQuestion();
         $query = $model->find();
 
         $query = $query
@@ -369,7 +369,20 @@ class ExamStudent extends \yii\db\ActiveRecord
             ->asArray()
             ->one();
 
-        return  $query;
+        return  $query; */
+
+        $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
+
+        $query = $query->select(['SUM(COALESCE(old_ball, ball))'])
+            ->andWhere([
+                'in', $model->tableName() . '.exam_student_answer_id',
+                ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+            ]);
+
+        $totalBall = $query->createCommand()->queryScalar();
+
+        return $totalBall;
     }
 
     public function getFinishedAt()

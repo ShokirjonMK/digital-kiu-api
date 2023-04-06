@@ -365,7 +365,9 @@ class ExamStudent extends \yii\db\ActiveRecord
             ->andWhere([
                 'in', $model->tableName() . '.exam_student_answer_id',
                 ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
-            ]);
+            ])
+            ->asArray()
+            ->one();
 
         return  $query;
     }

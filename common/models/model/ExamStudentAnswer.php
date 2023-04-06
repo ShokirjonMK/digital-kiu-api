@@ -716,10 +716,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     if ($examStudentAnswerSubQuestion) {
                         if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
                             $examStudentAnswerSubQuestion->appeal_teacher_conclusion = $subQuestionOneAnswerAppealChecking->appeal_teacher_conclusion;
-                            if ($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball) {
+                            // if ($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball) {
+                            if ($examStudentAnswerSubQuestion->old_ball) {
                                 $examStudentAnswerSubQuestion->old_ball = $examStudentAnswerSubQuestion->ball;
                                 $examAppeal->is_changed = ExamAppeal::IS_CHANGED_TRUE;
                                 $examAppeal->update();
+                            } else {
+                                $errors[] = [$examStudentAnswerSubQuestion->ball => _e("Already checked")];
                             }
 
                             $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerAppealChecking->ball;

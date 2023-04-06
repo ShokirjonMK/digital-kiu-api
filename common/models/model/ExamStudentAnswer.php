@@ -629,6 +629,9 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     if ($examStudentAnswerSubQuestion) {
                         if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
                             $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
+                            if(!$examStudentAnswerSubQuestion->ball <0)
+                            $errors[] = _e("This subQuestion Answer is already checked");
+                            
                             $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
                             if (isset($subQuestionOneAnswerChecking->teacher_conclusion) && isset($subQuestionOneAnswerChecking->ball)) {
                                 $examStudentAnswerSubQuestion->is_cheked = 1;

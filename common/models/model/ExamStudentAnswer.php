@@ -631,6 +631,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                             $examStudentAnswerSubQuestion->teacher_conclusion = $subQuestionOneAnswerChecking->teacher_conclusion;
                             if (!$examStudentAnswerSubQuestion->ball > 0) {
                                 $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerChecking->ball;
+                            } else {
+                                $errors[] = _e("Ball can not change");
                             }
 
                             if (isset($subQuestionOneAnswerChecking->teacher_conclusion) && isset($subQuestionOneAnswerChecking->ball)) {

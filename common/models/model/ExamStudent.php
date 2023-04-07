@@ -91,6 +91,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'start',
                     'finish',
                     'exam_id',
+                    'subject_id',
+                    'edu_semestr_subject_id',
                     'teacher_access_id',
                     'attempt',
                     'lang_id',

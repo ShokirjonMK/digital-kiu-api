@@ -110,6 +110,9 @@ class Kafedra extends \yii\db\ActiveRecord
             'direction',
             'leader',
             'userAccess',
+            'userAccessCount',
+
+            'mudir',
 
             'faculty',
             'subjects',
@@ -161,6 +164,10 @@ class Kafedra extends \yii\db\ActiveRecord
         return $this->hasOne(Direction::className(), ['id' => 'direction_id']);
     }
 
+    public function getTeachers()
+    {
+    }
+
     /**
      * Gets query for [[Faculty]].
      *
@@ -191,6 +198,11 @@ class Kafedra extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    public function getMudir()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+    }
+
     /**
      * Gets query for [[UserAccess]].
      * userAccess
@@ -206,6 +218,11 @@ class Kafedra extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
             ->andOnCondition(['USER_ACCESS_TYPE_ID' => self::USER_ACCESS_TYPE_ID, 'is_deleted' => 0]);
+    }
+
+    public function getUserAccessCount()
+    {
+        return count($this->userAccess);
     }
 
     public static function createItem($model, $post)

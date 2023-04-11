@@ -164,10 +164,6 @@ class Kafedra extends \yii\db\ActiveRecord
         return $this->hasOne(Direction::className(), ['id' => 'direction_id']);
     }
 
-    public function getTeachers()
-    {
-    }
-
     /**
      * Gets query for [[Faculty]].
      *
@@ -195,7 +191,9 @@ class Kafedra extends \yii\db\ActiveRecord
      */
     public function getLeader()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+
+        // return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     public function getMudir()
@@ -208,12 +206,6 @@ class Kafedra extends \yii\db\ActiveRecord
      * userAccess
      * @return \yii\db\ActiveQuery
      */
-    // public function getuserAccess()
-    // {
-    //     return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
-    //         ->andOnCondition(['user_access_type_id' => self::USER_ACCESS_TYPE_ID]);
-    // }
-
     public function getUserAccess()
     {
         return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])

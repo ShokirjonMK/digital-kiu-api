@@ -119,6 +119,7 @@ class Department extends \yii\db\ActiveRecord
             'leader',
             'userAccess',
             'userAccessCount',
+            'depLead',
 
             'children',
             'parent',
@@ -188,7 +189,13 @@ class Department extends \yii\db\ActiveRecord
      */
     public function getLeader()
     {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
         return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+    }
+    public function getDepLead()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**

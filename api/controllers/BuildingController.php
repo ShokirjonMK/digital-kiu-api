@@ -39,7 +39,8 @@ class BuildingController extends ApiActiveController
         $query = $this->filterAll($query, $model);
 
         // sort
-        $query = $this->sort($query);
+        // $query = $this->sort($query);
+        $query->orderBy(['order' => SORT_ASC]);
 
         // data
         $data =  $this->getData($query);

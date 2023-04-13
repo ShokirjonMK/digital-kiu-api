@@ -119,7 +119,8 @@ class ExamControlStudentController extends ApiActiveController
 
         if (isset($post['ball'])) {
             if (!is_null($model->ball)) {
-                return $this->response(0, _e('Can not change ball.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+                if ($post['ball'] != $model->ball)
+                    return $this->response(0, _e('Can not change ball.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
             }
         }
         if (isset($post['ball2'])) {

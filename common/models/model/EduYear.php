@@ -63,6 +63,8 @@ class EduYear extends \yii\db\ActiveRecord
                 'is_deleted'
             ], 'integer'],
             [['year'], 'integer'],
+            [['type'], 'default', 'value' => 1],
+
         ];
     }
 

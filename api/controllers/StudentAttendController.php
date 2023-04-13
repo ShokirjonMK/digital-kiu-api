@@ -101,7 +101,7 @@ class StudentAttendController extends ApiActiveController
             ->groupBy('faculty_id');
         $result = $query->all();
         // dd($result);
-        return $this->response(1, ($this->controller_name . ' successfully created.'), $result, null, ResponseStatus::CREATED);
+        return $this->response(1, ('Success.'), $result, null, ResponseStatus::OK);
         // return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
     }
 

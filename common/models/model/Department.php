@@ -118,6 +118,8 @@ class Department extends \yii\db\ActiveRecord
         $extraFields =  [
             'leader',
             'userAccess',
+            'userAccessCount',
+            'depLead',
 
             'children',
             'parent',
@@ -188,6 +190,28 @@ class Department extends \yii\db\ActiveRecord
     public function getLeader()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+    }
+    public function getDepLead()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * Gets query for [[UserAccess]].
+     * userAccess
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserAccess()
+    {
+        return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
+            ->andOnCondition(['USER_ACCESS_TYPE_ID' => self::USER_ACCESS_TYPE_ID, 'is_deleted' => 0]);
+    }
+
+    public function getUserAccessCount()
+    {
+        return count($this->userAccess);
     }
 
     /**
@@ -200,11 +224,11 @@ class Department extends \yii\db\ActiveRecord
     //     return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
     //         ->andOnCondition(['user_access_type_id' => self::USER_ACCESS_TYPE_ID]);
     // }
-    public function getUserAccess()
-    {
-        return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
-            ->andOnCondition(['USER_ACCESS_TYPE_ID' => self::USER_ACCESS_TYPE_ID, 'is_deleted' => 0]);
-    }
+    // public function getUserAccess()
+    // {
+    //     return $this->hasMany(UserAccess::className(), ['table_id' => 'id'])
+    //         ->andOnCondition(['USER_ACCESS_TYPE_ID' => self::USER_ACCESS_TYPE_ID, 'is_deleted' => 0]);
+    // }
 
     public static function createItem($model, $post)
     {

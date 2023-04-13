@@ -95,6 +95,14 @@ class Building extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'rooms',
+
+
+            'roomLecture',
+            'roomSeminar',
+            'roomsCount',
+            'roomsLectureCount',
+            'roomSeminarCount',
+            
             'description',
             'createdBy',
             'updatedBy',
@@ -145,8 +153,36 @@ class Building extends \yii\db\ActiveRecord
      */
     public function getRooms()
     {
-        return $this->hasMany(Room::className(), ['building_id' => 'id']);
+        return $this->hasMany(Room::className(), ['building_id' => 'id'])
+            ->where(['status' => 1, 'is_deleted' => 0]);
     }
+
+    public function getRoomLecture()
+    {
+        return $this->hasMany(Room::className(), ['building_id' => 'id'])->onCondition(['>=', 'capacity', 60])
+            ->where(['status' => 1, 'is_deleted' => 0]);
+    }
+
+    public function getRoomSeminar()
+    {
+        return $this->hasMany(Room::className(), ['building_id' => 'id'])->onCondition(['<', 'capacity', 60])
+            ->where(['status' => 1, 'is_deleted' => 0]);
+    }
+
+    public function getRoomsCount()
+    {
+        return count($this->rooms);
+    }
+    public function getRoomsLectureCount()
+    {
+        return count($this->roomLecture);
+    }
+    public function getRoomSeminarCount()
+    {
+        return count($this->roomSeminar);
+    }
+
+
 
     public static function createItem($model, $post)
     {

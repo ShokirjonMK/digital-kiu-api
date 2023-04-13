@@ -416,6 +416,10 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                             $ExamStudent->student_id = $student_id;
                             $ExamStudent->start = time();
                             $ExamStudent->lang_id = $student_lang_id;
+
+                            $ExamStudent->edu_semestr_subject_id = $exam->eduSemestrSubject->id;
+                            $ExamStudent->subject_id = $exam->eduSemestrSubject->subject_id;
+                            
                             // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
                             $ExamStudent->status = ExamStudent::STATUS_TAKED;
                             $ExamStudent->save();

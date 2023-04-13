@@ -91,6 +91,8 @@ class ExamStudent extends \yii\db\ActiveRecord
                     'start',
                     'finish',
                     'exam_id',
+                    'subject_id',
+                    'edu_semestr_subject_id',
                     'teacher_access_id',
                     'attempt',
                     'lang_id',
@@ -357,16 +359,32 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getOldAllBall()
     {
+        /* $model = new ExamStudentAnswerSubQuestion();
+        $query = $model->find();
+
+        $query = $query
+            ->select(['SUM(COALESCE(old_ball, ball))'])
+            ->andWhere([
+                'in', $model->tableName() . '.exam_student_answer_id',
+                ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+            ])
+            ->asArray()
+            ->one();
+
+        return  $query; */
+
         $model = new ExamStudentAnswerSubQuestion();
         $query = $model->find();
 
-        $query = $query->andWhere([
-            'in', $model->tableName() . '.exam_student_answer_id',
-            ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
-        ])
-            ->sum('old_ball');
+        $query = $query->select(['SUM(COALESCE(old_ball, ball))'])
+            ->andWhere([
+                'in', $model->tableName() . '.exam_student_answer_id',
+                ExamStudentAnswer::find()->select('id')->where(['exam_student_id' => $this->id])
+            ]);
 
-        return  $query;
+        $totalBall = $query->createCommand()->queryScalar();
+
+        return $totalBall;
     }
 
     public function getFinishedAt()

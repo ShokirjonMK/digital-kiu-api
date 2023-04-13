@@ -5,6 +5,8 @@ namespace api\controllers;
 use common\models\model\Attend;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\ExamControlStudent;
+use common\models\model\TimeTable;
 
 class AttendController extends ApiActiveController
 {
@@ -84,7 +86,7 @@ class AttendController extends ApiActiveController
         unset($post['edu_plan_id']);
         unset($post['type']);
         unset($post['semestr_id']);
-        
+
         $this->load($model, $post);
         $result = Attend::updateItem($model, $post, $student_ids);
         if (!is_array($result)) {
@@ -92,6 +94,40 @@ class AttendController extends ApiActiveController
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+    }
+
+    public function actionNot($date)
+    {
+        // $model = new TimeTable();
+        // $da = new \DateTime($date);
+        // $date = $da->format('Y-m-d');
+        // $n = $da->format('N');
+
+        $model = new TimeTable();
+        $model = new ExamControlStudent();
+
+        return $model->attributes();
+        
+        $date = date("Y-m-d", strtotime($date));
+        $N = date('N', strtotime($date));
+        // return $N;
+        $query = $model->find()
+            ->andWhere([$model->tableSchema->name . '.is_deleted' => 0])
+            ->andWhere([$model->tableSchema->name . '.archived' => 0])
+            ->join("LEFT JOIN", "attend as a", 'a.time_table_id = ' . $model->tableSchema->name . '.id')
+            ->andWhere(['a.time_table_id' => null])
+            ->andWhere(['a.date' => $date])
+            ->andWhere([$model->tableSchema->name . '.week_id' => $N]);
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
     }
 
     public function actionView($lang, $id)

@@ -457,6 +457,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                             $ExamStudent->exam_id = $exam_id;
                             $ExamStudent->edu_year_id = $exam->eduSemestrSubject->eduSemestr->edu_year_id;
+                            $ExamStudent->edu_semestr_subject_id = $exam->eduSemestrSubject->id;
+                            $ExamStudent->subject_id = $exam->eduSemestrSubject->subject_id;
 
                             $ExamStudent->student_id = $student_id;
                             $ExamStudent->start = time();
@@ -716,10 +718,13 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                     if ($examStudentAnswerSubQuestion) {
                         if ($examStudentAnswerSubQuestion->exam_student_answer_id == $model->id) {
                             $examStudentAnswerSubQuestion->appeal_teacher_conclusion = $subQuestionOneAnswerAppealChecking->appeal_teacher_conclusion;
-                            if ($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball) {
+                            // if ($examStudentAnswerSubQuestion->old_ball == null &&  $examStudentAnswerSubQuestion->ball != $subQuestionOneAnswerAppealChecking->ball) {
+                            if ($examStudentAnswerSubQuestion->old_ball == null) {
                                 $examStudentAnswerSubQuestion->old_ball = $examStudentAnswerSubQuestion->ball;
                                 $examAppeal->is_changed = ExamAppeal::IS_CHANGED_TRUE;
                                 $examAppeal->update();
+                            } else {
+                                $errors[] = [$examStudentAnswerSubQuestion->ball => _e("Already checked")];
                             }
 
                             $examStudentAnswerSubQuestion->ball = $subQuestionOneAnswerAppealChecking->ball;

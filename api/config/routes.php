@@ -217,6 +217,8 @@ $routes = [
 
     // ball statistics two, three, four, five
     'GET <lang:\w{2}>/exam-students/ball' => 'exam-student/ball',
+    // ball statistics appeal
+    'GET <lang:\w{2}>/exam-appeals/ball' => 'exam-appeal/ball',
     /* statistics all */
 
     // election password generator
@@ -288,6 +290,9 @@ $routes = [
     'POST <lang:\w{2}>/rooms/free' => 'room/free',
     /**  */
 
+
+    // Student Attendees By
+    'GET <lang:\w{2}>/attends/not' => 'attend/not',
 
     // Student Attendees By
     'GET <lang:\w{2}>/student-attends/by-date' => 'student-attend/by-date',

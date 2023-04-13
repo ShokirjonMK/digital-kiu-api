@@ -50,23 +50,12 @@ class EduYear extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['year', 'type'], 'required',],
-            // [['year'], 'unique',],
-            [[
-                'order',
-                'status',
-                'type',
-                'created_at',
-                'updated_at',
-                'created_by',
-                'updated_by',
-                'is_deleted'
-            ], 'integer'],
-            [['year'], 'integer'],
+            [['year', 'type'], 'required'],
+            [['order', 'status', 'type', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted', 'year'], 'integer'],
             [['type'], 'default', 'value' => 1],
-
         ];
     }
+
 
     /**
      * {@inheritdoc}

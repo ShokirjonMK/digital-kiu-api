@@ -293,22 +293,29 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         $errors = [];
         $data = [];
         $exam_id = $post["exam_id"] ?? null;
-
-        $student = Student::findOne(['user_id' => current_user_id()]);
-
-        if (!$student) {
-            $errors[] = _e("Student not found");
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-
-        $student_id = $student->id;
-        // $student_id = 15;
-        $exam_times = [];
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
-
             if ($exam) {
+                if (!checkAllowedIP() || $exam->is_protected == Exam::PROTECTED_FALSE) {
+                    // return $this->response(0, _e('Not allowed to this computers.'), null, [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
+                    $errors[] = _e("Not allowed to this computers");
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                $student = Student::findOne(['user_id' => current_user_id()]);
+
+                if (!$student) {
+                    $errors[] = _e("Student not found");
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
+                $student_id = $student->id;
+                // $student_id = 15;
+                $exam_times = [];
+
+
+
                 if ($exam->status == 1) {
 
                     $ExamStudentHas = ExamStudent::find()->where([

@@ -296,12 +296,12 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if ($exam) {
-                if (!checkAllowedIP() || $exam->is_protected == Exam::PROTECTED_FALSE) {
-                    // return $this->response(0, _e('Not allowed to this computers.'), null, [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
-                    $errors[] = _e("Not allowed to this computers");
-                    $transaction->rollBack();
-                    return simplify_errors($errors);
-                }
+                // if (!checkAllowedIP() || $exam->is_protected == Exam::PROTECTED_FALSE) {
+                //     // return $this->response(0, _e('Not allowed to this computers.'), null, [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
+                //     $errors[] = _e("Not allowed to this computers");
+                //     $transaction->rollBack();
+                //     return simplify_errors($errors);
+                // }
                 $student = Student::findOne(['user_id' => current_user_id()]);
 
                 if (!$student) {
@@ -542,6 +542,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 }
                             }
                             /** */
+                            
                             if ($ExamStudent->finish > 0) {
                                 $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->finish);
                             } else {

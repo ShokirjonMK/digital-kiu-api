@@ -335,10 +335,10 @@ class TimeOption extends \yii\db\ActiveRecord
 
         if (isset($post['status'])) {
             TimeTable::updateAll(['status' => $post['status']], ['time_option_id' => $model->id]);
-            $time_table_parent = TimeTable::findOne(['time_option_id' => $model->id, 'parent_id' => null, 'lecture_id' => null]);
+            $time_table_parent = TimeTable::findOne(['time_option_id' => $model->id, 'parent_id IS NOT NULL', 'lecture_id IS NOT NULL']);
             if ($time_table_parent) {
-                TimeTable::updateAll(['status' => $post['status']], ['or', ['parent_id' => $time_table_parent->parent_id], ['lecture_id' => $time_table_parent->lecture_id]]);
-                TimeTable::updateAll(['time_option_id' => $model->id], ['or', ['parent_id' => $time_table_parent->parent_id], ['lecture_id' => $time_table_parent->lecture_id]]);
+                TimeTable::updateAll(['status' => $post['status']], ['or', ['parent_id' => $time_table_parent->id], ['lecture_id' => $time_table_parent->id]]);
+                TimeTable::updateAll(['time_option_id' => $model->id], ['or', ['parent_id' => $time_table_parent->id], ['lecture_id' => $time_table_parent->id]]);
             }
         }
 

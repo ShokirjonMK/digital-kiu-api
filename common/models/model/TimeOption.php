@@ -333,6 +333,10 @@ class TimeOption extends \yii\db\ActiveRecord
         $model->edu_plan_id = $model->eduSemester->edu_plan_id;
         $model->faculty_id = $model->eduPlan->faculty_id;
 
+        if (isset($post['status'])) {
+            TimeTable::updateAll(['status' => $post['status']], ['time_option_id' => $model->id]);
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();

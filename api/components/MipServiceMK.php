@@ -4,7 +4,6 @@ namespace api\components;
 
 use common\models\model\Profile;
 use GuzzleHttp\Client;
-use yii\httpclient\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 
 class MipServiceMK

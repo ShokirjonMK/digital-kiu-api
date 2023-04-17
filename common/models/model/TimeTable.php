@@ -768,7 +768,7 @@ class TimeTable extends \yii\db\ActiveRecord
 
         if (isset($post['time_option_id'])) {
             $childs = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['parent_id' => $model->id]);
-            // $seminars = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['lecture_id' => $model->id]);
+            $seminars = TimeTable::updateAll(['time_option_id' => $post['time_option_id']], ['lecture_id' => $model->id]);
         }
 
         if (!isset($eduSemester)) {

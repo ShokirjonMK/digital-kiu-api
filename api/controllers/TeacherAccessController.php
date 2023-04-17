@@ -87,6 +87,7 @@ class TeacherAccessController extends ApiActiveController
                 'edu_year_id' => Yii::$app->request->get('edu_year_id'),
                 'week_id' => Yii::$app->request->get('week_id'),
                 'is_deleted' => 0,
+                'status' => 1,
                 'archived' => 0
 
             ])->andWhere(['in', 'semester_id', $semester_ids]);

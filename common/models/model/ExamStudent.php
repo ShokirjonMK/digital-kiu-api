@@ -830,7 +830,7 @@ class ExamStudent extends \yii\db\ActiveRecord
         $model = ExamStudent::find()
             ->where(['type' => null])
             ->andWhere(['is_checked_full' => 0])
-            ->limit(10000)->offset($soni)->all();
+            ->limit(5000)->offset($soni)->all();
 
         foreach ($model as $modelOne) {
             if (!($modelOne->type > 0)) {

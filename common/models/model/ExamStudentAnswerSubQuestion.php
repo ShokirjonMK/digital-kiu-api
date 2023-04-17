@@ -133,7 +133,7 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
     {
         $fields = [
             'id',
-            // 'file',
+            'file',
 
             'exam_student_answer_id',
             'sub_question_id',

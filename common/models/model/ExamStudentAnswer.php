@@ -58,7 +58,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
     const UPLOADS_FOLDER = 'uploads/answer_files/';
     public $answer_file;
-    public $answerFileMaxSize = 1024 * 1024 * 5; // 3 Mb
+    public $answerFileMaxSize = 1024 * 1024 * 8; // 8 Mb
 
     /**
      * {@inheritdoc}
@@ -413,10 +413,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 ->all();
 
                             $data['questions'] = $getQuestion;
-                            if ($exam->id = 345 || $exam->id = 346) {
-                                $ExamStudentHas->start = time();
-                                $ExamStudentHas->save();
-                            }
+                           
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                             $exam_times['duration'] = $exam->duration;
                             if ($ExamStudentHas->finish > 0) {

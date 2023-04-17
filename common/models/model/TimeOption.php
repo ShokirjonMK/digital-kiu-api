@@ -333,9 +333,22 @@ class TimeOption extends \yii\db\ActiveRecord
         $model->edu_plan_id = $model->eduSemester->edu_plan_id;
         $model->faculty_id = $model->eduPlan->faculty_id;
 
-        if (isset($post['status'])) {
-            TimeTable::updateAll(['status' => $post['status']], ['time_option_id' => $model->id]);
-        }
+        // if (isset($post['status'])) {
+        //     TimeTable::updateAll(['status' => $post['status']], ['time_option_id' => $model->id]);
+        //     $time_table_parent = TimeTable::findOne(['time_option_id' => $model->id, 'parent_id' => null, 'lecture_id' => null]);
+        //     if ($time_table_parent) {
+        //         TimeTable::updateAll(['status' => $post['status']], ['or', ['parent_id' => $time_table_parent->parent_id], ['lecture_id' => $time_table_parent->lecture_id]]);
+        //     }
+        // }
+
+        $subquery = TimeTable::find()
+            ->select(['parent_id', 'lecture_id'])
+            ->where(['time_option_id' => $model->id, 'parent_id IS NOT NULL']);
+
+        TimeTable::updateAll(
+            ['status' => $post['status']],
+            ['or', ['time_option_id' => $model->id], ['in', 'parent_id', $subquery], ['in', 'lecture_id', $subquery]]
+        );
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

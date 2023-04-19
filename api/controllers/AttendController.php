@@ -104,10 +104,10 @@ class AttendController extends ApiActiveController
         // $n = $da->format('N');
 
         $model = new TimeTable();
-        $model = new ExamControlStudent();
+        // $model = new ExamControlStudent();
 
-        return $model->attributes();
-        
+        // return $model->attributes();
+
         $date = date("Y-m-d", strtotime($date));
         $N = date('N', strtotime($date));
         // return $N;
@@ -127,6 +127,8 @@ class AttendController extends ApiActiveController
 
         // data
         $data =  $this->getData($query);
+
+        rawsql($query);
         return $this->response(1, _e('Success'), $data);
     }
 

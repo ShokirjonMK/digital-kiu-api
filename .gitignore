@@ -12,3 +12,4 @@ api/web/index.php
 storage/uploads
 composer.lock
 storage
+api/config/params.php

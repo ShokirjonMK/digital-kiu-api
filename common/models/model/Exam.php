@@ -457,6 +457,8 @@ class Exam extends \yii\db\ActiveRecord
     {
         return Student::find()
             ->where(['edu_plan_id' => $this->eduSemestrSubject->eduSemestr->edu_plan_id])
+            ->andWhere(['is_deleted' => 1])
+            // ->andWhere(['is_deleted' => 1])
             ->andWhere([
                 'not in', 'id',
                 ExamStudent::find()

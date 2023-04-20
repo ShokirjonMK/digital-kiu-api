@@ -98,25 +98,30 @@ class AttendController extends ApiActiveController
 
     public function actionNot($date)
     {
-        // $model = new TimeTable();
-        // $da = new \DateTime($date);
-        // $date = $da->format('Y-m-d');
-        // $n = $da->format('N');
-
         $model = new TimeTable();
-        // $model = new ExamControlStudent();
-
-        // return $model->attributes();
-
         $date = date("Y-m-d", strtotime($date));
         $N = date('N', strtotime($date));
-        // return $N;
+        /*
+                    		
+            SELECT
+            	* 
+            	* 
+            FROM
+            	`time_table` 
+            WHERE
+            	( `time_table`.`is_deleted` = 0 ) 
+            	AND ( `time_table`.`archived` = 0 ) 
+            	AND ( `id` NOT IN ( SELECT `time_table_id` FROM `attend` WHERE `date` = '2023-04-19' ) ) 
+            	AND ( `time_table`.`week_id` = '3' )
+        */
         $query = $model->find()
             ->andWhere([$model->tableSchema->name . '.is_deleted' => 0])
             ->andWhere([$model->tableSchema->name . '.archived' => 0])
-            ->join("LEFT JOIN", "attend as a", 'a.time_table_id = ' . $model->tableSchema->name . '.id')
-            ->andWhere(['a.time_table_id' => null])
-            ->andWhere(['a.date' => $date])
+            ->andWhere([
+                'not in', 'id', Attend::find()
+                    ->select('time_table_id')
+                    ->andWhere(['date' => $date])
+            ])
             ->andWhere([$model->tableSchema->name . '.week_id' => $N]);
 
         // filter
@@ -128,7 +133,7 @@ class AttendController extends ApiActiveController
         // data
         $data =  $this->getData($query);
 
-        rawsql($query);
+        // rawsql($query);
         return $this->response(1, _e('Success'), $data);
     }
 

@@ -27,12 +27,12 @@ class AttendController extends ApiActiveController
         $query = $model->find()
             // ->with(['infoRelation'])
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->andWhere([$model->tableName() . '.is_deleted' => 0])
+            // ->join("INNER JOIN", "translate tr", "tr.model_id = $model->tableName().id and tr.table_name = '$model->tableName()'" )
         ;
 
         // if (isRole('student')) {
-        //     $query->andWhere([$this->table_name . '.student_id' => $this->student()]);
+        //     $query->andWhere([$model->tableName() . '.student_id' => $this->student()]);
         // }
 
         // filter

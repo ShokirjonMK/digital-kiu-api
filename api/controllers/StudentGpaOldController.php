@@ -2,30 +2,34 @@
 
 namespace api\controllers;
 
-use common\models\model\AcademicDegree;
+use common\models\model\StudentGpaOld;
+use common\models\model\Translate;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\EduYear;
+use common\models\model\Para;
+use common\models\model\Semestr;
+use common\models\model\TimeTable;
+use common\models\model\Week;
 
-class AcademicDegreeController extends ApiActiveController
+class StudentGpaOldController extends ApiActiveController
 {
-    public $modelClass = 'api\resources\Degree';
+    public $modelClass = 'api\resources\StudentGpaOld';
 
     public function actions()
     {
         return [];
     }
 
-    public $table_name = 'academic_degree';
-    public $controller_name = 'AcademicDegree';
+    public $table_name = 'student_gpa_old';
+    public $controller_name = 'StudentGpaOld';
 
     public function actionIndex($lang)
     {
-        $model = new AcademicDegree();
+        $model = new StudentGpaOld();
 
         $query = $model->find()
-            ->andWhere([$model->tableName() . '.is_deleted' => 0])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
-
+            ->andWhere([$model->tableName() . '.is_deleted' => 0]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -40,28 +44,27 @@ class AcademicDegreeController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        $model = new AcademicDegree();
+        $model = new StudentGpaOld();
         $post = Yii::$app->request->post();
         $this->load($model, $post);
 
-        $result = AcademicDegree::createItem($model, $post);
+        $result = StudentGpaOld::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
     }
 
     public function actionUpdate($lang, $id)
     {
-        $model = AcademicDegree::findOne($id);
+        $model = StudentGpaOld::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        $result = AcademicDegree::updateItem($model, $post);
+        $result = StudentGpaOld::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -71,7 +74,7 @@ class AcademicDegreeController extends ApiActiveController
 
     public function actionView($lang, $id)
     {
-        $model = AcademicDegree::find()
+        $model = StudentGpaOld::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
         if (!$model) {
@@ -82,7 +85,7 @@ class AcademicDegreeController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = AcademicDegree::find()
+        $model = StudentGpaOld::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 

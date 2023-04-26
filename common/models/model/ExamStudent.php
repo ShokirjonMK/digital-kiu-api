@@ -272,7 +272,7 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         $on1 = ExamControlStudent::findOne([
             'student_id' => $this->student_id,
-            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
             'subject_id' => $this->exam->eduSemestrSubject->subject_id,
         ])->ball ?? null;
 
@@ -283,7 +283,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         $on2 = ExamControlStudent::findOne([
             'student_id' => $this->student_id,
-            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
             'subject_id' => $this->exam->eduSemestrSubject->subject_id,
         ])->ball2 ?? null;
 

@@ -57,7 +57,8 @@ return [
         'job_delete',
     ],
 
-    /* Pro rektor */ 'prorector' => [
+    /* Pro rektor */
+    'prorector' => [
 
         'user_oferta',
         "academic-degree_create",
@@ -712,7 +713,8 @@ return [
 
     ],
 
-    /* O'quv bo'limi Admin */ 'edu_admin' => [
+    /* O'quv bo'limi Admin */
+    'edu_admin' => [
         "access-control_roles",
         "area_index",
         "area_view",
@@ -831,11 +833,15 @@ return [
         "semestr_view",
         "statistic_checking",
         "statistic_student-count-by-faculty",
+        "student-gpa-old_create",
+        "student-gpa-old_delete",
+        "student-gpa-old_index",
+        "student-gpa-old_update",
+        "student-gpa-old_view",
         "student-time-option_delete",
         "student-time-option_index",
         "student-time-option_view",
         "student-time-table_create",
-        "student-time-table_delete",
         "student-time-table_index",
         "student-time-table_view",
         "student_create",
@@ -872,6 +878,7 @@ return [
         "time-option_update",
         "time-option_view",
         "time-table_create",
+        "time-table_delete",
         "time-table_index",
         "time-table_parent-null",
         "time-table_update",
@@ -892,7 +899,8 @@ return [
         "week_view"
     ],
 
-    /* O'quv bo'limi kontenthisi */ 'edu_moderator' => [
+    /* O'quv bo'limi kontenthisi */
+    'edu_moderator' => [
 
         'user_oferta',
         "user_self",
@@ -920,7 +928,8 @@ return [
         // 'time-table_delete',
     ],
 
-    /* O'quv bo'limi nazoratchi */ 'edu_editor' => [
+    /* O'quv bo'limi nazoratchi */
+    'edu_editor' => [
 
         'user_oferta',
         "user_self",
@@ -1057,7 +1066,8 @@ return [
         // 'time-table_delete',
     ],
 
-    /* O'quv bo'limi yordamchi */ 'edu_viewer' => [
+    /* O'quv bo'limi yordamchi */
+    'edu_viewer' => [
 
         'user_oferta',
         "user_self",
@@ -1185,7 +1195,8 @@ return [
 
     ],
 
-    /* Talim sifati */ 'edu_quality' => [
+    /* Talim sifati */
+    'edu_quality' => [
         "access-control_roles",
         "area_index",
         "area_view",
@@ -1264,7 +1275,8 @@ return [
         "week_view"
     ],
 
-    /* Dekan huquqlari */ 'dean' => [
+    /* Dekan huquqlari */
+    'dean' => [
         "academic-degree_index",
         "academic-degree_view",
         "access-control_permissions",
@@ -1502,7 +1514,8 @@ return [
         "student-subject-restrict_delete",
     ],
 
-    /* Kafedra mudiri */ 'mudir' => [
+    /* Kafedra mudiri */
+    'mudir' => [
         "academic-degree_index",
         "academic-degree_view",
         "access-control_permissions",
@@ -1510,6 +1523,7 @@ return [
         "area_index",
         "area_view",
         "building_index",
+        "citizenship_index",
         "citizenship_view",
         "country_index",
         "country_view",
@@ -1624,7 +1638,8 @@ return [
     ],
 
 
-    /* tutor tarbiyachi huquqlari */ 'tutor' => [
+    /* tutor tarbiyachi huquqlari */
+    'tutor' => [
         "area_index",
         "attend-reason_create",
         "attend-reason_delete",
@@ -1915,13 +1930,19 @@ return [
         'department_view',
     ],
 
-    /* Teacher */ 'teacher' => [
+    /* Teacher */
+    'teacher' => [
         "academic-degree_index",
         "academic-degree_view",
         "access-control_permissions",
         "access-control_roles",
         "area_index",
         "area_view",
+        "attend_create",
+        "attend_delete",
+        "attend_index",
+        "attend_update",
+        "attend_view",
         "building_index",
         "citizenship_view",
         "country_index",
@@ -1946,18 +1967,39 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
-        "exam-appeal-semeta_create",
         "exam-appeal-semeta_index",
         "exam-appeal-semeta_view",
+        "exam-appeal_create",
+        "exam-appeal_index",
+        "exam-appeal_update",
+        "exam-appeal_view",
+        "exam-checking_appeal",
+        "exam-checking_create",
         "exam-checking_index",
         "exam-checking_update",
         "exam-checking_view",
-        "exam-control-student_appeal",
+        "exam-control-student_create",
+        "exam-control-student_index",
+        "exam-control-student_update",
+        "exam-control-student_view",
+        "exam-control_create",
+        "exam-control_index",
+        "exam-control_update",
+        "exam-control_view",
         "exam-question_index",
         "exam-question_view",
         "exam-semeta_create",
         "exam-semeta_index",
         "exam-semeta_view",
+        "exam-student_index",
+        "exam-student_update",
+        "exam-student_view",
+        "exam-teacher-check_create",
+        "exam-teacher-check_delete",
+        "exam-teacher-check_index",
+        "exam-teacher-check_random-students",
+        "exam-teacher-check_update",
+        "exam-teacher-check_view",
         "exams-type_index",
         "exams-type_view",
         "exam_index",
@@ -1992,13 +2034,22 @@ return [
         "room_index",
         "semestr_index",
         "statistic_checking",
+        "subject-access_index",
+        "subject-access_view",
         "subject-category_index",
         "subject-category_view",
+        "subject-content_create",
+        "subject-content_index",
+        "subject-content_types",
+        "subject-content_update",
+        "subject-content_view",
         "subject-sillabus_create",
         "subject-sillabus_delete",
         "subject-sillabus_index",
         "subject-sillabus_update",
         "subject-sillabus_view",
+        "subject-topic-reference_index",
+        "subject-topic-reference_view",
         "subject-topic_create",
         "subject-topic_delete",
         "subject-topic_index",
@@ -2036,7 +2087,8 @@ return [
         "week_index"
     ],
 
-    /* Student */ 'student' => [
+    /* Student */
+    'student' => [
         "access-control_permissions",
         "access-control_roles",
         "area_view",
@@ -2070,7 +2122,7 @@ return [
         "enum_rates",
         "enum_topic-types",
         "enum_yesno",
-        "exam-appeal_delete",
+        "exam-appeal_index",
         "exam-appeal_view",
         "exam-control-student_create",
         "exam-control-student_index",

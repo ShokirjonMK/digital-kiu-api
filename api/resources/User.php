@@ -4,6 +4,7 @@ namespace api\resources;
 
 use common\models\AuthAssignment;
 use common\models\model\Area;
+use common\models\model\Citizenship;
 use common\models\model\Countries;
 use common\models\model\TeacherAccess;
 use common\models\model\PasswordEncrypts;
@@ -15,6 +16,7 @@ use common\models\model\Faculty;
 use common\models\model\Kafedra;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
+use common\models\model\Nationality;
 use common\models\model\Oferta;
 use common\models\model\Region;
 use common\models\model\UserAccess;
@@ -142,6 +144,8 @@ class User extends CommonUser
             'permanentCountry',
             'permanentRegion',
             'permanentArea',
+            'nationality',
+            'citizenship',
 
             'updatedBy',
             'createdBy'
@@ -297,6 +301,18 @@ class User extends CommonUser
         return $this->hasOne(Oferta::className(), ['created_by' => 'id']);
     }
 
+    // getNationality
+    public function getNationality()
+    {
+        return Nationality::findOne($this->profile->nationality_id) ?? null;
+    }
+
+    // Profile Citizenship
+    public function getCitizenship()
+    {
+        return Citizenship::findOne($this->profile->citizenship_id) ?? null;
+    }
+    
 
     public function getKpiMark()
     {

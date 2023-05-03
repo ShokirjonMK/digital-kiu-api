@@ -276,6 +276,16 @@ class Profile extends \yii\db\ActiveRecord
 
 
     /**
+     * Gets query for [[ContractInfo]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getContractInfo()
+    {
+        return $this->hasOne(ContractInfo::className(), ['passport_pin' => 'passport_pin']);
+    }
+
+    /**
      * Gets query for [[Area]].
      *
      * @return \yii\db\ActiveQuery

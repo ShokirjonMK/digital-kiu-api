@@ -296,7 +296,7 @@ class Student extends \yii\db\ActiveRecord
      */
     public function getContractInfo()
     {
-        return $this->hasOne(ContractInfo::className(), ['passport_pin' => 'passport_pin']);
+        return $this->profile->contractInfo;
     }
 
     public function getStudentSubjectRestrict()

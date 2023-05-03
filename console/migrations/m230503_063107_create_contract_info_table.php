@@ -19,6 +19,7 @@ class m230503_063107_create_contract_info_table extends Migration
 
         $this->createTable('{{%contract_info}}', [
             'id' => $this->primaryKey(),
+            
             'student_id' => $this->integer()->null(),
             'uzasbo_id' => $this->integer()->null(),
             'passport_pin' => $this->string(255)->null(),

@@ -180,7 +180,7 @@ trait ResourceTrait
 
     public static function encodemk5MK($key)
     {
-        return base64_encode($key); // Encode string using Base64 // Output: SGVsbG8gV29ybGQh
+        return str_replace('=', '', base64_encode($key)); // Encode string using Base64 // Output: SGVsbG8gV29ybGQh
     }
 
     public static function decodemk5MK($key)

@@ -407,7 +407,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getAccessKey()
     {
-        return $this->encodemk5MK($this->student_id . '-' . $this->exam_student_id);
+        return $this->encodemk5MK($this->student_id . '-' . $this->id);
 
         return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
     }

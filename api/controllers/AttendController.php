@@ -6,6 +6,8 @@ use common\models\model\Attend;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamControlStudent;
+use common\models\model\Kafedra;
+use common\models\model\Subject;
 use common\models\model\TimeTable;
 
 class AttendController extends ApiActiveController
@@ -114,14 +116,43 @@ class AttendController extends ApiActiveController
             	AND ( `id` NOT IN ( SELECT `time_table_id` FROM `attend` WHERE `date` = '2023-04-19' ) ) 
             	AND ( `time_table`.`week_id` = '3' )
         */
+
         $query = $model->find()
             ->andWhere([$model->tableSchema->name . '.is_deleted' => 0])
-            ->andWhere([$model->tableSchema->name . '.archived' => 0])
-            ->andWhere([
-                'not in', 'id', Attend::find()
-                    ->select('time_table_id')
-                    ->andWhere(['date' => $date])
-            ])
+            ->andWhere([$model->tableSchema->name . '.archived' => 0]);
+
+
+        $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+        if ($k['status'] == 1) {
+
+            $query->andFilterWhere([
+                'in', 'subject_id', Subject::find()->where([
+                    'kafedra_id' => $k['UserAccess']->table_id
+                ])->select('id')
+            ]);
+        }
+
+
+        if (isRole('teacher') && !isRole('mudir')) {
+            $query->andFilterWhere([
+                'teacher_user_id' => current_user_id()
+            ]);
+        }
+
+        $kafedraId = Yii::$app->request->get('kafedra_id');
+        if (isset($kafedraId)) {
+            $query->andFilterWhere([
+                'in', 'subject_id', Subject::find()->where([
+                    'kafedra_id' => $kafedraId
+                ])->select('id')
+            ]);
+        }
+
+        $query = $query->andWhere([
+            'not in', 'id', Attend::find()
+                ->select('time_table_id')
+                ->andWhere(['date' => $date])
+        ])
             ->andWhere([$model->tableSchema->name . '.week_id' => $N]);
 
         // filter

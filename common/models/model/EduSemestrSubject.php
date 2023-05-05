@@ -260,9 +260,11 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
         $EduSemestrSubject = EduSemestrSubject::findOne([
             'edu_semestr_id' => $model->edu_semestr_id,
             'subject_id' => $post['subject_id'] ?? null,

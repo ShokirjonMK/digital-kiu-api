@@ -149,9 +149,9 @@ class User extends CommonUser
             'nationality',
             'citizenship',
 
-            'attendedCount,',
-            'timeTabes,',
-            'timeTabesCount,',
+            'attendedCount',
+            'timeTabes',
+            'timeTabesCount',
 
             'updatedBy',
             'createdBy'

@@ -274,11 +274,12 @@ class EduSemestrSubject extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        if ($model->eduSemestr->semestr_id != $model->subject->semestr_id) {
-            $errors[] = _e('Semestr not same');
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+        // edu admin uchun
+        // if ($model->eduSemestr->semestr_id != $model->subject->semestr_id) {
+        //     $errors[] = _e('Semestr not same');
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
 
         if ($model->save()) {
             $subjectSillabus = SubjectSillabus::findOne(['subject_id' => $post['subject_id'] ?? null]);

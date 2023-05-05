@@ -100,6 +100,7 @@ class Question extends \yii\db\ActiveRecord
                     'level',
                     'question_type_id',
 
+                    'archived',
                     'order',
                     'status',
                     'created_at',
@@ -145,6 +146,7 @@ class Question extends \yii\db\ActiveRecord
             'created_by' => _e('Created By'),
             'updated_by' => _e('Updated By'),
             'is_deleted' => _e('Is Deleted'),
+            'archived' => _e('archived'),
         ];
     }
 

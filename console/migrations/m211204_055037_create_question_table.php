@@ -26,6 +26,7 @@ class m211204_055037_create_question_table extends Migration
             'question_type_id' => $this->integer()->notNull()->comment("1-savol, 2-test, 3-another"),
 
 
+            'archived' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -41,7 +42,6 @@ class m211204_055037_create_question_table extends Migration
         $this->addForeignKey('qs_question_subject', 'question', 'subject_id', 'subject', 'id');
         $this->addForeignKey('qqt_question_question_type', 'question', 'question_type_id', 'question_type', 'id');
         $this->addForeignKey('ql_question_language', 'question', 'lang_id', 'languages', 'id');
-
     }
 
     /**

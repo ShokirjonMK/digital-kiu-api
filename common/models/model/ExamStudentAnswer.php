@@ -413,7 +413,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 ->all();
 
                             $data['questions'] = $getQuestion;
-                           
+
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                             $exam_times['duration'] = $exam->duration;
                             if ($ExamStudentHas->finish > 0) {
@@ -482,7 +482,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                         'lang_id' => $student_lang_id,
                                         'question_type_id' => $type,
                                         'status' => 1,
-                                        'is_deleted' => 0
+                                        'is_deleted' => 0,
+                                        'archived' => 0,
                                     ])
                                     ->orderBy(new Expression('rand()'))
                                     ->limit($question_count_with_ball->count)
@@ -539,7 +540,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 }
                             }
                             /** */
-                            
+
                             if ($ExamStudent->finish > 0) {
                                 $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->finish);
                             } else {

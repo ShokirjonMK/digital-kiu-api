@@ -419,7 +419,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
 
                             $ExamStudent->edu_semestr_subject_id = $exam->eduSemestrSubject->id;
                             $ExamStudent->subject_id = $exam->eduSemestrSubject->subject_id;
-                            
+
                             // $ExamStudent->attempt = isset($ExamStudentHas) ? $ExamStudentHas->attempt + 1 : 1;
                             $ExamStudent->status = ExamStudent::STATUS_TAKED;
                             $ExamStudent->save();
@@ -435,6 +435,7 @@ class ExamStudentAnswerDeleted extends \yii\db\ActiveRecord
                                         'lang_id' => $student_lang_id,
                                         'question_type_id' => $type,
                                         'status' => 1,
+                                        'archived' => 0,
                                         'is_deleted' => 0
                                     ])
                                     ->orderBy(new Expression('rand()'))

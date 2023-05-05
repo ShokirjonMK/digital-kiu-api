@@ -150,8 +150,8 @@ class User extends CommonUser
             'citizenship',
 
             'attendedCount',
-            'timeTabes',
-            'timeTabesCount',
+            'timeTables',
+            'timeTablesCount',
 
             'updatedBy',
             'createdBy'
@@ -316,14 +316,14 @@ class User extends CommonUser
             ->count();
     }
 
-    public function getAttendedCount()
+    public function getAttendedCountEski()
     {
         $query = Attend::find()
             ->innerJoinWith('time_table', false)
             ->andWhere([
-                'teacher_user_id' => $this->id,
-                'archived' => 0,
-                'is_deleted' => 0,
+                'time_table.teacher_user_id' => $this->id,
+                'time_table.archived' => 0,
+                'time_table.is_deleted' => 0,
             ]);
 
         if (!empty($_GET['date'])) {
@@ -338,8 +338,32 @@ class User extends CommonUser
 
         return $query->count();
     }
+    public function getAttendedCount()
+    {
+        $query = Attend::find()
+            ->joinWith('timeTable') // Use joinWith instead of innerJoinWith
+            ->andWhere([
+                'time_table.teacher_user_id' => $this->id,
+                'time_table.archived' => 0,
+                'time_table.is_deleted' => 0,
+            ]);
 
-    public function getTimeTabes()
+        if (!empty($_GET['date'])) {
+            $date = date("Y-m-d", strtotime(Yii::$app->request->get('date')));
+            $week_id = date('N', strtotime($date));
+
+            $query->andWhere([
+                'date' => $date,
+                'time_table.week_id' => $week_id,
+            ]);
+        }
+
+        return $query->count();
+    }
+
+
+
+    public function getTimeTables()
     {
         if (!empty($_GET['date'])) {
             $date = date("Y-m-d", strtotime(Yii::$app->request->get('date')));
@@ -359,7 +383,7 @@ class User extends CommonUser
             ]);
     }
 
-    public function getTimeTabesCount()
+    public function getTimeTablesCount()
     {
         return count($this->timeTables);
     }

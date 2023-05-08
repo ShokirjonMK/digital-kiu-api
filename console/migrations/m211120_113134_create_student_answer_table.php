@@ -36,6 +36,8 @@ class m211120_113134_create_student_answer_table extends Migration
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
             'updated_at' => $this->integer()->Null(),
+            'student_created_at' => $this->integer()->Null()->comment('student yaratgan payt'),
+            'student_updated_at' => $this->integer()->Null()->comment('student ozgartirgan payt'),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),

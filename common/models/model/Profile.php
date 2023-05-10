@@ -8,50 +8,61 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "profile".
+ * This is the model class for table "{{%profile}}".
  *
  * @property int $id
  * @property int $user_id
- * @property string $image
- * @property string $phone
- * @property string $phone_secondary
- * @property int $is_foreign
- * @property string $last_name
- * @property string $first_name
- * @property string $middle_name
- * @property string $passport_seria
- * @property string $passport_number
- * @property string $passport_pin
- * @property int $birthday
- * @property string $passport_file
- * @property int $country_id
- * @property int $region_id
- * @property int $area_id
- * @property string $address
- * @property int $gender
- * @property string $passport_given_date
- * @property string $passport_issued_date
- * @property string $passport_given_by
- * @property int $permanent_country_id
- * @property int $permanent_region_id
- * @property int $permanent_area_id
- * @property string $permanent_address
+ * @property int|null $checked
+ * @property int|null $checked_full
+ * @property string|null $image
+ * @property string|null $last_name
+ * @property string|null $first_name
+ * @property string|null $middle_name
+ * @property string|null $passport_seria
+ * @property string|null $passport_number
+ * @property string|null $passport_pin
+ * @property string|null $passport_given_date
+ * @property string|null $passport_issued_date
+ * @property string|null $passport_given_by
+ * @property string|null $birthday
+ * @property string|null $phone
+ * @property string|null $phone_secondary
+ * @property string|null $passport_file
+ * @property int|null $country_id
+ * @property int|null $is_foreign
+ * @property int|null $region_id
+ * @property int|null $area_id
+ * @property string|null $address
+ * @property int|null $gender
+ * @property int|null $permanent_country_id
+ * @property int|null $permanent_region_id
+ * @property int|null $permanent_area_id
+ * @property string|null $permanent_address
  * @property int|null $order
  * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
+ * @property string|null $description
+ * @property int|null $created_at
+ * @property int|null $updated_at
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
- * @property int $telegram_chat_id
+ * @property int|null $citizenship_id citizenship_id fuqarolik turi
+ * @property int|null $nationality_id millati id 
+ * @property int|null $telegram_chat_id
+ * @property int|null $diploma_type_id diploma_type
+ * @property int|null $degree_id darajasi id
+ * @property int|null $academic_degree_id academic_degree id
+ * @property int|null $degree_info_id degree_info id
+ * @property int|null $partiya_id partiya id
  *
  * @property Area $area
- * @property Countries $country
+ * @property Citizenship $citizenship
+ * @property Country $country
  * @property Area $permanentArea
- * @property Countries $permanentCountry
+ * @property Country $permanentCountry
  * @property Region $permanentRegion
  * @property Region $region
- * @property Users $user
+ * @property User $user
  */
 class Profile extends \yii\db\ActiveRecord
 {
@@ -237,53 +248,59 @@ class Profile extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'user_id',
+            'checked',
+            'checked_full',
             'image',
-            'phone',
-            'phone_secondary',
-            'is_foreign',
             'last_name',
             'first_name',
             'middle_name',
-
             'passport_seria',
             'passport_number',
             'passport_pin',
-            'birthday',
-            'passport_file',
-            'gender',
             'passport_given_date',
             'passport_issued_date',
             'passport_given_by',
-
-
+            'birthday',
+            'phone',
+            'phone_secondary',
+            'passport_file',
             'country_id',
+            'is_foreign',
             'region_id',
             'area_id',
             'address',
-
+            'gender',
             'permanent_country_id',
             'permanent_region_id',
             'permanent_area_id',
             'permanent_address',
-
+            'order',
             'status',
+            'description',
             'created_at',
             'updated_at',
             'created_by',
             'updated_by',
-
+            'is_deleted',
+            'citizenship_id',
+            'nationality_id',
+            'telegram_chat_id',
+            'diploma_type_id',
+            'degree_id',
+            'academic_degree_id',
+            'degree_info_id',
+            'partiya_id',
         ];
 
+
         if (!isRole('admin')) {
-            unset($fields['ppassport_seria']);
-            unset($fields['ppassport_number']);
-            unset($fields['ppassport_pin']);
-            unset($fields['pbirthday']);
-            unset($fields['ppassport_file']);
-            unset($fields['pgender']);
-            unset($fields['ppassport_given_date']);
-            unset($fields['ppassport_issued_date']);
-            unset($fields['ppassport_given_by']);
+            unset($fields['passport_seria']);
+            unset($fields['passport_number']);
+            unset($fields['passport_pin']);
+            unset($fields['passport_given_date']);
+            unset($fields['passport_issued_date']);
+            unset($fields['passport_given_by']);
+            unset($fields['passport_file']);
         }
 
         return $fields;

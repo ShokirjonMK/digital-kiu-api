@@ -48,7 +48,7 @@ class PasswordController extends ApiActiveController
             if (strlen($passwordNew) >= 6) {
 
                 if ($passwordRe == $passwordNew) {
-                    if (isRole('admin')) {
+                    if (isRole('admin') && current_user_id() != $id) {
                         $model = User::findOne($id);
                         $model->savePassword($passwordNew, $id);
                         $model->is_changed = User::PASSWORD_NO_CHANED;

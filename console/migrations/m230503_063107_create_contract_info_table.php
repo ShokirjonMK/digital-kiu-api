@@ -39,6 +39,7 @@ class m230503_063107_create_contract_info_table extends Migration
             'must_pay_this_year' => $this->double()->defaultValue(0),
             'paid_this_year' => $this->double()->defaultValue(0),
             'payment_percent' => $this->double()->defaultValue(0),
+            'debt_or_overpayment' => $this->double()->defaultValue(0),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

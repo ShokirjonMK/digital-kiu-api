@@ -232,46 +232,62 @@ class Profile extends \yii\db\ActiveRecord
         ];
     }
 
-    // public function fields()
-    // {
-    //     $fields =  [
-    //         'id',
-    //         'user_id',
-    //         'image',
-    //         'phone',
-    //         'phone_secondary',
-    //         'is_foreign',
-    //         'last_name',
-    //         'first_name',
-    //         'middle_name',
-    //         'passport_seria',
-    //         'passport_number',
-    //         'passport_pin',
-    //         'birthday',
-    //         'passport_file',
-    //         'country_id',
-    //         'region_id',
-    //         'area_id',
-    //         'address',
-    //         'gender',
-    //         'passport_given_date',
-    //         'passport_issued_date',
-    //         'passport_given_by',
-    //         'permanent_country_id',
-    //         'permanent_region_id',
-    //         'permanent_area_id',
-    //         'permanent_address',
+    public function fields()
+    {
+        $fields =  [
+            'id',
+            'user_id',
+            'image',
+            'phone',
+            'phone_secondary',
+            'is_foreign',
+            'last_name',
+            'first_name',
+            'middle_name',
 
-    //         'status',
-    //         'created_at',
-    //         'updated_at',
-    //         'created_by',
-    //         'updated_by',
+            'passport_seria',
+            'passport_number',
+            'passport_pin',
+            'birthday',
+            'passport_file',
+            'gender',
+            'passport_given_date',
+            'passport_issued_date',
+            'passport_given_by',
 
-    //     ];
 
-    //     return $fields;
-    // }
+            'country_id',
+            'region_id',
+            'area_id',
+            'address',
+
+            'permanent_country_id',
+            'permanent_region_id',
+            'permanent_area_id',
+            'permanent_address',
+
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+
+        ];
+
+        if (!isRole('admin')) {
+            unset($fields['ppassport_seria']);
+            unset($fields['ppassport_number']);
+            unset($fields['ppassport_pin']);
+            unset($fields['pbirthday']);
+            unset($fields['ppassport_file']);
+            unset($fields['pgender']);
+            unset($fields['ppassport_given_date']);
+            unset($fields['ppassport_issued_date']);
+            unset($fields['ppassport_given_by']);
+        }
+
+        return $fields;
+    }
 
 
 

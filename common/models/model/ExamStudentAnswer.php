@@ -316,8 +316,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 // $student_id = 15;
                 $exam_times = [];
 
-
-
                 if ($exam->status == 1) {
 
                     $ExamStudentHas = ExamStudent::find()->where([

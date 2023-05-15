@@ -298,12 +298,12 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if ($exam) {
-                if (!checkAllowedIP() || $exam->is_protected == Exam::PROTECTED_FALSE) {
-                    // return $this->response(0, _e('Not allowed to this computers.'), null, [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
+                if ($exam->is_protected == Exam::PROTECTED_TURE && !checkAllowedIP()) {
                     $errors[] = _e("Not allowed to this computers");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
+
                 $student = Student::findOne(['user_id' => current_user_id()]);
 
                 if (!$student) {
@@ -382,7 +382,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
-                    if ($exam->is_protected == 1) {
+                    if ($exam->is_protected == Exam::PROTECTED_TURE) {
                         // if ($ExamStudentHas) {
                         if (isset($post["password"])) {
                             $password = $post["password"];

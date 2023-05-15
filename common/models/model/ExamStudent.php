@@ -250,6 +250,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examControlStudent',
 
             'appeal',
+            'examAppeal',
             'teacher',
 
             'finishedAt',
@@ -519,6 +520,10 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
     public function getAppeal()
+    {
+        return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
+    }
+    public function getExamAppeal()
     {
         return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
     }

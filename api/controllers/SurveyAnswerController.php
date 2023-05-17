@@ -45,9 +45,24 @@ class SurveyAnswerController extends ApiActiveController
         $post['student_id'] = $this->student();
         // $post['student_id'] = 2;
 
-        $this->load($model, $post);
+        if (isset($post['answers'])) {
+            $result = SurveyAnswer::createItems($post);
 
-        $result = SurveyAnswer::createItem($model, $post);
+            if (isset($result['status'])) {
+                if ($result['status']) {
+                    return $this->response(1, _e($this->controller_name . 's successfully created.'), null, null, ResponseStatus::CREATED);
+                } else {
+                    return $this->response(0, _e('There is an error occurred while processing.'), null, $result['errors'], ResponseStatus::UPROCESSABLE_ENTITY);
+                }
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        } else {
+            $this->load($model, $post);
+            $result = SurveyAnswer::createItem($model, $post);
+        }
+
+
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {

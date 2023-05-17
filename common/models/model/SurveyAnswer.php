@@ -154,7 +154,6 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-
             'subject',
             'surveyQuestion',
             'exam',
@@ -225,6 +224,59 @@ class SurveyAnswer extends \yii\db\ActiveRecord
         }
     }
 
+    public static function createItems($post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        $examId = $post['exam_id'] ?? null;
+        $data = ['status' => true,];
+
+        if (!isset($examId)) {
+            $errors['exam_id'] = [_e('Exam ID is required')];
+        } else {
+            $exam = Exam::findOne($examId);
+            if (isset($exam)) {
+                if (isset($post['answers'])) {
+                    $post['answers'] = str_replace("'", "", $post['answers']);
+                    if (!isJsonMK($post['answers'])) {
+                        $errors['answers'] = [_e('Must be Json')];
+                    } else {
+                        foreach (((array)json_decode($post['answers'])) as  $survey_question_id => $ball) {
+                            $newModel = new self();
+                            $newModel->user_id = $post['user_id'];
+                            $newModel->student_id = $post['student_id'];
+                            $newModel->exam_id = $examId;
+                            $newModel->edu_semestr_subject_id = $exam->edu_semestr_subject_id;
+                            $newModel->subject_id = $exam->eduSemestrSubject->subject_id;
+
+                            $newModel->survey_question_id = $survey_question_id;
+                            $newModel->ball = $ball;
+// dd($newModel);
+                            if (!($newModel->validate()) || (!$newModel->save())) {
+                                $errors[] = [$survey_question_id => $newModel->errors];
+                            }
+                        }
+                    }
+                } else {
+                    $errors['answers'] = [_e('Required')];
+                }
+            } else {
+                $errors['exam'] = [_e('Exam not found')];
+            }
+        }
+
+        if (count($errors) == 0) {
+
+            $transaction->commit();
+            return $data;
+        } else {
+            $data['status'] = false;
+            $transaction->rollBack();
+            $data['errors'] = $errors;
+            return $data;
+        }
+    }
+
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
@@ -244,9 +296,9 @@ class SurveyAnswer extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
         }
         return parent::beforeSave($insert);
     }

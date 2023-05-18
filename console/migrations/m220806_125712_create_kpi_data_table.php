@@ -18,6 +18,12 @@ class m220806_125712_create_kpi_data_table extends Migration
             $this->dropTable('kpi_data');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%kpi_data}}', [
             'id' => $this->primaryKey(),
             'kpi_category_id' => $this->integer()->notNull(),
@@ -57,7 +63,7 @@ class m220806_125712_create_kpi_data_table extends Migration
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
             'is_deleted_org' => $this->integer()->defaultValue(0),
 
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('kpiskc_kpi_data_kpi_category', 'kpi_store', 'kpi_category_id', 'kpi_category', 'id');
         $this->addForeignKey('kpissc_kpi_data_subject_category', 'kpi_store', 'subject_category_id', 'subject_category', 'id');

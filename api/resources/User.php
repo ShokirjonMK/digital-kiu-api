@@ -4,6 +4,8 @@ namespace api\resources;
 
 use common\models\AuthAssignment;
 use common\models\model\Area;
+use common\models\model\Attend;
+use common\models\model\Citizenship;
 use common\models\model\Countries;
 use common\models\model\TeacherAccess;
 use common\models\model\PasswordEncrypts;
@@ -15,8 +17,10 @@ use common\models\model\Faculty;
 use common\models\model\Kafedra;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
+use common\models\model\Nationality;
 use common\models\model\Oferta;
 use common\models\model\Region;
+use common\models\model\TimeTable;
 use common\models\model\UserAccess;
 use common\models\model\UserAccessType;
 use common\models\User as CommonUser;
@@ -142,6 +146,12 @@ class User extends CommonUser
             'permanentCountry',
             'permanentRegion',
             'permanentArea',
+            'nationality',
+            'citizenship',
+
+            'attendedCount',
+            'timeTables',
+            'timeTablesCount',
 
             'updatedBy',
             'createdBy'
@@ -276,6 +286,109 @@ class User extends CommonUser
         }
     }
 
+    public function getAttendedTEST()
+    {
+        if (!empty($_GET['date'])) {
+            $date = date("Y-m-d", strtotime(Yii::$app->request->get('date')));
+            $week_id = date('N', strtotime($date));
+
+
+            return Attend::find()
+                ->where(['in' . 'time_table', TimeTable::find()
+                    ->select('id')
+                    ->andWhere([
+                        'teacher_user_id' => $this->id,
+                        'archived' => 0,
+                        'is_deleted' => 0,
+                        'week_id' => $week_id,
+                    ])])
+                ->andWhere(['date' => $date])
+                ->count();
+        }
+        return Attend::find()
+            ->where(['in' . 'time_table', TimeTable::find()
+                ->select('id')
+                ->andWhere([
+                    'teacher_user_id' => $this->id,
+                    'archived' => 0,
+                    'is_deleted' => 0,
+                ])])
+            ->count();
+    }
+
+    public function getAttendedCountEski()
+    {
+        $query = Attend::find()
+            ->innerJoinWith('time_table', false)
+            ->andWhere([
+                'time_table.teacher_user_id' => $this->id,
+                'time_table.archived' => 0,
+                'time_table.is_deleted' => 0,
+            ]);
+
+        if (!empty($_GET['date'])) {
+            $date = date("Y-m-d", strtotime(Yii::$app->request->get('date')));
+            $week_id = date('N', strtotime($date));
+
+            $query->andWhere([
+                'date' => $date,
+                'week_id' => $week_id,
+            ]);
+        }
+
+        return $query->count();
+    }
+    public function getAttendedCount()
+    {
+        $query = Attend::find()
+            ->joinWith('timeTable') // Use joinWith instead of innerJoinWith
+            ->andWhere([
+                'time_table.teacher_user_id' => $this->id,
+                'time_table.archived' => 0,
+                'time_table.is_deleted' => 0,
+            ]);
+
+        if (!empty($_GET['date'])) {
+            $date = date("Y-m-d", strtotime(Yii::$app->request->get('date')));
+            $week_id = date('N', strtotime($date));
+
+            $query->andWhere([
+                'date' => $date,
+                'time_table.week_id' => $week_id,
+            ]);
+        }
+
+        return $query->count();
+    }
+
+
+
+    public function getTimeTables()
+    {
+        if (!empty($_GET['date'])) {
+            $date = date("Y-m-d", strtotime(Yii::$app->request->get('date')));
+            $week_id = date('N', strtotime($date));
+
+            return $this->hasMany(TimeTable::className(), ['teacher_user_id' => 'id'])
+                ->andWhere([
+                    'archived' => 0,
+                    'is_deleted' => 0,
+                    'week_id' => $week_id,
+                ]);
+        }
+        return $this->hasMany(TimeTable::className(), ['teacher_user_id' => 'id'])
+            ->andWhere([
+                'archived' => 0,
+                'is_deleted' => 0,
+            ]);
+    }
+
+    public function getTimeTablesCount()
+    {
+        return count($this->timeTables);
+    }
+
+
     public function getKpiBall()
     {
         return $this->hasMany(KpiMark::className(), ['user_id' => 'id'])->andWhere(['archived' => 0, 'is_deleted' => 0])->sum('ball');
@@ -295,6 +408,18 @@ class User extends CommonUser
     public function getOferta()
     {
         return $this->hasOne(Oferta::className(), ['created_by' => 'id']);
+    }
+
+    // getNationality
+    public function getNationality()
+    {
+        return Nationality::findOne($this->profile->nationality_id) ?? null;
+    }
+
+    // Profile Citizenship
+    public function getCitizenship()
+    {
+        return Citizenship::findOne($this->profile->citizenship_id) ?? null;
     }
 
 

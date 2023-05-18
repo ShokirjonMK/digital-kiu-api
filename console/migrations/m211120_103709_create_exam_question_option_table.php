@@ -11,7 +11,13 @@ class m211120_103709_create_exam_question_option_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-    {
+   {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%exam_question_option}}', [
             'id' => $this->primaryKey(),
             'exam_question_id' => $this->integer()->notNull(),
@@ -28,7 +34,7 @@ class m211120_103709_create_exam_question_option_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('ses_exam_question_option_exam_question', 'exam_question_option', 'exam_question_id', 'exam_question', 'id');
 

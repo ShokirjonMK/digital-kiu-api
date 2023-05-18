@@ -117,17 +117,26 @@ class ExamControlStudentController extends ApiActiveController
         $data = [];
         $post = Yii::$app->request->post();
 
-        if (isset($post['ball'])) {
-            if (!is_null($model->ball)) {
-                if ($post['ball'] != $model->ball)
-                    return $this->response(0, _e('Can not change ball.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-            }
-        }
-        if (isset($post['ball2'])) {
-            if (!is_null($model->ball2)) {
-                return $this->response(0, _e('Can not change ball2.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-            }
-        }
+        // if (isset($post['ball'])) {
+        //     if (!is_null($model->ball) || !($model->ball == 0)) {
+        //         if ($post['ball'] != $model->ball)
+        //             return $this->response(0, _e('Can not change ball.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        //     }
+        // }
+
+        // if (isset($post['ball2'])) {
+        //     if (!is_null($model->ball2) || !($model->ball2 == 0)) {
+        //         if ($post['ball2'] != $model->ball2)
+        //             return $this->response(0, _e('Can not change ball2.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        //     }
+        // }
+
+
+        // if (isset($post['ball2'])) {
+        //     if (!is_null($model->ball2)) {
+        //         return $this->response(0, _e('Can not change ball2.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        //     }
+        // }
 
         if (isRole('student')) {
             if ($model->student_id != $this->student()) {

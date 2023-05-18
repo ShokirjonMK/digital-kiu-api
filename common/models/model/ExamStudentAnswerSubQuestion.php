@@ -64,6 +64,8 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
     {
         return [
             [['exam_student_answer_id', 'sub_question_id'], 'required'],
+            [['student_updated_at', 'student_created_at'], 'integer'],
+
             [
                 [
                     'exam_student_answer_id',
@@ -351,8 +353,14 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = current_user_id();
+            if (isRole('student')) {
+                $this->student_created_at = time();
+            }
         } else {
             $this->updated_by = current_user_id();
+            if (isRole('student')) {
+                $this->student_updated_at = time();
+            }
         }
         return parent::beforeSave($insert);
     }

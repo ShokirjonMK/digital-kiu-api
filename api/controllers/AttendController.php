@@ -6,6 +6,8 @@ use common\models\model\Attend;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamControlStudent;
+use common\models\model\Kafedra;
+use common\models\model\Subject;
 use common\models\model\TimeTable;
 
 class AttendController extends ApiActiveController
@@ -27,12 +29,12 @@ class AttendController extends ApiActiveController
         $query = $model->find()
             // ->with(['infoRelation'])
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
+            ->andWhere([$model->tableName() . '.is_deleted' => 0])
+            // ->join("INNER JOIN", "translate tr", "tr.model_id = $model->tableName().id and tr.table_name = '$model->tableName()'" )
         ;
 
         // if (isRole('student')) {
-        //     $query->andWhere([$this->table_name . '.student_id' => $this->student()]);
+        //     $query->andWhere([$model->tableName() . '.student_id' => $this->student()]);
         // }
 
         // filter
@@ -98,25 +100,59 @@ class AttendController extends ApiActiveController
 
     public function actionNot($date)
     {
-        // $model = new TimeTable();
-        // $da = new \DateTime($date);
-        // $date = $da->format('Y-m-d');
-        // $n = $da->format('N');
-
         $model = new TimeTable();
-        $model = new ExamControlStudent();
-
-        return $model->attributes();
-        
         $date = date("Y-m-d", strtotime($date));
         $N = date('N', strtotime($date));
-        // return $N;
+        /*
+                    		
+            SELECT
+            	* 
+            	* 
+            FROM
+            	`time_table` 
+            WHERE
+            	( `time_table`.`is_deleted` = 0 ) 
+            	AND ( `time_table`.`archived` = 0 ) 
+            	AND ( `id` NOT IN ( SELECT `time_table_id` FROM `attend` WHERE `date` = '2023-04-19' ) ) 
+            	AND ( `time_table`.`week_id` = '3' )
+        */
+
         $query = $model->find()
             ->andWhere([$model->tableSchema->name . '.is_deleted' => 0])
-            ->andWhere([$model->tableSchema->name . '.archived' => 0])
-            ->join("LEFT JOIN", "attend as a", 'a.time_table_id = ' . $model->tableSchema->name . '.id')
-            ->andWhere(['a.time_table_id' => null])
-            ->andWhere(['a.date' => $date])
+            ->andWhere([$model->tableSchema->name . '.archived' => 0]);
+
+
+        $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+        if ($k['status'] == 1) {
+
+            $query->andFilterWhere([
+                'in', 'subject_id', Subject::find()->where([
+                    'kafedra_id' => $k['UserAccess']->table_id
+                ])->select('id')
+            ]);
+        }
+
+
+        if (isRole('teacher') && !isRole('mudir')) {
+            $query->andFilterWhere([
+                'teacher_user_id' => current_user_id()
+            ]);
+        }
+
+        $kafedraId = Yii::$app->request->get('kafedra_id');
+        if (isset($kafedraId)) {
+            $query->andFilterWhere([
+                'in', 'subject_id', Subject::find()->where([
+                    'kafedra_id' => $kafedraId
+                ])->select('id')
+            ]);
+        }
+
+        $query = $query->andWhere([
+            'not in', 'id', Attend::find()
+                ->select('time_table_id')
+                ->andWhere(['date' => $date])
+        ])
             ->andWhere([$model->tableSchema->name . '.week_id' => $N]);
 
         // filter
@@ -127,6 +163,8 @@ class AttendController extends ApiActiveController
 
         // data
         $data =  $this->getData($query);
+
+        // rawsql($query);
         return $this->response(1, _e('Success'), $data);
     }
 

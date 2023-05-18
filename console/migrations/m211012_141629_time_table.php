@@ -11,7 +11,13 @@ class m211012_141629_time_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-    {
+   {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('time_table', [
             'id' => $this->primaryKey(),
             'teacher_access_id' => $this->integer()->notNull(),
@@ -23,7 +29,6 @@ class m211012_141629_time_table extends Migration
             'subject_id' => $this->integer()->notNull(),
             'language_id' => $this->integer()->notNull(),
 
-
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->notNull(),
@@ -32,7 +37,7 @@ class m211012_141629_time_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
             'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('tt_time_table_teacher_access_id', 'time_table', 'teacher_access_id', 'teacher_access', 'id');
         $this->addForeignKey('rt_time_table_room_id', 'time_table', 'room_id', 'room', 'id');

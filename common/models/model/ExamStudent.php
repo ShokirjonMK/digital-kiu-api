@@ -250,6 +250,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examControlStudent',
 
             'appeal',
+            'examAppeal',
             'teacher',
 
             'finishedAt',
@@ -272,7 +273,7 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         $on1 = ExamControlStudent::findOne([
             'student_id' => $this->student_id,
-            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
             'subject_id' => $this->exam->eduSemestrSubject->subject_id,
         ])->ball ?? null;
 
@@ -283,7 +284,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         $on2 = ExamControlStudent::findOne([
             'student_id' => $this->student_id,
-            'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
             'subject_id' => $this->exam->eduSemestrSubject->subject_id,
         ])->ball2 ?? null;
 
@@ -407,6 +408,8 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getAccessKey()
     {
+        return $this->encodemk5MK($this->id . '-' . $this->student_id);
+
         return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
     }
 
@@ -517,6 +520,10 @@ class ExamStudent extends \yii\db\ActiveRecord
 
 
     public function getAppeal()
+    {
+        return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
+    }
+    public function getExamAppeal()
     {
         return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
     }

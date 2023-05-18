@@ -13,13 +13,19 @@ class m221008_111019_create_student_attend_table extends Migration
     public function safeUp()
     {
 
-   // $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
+        // $this->execute("SET FOREIGN_KEY_CHECKS = 0;");
 
         $tableName = Yii::$app->db->tablePrefix . 'attend_reason';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('attend_reason');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%attend_reason}}', [
             'id' => $this->primaryKey(),
             'is_confirmed' => $this->tinyInteger(1)->defaultValue(0),
@@ -42,12 +48,7 @@ class m221008_111019_create_student_attend_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
             'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
-
-
-
-  
-
+        ], $tableOptions);
 
         $tableName = Yii::$app->db->tablePrefix . 'student_attend';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
@@ -55,6 +56,12 @@ class m221008_111019_create_student_attend_table extends Migration
         }
 
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%student_attend}}', [
             'id' => $this->primaryKey(),
             'student_id' => $this->integer()->notNull(),
@@ -82,7 +89,7 @@ class m221008_111019_create_student_attend_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('as_mk_student_attend_attend_reason_id', 'student_attend', 'attend_reason_id', 'attend_reason', 'id');
         $this->addForeignKey('as_mk_student_attend_attend_id', 'student_attend', 'attend_id', 'attend', 'id');

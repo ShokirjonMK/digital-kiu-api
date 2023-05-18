@@ -75,6 +75,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     {
         return [
             [['exam_id', 'question_id', 'student_id', 'type'], 'required'],
+            [['student_updated_at', 'student_created_at'], 'integer'],
+
             [
                 [
                     'archived',
@@ -296,12 +298,12 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
         if (isset($exam_id)) {
             $exam = Exam::findOne($exam_id);
             if ($exam) {
-                // if (!checkAllowedIP() || $exam->is_protected == Exam::PROTECTED_FALSE) {
-                //     // return $this->response(0, _e('Not allowed to this computers.'), null, [_e('Not allowed to this computers.')], ResponseStatus::UPROCESSABLE_ENTITY);
-                //     $errors[] = _e("Not allowed to this computers");
-                //     $transaction->rollBack();
-                //     return simplify_errors($errors);
-                // }
+                if ($exam->is_protected == Exam::PROTECTED_TURE && !checkAllowedIP()) {
+                    $errors[] = _e("Not allowed to this computers");
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
                 $student = Student::findOne(['user_id' => current_user_id()]);
 
                 if (!$student) {
@@ -313,8 +315,6 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                 $student_id = $student->id;
                 // $student_id = 15;
                 $exam_times = [];
-
-
 
                 if ($exam->status == 1) {
 
@@ -382,7 +382,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
                     // imtihon parolli bo'lsa parol tergandan keyin savol shaklantiriladi
                     $t = true;
-                    if ($exam->is_protected == 1) {
+                    if ($exam->is_protected == Exam::PROTECTED_TURE) {
                         // if ($ExamStudentHas) {
                         if (isset($post["password"])) {
                             $password = $post["password"];
@@ -413,7 +413,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 ->all();
 
                             $data['questions'] = $getQuestion;
-                           
+
                             $exam_times['start'] = date("Y-m-d H:i:s", $ExamStudentHas->start);
                             $exam_times['duration'] = $exam->duration;
                             if ($ExamStudentHas->finish > 0) {
@@ -482,7 +482,8 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                         'lang_id' => $student_lang_id,
                                         'question_type_id' => $type,
                                         'status' => 1,
-                                        'is_deleted' => 0
+                                        'is_deleted' => 0,
+                                        'archived' => 0,
                                     ])
                                     ->orderBy(new Expression('rand()'))
                                     ->limit($question_count_with_ball->count)
@@ -539,7 +540,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
                                 }
                             }
                             /** */
-                            
+
                             if ($ExamStudent->finish > 0) {
                                 $exam_times['finish'] = date("Y-m-d H:i:s", $ExamStudent->finish);
                             } else {
@@ -1057,8 +1058,14 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
     {
         if ($insert) {
             $this->created_by = current_user_id();
+            if (isRole('student')) {
+                $this->student_created_at = time();
+            }
         } else {
             $this->updated_by = current_user_id();
+            if (isRole('student')) {
+                $this->student_updated_at = time();
+            }
         }
         return parent::beforeSave($insert);
     }

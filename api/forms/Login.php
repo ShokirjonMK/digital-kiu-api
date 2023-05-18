@@ -52,7 +52,6 @@ class Login extends Model
      */
     public function authorize()
     {
-
         if ($this->validate()) {
             $user = $this->getUser();
 

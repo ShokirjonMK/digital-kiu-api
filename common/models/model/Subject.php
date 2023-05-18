@@ -217,6 +217,7 @@ class Subject extends \yii\db\ActiveRecord
         $query = $query->andWhere(['subject_id' => $this->id]);
         $query = $query->andWhere(['lang_id' => 1]);
         $query = $query->andWhere(['is_deleted' => 0]);
+        $query = $query->andWhere(['archived' => 0]);
         return $query->all();
     }
 
@@ -228,6 +229,7 @@ class Subject extends \yii\db\ActiveRecord
         $query = $query->andWhere(['subject_id' => $this->id]);
         $query = $query->andWhere(['lang_id' => 2]);
         $query = $query->andWhere(['is_deleted' => 0]);
+        $query = $query->andWhere(['archived' => 0]);
 
         return $query->all();
     }
@@ -240,6 +242,7 @@ class Subject extends \yii\db\ActiveRecord
         $query = $query->andWhere(['subject_id' => $this->id]);
         $query = $query->andWhere(['lang_id' => 3]);
         $query = $query->andWhere(['is_deleted' => 0]);
+        $query = $query->andWhere(['archived' => 0]);
 
         return $query->all();
     }
@@ -269,7 +272,6 @@ class Subject extends \yii\db\ActiveRecord
         if ($this->surveyAnswersCount > 0) {
             // return (float) $this->surveyAnswersSum / $this->surveyAnswersCount;
             return round(((float) $this->surveyAnswersSum / $this->surveyAnswersCount), 2);
-
         }
         return 0;
     }

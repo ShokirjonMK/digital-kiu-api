@@ -443,23 +443,24 @@ class ExamControlStudent extends ActiveRecord
         if (isRole('student')) {
             if (isset($post['answer2']) || isset($post['upload2_file'])) {
                 if ($model->examControl->start2 > $now) {
-                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2) . " (2)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
                 if ($model->examControl->finish2 < $now) {
-                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2) . " (2)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
-            } else {
+            }
+            if (isset($post['answer']) || isset($post['upload_file'])) {
                 if ($model->examControl->start > $now) {
-                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start) . " (1)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
                 if ($model->examControl->finish < $now) {
-                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish) . " (1)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
@@ -624,25 +625,24 @@ class ExamControlStudent extends ActiveRecord
 
             if (isset($post['answer2']) || isset($post['upload2_file'])) {
                 if ($model->examControl->start2 > $now) {
-                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2));
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start2) . " (2)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
                 if ($model->examControl->finish2 < $now) {
-                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2));
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish2) . " (2)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
-            } else {
-
-                if ($model->ball > 0)
-                    if ($model->examControl->start > $now) {
-                        $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start));
-                        $transaction->rollBack();
-                        return simplify_errors($errors);
-                    }
+            }
+            if (isset($post['answer']) || isset($post['upload_file'])) {
+                if ($model->examControl->start > $now) {
+                    $errors[] = _e("After " . date('Y-m-d H:m:i', $model->examControl->start) . " (1)");
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
                 if ($model->examControl->finish < $now) {
-                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish));
+                    $errors[] = _e("Before " . date('Y-m-d H:m:i', $model->examControl->finish) . " (1)");
                     $transaction->rollBack();
                     return simplify_errors($errors);
                 }
@@ -909,7 +909,7 @@ class ExamControlStudent extends ActiveRecord
                 mkdir(STORAGE_PATH  . self::UPLOADS_FOLDER, 0777, true);
             }
 
-            $fileName = $this->id . "_" . \Yii::$app->security->generateRandomString(5) . '.' . $question_file->extension;
+            $fileName = current_user_id() . "_" . $this->id . "_" . \Yii::$app->security->generateRandomString(5) . '.' . $question_file->extension;
 
             $miniUrl = self::UPLOADS_FOLDER . $fileName;
             $url = STORAGE_PATH . $miniUrl;

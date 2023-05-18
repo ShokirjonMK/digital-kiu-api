@@ -16,8 +16,8 @@ class m220703_093957_create_instruction_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('instruction');
         }
-        $tableOptions = null;
 
+        $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }

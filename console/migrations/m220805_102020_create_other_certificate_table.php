@@ -17,6 +17,12 @@ class m220805_102020_create_other_certificate_table extends Migration
             $this->dropTable('other_certificate');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%other_certificate}}', [
             'id' => $this->primaryKey(),
 
@@ -24,8 +30,8 @@ class m220805_102020_create_other_certificate_table extends Migration
             'address' => $this->string(255)->null(),
             'year' => $this->string(11)->null(),
             'file' => $this->string(255),
-            'student_id'=>$this->integer(11)->Null(),
-            'user_id'=>$this->integer(11)->notNull(),
+            'student_id' => $this->integer(11)->Null(),
+            'user_id' => $this->integer(11)->notNull(),
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
@@ -33,12 +39,11 @@ class m220805_102020_create_other_certificate_table extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
-        ]);
-//        // Student
-//        $this->addForeignKey('other_certificate-student_id', 'sport_certificate', 'student_id', 'student', 'id');
-//        // User
-       $this->addForeignKey('ocu_other_certificate_user_id', 'other_certificate', 'user_id', 'users', 'id');
-
+        ], $tableOptions);
+        //        // Student
+        //        $this->addForeignKey('other_certificate-student_id', 'sport_certificate', 'student_id', 'student', 'id');
+        //        // User
+        $this->addForeignKey('ocu_other_certificate_user_id', 'other_certificate', 'user_id', 'users', 'id');
     }
 
     /**
@@ -46,12 +51,12 @@ class m220805_102020_create_other_certificate_table extends Migration
      */
     public function safeDown()
     {
-//        // student
-//        $this->dropForeignKey('other_certificate-student_id', 'sport_certificate');
-//
-//        // user
-       $this->dropForeignKey('ocu_other_certificate_user_id', 'other_certificate');
-//
+        //        // student
+        //        $this->dropForeignKey('other_certificate-student_id', 'sport_certificate');
+        //
+        //        // user
+        $this->dropForeignKey('ocu_other_certificate_user_id', 'other_certificate');
+        //
 
         $this->dropTable('{{%other_certificate}}');
     }

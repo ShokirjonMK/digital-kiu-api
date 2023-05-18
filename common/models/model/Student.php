@@ -278,6 +278,7 @@ class Student extends \yii\db\ActiveRecord
             'attends',
 
             'studentSubjectRestrict',
+            'contractInfo',
 
             'createdBy',
             'updatedBy',
@@ -288,9 +289,18 @@ class Student extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    /**
+     * Gets query for [[Student]].
+     *
+     * @return \yii\db\ActiveQuery|StudentQuery
+     */
+    public function getContractInfo()
+    {
+        return $this->profile->contractInfo;
+    }
+
     public function getStudentSubjectRestrict()
     {
-
         if (null !==  Yii::$app->request->get('subject_id')) {
             return $this->hasMany(
                 StudentSubjectRestrict::className(),

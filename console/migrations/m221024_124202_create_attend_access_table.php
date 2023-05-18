@@ -16,6 +16,12 @@ class m221024_124202_create_attend_access_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('attend_access');
         }
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%attend_access}}', [
             'id' => $this->primaryKey(),
 
@@ -41,7 +47,7 @@ class m221024_124202_create_attend_access_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
             'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('mk_a_a_attend_access_time_table_id', 'attend_access', 'time_table_id', 'time_table', 'id');
         $this->addForeignKey('mk_a_a_attend_access_subject_id', 'attend_access', 'subject_id', 'subject', 'id');

@@ -17,6 +17,12 @@ class m221008_102604_create_attend_table extends Migration
             $this->dropTable('attend');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%attend}}', [
             'id' => $this->primaryKey(),
 
@@ -34,7 +40,6 @@ class m221008_102604_create_attend_table extends Migration
 
             'type' => $this->tinyInteger(1)->defaultValue(1)->comment('1 kuz 2 bohor'),
 
-
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -43,7 +48,7 @@ class m221008_102604_create_attend_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
             'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
         $this->addForeignKey('amk_attend_time_table', 'attend', 'time_table_id', 'time_table', 'id');
         $this->addForeignKey('amk_attend_subject', 'attend', 'subject_id', 'subject', 'id');
         $this->addForeignKey('amk_attend_subject_category', 'attend', 'subject_category_id', 'subject_category', 'id');

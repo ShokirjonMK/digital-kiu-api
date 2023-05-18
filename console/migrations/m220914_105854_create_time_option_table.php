@@ -18,6 +18,12 @@ class m220914_105854_create_time_option_table extends Migration
             $this->dropTable('time_option');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%time_option}}', [
             'id' => $this->primaryKey(),
 
@@ -39,7 +45,7 @@ class m220914_105854_create_time_option_table extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('time_option_faculty_id', 'time_option', 'faculty_id', 'faculty', 'id');
         $this->addForeignKey('time_option_edu_plan_id', 'time_option', 'edu_plan_id', 'edu_plan', 'id');

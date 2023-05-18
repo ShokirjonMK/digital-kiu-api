@@ -188,6 +188,8 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
     public function getAccessKey()
     {
+        return $this->encodemk5MK($this->student_id . '-' . $this->exam_student_id);
+
         return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->exam_student_id);
     }
 
@@ -262,7 +264,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
         // if (is_null($model->examStudent->teacher_access_id) || !is_null($model->type)) {
 
         if (is_null($model->examStudent->teacher_access_id)) {
-            
+
             $errors[] = _e('This exam is not checked!');
             return simplify_errors($errors);
         }
@@ -306,7 +308,7 @@ class ExamAppeal extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
-            
+
             $transaction->rollBack();
             return simplify_errors($errors);
         }

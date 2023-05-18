@@ -115,7 +115,7 @@ trait ResourceTrait
             return  $student ?? null;
         }
     }
-    
+
     public static function student($type = null, $user_id = null)
     {
         if ($user_id == null) {
@@ -178,6 +178,16 @@ trait ResourceTrait
         }
     }
 
+    public static function encodemk5MK($key)
+    {
+        return str_replace('=', '', base64_encode($key)); // Encode string using Base64 // Output: SGVsbG8gV29ybGQh
+    }
+
+    public static function decodemk5MK($key)
+    {
+        return base64_decode($key); // Encode string using Base64 // Output: SGVsbG8gV29ybGQh
+    }
+
     public static function encodeMK($key)
     {
         $str = '';
@@ -190,6 +200,20 @@ trait ResourceTrait
     }
 
 
+    public static function decodeFromLetterMK($string)
+    {
+        // return $string;
+        // $string = "ejdg-biebc";
+        $num = '';
+        foreach (str_split((string) $string) as $one) {
+            if ($one == "-") {
+                $num .= $one;
+            } else {
+                $num .= ((int)ord($one) - 97);
+            }
+        }
+        return $num;
+    }
     public static function decodeMK($string)
     {
         // return $string;

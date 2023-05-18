@@ -65,7 +65,7 @@ class m211204_055038_create_student_answer_table extends Migration
         $this->dropForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_student', 'exam_student_answer');
-        $this->dropForeignKey('ses_exam_student_answer_option', 'exam_student_answer');
+        $this->dropForeignKey('mk_ses_exam_student_answer_option', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_teacher_access', 'exam_student_answer');
 
 

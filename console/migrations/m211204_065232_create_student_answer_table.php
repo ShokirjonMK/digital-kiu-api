@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%exam_student_answer}}`.
  */
-class m211204_055038_create_student_answer_table extends Migration
+class m211204_065232_create_student_answer_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -60,7 +60,6 @@ class m211204_055038_create_student_answer_table extends Migration
      */
     public function safeDown()
     {
-
         $this->dropForeignKey('ses_exam_student_answer_exam', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer');
         $this->dropForeignKey('ses_exam_student_answer_exam_question', 'exam_student_answer');

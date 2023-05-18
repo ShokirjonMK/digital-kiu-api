@@ -12,7 +12,6 @@ class m211204_055038_create_student_answer_table extends Migration
      */
     public function safeUp()
     {
-
         $tableName = Yii::$app->db->tablePrefix . 'exam_student_answer';
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('exam_student_answer');

@@ -11,7 +11,13 @@ class m211204_065231_create_question_student_answer_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-    {
+   {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%question_student_answer}}', [
             'id' => $this->primaryKey(),
 
@@ -34,7 +40,7 @@ class m211204_065231_create_question_student_answer_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('qsae_question_student_answer_exam', 'question_student_answer', 'exam_id', 'exam', 'id');
         $this->addForeignKey('qsaq_question_student_answer_question', 'question_student_answer', 'question_id', 'question', 'id');
@@ -42,7 +48,6 @@ class m211204_065231_create_question_student_answer_table extends Migration
         $this->addForeignKey('qsas_question_student_answer_student', 'question_student_answer', 'student_id', 'student', 'id');
         $this->addForeignKey('qsao_question_student_answer_option', 'question_student_answer', 'option_id', 'question_option', 'id');
         $this->addForeignKey('qsata_question_student_answer_teacher_access', 'question_student_answer', 'teacher_access_id', 'teacher_access', 'id');
-
     }
 
     /**

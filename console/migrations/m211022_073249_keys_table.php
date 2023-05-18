@@ -20,8 +20,6 @@ class m211022_073249_keys_table extends Migration
             // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
             $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
-
-
         $this->createTable('{{%keys}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string('255'),
@@ -64,63 +62,63 @@ class m211022_073249_keys_table extends Migration
                 'name' => 'TSUL'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'Action'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'Series'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'MasterKey'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'Compyuter'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'Supervisor'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'Administrator'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'UserGuest'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [
                 'name' => 'Solutions'
             ]
         );
-        
+
         $this->insert(
             '{{%keys}}',
             [

@@ -11,7 +11,13 @@ class m211126_050552_create_subject_sillabus_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-    {
+   {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%subject_sillabus}}', [
             'id' => $this->primaryKey(),
             'subject_id' => $this->integer()->notNull(),
@@ -30,7 +36,7 @@ class m211126_050552_create_subject_sillabus_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('sss_subject_sillabus_subject', 'subject_sillabus', 'subject_id', 'subject', 'id');
         $this->addForeignKey('sss_subject_sillabus_subject_type', 'subject_sillabus', 'subject_type_id', 'subject_type', 'id');

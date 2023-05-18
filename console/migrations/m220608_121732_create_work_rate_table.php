@@ -18,6 +18,13 @@ class m220608_121732_create_work_rate_table extends Migration
             $this->dropTable('work_rate');
         }
 
+        $tableOptions = null;
+       
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%work_rate}}', [
             'id' => $this->primaryKey(),
 
@@ -26,7 +33,6 @@ class m220608_121732_create_work_rate_table extends Migration
             'hour_day' => $this->double()->defaultValue(0),
             'daily_hours' => $this->json()->Null()->comment('{"1":8, "2":7, "3":7, "4":7, "5":7}'),
             'type' => $this->tinyInteger(1)->defaultValue(0),
-
 
             // 'name' => $this->string(255)->null(),
             // 'description' => $this->text()->null(),
@@ -38,7 +44,7 @@ class m220608_121732_create_work_rate_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
     }
 
     /**

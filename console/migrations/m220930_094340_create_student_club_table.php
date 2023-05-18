@@ -17,6 +17,12 @@ class m220930_094340_create_student_club_table extends Migration
             $this->dropTable('student_club');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%student_club}}', [
             'id' => $this->primaryKey(),
 
@@ -36,7 +42,7 @@ class m220930_094340_create_student_club_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('ctcc_student_club_club_category_id', 'student_club', 'club_category_id', 'club_category', 'id');
         $this->addForeignKey('ctct_student_club_club_time_id', 'student_club', 'club_time_id', 'club_time', 'id');

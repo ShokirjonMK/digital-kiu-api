@@ -16,6 +16,12 @@ class m220819_141223_create_subject_content_mark_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('subject_content_mark');
         }
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%subject_content_mark}}', [
             'id' => $this->primaryKey(),
 
@@ -33,7 +39,7 @@ class m220819_141223_create_subject_content_mark_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
 
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('subject_content_mark_user_id', 'subject_content_mark', 'user_id', 'users', 'id');
         $this->addForeignKey('subject_content_mark_teacher_access_id', 'subject_content_mark', 'teacher_access_id', 'teacher_access', 'id');

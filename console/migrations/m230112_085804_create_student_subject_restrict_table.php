@@ -17,6 +17,12 @@ class m230112_085804_create_student_subject_restrict_table extends Migration
             $this->dropTable('student_subject_restrict');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%student_subject_restrict}}', [
             'id' => $this->primaryKey(),
 
@@ -38,7 +44,7 @@ class m230112_085804_create_student_subject_restrict_table extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('mark_student_subject_restrict___student_id', 'student_subject_restrict', 'student_id', 'student', 'id');
         $this->addForeignKey('mark_student_subject_restrict___edu_semestr_subject_id', 'student_subject_restrict', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');

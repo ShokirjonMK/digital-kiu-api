@@ -17,6 +17,12 @@ class m221026_092659_create_exam_control_student_table extends Migration
             $this->dropTable('exam_control_student');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%exam_control_student}}', [
             'id' => $this->primaryKey(),
 
@@ -65,7 +71,8 @@ class m221026_092659_create_exam_control_student_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
+
         $this->addForeignKey('exam_control_student_exam_control_id', 'exam_control_student', 'exam_control_id', 'exam_control', 'id');
         $this->addForeignKey('exam_control_student_course_id', 'exam_control_student', 'course_id', 'course', 'id');
         $this->addForeignKey('exam_control_student_semester_id', 'exam_control_student', 'semester_id', 'semestr', 'id');

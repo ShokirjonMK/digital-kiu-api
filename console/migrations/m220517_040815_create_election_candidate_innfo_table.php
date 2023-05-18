@@ -17,6 +17,13 @@ class m220517_040815_create_election_candidate_innfo_table extends Migration
             $this->dropTable('election_candidate_info');
         }
 
+        $tableOptions = null;
+       
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%election_candidate_info}}', [
             'id' => $this->primaryKey(),
             'election_candidate_id' => $this->integer()->notNull(),
@@ -25,7 +32,6 @@ class m220517_040815_create_election_candidate_innfo_table extends Migration
             'short_info' => $this->text()->null(),
             'full_info' => $this->text()->null(),
 
-
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
@@ -33,7 +39,7 @@ class m220517_040815_create_election_candidate_innfo_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
         $this->addForeignKey('eciec_election_candidate_info_election_candidate_mk', 'election_candidate_info', 'election_candidate_id', 'election_candidate', 'id');
     }
 

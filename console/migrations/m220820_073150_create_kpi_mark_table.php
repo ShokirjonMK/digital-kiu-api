@@ -18,6 +18,12 @@ class m220820_073150_create_kpi_mark_table extends Migration
             $this->dropTable('kpi_mark');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%kpi_mark}}', [
             'id' => $this->primaryKey(),
 
@@ -26,7 +32,7 @@ class m220820_073150_create_kpi_mark_table extends Migration
             'ball' => $this->double()->Null(),
             'edu_year_id' => $this->integer(11)->null(),
             'type' => $this->tinyInteger(1)->defaultValue(1),
-            
+
 
             'status' => $this->tinyInteger(1)->defaultValue(1),
 
@@ -36,7 +42,7 @@ class m220820_073150_create_kpi_mark_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
 
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('kpi_mark_kpi_user_id', 'kpi_mark', 'user_id', 'users', 'id');
         $this->addForeignKey('kpi_mark_kpi_category_id', 'kpi_mark', 'kpi_category_id', 'kpi_category', 'id');

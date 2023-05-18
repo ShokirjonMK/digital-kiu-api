@@ -17,6 +17,13 @@ class m220526_115842_create_exam_student_deleted_table extends Migration
             $this->dropTable('exam_student_deleted');
         }
 
+        $tableOptions = null;
+       
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%exam_student_deleted}}', [
             'id' => $this->primaryKey(),
             'exam_student_id' => $this->integer()->Null(),
@@ -44,7 +51,7 @@ class m220526_115842_create_exam_student_deleted_table extends Migration
             'updated_by' => $this->integer()->Null()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->Null()->defaultValue(0),
 
-        ]);
+        ], $tableOptions);
     }
 
     /**

@@ -17,6 +17,12 @@ class m221227_044617_create_student_mark_table extends Migration
             $this->dropTable('student_mark');
         }
 
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%student_mark}}', [
             'id' => $this->primaryKey(),
 
@@ -36,7 +42,7 @@ class m221227_044617_create_student_mark_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
 
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('mark_student_mark_student_id', 'student_mark', 'student_id', 'student', 'id');
         $this->addForeignKey('mark_student_mark_subject_id', 'student_mark', 'subject_id', 'subject', 'id');

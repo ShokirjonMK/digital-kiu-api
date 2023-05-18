@@ -19,7 +19,6 @@ class m220703_085729_create_exam_appeal_semeta_table extends Migration
             // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
             $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
-
         $this->createTable('{{%exam_appeal_semeta}}', [
             'id' => $this->primaryKey(),
 

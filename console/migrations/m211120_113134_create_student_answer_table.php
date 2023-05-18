@@ -17,7 +17,11 @@ class m211120_113134_create_student_answer_table extends Migration
         if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
             $this->dropTable('exam_student_answer');
         }
-
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%exam_student_answer}}', [
             'id' => $this->primaryKey(),
             'exam_student_id' => $this->integer()->null(),
@@ -42,7 +46,7 @@ class m211120_113134_create_student_answer_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
 
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('ses_exam_student_answer_exam', 'exam_student_answer', 'exam_id', 'exam', 'id');
         $this->addForeignKey('ses_exam_student_answer_exam_student_id', 'exam_student_answer', 'exam_student_id', 'exam_student', 'id');

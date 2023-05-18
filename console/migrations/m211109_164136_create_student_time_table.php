@@ -11,8 +11,13 @@ class m211109_164136_create_student_time_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-    {
-
+   {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
         $this->createTable('{{%student_time_table}}', [
             'id' => $this->primaryKey(),
             'student_id' => $this->integer()->notNull(),
@@ -25,7 +30,7 @@ class m211109_164136_create_student_time_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
             'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
-        ]);
+        ], $tableOptions);
 
         $this->addForeignKey('pe_student_time_table_student_id', 'student_time_table', 'student_id', 'student', 'id');
         $this->addForeignKey('ce_student_time_table_time_table_id', 'student_time_table', 'time_table_id', 'time_table', 'id');

@@ -286,6 +286,26 @@ class ExamStudentController extends ApiActiveController
         return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
     }
 
+    public function actionAct($lang, $id)
+    {
+        $model = ExamStudent::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $result = ExamStudent::actItem($model, Yii::$app->request->post());
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+    }
+
     public function actionView($lang, $id)
     {
         if (isRole('teacher')) {

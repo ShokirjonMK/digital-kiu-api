@@ -216,6 +216,9 @@ $routes = [
     'GET <lang:\w{2}>/statistics/checking-chala' => 'statistic/checking-chala',
     'GET <lang:\w{2}>/statistics/exam-checking' => 'statistic/exam-checking',
 
+    // exam_student act qilish
+    'POST <lang:\w{2}>/exam-students/<id>/act' => 'exam-student/act',
+
     // ball statistics two, three, four, five
     'GET <lang:\w{2}>/exam-students/ball' => 'exam-student/ball',
     // ball statistics appeal

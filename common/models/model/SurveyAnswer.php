@@ -242,18 +242,27 @@ class SurveyAnswer extends \yii\db\ActiveRecord
                         $errors['answers'] = [_e('Must be Json')];
                     } else {
                         foreach (((array)json_decode($post['answers'])) as  $survey_question_id => $ball) {
-                            $newModel = new self();
-                            $newModel->user_id = $post['user_id'];
-                            $newModel->student_id = $post['student_id'];
-                            $newModel->exam_id = $examId;
-                            $newModel->edu_semestr_subject_id = $exam->edu_semestr_subject_id;
-                            $newModel->subject_id = $exam->eduSemestrSubject->subject_id;
 
-                            $newModel->survey_question_id = $survey_question_id;
-                            $newModel->ball = $ball;
-// dd($newModel);
-                            if (!($newModel->validate()) || (!$newModel->save())) {
-                                $errors[] = [$survey_question_id => $newModel->errors];
+                            $newOrUpdateModel = self::findOne([
+                                'survey_question_id' => $survey_question_id,
+                                'exam_id' => $examId,
+                            ]);
+
+                            if (!$newOrUpdateModel) {
+                                $newOrUpdateModel = new self();
+                            }
+
+                            $newOrUpdateModel->user_id = $post['user_id'];
+                            $newOrUpdateModel->student_id = $post['student_id'];
+                            $newOrUpdateModel->exam_id = $examId;
+                            $newOrUpdateModel->edu_semestr_subject_id = $exam->edu_semestr_subject_id;
+                            $newOrUpdateModel->subject_id = $exam->eduSemestrSubject->subject_id;
+
+                            $newOrUpdateModel->survey_question_id = $survey_question_id;
+                            $newOrUpdateModel->ball = $ball;
+                            // dd($newOrUpdateModel);
+                            if (!($newOrUpdateModel->validate()) || (!$newOrUpdateModel->save())) {
+                                $errors[] = [$survey_question_id => $newOrUpdateModel->errors];
                             }
                         }
                     }

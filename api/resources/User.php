@@ -32,7 +32,7 @@ class User extends CommonUser
 {
     use ResourceTrait;
 
-    const UPLOADS_FOLDER = 'uploads/user-images/';
+    const UPLOADS_FOLDER = 'user-images/';
     const PASSWORD_CHANED = 1;
     const PASSWORD_NO_CHANED = 0;
     // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
@@ -586,8 +586,6 @@ class User extends CommonUser
                 $errors[] = ['role' => [_e('Role is not valid.')]];
             }
         }
-
-
 
         if (count($errors) == 0) {
 

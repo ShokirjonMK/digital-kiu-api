@@ -341,7 +341,10 @@ class Student extends \yii\db\ActiveRecord
     {
         if (null !==  Yii::$app->request->get('subject_id')) {
             return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])
-                ->onCondition(['subject_id' => Yii::$app->request->get('subject_id')])
+                ->onCondition([
+                    'subject_id' => Yii::$app->request->get('subject_id'),
+                    'archived' => 0
+                ])
                 ->orderBy(['date' => SORT_ASC]);
         }
         return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])->orderBy(['date' => SORT_ASC]);

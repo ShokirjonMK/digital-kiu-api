@@ -111,7 +111,9 @@ class StudentAttend extends \yii\db\ActiveRecord
                 'updated_at',
                 'created_by',
                 'updated_by',
-                'is_deleted'
+                'is_deleted',
+                'archived'
+
             ], 'integer'],
             [['date'], 'safe'],
             [['attend_id'], 'exist', 'skipOnError' => true, 'targetClass' => Attend::className(), 'targetAttribute' => ['attend_id' => 'id']],
@@ -157,6 +159,7 @@ class StudentAttend extends \yii\db\ActiveRecord
             'edu_plan_id' => _e('Edu Plan ID'),
 
             'type' => _e('type'),
+            'archived' => _e('archived'),
             'status' => _e('Status'),
             'order' => _e('Order'),
             'created_at' => _e('Created At'),

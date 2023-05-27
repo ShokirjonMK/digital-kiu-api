@@ -136,25 +136,25 @@ class StudentAttendController extends ApiActiveController
         }
     }
 
-    public function actionView($lang, $id)
+    public function actionView111($lang, $id)
     {
 
-        $faculties = Faculty::find()->andWhere(['is_deleted'=>0])->all();
-        
-        foreach($faculties as $faculty){
+        $faculties = Faculty::find()->andWhere(['is_deleted' => 0])->all();
+
+        foreach ($faculties as $faculty) {
             for ($i = 1; $i <= 26; $i++) {
 
                 if ($i <= 9) {
                     $i = "0" . $i;
                 }
-                $date =  "2023-05-".$i;
+                $date =  "2023-05-" . $i;
 
                 $model = StudentAttend::find()
                     ->andWhere(['date' => $date])
                     ->andWhere(['faculty_id' => $faculty->id])
                     ->groupBy('student_id')
                     ->count();
-                    $data [] = ($faculty->id . "--".$date."--".$model);
+                $data[] = ($faculty->id . "--" . $date . "--" . $model);
                 $databydate[$date] = $model;
             }
 
@@ -172,7 +172,7 @@ class StudentAttendController extends ApiActiveController
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
-    public function actionView111($lang, $id)
+    public function actionView($lang, $id)
     {
         $model = StudentAttend::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])

@@ -283,7 +283,7 @@ class Subject extends \yii\db\ActiveRecord
 
     public function getQuestionActive()
     {
-        return $this->hasMany(Question::className(), ['subject_id' => 'id'])->onCondition(['status' => 1, 'is_deleted' => 0]);
+        return $this->hasMany(Question::className(), ['subject_id' => 'id'])->onCondition(['status' => 1, 'is_deleted' => 0, 'archived' => 0]);
     }
 
     public function getQuestionsCount()

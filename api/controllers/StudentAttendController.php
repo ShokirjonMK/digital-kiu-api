@@ -5,6 +5,7 @@ namespace api\controllers;
 use common\models\model\StudentAttend;
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Faculty;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 
@@ -136,6 +137,42 @@ class StudentAttendController extends ApiActiveController
     }
 
     public function actionView($lang, $id)
+    {
+
+        $faculties = Faculty::find()->andWhere(['is_deleted'=>0])->all();
+        
+        foreach($faculties as $faculty){
+            for ($i = 1; $i <= 26; $i++) {
+
+                if ($i <= 9) {
+                    $i = "0" . $i;
+                }
+                $date =  "2023-05-".$i;
+
+                $model = StudentAttend::find()
+                    ->andWhere(['date' => $date])
+                    ->andWhere(['faculty_id' => $faculty->id])
+                    ->groupBy('student_id')
+                    ->count();
+                    $data [] = ($faculty->id . "--".$date."--".$model);
+                $databydate[$date] = $model;
+            }
+
+            $umdataa[$faculty->id] = $databydate;
+        }
+        return $umdataa;
+        die;
+
+        $model = StudentAttend::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+    }
+
+    public function actionView111($lang, $id)
     {
         $model = StudentAttend::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])

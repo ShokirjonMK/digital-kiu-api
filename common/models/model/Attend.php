@@ -519,7 +519,6 @@ class Attend extends \yii\db\ActiveRecord
             $new_deff = array_diff($model->student_ids, $old_student_ids);
 
 
-
             // if (!isRole('tutor')) {
             if (!empty($old_deff)) {
 

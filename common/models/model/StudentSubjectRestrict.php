@@ -175,7 +175,8 @@ class StudentSubjectRestrict extends \yii\db\ActiveRecord
             ->onCondition([
                 'subject_id' => $this->subject_id,
                 'edu_semestr_id' => $this->edu_semestr_id,
-                'reason' => 0
+                'reason' => 0,
+                'archived' => 0
             ]);
     }
 

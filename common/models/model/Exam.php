@@ -468,6 +468,14 @@ class Exam extends \yii\db\ActiveRecord
             ->all();
     }
 
+    // public function getExamStudentNoAnswer()
+    // {
+    //     return  ExamStudent::find()
+    //         ->where(['exam_id' => $this->id])
+    //         ->leftJoin()
+    //         ->all();
+    // }
+
     public function getExamStudent()
     {
         if (isRole('student')) {

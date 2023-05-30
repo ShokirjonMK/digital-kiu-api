@@ -28,7 +28,7 @@ class m221008_111019_create_student_attend_table extends Migration
         }
         $this->createTable('{{%attend_reason}}', [
             'id' => $this->primaryKey(),
-            'is_confirmed' => $this->tinyInteger(1)->defaultValue(0),
+            'is_confirmed' => $this->tinyInteger(1)->Null(),
             'start' => $this->dateTime()->notNull(),
             'end' => $this->dateTime()->notNull(),
             'student_id' => $this->integer()->notNull(),

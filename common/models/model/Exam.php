@@ -253,6 +253,7 @@ class Exam extends \yii\db\ActiveRecord
 
 
             'examStudentNo',
+            'examStudentNoAnswer',
 
             'description',
             'createdBy',
@@ -468,13 +469,15 @@ class Exam extends \yii\db\ActiveRecord
             ->all();
     }
 
-    // public function getExamStudentNoAnswer()
-    // {
-    //     return  ExamStudent::find()
-    //         ->where(['exam_id' => $this->id])
-    //         ->leftJoin()
-    //         ->all();
-    // }
+    public function getExamStudentNoAnswer()
+    {
+        return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
+            ->andWhere([
+                'NOT EXISTS', ExamStudentAnswerSubQuestion::find()
+                    ->select('exam_student_id')
+                    ->where('exam_student_id = exam_student.id')
+            ]);
+    }
 
     public function getExamStudent()
     {

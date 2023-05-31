@@ -243,6 +243,10 @@ class ExamController extends ApiActiveController
     {
         $model = Exam::findOne($id);
 
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
@@ -262,8 +266,11 @@ class ExamController extends ApiActiveController
         if (isset($post->finish)) {
             $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
         }
-        if (!$model) {
-            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        if (isset($post->appeal_start)) {
+            $model->appeal_start = strtotime($post->appeal_start);
+        }
+        if (isset($post->appeal_finish)) {
+            $model->appeal_finish = strtotime($post->appeal_finish);
         }
 
         if (isset($post['duration'])) {

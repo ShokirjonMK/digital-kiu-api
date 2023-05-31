@@ -266,11 +266,12 @@ class ExamController extends ApiActiveController
         if (isset($post->finish)) {
             $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
         }
+
         if (isset($post->appeal_start)) {
-            $model->appeal_start = strtotime($post->appeal_start);
+            $model->appeal_start = strtotime(date('Y-m-d H:i:s', strtotime($post->appeal_start)));
         }
         if (isset($post->appeal_finish)) {
-            $model->appeal_finish = strtotime($post->appeal_finish);
+            $model->appeal_finish = strtotime(date('Y-m-d H:i:s', strtotime($post->appeal_finish)));
         }
 
         if (isset($post['duration'])) {

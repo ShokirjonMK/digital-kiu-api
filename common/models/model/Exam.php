@@ -985,10 +985,16 @@ class Exam extends \yii\db\ActiveRecord
         $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
         $model->subject_id = $model->eduSemestrSubject->subject_id;
 
+        if (isset($post->appeal_start)) {
+            $model->appeal_start = strtotime($post->appeal_start);
+        }
+        if (isset($post->appeal_finish)) {
+            $model->appeal_finish = strtotime($post->appeal_finish);
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-
 
         /** question_count_by_type_with_ball */
         if (isset($post['question_count_by_type_with_ball'])) {

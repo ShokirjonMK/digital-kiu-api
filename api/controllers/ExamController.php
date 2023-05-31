@@ -265,13 +265,12 @@ class ExamController extends ApiActiveController
         if (isset($post->finish)) {
             $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
         }
-        // if (isset($post->appeal_start)) {
-        //     $model->appeal_start = strtotime($post->appeal_start);
-        // }
-        // if (isset($post->appeal_finish)) {
-        //     $model->appeal_finish = strtotime($post->appeal_finish);
-        // }
-       
+        if (isset($post['appeal_start'])) {
+            $post['appeal_start'] = strtotime($post['appeal_start']);
+        }
+        if (isset($post['appeal_finish'])) {
+            $post['appeal_finish'] = strtotime($post['appeal_finish']);
+        }
 
         if (isset($post['duration'])) {
             $post['duration'] =  str_replace("'", "", $post['duration']);
@@ -283,6 +282,7 @@ class ExamController extends ApiActiveController
         }
 
         $this->load($model, $post);
+        // return $model;
         $result = Exam::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);

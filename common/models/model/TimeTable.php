@@ -714,13 +714,13 @@ class TimeTable extends \yii\db\ActiveRecord
         //     'status' => 1
         // ]);
 
-        // $model->semester_id = $eduSemester->semestr_id;
-        // $model->course_id = $eduSemester->course_id;
-        // $model->edu_year_id = $eduSemester->edu_year_id;
-        // $model->edu_plan_id = $eduSemester->edu_plan_id;
-        // $model->building_id = $model->room->building_id;
+        $model->semester_id = $eduSemester->semestr_id;
+        $model->course_id = $eduSemester->course_id;
+        $model->edu_year_id = $eduSemester->edu_year_id;
+        $model->edu_plan_id = $eduSemester->edu_plan_id;
+        $model->building_id = $model->room->building_id;
 
-        // $model->teacher_user_id = $model->teacherAccess->user_id;
+        $model->teacher_user_id = $model->teacherAccess->user_id;
 
         // if (isset($timeTable)) {
         //     if ($model->semester_id % 2 == $timeTable->semester_id % 2) {
@@ -731,16 +731,16 @@ class TimeTable extends \yii\db\ActiveRecord
         // }
 
         // /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
-        // $checkTeacherTimeTable = TimeTable::findOne([
-        //     'para_id' => $model->para_id,
-        //     // 'edu_semester_id' => $model->edu_semester_id,
-        //     'edu_year_id' => $eduSemester->edu_year_id,
-        //     'week_id' => $model->week_id,
-        //     'teacher_access_id' => $model->teacher_access_id,
-        //     'archived' => 0,
-        //     'status' => 1
+        $checkTeacherTimeTable = TimeTable::findOne([
+            'para_id' => $model->para_id,
+            // 'edu_semester_id' => $model->edu_semester_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
+            'week_id' => $model->week_id,
+            'teacher_access_id' => $model->teacher_access_id,
+            'archived' => 0,
+            'status' => 1
 
-        // ]);
+        ]);
 
         // if (isset($checkTeacherTimeTable)) {
         //     if ($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) {
@@ -781,19 +781,19 @@ class TimeTable extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
        
-        // $timeTable = TimeTable::findOne([
-        //     'room_id' => $model->room_id,
-        //     'para_id' => $model->para_id,
-        //     'week_id' => $model->week_id,
-        //     'edu_year_id' => $eduSemester->edu_year_id,
-        //     'status' => 1,
-        // ]);
+        $timeTable = TimeTable::findOne([
+            'room_id' => $model->room_id,
+            'para_id' => $model->para_id,
+            'week_id' => $model->week_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
+            'status' => 1,
+        ]);
 
-        // $model->semester_id = $eduSemester->semestr_id;
-        // $model->course_id = $eduSemester->course_id;
-        // $model->edu_year_id = $eduSemester->edu_year_id;
+        $model->semester_id = $eduSemester->semestr_id;
+        $model->course_id = $eduSemester->course_id;
+        $model->edu_year_id = $eduSemester->edu_year_id;
 
-        // $model->teacher_user_id = $model->teacherAccess->user_id;
+        $model->teacher_user_id = $model->teacherAccess->user_id;
 
         // if (isset($timeTable)) {
         //     if (($model->semester_id % 2 == $timeTable->semester_id % 2) && ($model->id != $timeTable->id)) {
@@ -803,15 +803,15 @@ class TimeTable extends \yii\db\ActiveRecord
         //     }
         // }
 
-        // /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
-        // $checkTeacherTimeTable = TimeTable::findOne([
-        //     'para_id' => $model->para_id,
-        //     // 'edu_semester_id' => $model->edu_semester_id,
-        //     'edu_year_id' => $eduSemester->edu_year_id,
-        //     'week_id' => $model->week_id,
-        //     'teacher_access_id' => $model->teacher_access_id,
-        //     'status' => 1,
-        // ]);
+        /* Aynan bir kun va bir para boyicha o`qituvchini darsi bo`lsa error qaytadi*/
+        $checkTeacherTimeTable = TimeTable::findOne([
+            'para_id' => $model->para_id,
+            // 'edu_semester_id' => $model->edu_semester_id,
+            'edu_year_id' => $eduSemester->edu_year_id,
+            'week_id' => $model->week_id,
+            'teacher_access_id' => $model->teacher_access_id,
+            'status' => 1,
+        ]);
 
         // if (isset($checkTeacherTimeTable)) {
         //     if (($model->semester_id % 2 == $checkTeacherTimeTable->semester_id % 2) && ($model->id != $checkTeacherTimeTable->id)) {

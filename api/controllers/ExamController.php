@@ -260,19 +260,7 @@ class ExamController extends ApiActiveController
 
         $post = Yii::$app->request->post();
 
-        if (isset($post->start)) {
-            $model->start = date('Y-m-d H:i:s', strtotime($post->start));
-        }
-        if (isset($post->finish)) {
-            $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
-        }
-        
-        if (isset($post->appeal_start)) {
-            $post->appeal_start = strtotime($post->appeal_start);
-        }
-        if (isset($post->appeal_finish)) {
-            $post->appeal_finish = strtotime($post->appeal_finish);
-        }
+
 
         if (isset($post['duration'])) {
             $post['duration'] =  str_replace("'", "", $post['duration']);
@@ -284,6 +272,20 @@ class ExamController extends ApiActiveController
         }
 
         $this->load($model, $post);
+
+        if (isset($post->start)) {
+            $model->start = date('Y-m-d H:i:s', strtotime($post->start));
+        }
+        if (isset($post->finish)) {
+            $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
+        }
+
+        if (isset($post->appeal_start)) {
+            $model->appeal_start = strtotime($post->appeal_start);
+        }
+        if (isset($post->appeal_finish)) {
+            $model->appeal_finish = strtotime($post->appeal_finish);
+        }
         $result = Exam::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);

@@ -365,7 +365,8 @@ class Student extends \yii\db\ActiveRecord
             return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])
                 ->onCondition([
                     'subject_id' => Yii::$app->request->get('subject_id'),
-                    'reason' => 1
+                    'reason' => 1,
+                    'archived' => 0
                 ]);
         }
         return $this->hasMany(StudentAttend::className(), ['student_id' => 'id'])->onCondition(['reason' => 1]);

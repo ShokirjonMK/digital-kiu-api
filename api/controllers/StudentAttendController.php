@@ -29,6 +29,7 @@ class StudentAttendController extends ApiActiveController
             // ->with(['infoRelation'])
             // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
             ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0])
             // ->join("INNER JOIN", "translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'" )
         ;
 
@@ -166,7 +167,7 @@ class StudentAttendController extends ApiActiveController
         $model = StudentAttend::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
-            
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }

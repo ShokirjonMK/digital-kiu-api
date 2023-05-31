@@ -756,6 +756,8 @@ class ExamControlStudent extends ActiveRecord
         }
 
         $model->main_ball = $model->ball ?? 0 + $model->ball2 ?? 0;
+        if (isset($post['appeal_status'])) $model->appeal_status = $post['appeal_status'];
+        if (isset($post['appeal2_status'])) $model->appeal2_status = $post['appeal2_status'];
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

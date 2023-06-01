@@ -29,18 +29,18 @@ class m230531_101758_create_exam_student_reaxam_table extends Migration
 
             'file' => $this->string(255)->null(),
             'description' => $this->text()->null(),
-            'student_id' => $this->integer(11)->notNull(),
-            'exam_student_id' => $this->integer(11)->notNull(),
-            'subject_id' => $this->integer(11)->notNull(),
-            'exam_id' => $this->integer(11)->notNull(),
+            'student_id' => $this->integer(11)->null(),
+            'exam_student_id' => $this->integer(11)->null(),
+            'subject_id' => $this->integer(11)->null(),
+            'exam_id' => $this->integer(11)->null(),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
             'updated_at' => $this->integer()->Null(),
-            'created_by' => $this->integer()->notNull()->defaultValue(0),
-            'updated_by' => $this->integer()->notNull()->defaultValue(0),
-            'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'created_by' => $this->integer()->null()->defaultValue(0),
+            'updated_by' => $this->integer()->null()->defaultValue(0),
+            'is_deleted' => $this->tinyInteger()->null()->defaultValue(0),
         ]);
         $this->addForeignKey('exam_student_reaxam_student_id', 'exam_student_reaxam', 'student_id', 'student', 'id');
         $this->addForeignKey('exam_student_reaxam_exam_student_id', 'exam_student_reaxam', 'exam_student_id', 'exam_student', 'id');

@@ -31,7 +31,7 @@ use yii\web\UploadedFile;
  * @property Student $student0
  * @property TeacherAccess $teacherAccess0
  */
-class ExamStudentReaxam extends \yii\db\ActiveRecord
+class ExamStudentReexam extends \yii\db\ActiveRecord
 {
     use ResourceTrait;
 
@@ -62,6 +62,7 @@ class ExamStudentReaxam extends \yii\db\ActiveRecord
         return [
             [['description'], 'string'],
             // [['student_id', 'exam_student_id', 'subject_id', 'exam_id'], 'required'],
+            [['description', 'uploadFile'], 'required'],
             [['student_id', 'exam_student_id', 'subject_id', 'exam_id', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['file'], 'string', 'max' => 255],
             [['exam_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exam::className(), 'targetAttribute' => ['exam_id' => 'id']],
@@ -175,16 +176,18 @@ class ExamStudentReaxam extends \yii\db\ActiveRecord
 
     public static function createItem($post, $exam_student_id)
     {
-        $newModel = new ExamStudentReaxam();
+        $newModel = new self();
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
         // dd($newModel->attributeLabels());
+
         $newModel->exam_student_id = $exam_student_id;
 
         $newModel->exam_id = $newModel->examStudent->exam_id;
         $newModel->student_id = $newModel->examStudent->student_id;
         $newModel->subject_id = $newModel->examStudent->exam->eduSemestrSubject->subject_id;
-        $newModel->description = $post['description'];
+        $newModel->description = $post['description'] ?? null;
 
         $newModel->uploadFile = UploadedFile::getInstancesByName('uploadFile');
         if ($newModel->uploadFile) {

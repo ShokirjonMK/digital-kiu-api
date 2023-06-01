@@ -7,6 +7,7 @@ use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\ExamStudentReaxam;
+use common\models\model\ExamStudentReexam;
 use common\models\model\Profile;
 use yii\db\Query;
 
@@ -354,11 +355,12 @@ class ExamStudentController extends ApiActiveController
 
         // return $post;
 
-        $resultWriteReason = ExamStudentReaxam::createItem($post, $model->id);
+
+        $resultWriteReason = ExamStudentReexam::createItem($post, $model->id);
         if (is_array($resultWriteReason)) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $resultWriteReason, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-        
+
         $result = ExamStudent::deleteMK($model);
 
         // $resul

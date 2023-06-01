@@ -213,6 +213,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'conclusion',
             'plagiat_file',
             'plagiat_percent',
+            'reexam',
+            'examStudentReexam',
 
             'in_ball',
             'is_checked',
@@ -523,6 +525,21 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getExam()
     {
         return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
+    }
+
+    /**
+     * Gets query for [[Exam]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExamStudentReexam()
+    {
+        return $this->hasMany(Exam::className(), ['exam_student_id' => 'id']);
+    }
+
+    public function getReexam()
+    {
+        return $this->hasMany(Exam::className(), ['exam_student_id' => 'id']);
     }
 
 

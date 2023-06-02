@@ -39,8 +39,8 @@ class ExamControlStudent extends ActiveRecord
     public $upload_file;
     public $upload_plagiat2_file;
     public $upload2_file;
-    public $answerFileMaxSize = 1024 * 1024 * 5; // 5 Mb
-    public $plagiatFileMaxSize = 1024 * 1024 * 5; // 5 Mb
+    public $answerFileMaxSize = 1024 * 1024 * 4; // 5 Mb
+    public $plagiatFileMaxSize = 1024 * 1024 * 4; // 5 Mb
 
 
     public static function tableName()
@@ -514,7 +514,7 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
@@ -645,7 +645,7 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();

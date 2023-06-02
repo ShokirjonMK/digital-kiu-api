@@ -89,7 +89,7 @@ class ExamControl extends \yii\db\ActiveRecord
     const UPLOADS_FOLDER = 'uploads/exam_control/question/';
     public $upload_file;
     public $upload2_file;
-    public $questionFileMaxSize = 1024 * 1024 * 10; // 10 Mb
+    public $questionFileMaxSize = 1024 * 1024 * 5; // 10 Mb
 
     /**
      * {@inheritdoc}
@@ -536,7 +536,7 @@ class ExamControl extends \yii\db\ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
@@ -615,7 +615,7 @@ class ExamControl extends \yii\db\ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();

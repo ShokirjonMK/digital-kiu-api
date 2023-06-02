@@ -355,7 +355,6 @@ class ExamStudentController extends ApiActiveController
 
         // return $post;
 
-
         $resultWriteReason = ExamStudentReexam::createItem($post, $model->id);
         if (is_array($resultWriteReason)) {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $resultWriteReason, ResponseStatus::UPROCESSABLE_ENTITY);

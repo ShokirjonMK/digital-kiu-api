@@ -534,12 +534,12 @@ class ExamStudent extends \yii\db\ActiveRecord
      */
     public function getExamStudentReexam()
     {
-        return $this->hasMany(Exam::className(), ['exam_student_id' => 'id']);
+        return $this->hasMany(Exam::className(), ['id' => 'exam_id']);
     }
 
     public function getReexam()
     {
-        return $this->hasMany(Exam::className(), ['exam_student_id' => 'id']);
+        return $this->hasMany(Exam::className(), ['id' => 'exam_id']);
     }
 
 
@@ -547,6 +547,7 @@ class ExamStudent extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
     }
+
     public function getExamAppeal()
     {
         return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
@@ -575,6 +576,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         return null;
     }
+
     public function getTeacher()
     {
         return $this->teacherAccess->profile;

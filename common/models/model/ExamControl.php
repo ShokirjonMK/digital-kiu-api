@@ -536,7 +536,7 @@ class ExamControl extends \yii\db\ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 55, 131])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
@@ -615,7 +615,7 @@ class ExamControl extends \yii\db\ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 55, 131])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();

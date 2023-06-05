@@ -514,7 +514,7 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 55, 131])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 131, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 55])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();
@@ -645,7 +645,7 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 55, 131])
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 131, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 55])
         ) {
             $errors[] = ["Ruxsat berilmagan"];
             $transaction->rollBack();

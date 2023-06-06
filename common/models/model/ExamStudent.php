@@ -320,7 +320,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             $query->andWhere(['subject_id' => Yii::$app->request->get('subject_id')]);
         }
 
-        return $query->all();student
+        return $query->all();
     }
 
 

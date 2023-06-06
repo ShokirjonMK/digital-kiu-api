@@ -8,6 +8,7 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
+use common\models\model\ExamConclution;
 use common\models\model\ExamSemeta;
 use common\models\model\Faculty;
 use common\models\model\Kafedra;
@@ -424,5 +425,38 @@ class ExamController extends ApiActiveController
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+    }
+
+    public function actionConclution($lang)
+    {
+        $model = new ExamConclution();
+        $post = Yii::$app->request->post();
+
+        $this->load($model, $post);
+
+        $result = ExamConclution::createItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionConclutionGet($lang)
+    {
+        $model = new ExamConclution();
+        $query = $model->find();
+        if (!isRole('admin')) {
+            $query->filterWhere(['created_by' => current_user_id()]);
+        }
+
+        // filter
+        $query = $this->filterAll($query, $model);
+        // sort
+        $query = $this->sort($query);
+        // data
+        $data = $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
     }
 }

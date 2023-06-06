@@ -263,6 +263,10 @@ $routes = [
     // exam announced // natijani e'lon qilish
     'GET <lang:\w{2}>/exams/<id>/ad' => 'exam/ad',
 
+    // exam conclusion defaulter
+    'POST <lang:\w{2}>/exams/conclution' => 'exam/conclution',
+    'GET <lang:\w{2}>/exams/conclution' => 'exam/conclution-get',
+
     // Department type list
     'GET <lang:\w{2}>/departments/types' => 'department/types',
 

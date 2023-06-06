@@ -278,6 +278,52 @@ class ExamStudent extends \yii\db\ActiveRecord
         return $this->start ? date('Y-m-d H:i:s', $this->start) : '';
     }
 
+
+    public function getConclution12()
+    {
+        if (!isRole('admin')) {
+            if (Yii::$app->request->get('subject_id') != null) {
+                return ExamConclution::find()
+                    ->where(['subject_id' => Yii::$app->request->get('subject_id')])
+                    ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+                    ->andWhere(['created_by' => current_user_id()])
+                    ->all();
+            }
+            return ExamConclution::find()
+                ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+                ->andWhere(['created_by' => current_user_id()])
+                ->all();
+        }
+        if (Yii::$app->request->get('subject_id') != null) {
+            return ExamConclution::find()
+                ->where(['subject_id' => Yii::$app->request->get('subject_id')])
+                ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+                ->all();
+        }
+        return ExamConclution::find()
+            ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+            ->all();
+
+        return ExamConclution::find()->all();
+    }
+
+    public function getConclution()
+    {
+        $query = ExamConclution::find()
+            ->andWhere(['lang_code' => Yii::$app->request->get('lang')]);
+
+        if (!isRole('admin')) {
+            $query->andWhere(['created_by' => current_user_id()]);
+        }
+
+        if (Yii::$app->request->get('subject_id') != null) {
+            $query->andWhere(['subject_id' => Yii::$app->request->get('subject_id')]);
+        }
+
+        return $query->all();student
+    }
+
+
     public function getCorrect()
     {
         $on1 = ExamControlStudent::findOne([

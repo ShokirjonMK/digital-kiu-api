@@ -33,7 +33,7 @@ class  StudentTimeTableController extends ApiActiveController
             ->join('INNER JOIN', 'student', 'student.id = ' . $this->table_name . '.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id');
 
-        $student = Student::findOne(['user_id' => Current_user_id()]);
+        $student = Student::findOne(['user_id' => current_user_id()]);
 
         $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
 

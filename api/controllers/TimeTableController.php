@@ -27,7 +27,8 @@ class TimeTableController extends ApiActiveController
         $student = Student::findOne(['user_id' => current_user_id()]);
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['archived' => 0]);
+            // ->andWhere(['archived' => 0])
+            ;
 
         if (isRole('student')) {
             if ($student) {

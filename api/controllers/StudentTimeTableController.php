@@ -39,7 +39,7 @@ class  StudentTimeTableController extends ApiActiveController
 
         if ($student && isRole('student')) {
             if ($semester) {
-                $query->andWhere([$this->table_name . '.semester_id' => $semester]);
+                $query->andWhere([$this->table_name . '.semester_id' => $semester->id]);
                 // $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
             } else {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);

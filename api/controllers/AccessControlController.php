@@ -29,7 +29,9 @@ class AccessControlController extends ApiActiveController
             $roles = new AuthItem();
             $queryRole = $roles->find()
                 ->where(['type' => 1])
-                ->andFilterWhere(['like', 'child', Yii::$app->request->get('q')]);
+                // ->andFilterWhere(['like', 'child', Yii::$app->request->get('q')])
+                ;
+
             // sort
             $queryRole = $this->sort($queryRole);
 

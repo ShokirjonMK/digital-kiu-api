@@ -38,7 +38,7 @@ class CitizenshipController extends ApiActiveController
 
         // data
 
-        dd(Yii::$app->request->get('q'));
+        // dd(Yii::$app->request->get('q'));
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }

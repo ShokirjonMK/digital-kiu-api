@@ -12,7 +12,13 @@ class m211021_142749_profile_table extends Migration
      */
 
     public function safeUp()
-   {
+    {
+        $tableName = Yii::$app->db->tablePrefix . 'profile';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('profile');
+        }
+
+
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
@@ -47,6 +53,10 @@ class m211021_142749_profile_table extends Migration
             'permanent_region_id' => $this->integer()->Null(),
             'permanent_area_id' => $this->integer()->Null(),
             'permanent_address' => $this->string(255)->Null(),
+
+            'checked' => $this->integer()->notNull()->defaultValue(0),
+            'checked_full' => $this->integer()->notNull()->defaultValue(0),
+
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

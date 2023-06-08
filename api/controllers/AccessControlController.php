@@ -22,7 +22,7 @@ class AccessControlController extends ApiActiveController
     {
         $model = new AuthChild();
 
-        $user_id = Current_user_id();
+        $user_id = current_user_id();
 
 
         if (isRole('admin')) {

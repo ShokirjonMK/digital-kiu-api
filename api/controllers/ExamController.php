@@ -431,6 +431,11 @@ class ExamController extends ApiActiveController
     {
         $model = new ExamConclution();
         $post = Yii::$app->request->post();
+        if (isset($post['id'])) {
+            $model = ExamConclution::find()
+                ->andWhere(['id' => $post['id'], 'is_deleted' => 0])
+                ->one();
+        }
 
         $this->load($model, $post);
 

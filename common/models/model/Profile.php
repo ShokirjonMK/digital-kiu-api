@@ -248,8 +248,8 @@ class Profile extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'user_id',
-            'checked',
-            'checked_full',
+            // 'checked',
+            // 'checked_full',
             'image',
             'last_name',
             'first_name',

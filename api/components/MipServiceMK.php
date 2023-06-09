@@ -258,9 +258,9 @@ class MipServiceMK
     private static function saveTo($imgBase64, $pin)
     {
         // $imgBase64 = '';
-        $uploadPathMK   = STORAGE_PATH  . 'user_images_100/';
-        if (!file_exists(STORAGE_PATH  . 'user_images_100/')) {
-            mkdir(STORAGE_PATH . 'user_images_100/', 0777, true);
+        $uploadPathMK   = STORAGE_PATH  . 'user_images_1001/';
+        if (!file_exists(STORAGE_PATH  . 'user_images_1001/')) {
+            mkdir(STORAGE_PATH . 'user_images_1001/', 0777, true);
         }
 
         $parts        = explode(

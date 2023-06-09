@@ -522,6 +522,14 @@ class Attend extends \yii\db\ActiveRecord
         //     return simplify_errors($errors);
         // }
 
+        if (!in_array($model->edu_plan_id, [
+            55, 131
+        ])) {
+            $errors[] = ["Ruxsat berilmagan"];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         if ($model->save()) {
 
             $old_deff = array_diff($old_student_ids, $model->student_ids);

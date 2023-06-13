@@ -435,13 +435,21 @@ class ExamController extends ApiActiveController
             $model = ExamConclution::find()
                 ->andWhere(['id' => $post['id'], 'is_deleted' => 0])
                 ->one();
+            $this->load($model, $post);
+
+            $result = ExamConclution::createItem($model, $post);
+            if (!is_array($result)) {
+                return $this->response(1, _e('ExamConclution successfully updated.'), $model, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
         }
 
         $this->load($model, $post);
 
         $result = ExamConclution::createItem($model, $post);
         if (!is_array($result)) {
-            return $this->response(1, _e($this->controller_name . ' successfully created.'), $model, null, ResponseStatus::CREATED);
+            return $this->response(1, _e('ExamConclution successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
@@ -451,6 +459,7 @@ class ExamController extends ApiActiveController
     {
         $model = new ExamConclution();
         $query = $model->find();
+        $query->filterWhere(['is_deleted' => 0]);
         if (!isRole('admin')) {
             $query->filterWhere(['created_by' => current_user_id()]);
         }
@@ -463,5 +472,49 @@ class ExamController extends ApiActiveController
         $data = $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionConclutionUpdate($lang, $id)
+    {
+        $model = new ExamConclution();
+        $post = Yii::$app->request->post();
+        $model = ExamConclution::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $this->load($model, $post);
+
+        $result = ExamConclution::createItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('ExamConclution successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionConclutionDelete($lang, $id)
+    {
+        $model = new ExamConclution();
+        $post = Yii::$app->request->post();
+        $model = ExamConclution::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if ($model) {
+            $model->is_deleted = 1;
+            $model->update();
+
+            return $this->response(1, _e('ExamConclution succesfully removed.'), null, null, ResponseStatus::OK);
+        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 }

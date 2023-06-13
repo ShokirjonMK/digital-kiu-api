@@ -526,9 +526,6 @@ class Exam extends \yii\db\ActiveRecord
             ->andWhere(['IS NOT', 'exam_student_answer_sub_question.teacher_conclusion', null])
             ->groupBy('exam_student.id');
 
-        // dd($query->createCommand()->getRawSql());
-        // dd("qweqwe");
-        // return 122;
         return count($query->all());
     }
 

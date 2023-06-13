@@ -264,8 +264,10 @@ $routes = [
     'GET <lang:\w{2}>/exams/<id>/ad' => 'exam/ad',
 
     // exam conclusion defaulter
-    'POST <lang:\w{2}>/exams/conclution' => 'exam/conclution',
     'GET <lang:\w{2}>/exams/conclution' => 'exam/conclution-get',
+    'POST <lang:\w{2}>/exams/conclution' => 'exam/conclution',
+    'PUT <lang:\w{2}>/exams/conclution/<id>' => 'exam/conclution-update',
+    'DELETE <lang:\w{2}>/exams/conclution/<id>' => 'exam/conclution-delete',
 
     // Department type list
     'GET <lang:\w{2}>/departments/types' => 'department/types',

@@ -59,7 +59,8 @@ class ExamConclution extends \yii\db\ActiveRecord
             [['text'], 'string'],
             [['subject_id', 'language_id', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['key', 'lang_code'], 'string', 'max' => 33],
-            [['key'], 'unique'],
+         //   [['key'], 'unique'],
+            ['key', 'unique', 'targetAttribute' => ['key', 'created_by']]
 
         ];
     }

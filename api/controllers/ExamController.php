@@ -72,19 +72,17 @@ class ExamController extends ApiActiveController
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
-
-        // if (current_user_id() == 5510) {
-        //     $query = $query->andFilterWhere([
-        //         'in', $this->table_name . '.edu_semestr_subject_id', [569]
-        //     ]);
-        //     // filter
-        //     $query = $this->filterAll($query, $model);
-        //     // sort
-        //     $query = $this->sort($query);
-        //     // data
-        //     $data = $this->getData($query);
-        //     return $this->response(1, _e('Success'), $data);
-        // }
+        
+            if (Yii::$app->request->get('no')) {
+            $query->andFilterWhere([
+                'not in', $this->table_name . '.id',
+                [439, 438, 437, 432, 431, 428, 425, 424, 421, 420, 414, 410, 409, 408, 385, 384, 379, 378, 373, 371, 369, 365, 364, 363, 362, 361, 360, 354, 353, 351, 323, 321, 300, 299, 298, 297, 296, 295, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273]
+            ]);
+            $query->andFilterWhere([
+                '>', $this->table_name . '.id',
+                270
+            ]);
+        }
 
         $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
 
@@ -94,9 +92,6 @@ class ExamController extends ApiActiveController
                 $statuses
             ]);
         }
-
-
-
 
         $subjectId = Yii::$app->request->get('subject_id');
         if ($subjectId) {
@@ -208,6 +203,7 @@ class ExamController extends ApiActiveController
             return $this->response(1, _e('Success'), $data);
         }
     }
+   
 
     public function actionCreate($lang)
     {

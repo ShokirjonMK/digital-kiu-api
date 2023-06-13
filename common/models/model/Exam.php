@@ -466,6 +466,7 @@ class Exam extends \yii\db\ActiveRecord
                     ->select('student_id')
                     ->where(['exam_id' => $this->id])
             ])
+            // ->select(['id', 'last_name', 'first_name', 'middle_name', 'pasport_pin', 'faculty_id'])
             ->all();
     }
 

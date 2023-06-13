@@ -514,8 +514,8 @@ class Exam extends \yii\db\ActiveRecord
         $query = $model->find();
         $query->andWhere([$model->tableName() . '.exam_id' => $this->id]);
 
-        // if (isRole('teacher') && (!isRole('mudir'))) {
-        if (isRole('teacher')) {
+        // if (isRole('teacher')) {
+        if (isRole('teacher') && (!isRole('mudir'))) {
             $query->andWhere(['in', $model->tableName() . '.teacher_access_id', self::teacher_access()]);
         }
         $query->leftJoin("exam_student_answer", "exam_student_answer.exam_student_id = " . $model->tableName() . ".id ")

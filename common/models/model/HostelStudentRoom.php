@@ -209,6 +209,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
 
         $model->faculty_id = $model->student->faculty_id;
         $model->edu_plan_id = $model->student->edu_plan_id;
+        $model->is_contract = $model->student->is_contract;
 
         if (!isset($post['edu_year_id'])) {
             $eduYear = EduYear::findOne(['status' => 1], ['order' => ['id' => SORT_DESC]]);
@@ -273,6 +274,18 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
             if ($eduYear !== null) {
                 $model->edu_year_id = $eduYear->id;
             }
+        }
+
+        if ($model->room->type != Room::TYPE_HOSTEL) {
+            $errors[] = _e('This room is not for hostel');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->room->gender != $model->student->gender) {
+            $errors[] = _e('This room is for ') . Gender::list()[$model->room->gender];
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         $forhisYearCapacity = self::find()->where([

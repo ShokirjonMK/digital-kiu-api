@@ -243,6 +243,12 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        
         if ($model->save()) {
             $transaction->commit();
             return true;
@@ -301,6 +307,11 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         if ($model->save()) {
             $transaction->commit();

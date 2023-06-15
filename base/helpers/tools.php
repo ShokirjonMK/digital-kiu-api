@@ -7,6 +7,13 @@ function rawsql($query)
     echo '</pre>';
     die;
 }
+function sqlraw($query)
+{
+    echo '<pre>';
+    print_r($query->createCommand()->rawsql);
+    echo '</pre>';
+    die;
+}
 
 function dd($array)
 {

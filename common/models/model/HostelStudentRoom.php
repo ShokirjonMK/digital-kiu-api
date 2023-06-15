@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use common\models\enums\Gender;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 
@@ -218,6 +219,12 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
 
         if ($model->room->type != Room::TYPE_HOSTEL) {
             $errors[] = _e('This room is not for hostel');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if ($model->room->gender != $model->student->gender) {
+            $errors[] = _e('This room is for ') . Gender::list()[$model->room->gender];
             $transaction->rollBack();
             return simplify_errors($errors);
         }

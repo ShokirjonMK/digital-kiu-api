@@ -62,7 +62,7 @@ class Room extends \yii\db\ActiveRecord
         return [
             [['type', 'gender', 'empty_count', 'building_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted', 'capacity'], 'integer'],
             [['price'], 'number'],
-            [['building_id', 'created_at', 'updated_at'], 'required'],
+            [['building_id'], 'required'],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Building::className(), 'targetAttribute' => ['building_id' => 'id']],
         ];
     }
@@ -74,11 +74,11 @@ class Room extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type' => 'type education building or hostel or something',
-            'gender' => 'room gender male 1 female 0',
-            'empty_count' => 'bosh joylar soni',
+            'type' => 'Type', //'type education building or hostel or something',
+            'gender' => 'Gender', // 'room gender male 1 female 0',
+            'empty_count' => 'Empty Count', // 'bosh joylar soni',
             'price' => 'room price',
-            //            'name' => 'Name',
+            // 'name' => 'Name',
             'building_id' => 'Building ID',
             'capacity' => 'capacity',
             'order' => _e('Order'),

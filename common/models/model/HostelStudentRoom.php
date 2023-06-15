@@ -7,35 +7,34 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "{{%room}}".
+ * This is the model class for table "{{%hostel_student_room}}".
  *
  * @property int $id
- * @property int|null $type type education building or hostel or something
- * @property int|null $gender room gender male 1 female 0
- * @property int|null $empty_count bosh joylar soni
- * @property float|null $price room price
- * @property int $building_id
- * @property int|null $order
+ * @property int|null $room_id
+ * @property int|null $student_id
+ * @property int|null $faculty_id
+ * @property int|null $edu_year_id
+ * @property int|null $edu_plan_id
+ * @property float|null $payed
+ * @property int|null $is_contract
+ * @property int|null $is_free
  * @property int|null $status
- * @property int $created_at
- * @property int $updated_at
- * @property int $created_by
- * @property int $updated_by
- * @property int $is_deleted
- * @property int $capacity
+ * @property int|null $order
+ * @property int|null $created_at
+ * @property int|null $updated_at
+ * @property int|null $created_by
+ * @property int|null $updated_by
+ * @property int|null $is_deleted
  *
- * @property Building $building
- * @property TimeTable[] $timeTables
+ * @property EduPlan $eduPlan
+ * @property EduYear $eduYear
+ * @property Faculty $faculty
+ * @property Room $room
+ * @property Student $student
  */
 class HostelStudentRoom  extends \yii\db\ActiveRecord
 {
-    public static $selected_language = 'uz';
-
     use ResourceTrait;
-
-
-    const TYPE_EDUCATIoN = 1;
-    const TYPE_HOSTEL = 2;
 
     public function behaviors()
     {
@@ -49,7 +48,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'room';
+        return '{{%hostel_student_room}}';
     }
 
     /**
@@ -60,10 +59,16 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'gender', 'empty_count', 'building_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted', 'capacity'], 'integer'],
-            [['price'], 'number'],
-            [['building_id', 'created_at', 'updated_at'], 'required'],
-            [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Building::className(), 'targetAttribute' => ['building_id' => 'id']],
+            [['room_id', 'student_id', 'archived', 'faculty_id', 'edu_year_id', 'edu_plan_id', 'is_contract', 'is_free', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['room_id', 'student_id',], 'required'],
+            [['payed'], 'double'],
+            [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
+            [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
+            [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
+            [['room_id'], 'exist', 'skipOnError' => true, 'targetClass' => Room::className(), 'targetAttribute' => ['room_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id', 'is_deleted']],
+
         ];
     }
 
@@ -74,13 +79,14 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type' => 'type education building or hostel or something',
-            'gender' => 'room gender male 1 female 0',
-            'empty_count' => 'bosh joylar soni',
-            'price' => 'room price',
-            //            'name' => 'Name',
-            'building_id' => 'Building ID',
-            'capacity' => 'capacity',
+            'room_id' => 'Room ID',
+            'student_id' => 'Student ID',
+            'faculty_id' => 'Faculty ID',
+            'edu_year_id' => 'Edu Year ID',
+            'edu_plan_id' => 'Edu Plan ID',
+            'payed' => 'Payed',
+            'is_contract' => 'Is Contract',
+            'is_free' => 'Is Free',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -95,15 +101,15 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
     {
         $fields =  [
             'id',
-            'name' => function ($model) {
-                return $model->translate->name ?? '';
-            },
-            'type',
-            'gender',
-            'empty_count',
-            'price',
-            'building_id',
-            'capacity',
+            'room_id',
+            'student_id',
+            'faculty_id',
+            'edu_year_id',
+            'edu_plan_id',
+            'payed',
+            'is_contract',
+            'is_free',
+
             'order',
             'status',
             'created_at',
@@ -121,9 +127,11 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields =  [
-            'building',
-            'timeTables',
-            'description',
+            'eduPlan',
+            'eduYear',
+            'faculty',
+            'room',
+            'student',
 
             'createdBy',
             'updatedBy',
@@ -134,65 +142,100 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
-    /**
-     * Gets query for [[Building]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBuilding()
-    {
-        return $this->hasOne(Building::className(), ['id' => 'building_id']);
-    }
 
     /**
-     * Gets query for [[TimeTables]].
+     * Gets query for [[EduPlan]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery|EduPlanQuery
      */
-    public function getTimeTables()
+    public function getEduPlan()
     {
-        return $this->hasMany(TimeTable::className(), ['room_id' => 'id']);
+        return $this->hasOne(EduPlan::className(), ['id' => 'edu_plan_id']);
     }
 
-    public function getTranslate()
+    /**
+     * Gets query for [[EduYear]].
+     *
+     * @return \yii\db\ActiveQuery|EduYearQuery
+     */
+    public function getEduYear()
     {
-        if (Yii::$app->request->get('self') == 1) {
-            return $this->infoRelation[0];
-        }
-
-        return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
+        return $this->hasOne(EduYear::className(), ['id' => 'edu_year_id']);
     }
 
-    public function getDescription()
+    /**
+     * Gets query for [[Faculty]].
+     *
+     * @return \yii\db\ActiveQuery|FacultyQuery
+     */
+    public function getFaculty()
     {
-        return $this->translate->description ?? '';
+        return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
     }
 
-    public function getInfoRelation()
+    /**
+     * Gets query for [[Room]].
+     *
+     * @return \yii\db\ActiveQuery|RoomQuery
+     */
+    public function getRoom()
     {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(Translate::class, ['model_id' => 'id'])
-            ->andOnCondition(['language' => Yii::$app->request->get('lang'), 'table_name' => $this->tableName()]);
+        return $this->hasOne(Room::className(), ['id' => 'room_id']);
     }
 
-    public function getInfoRelationDefaultLanguage()
+    /**
+     * Gets query for [[Student]].
+     *
+     * @return \yii\db\ActiveQuery|StudentQuery
+     */
+    public function getStudent()
     {
-        // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
-        return $this->hasMany(Translate::class, ['model_id' => 'id'])
-            ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+        return $this->hasOne(Student::className(), ['id' => 'student_id']);
     }
 
-
+    /**
+     * HostelStudentRoom createItem <$model, $post>
+     */
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $model->faculty_id = $model->student->faculty_id;
+        $model->edu_plan_id = $model->student->edu_plan_id;
+
+        if (!isset($post['edu_year_id'])) {
+            $eduYear = EduYear::findOne(['status' => 1], ['order' => ['id' => SORT_DESC]]);
+            if ($eduYear !== null) {
+                $model->edu_year_id = $eduYear->id;
+            }
+        }
+
+        if ($model->room->type != Room::TYPE_HOSTEL) {
+            $errors[] = _e('This room is not for hostel');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $forhisYearCapacity = self::find()->where([
+            'is_deleted' => 0,
+            'room_id' => $model->room_id,
+            'edu_year_id' => $model->edu_year_id,
+            'archived' => 0,
+        ])->count();
+
+        if (!$model->room->capacity > $forhisYearCapacity) {
+            $errors[] = _e('This room capacity is full');
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if ($model->save()) {
-
             $transaction->commit();
             return true;
         } else {
@@ -201,16 +244,45 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * HostelStudentRoom updateItem <$model, $post>
+     */
     public static function updateItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
-        if ($model->save()) {
+        $model->faculty_id = $model->student->faculty_id;
+        $model->edu_plan_id = $model->student->edu_plan_id;
+        $model->is_contract = $model->student->is_contract;
 
+        if (!isset($post['edu_year_id'])) {
+            $eduYear = EduYear::findOne(['status' => 1], ['order' => ['id' => SORT_DESC]]);
+            if ($eduYear !== null) {
+                $model->edu_year_id = $eduYear->id;
+            }
+        }
+
+        $forhisYearCapacity = self::find()->where([
+            'is_deleted' => 0,
+            'room_id' => $model->room_id,
+            'edu_year_id' => $model->edu_year_id,
+            'archived' => 0,
+        ])->count();
+
+        if (!$model->room->capacity > $forhisYearCapacity) {
+            $errors[] = _e('This room capacity is full');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+
+        if ($model->save()) {
             $transaction->commit();
             return true;
         } else {
@@ -219,14 +291,35 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
         }
     }
 
+    // public function beforeSave($insert)
+    // {
+    //     if ($insert) {
+    //         $this->created_by = current_user_id();
+    //     } else {
+    //         $this->updated_by = current_user_id();
+    //     }
+    //     return parent::beforeSave($insert);
+    // }
 
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_by = Current_user_id();
+            $this->created_by = current_user_id();
+            // Increment the empty_count of the related room
+            $room = Room::findOne($this->room_id);
+            if ($room !== null) {
+                $room->empty_count++;
+                $room->save();
+            }
         } else {
-            $this->updated_by = Current_user_id();
+            $this->updated_by = current_user_id();
+            $room = Room::findOne($this->room_id);
+            if ($room !== null) {
+                --$room->empty_count;
+                $room->save();
+            }
         }
+
         return parent::beforeSave($insert);
     }
 }

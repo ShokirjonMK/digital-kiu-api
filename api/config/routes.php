@@ -152,6 +152,7 @@ $controllers = [
 
     'student-subject-restrict',
     'student-gpa-old',
+    'hostel-student',
 
     'telegram',
     'test-get-data',

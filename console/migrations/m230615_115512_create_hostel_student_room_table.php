@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%hostel_student_room}}`.
  */
-class m230615_045810_create_hostel_student_room_table extends Migration
+class m230615_115512_create_hostel_student_room_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -26,9 +26,9 @@ class m230615_045810_create_hostel_student_room_table extends Migration
 
         $this->createTable('{{%hostel_student_room}}', [
             'id' => $this->primaryKey(),
+            'student_id' => $this->integer(11)->notNull(),
+            'room_id' => $this->integer(11)->notNull(),
 
-            'room_id' => $this->integer(11)->null(),
-            'student_id' => $this->integer(11)->null(),
             'faculty_id' => $this->integer(11)->null(),
             'edu_year_id' => $this->integer(11)->null(),
             'edu_plan_id' => $this->integer(11)->null(),
@@ -36,6 +36,8 @@ class m230615_045810_create_hostel_student_room_table extends Migration
 
             'is_contract' => $this->tinyInteger(1)->defaultValue(1),
             'is_free' => $this->tinyInteger(1)->defaultValue(0),
+
+            'archived' => $this->tinyInteger(1)->defaultValue(0),
 
             'status' => $this->tinyInteger(1)->defaultValue(0),
             'order' => $this->tinyInteger(1)->defaultValue(1),

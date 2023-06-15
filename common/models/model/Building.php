@@ -188,8 +188,6 @@ class Building extends \yii\db\ActiveRecord
         return count($this->roomSeminar);
     }
 
-
-
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();

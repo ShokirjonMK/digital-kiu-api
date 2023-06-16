@@ -120,6 +120,7 @@ class Subject extends \yii\db\ActiveRecord
             'child',
             'parent',
             'timeTables',
+            'TimeTableCount',
             'teacherAccesses',
             'kafedra',
             'semestrSubjects',
@@ -411,6 +412,10 @@ class Subject extends \yii\db\ActiveRecord
     public function getTimeTables()
     {
         return $this->hasMany(TimeTable::className(), ['subject_id' => 'id']);
+    }
+    public function getTimeTableCount()
+    {
+        return count($this->timeTables);
     }
 
     /**

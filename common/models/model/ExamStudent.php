@@ -326,22 +326,32 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getCorrect()
     {
-        $on1 = ExamControlStudent::findOne([
-            'student_id' => $this->student_id,
-            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
-            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
-        ])->ball ?? null;
+        $on1 = ExamControlStudent::find()
+            ->where([
+                'student_id' => $this->student_id,
+                // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+                'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+            ])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+
+        $on1 = $on1->ball ?? null;
 
         if (is_null($this->on1)) {
             $this->on1 = $on1;
             $this->save();
         }
 
-        $on2 = ExamControlStudent::findOne([
-            'student_id' => $this->student_id,
-            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
-            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
-        ])->ball2 ?? null;
+        $on2 = ExamControlStudent::find()
+            ->where([
+                'student_id' => $this->student_id,
+                // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+                'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+            ])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+
+        $on2 = $on2->ball2 ?? null;
 
         if (is_null($this->on2)) {
             $this->on2 = $on2;

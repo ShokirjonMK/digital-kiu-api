@@ -256,7 +256,7 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
     public function getQuestionOnly()
     {
-        return $this->hasOne(Question::className(), ['id' => 'question_id'])->select('question');
+        return $this->hasOne(Question::className(), ['id' => 'question_id'])->select(['question', 'question_file']);
     }
 
     public function getQuestionForExamStudentAnswer()

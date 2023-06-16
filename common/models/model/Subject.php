@@ -120,7 +120,7 @@ class Subject extends \yii\db\ActiveRecord
             'child',
             'parent',
             'timeTables',
-            'TimeTableCount',
+            'timeTableCount',
             'teacherAccesses',
             'kafedra',
             'semestrSubjects',

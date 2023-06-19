@@ -519,7 +519,7 @@ class ExamControlStudent extends ActiveRecord
             && !in_array(
                 $model->student->profile->passport_pin,
                 [
-                    52507005280048,
+                    50201026560030,
                     62310055610018,
                     51908046090101,
 
@@ -688,7 +688,7 @@ class ExamControlStudent extends ActiveRecord
             && !in_array(
                 $model->student->profile->passport_pin,
                 [
-                    52507005280048,
+                    50201026560030,
                     62310055610018,
                     51908046090101,
 

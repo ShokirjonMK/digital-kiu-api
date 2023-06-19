@@ -154,6 +154,8 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             'is_cheked',
 
             'archived',
+            'student_updated_at',
+            'student_created_at',
 
             'order',
             'status',

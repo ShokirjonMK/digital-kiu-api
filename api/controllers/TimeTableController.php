@@ -184,13 +184,16 @@ class TimeTableController extends ApiActiveController
             $errors[] = _e('Students started choosing!');
             return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
         } */
+
         $model = TimeTable::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
+        
         $result = TimeTable::updateItem($model, $post);
+        
         if (!is_array($result)) {
             return $this->response(1, _e('TimeTable successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -206,6 +209,7 @@ class TimeTableController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

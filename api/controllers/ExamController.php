@@ -72,16 +72,22 @@ class ExamController extends ApiActiveController
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             ->groupBy($this->table_name . '.id')
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
-        
-            if (Yii::$app->request->get('no')) {
+
+        if (Yii::$app->request->get('no')) {
+            // $query->andFilterWhere([
+            //     'not in', $this->table_name . '.id',
+            //     [439, 438, 437, 432, 431, 428, 425, 424, 421, 420, 414, 410, 409, 408, 385, 384, 379, 378, 373, 371, 369, 365, 364, 363, 362, 361, 360, 354, 353, 351, 323, 321, 300, 299, 298, 297, 296, 295, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273]
+            // ]);
             $query->andFilterWhere([
-                'not in', $this->table_name . '.id',
-                [439, 438, 437, 432, 431, 428, 425, 424, 421, 420, 414, 410, 409, 408, 385, 384, 379, 378, 373, 371, 369, 365, 364, 363, 362, 361, 360, 354, 353, 351, 323, 321, 300, 299, 298, 297, 296, 295, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273]
+                '>=', $this->table_name . '.id',
+                272
             ]);
             $query->andFilterWhere([
-                '>', $this->table_name . '.id',
-                270
+                '<=', $this->table_name . '.id',
+                515
             ]);
+
+            // exam_id>=272 and exam_id<=515 
         }
 
         $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
@@ -203,7 +209,7 @@ class ExamController extends ApiActiveController
             return $this->response(1, _e('Success'), $data);
         }
     }
-   
+
 
     public function actionCreate($lang)
     {

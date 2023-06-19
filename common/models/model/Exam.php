@@ -16,6 +16,7 @@ use yii\db\Expression;
  * @property int $exam_type_id
  * @property int $faculty_id
  * @property int $edu_semestr_subject_id
+ * @property int $edu_plan_id
  * @property string $start
  * @property string $finish
  * @property float|null $max_ball
@@ -93,6 +94,7 @@ class Exam extends \yii\db\ActiveRecord
                     'duration',
                     'subject_id',
                     'edu_semestr_subject_id',
+                    'edu_plan_id',
                     'order',
                     'status',
                     'created_at',
@@ -136,6 +138,7 @@ class Exam extends \yii\db\ActiveRecord
             'question_count_by_type' => 'Question Count By Type',
             'exam_type_id' => 'Exam Type ID',
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
+            'edu_plan_id' => 'Edu Plan ID',
             'start' => 'Start',
             'finish' => 'Finish',
             'is_protected' => 'Is Protected',
@@ -881,13 +884,14 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = _e("Start of exam can not be greater than finish");
         }
 
-        $model->type = $model->eduSemestr->type ?? 1;
-        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
-        $model->subject_id = $model->eduSemestrSubject->subject_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+        $model->type = $model->eduSemestr->type ?? 1;
+        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->eduSemestrSubject->subject_id;
+        $model->edu_plan_id = $model->eduSemestrSubject->eduSemestr->edu_plan_id;
 
         /** question_count_by_type_with_ball */
         if (isset($post['question_count_by_type_with_ball'])) {

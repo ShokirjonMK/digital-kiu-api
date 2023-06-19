@@ -11,7 +11,7 @@ class m211110_061104_create_exam_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-   {
+    {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
@@ -23,6 +23,7 @@ class m211110_061104_create_exam_table extends Migration
             // nama translate da bo'ladi
             'exam_type_id' => $this->integer()->notNull(),
             'edu_semestr_subject_id' => $this->integer()->notNull(),
+            'edu_plan_id' => $this->integer()->null(),
             'start' => $this->dateTime()->notNull(),
             'finish' => $this->dateTime()->notNull(),
             'password' => $this->string()->Null(),

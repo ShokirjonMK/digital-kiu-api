@@ -810,7 +810,7 @@ class ExamControlStudent extends ActiveRecord
             }
         }
         if (isset($post['appeal2_text'])) {
-            if ($model->examControl->status2 == 2) {
+            if ($model->examControl->status2 == ExamControl::STATUS_ANNOUNCED) {
 
                 if ($model->examControl->appeal2_at >= $now) {
 

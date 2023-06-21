@@ -520,6 +520,7 @@ class ExamControlStudent extends ActiveRecord
                 $model->student->profile->passport_pin,
                 [
                     50404046900075,
+                    62410026440041,
                     52403026920016,
                     62310055610018,
                     51908046090101,
@@ -687,6 +688,7 @@ class ExamControlStudent extends ActiveRecord
                 $model->student->profile->passport_pin,
                 [
                     50404046900075,
+                    62410026440041,
                     52403026920016,
                     62310055610018,
                     51908046090101,

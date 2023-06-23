@@ -514,7 +514,16 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [55, 131, 132])
+            !in_array($model->edu_plan_id, [
+                55,
+                131,
+                132,
+
+                56,
+                22,
+                27,
+                15
+            ])
 
             && !in_array(
                 $model->student->profile->passport_pin,
@@ -651,7 +660,17 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            !in_array($model->edu_plan_id, [55, 131, 132])
+            !in_array($model->edu_plan_id, [
+                55,
+                131,
+                132,
+
+
+                56,
+                22,
+                27,
+                15
+            ])
             && !in_array(
                 $model->student->profile->passport_pin,
                 []

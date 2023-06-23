@@ -29,15 +29,15 @@ class ExamSemetaController extends ApiActiveController
 
 
         /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $query = $query->leftJoin('exam', 'exam.id = exam_semeta.exam_id',)
-                ->andWhere(['exam.faculty_id' => $t['UserAccess']->table_id]);
-        } elseif ($t['status'] == 2) {
-            $query->andFilterWhere([
-                'exam_id' => -1
-            ]);
-        }
+        // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        // if ($t['status'] == 1) {
+        //     $query = $query->leftJoin('exam', 'exam.id = exam_semeta.exam_id',)
+        //         ->andWhere(['exam.faculty_id' => $t['UserAccess']->table_id]);
+        // } elseif ($t['status'] == 2) {
+        //     $query->andFilterWhere([
+        //         'exam_id' => -1
+        //     ]);
+        // }
         /*  is Self  */
 
         // /*  is Self  */

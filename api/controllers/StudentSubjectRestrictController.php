@@ -52,7 +52,7 @@ class StudentSubjectRestrictController extends ApiActiveController
         // sort
         $query = $this->sort($query);
 
-        rawsql($query);
+        // rawsql($query);
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);

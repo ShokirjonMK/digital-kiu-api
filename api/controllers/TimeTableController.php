@@ -27,7 +27,8 @@ class TimeTableController extends ApiActiveController
         $student = Student::findOne(['user_id' => current_user_id()]);
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['archived' => 0]);
+            // ->andWhere(['archived' => 0])
+            ;
 
         if (isRole('student')) {
             if ($student) {
@@ -209,7 +210,7 @@ class TimeTableController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
-        
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

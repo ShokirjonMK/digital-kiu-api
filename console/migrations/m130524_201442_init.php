@@ -164,7 +164,7 @@ class m130524_201442_init extends Migration
         $this->insert('{{%users}}', [
             'username' => 'professor',
             'auth_key' => \Yii::$app->security->generateRandomString(20),
-            'password_hash' => \Yii::$app->security->generatePasswordHash("tsul2022"),
+            'password_hash' => \Yii::$app->security->generatePasswordHash("prof007"),
             'password_reset_token' => null,
             'access_token' => \Yii::$app->security->generateRandomString(),
             'access_token_time' => time(),

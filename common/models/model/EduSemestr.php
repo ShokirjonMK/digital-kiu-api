@@ -59,7 +59,7 @@ class EduSemestr extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['edu_plan_id', 'type', 'course_id', 'semestr_id', 'edu_year_id'], 'required'],
+            [['edu_plan_id', 'course_id', 'semestr_id', 'edu_year_id'], 'required'],
             [['edu_plan_id', 'course_id', 'optional_subject_count', 'required_subject_count', 'semestr_id', 'edu_year_id', 'is_checked', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
             [['credit'], 'double'],

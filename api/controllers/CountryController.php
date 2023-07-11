@@ -23,9 +23,17 @@ class CountryController extends ApiActiveController
         $model = new Countries();
 
         $query = $model->find()
+            ->with(['infoRelation'])
+            // ->andWhere([$table_name.'.status' => 1, $table_name . '.is_deleted' => 0])
+            ->andWhere([$model->tableName() . '.is_deleted' => 0])
+            // ->join("INNER JOIN", "translate tr", "tr.model_id = $model->tableName().id and tr.table_name = '$model->tableName()'" )
+            ->leftJoin("translate tr", "tr.model_id = $model->tableName().id and tr.table_name = '$model->tableName()'")
+            ->groupBy($model->tableName() . '.id')
+            // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
+            // ->andWhere(['tr.tabel_name' => 'faculty'])
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
 
-            // ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')])
-            ;
+
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -38,7 +46,7 @@ class CountryController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-    
+
     public function actionView($lang, $id)
     {
         $model = Countries::find()
@@ -49,6 +57,4 @@ class CountryController extends ApiActiveController
         }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
-
-
 }

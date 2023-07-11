@@ -15,7 +15,7 @@ class CountryController extends ApiActiveController
         return [];
     }
 
-    public $table_name = 'country';
+    public $table_name = 'countries';
     public $controller_name = 'Country';
 
     public function actionIndex($lang)

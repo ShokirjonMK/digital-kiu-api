@@ -22,7 +22,7 @@ class CountryController extends ApiActiveController
     {
         $model = new Countries();
 
-        return Yii::$app->request->get('query');
+        // return Yii::$app->request->get('query');
         $query = $model->find()
             // ->with(['infoRelation'])
             // ->andWhere([$this->table_name . '.is_deleted' => 0])

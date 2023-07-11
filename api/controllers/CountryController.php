@@ -24,7 +24,8 @@ class CountryController extends ApiActiveController
 
         $query = $model->find()
 
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            // ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')])
+            ;
 
         // filter
         $query = $this->filterAll($query, $model);

@@ -52,7 +52,7 @@ class ExamStudentController extends ApiActiveController
             ->andWhere([$model->tableName() . '.is_deleted' => 0])
             ->join('INNER JOIN', 'student', 'student.id = ' . $model->tableName() . '.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
-            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
 
 
         //  Filter from Profile 

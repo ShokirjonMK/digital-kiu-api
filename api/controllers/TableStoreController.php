@@ -32,7 +32,7 @@ class TableStoreController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
+            // ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')])
         ;
 
         if (Yii::$app->request->get('month') != null) {

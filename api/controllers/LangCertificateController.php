@@ -26,7 +26,7 @@ class LangCertificateController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
 
-            ->andFilterWhere(['like', 'link', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'link', Yii::$app->request->get('query')]);
 
 
         if (Yii::$app->request->get('user_id') != null) {

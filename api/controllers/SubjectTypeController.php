@@ -34,7 +34,7 @@ class SubjectTypeController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);

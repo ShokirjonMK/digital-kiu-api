@@ -25,7 +25,7 @@ class KpiDataController extends ApiActiveController
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
 
-            ->andFilterWhere(['like', 'link', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'link', Yii::$app->request->get('query')]);
 
         if (isRole('teacher') && !isRole('mudir')) {
             $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);

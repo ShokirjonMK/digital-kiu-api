@@ -32,9 +32,9 @@ class GetTeacherController extends ActiveController
 
         $query = $query->andWhere(['auth_assignment.item_name' => 'teacher']);
 
-        $query->andFilterWhere(['like', 'last_name', Yii::$app->request->get('q')]);
-        // $query->orFilterWhere(['like', 'first_name', Yii::$app->request->get('q')]);
-        // $query->orFilterWhere(['like', 'middle_name', Yii::$app->request->get('q')]);
+        $query->andFilterWhere(['like', 'last_name', Yii::$app->request->get('query')]);
+        // $query->orFilterWhere(['like', 'first_name', Yii::$app->request->get('query')]);
+        // $query->orFilterWhere(['like', 'middle_name', Yii::$app->request->get('query')]);
         /** */
         // data
 

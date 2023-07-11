@@ -50,7 +50,7 @@ class StatisticController extends ApiActiveController
             ->andWhere([$table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $table_name.id and tr.table_name = '$table_name'")
             ->groupBy($table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -78,7 +78,7 @@ class StatisticController extends ApiActiveController
             ->andWhere([$table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $table_name.id and tr.table_name = '$table_name'")
             ->groupBy($table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -103,7 +103,7 @@ class StatisticController extends ApiActiveController
             ->andWhere([$table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $table_name.id and tr.table_name = '$table_name'")
             // ->groupBy($table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
@@ -145,7 +145,7 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
@@ -277,7 +277,7 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
@@ -408,7 +408,7 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);

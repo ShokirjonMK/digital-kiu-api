@@ -141,7 +141,7 @@ class UserController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);

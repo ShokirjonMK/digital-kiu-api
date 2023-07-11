@@ -25,7 +25,7 @@ class SubjectAccessController extends ApiActiveController
         $model = new SubjectAccess();
 
         $query = $model->find()
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);

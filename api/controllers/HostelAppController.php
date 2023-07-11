@@ -27,7 +27,7 @@ class HostelAppController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0]);
 
         $query->join('INNER JOIN', 'profile', 'profile.user_id = hostel_app.user_id')
-            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
 
 
         //  Filter from Profile 

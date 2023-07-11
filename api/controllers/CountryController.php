@@ -23,7 +23,7 @@ class CountryController extends ApiActiveController
         $model = new Countries();
 
         $query = $model->find()
-            ->with(['infoRelation'])
+            // ->with(['infoRelation'])
             // ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             ->groupBy($this->table_name . '.id')

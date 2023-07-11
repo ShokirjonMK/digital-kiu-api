@@ -20,8 +20,6 @@ class CountryController extends ApiActiveController
 
     public function actionIndex($lang)
     {
-
-        return Yii::$app->request->get('q');
         $model = new Countries();
 
         $query = $model->find()
@@ -29,8 +27,7 @@ class CountryController extends ApiActiveController
             // ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')])
-            ;
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
 
 

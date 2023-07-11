@@ -26,7 +26,7 @@ class RegionController extends ApiActiveController
         // return $countryId;
 
         $query = $model->find()
-            ->andFilterWhere(['name', Yii::$app->request->get('query')]);
+            ->andFilterWhere(['like','name', Yii::$app->request->get('query')]);
 
         ;
 

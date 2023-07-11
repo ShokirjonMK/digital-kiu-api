@@ -28,8 +28,9 @@ class CountryController extends ApiActiveController
             // ->andWhere([$this->table_name . '.is_deleted' => 0])
             // ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             // ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['name', Yii::$app->request->get('query')]);
+            // ->andFilterWhere(['name', Yii::$app->request->get('query')]);
 
+            ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
 
 
         // filter

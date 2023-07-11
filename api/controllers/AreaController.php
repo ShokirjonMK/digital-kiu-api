@@ -23,8 +23,8 @@ class AreaController extends ApiActiveController
         $model = new Area();
 
         $query = $model->find()
-            ->andFilterWhere(['name', Yii::$app->request->get('query')]);
-        
+            ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
+
 
         // filter
         $query = $this->filterAll($query, $model);

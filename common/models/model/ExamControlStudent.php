@@ -513,7 +513,8 @@ class ExamControlStudent extends ActiveRecord
         }
 
         // faqat 4- kurslar uchun
-        if ( current_user_id() != 11704 && 
+        if (
+            !in_array(current_user_id(), [11704]) &&
             !in_array($model->edu_plan_id, [
                 // 55,
                 // 131,
@@ -669,7 +670,7 @@ class ExamControlStudent extends ActiveRecord
 
         // faqat 4- kurslar uchun
         if (
-            current_user_id() != 11704 && 
+            !in_array(current_user_id(), [11704]) &&
             !in_array($model->edu_plan_id, [
                 55,
                 131,

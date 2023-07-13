@@ -18,16 +18,22 @@ class m211022_134710_student_new extends Migration
             $this->dropTable('student');
         }
 
-        $this->createTable('student', [
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation
+            // https://www.eversql.com/mysql-utf8-vs-utf8mb4-whats-the-difference-between-utf8-and-utf8mb4/
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
+        }
+        $this->createTable('{{%student}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'faculty_id' => $this->integer()->notNull(),
-            'direction_id' => $this->integer()->notNull(),
-            'course_id' => $this->integer()->notNull(),
-            'edu_year_id' => $this->integer()->notNull(),
-            'edu_type_id' => $this->integer()->notNull(),
+            'faculty_id' => $this->integer()->null(),
+            'direction_id' => $this->integer()->null(),
+            'course_id' => $this->integer()->null(),
+            'edu_year_id' => $this->integer()->null(),
+            'edu_type_id' => $this->integer()->null(),
             'gender' => $this->tinyInteger(1)->defaultValue(1),
-            'is_contract' => $this->integer()->notNull(),
+            'is_contract' => $this->integer()->null(),
             'diplom_number' => $this->string(255)->Null(),
             'diplom_seria' => $this->string(255)->Null(),
             'diplom_date' => $this->date()->Null(),

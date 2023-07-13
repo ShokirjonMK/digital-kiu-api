@@ -30,7 +30,7 @@ class ElectionVoteController extends ApiActiveController
             // ->groupBy($this->table_name . '.id')
             // ->andWhere(['eci.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['eci.tabel_name' => 'faculty'])
-            // ->andFilterWhere(['like', 'eci.name', Yii::$app->request->get('q')])
+            // ->andFilterWhere(['like', 'eci.name', Yii::$app->request->get('query')])
         ;
 
 

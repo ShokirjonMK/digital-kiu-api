@@ -28,7 +28,7 @@ class JobTitleController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin("job_title_info jtinfo", "jtinfo.job_title_id = $this->table_name.id")
             ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['like', 'jtinfo.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'jtinfo.name', Yii::$app->request->get('query')]);
 
 
         // filter

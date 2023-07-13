@@ -50,7 +50,7 @@ class StatisticController extends ApiActiveController
             ->andWhere([$table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $table_name.id and tr.table_name = '$table_name'")
             ->groupBy($table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -78,7 +78,7 @@ class StatisticController extends ApiActiveController
             ->andWhere([$table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $table_name.id and tr.table_name = '$table_name'")
             ->groupBy($table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -103,7 +103,7 @@ class StatisticController extends ApiActiveController
             ->andWhere([$table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $table_name.id and tr.table_name = '$table_name'")
             // ->groupBy($table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
@@ -134,7 +134,7 @@ class StatisticController extends ApiActiveController
 
     public function actionChecking($lang)
     {
-        return "ok";
+        // return "ok";
         $model = new UserStatistic();
         $filter = Yii::$app->request->get('filter');
         $filter = json_decode(str_replace("'", "", $filter));
@@ -145,7 +145,7 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
@@ -277,7 +277,7 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
@@ -408,7 +408,7 @@ class StatisticController extends ApiActiveController
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
             ->groupBy('users.id')
-            ->andFilterWhere(['like', 'username', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
@@ -639,19 +639,20 @@ class StatisticController extends ApiActiveController
         return "ok";
 
         /*     SELECT
-	time_table.teacher_user_id,
-	ROUND( AVG( survey_answer.ball ), 0 ) AS average_ball ,
-	AVG( survey_answer.ball )
-FROM
-	time_table
-	INNER JOIN student_time_table ON time_table.id = student_time_table.time_table_id
-	INNER JOIN survey_answer ON student_time_table.student_id = survey_answer.student_id 
-	AND time_table.subject_id = survey_answer.subject_id 
-WHERE
-	time_table.archived = 1 
--- 	and time_table.teacher_user_id = 8177
-GROUP BY
-	time_table.teacher_user_id */
+            time_table.teacher_user_id,
+            ROUND( AVG( survey_answer.ball ), 0 ) AS average_ball ,
+            AVG( survey_answer.ball )
+        FROM
+            time_table
+            INNER JOIN student_time_table ON time_table.id = student_time_table.time_table_id
+            INNER JOIN survey_answer ON student_time_table.student_id = survey_answer.student_id 
+            AND time_table.subject_id = survey_answer.subject_id 
+        WHERE
+            time_table.archived = 1 
+        -- 	and time_table.teacher_user_id = 8177
+        GROUP BY
+            time_table.teacher_user_id
+        */
 
         $model = new UserStatistic();
 

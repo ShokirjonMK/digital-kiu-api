@@ -99,9 +99,9 @@ class RoomController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
-        if (isset($roomIds)) {
-            $query->andFilterWhere(['not in', 'id', $roomIds]);
-        }
+        // if (isset($roomIds)) {
+        //     $query->andFilterWhere(['not in', 'id', $roomIds]);
+        // }
 
         $query = $this->filterAll($query, $model);
 
@@ -127,7 +127,7 @@ class RoomController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             // ->andWhere(['tr.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['tr.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);

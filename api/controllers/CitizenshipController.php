@@ -25,9 +25,10 @@ class CitizenshipController extends ApiActiveController
 
         $query = $model->find()
             ->with(['infoRelation'])
-            ->andWhere([$this->table_name . '.is_deleted' => 0])->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             // ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);
@@ -36,6 +37,8 @@ class CitizenshipController extends ApiActiveController
         $query = $this->sort($query);
 
         // data
+
+        // dd(Yii::$app->request->get('query'));
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }

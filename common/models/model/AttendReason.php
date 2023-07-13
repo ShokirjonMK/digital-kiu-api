@@ -79,13 +79,13 @@ class AttendReason extends \yii\db\ActiveRecord
                 'start',
                 'end'
             ], 'safe'],
-            [
-                ['end'],
-                'compare',
-                'compareValue' => date("Y-m-d H:i:s", strtotime('-1 month')),
-                'operator' => '>=',
-                'message' => _e('The date must be within the last month.')
-            ],
+            // [
+            //     ['end'],
+            //     'compare',
+            //     'compareValue' => date("Y-m-d H:i:s", strtotime('-1 month')),
+            //     'operator' => '>=',
+            //     'message' => _e('The date must be within the last month.')
+            // ],
             [[
                 'is_confirmed',
                 'student_id',

@@ -52,6 +52,40 @@ class StudentSubjectRestrictController extends ApiActiveController
         // sort
         $query = $this->sort($query);
 
+        // rawsql($query);
+        // data
+        $data =  $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionIndexSort($lang)
+    {
+        $model = new StudentSubjectRestrict();
+
+        $query = $model->find()
+            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+
+
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere([
+                'faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                'faculty_id' => -1
+            ]);
+        }
+
+
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
         // data
         $data =  $this->getData($query);
         return $this->response(1, _e('Success'), $data);

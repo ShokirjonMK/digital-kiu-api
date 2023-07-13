@@ -30,7 +30,7 @@ class QuestionController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             ->andWhere(['archived' => 0])
-            ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'question', Yii::$app->request->get('query')]);
 
         $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
 

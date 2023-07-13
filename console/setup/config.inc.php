@@ -24,9 +24,9 @@ return array(
     'database' => array(
         'db' => array(
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=website_db',
-            'username' => 'api-intalim',
-            'password' => '1nTal!m-api',
+            'dsn' => 'mysql:host=localhost;dbname=db_name_here',
+            'username' => 'user_name_here',
+            'password' => 'password_here',
             'charset' => 'utf8mb4',
             'attributes' => [
                 '{PDO_ATTR}' => "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));",
@@ -37,7 +37,7 @@ return array(
         'class' => 'yii\swiftmailer\Mailer',
         'useFileTransport' => true,
     ),
-    'adminEmail' => 'admin@domain.com',
+    'adminEmail' => 'mkshokirjon@gmail.com',
     'infoEmail' => 'info@domain.com',
     'supportEmail' => 'support@domain.com',
     'senderEmail' => 'noreply@domain.com',

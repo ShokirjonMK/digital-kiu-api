@@ -7,10 +7,13 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "room".
+ * This is the model class for table "{{%room}}".
  *
  * @property int $id
- * @property string $name
+ * @property int|null $type type education building or hostel or something
+ * @property int|null $gender room gender male 1 female 0
+ * @property int|null $empty_count bosh joylar soni
+ * @property float|null $price room price
  * @property int $building_id
  * @property int|null $order
  * @property int|null $status
@@ -19,6 +22,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
+ * @property int $capacity
  *
  * @property Building $building
  * @property TimeTable[] $timeTables
@@ -28,6 +32,10 @@ class Room extends \yii\db\ActiveRecord
     public static $selected_language = 'uz';
 
     use ResourceTrait;
+
+
+    const TYPE_EDUCATIoN = 1;
+    const TYPE_HOSTEL = 2;
 
     public function behaviors()
     {
@@ -52,9 +60,9 @@ class Room extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['type', 'gender', 'empty_count', 'building_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted', 'capacity'], 'integer'],
+            [['price'], 'number'],
             [['building_id'], 'required'],
-            [['building_id', 'capacity', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
-            //            [['name'], 'string', 'max' => 255],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Building::className(), 'targetAttribute' => ['building_id' => 'id']],
         ];
     }
@@ -66,7 +74,11 @@ class Room extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            //            'name' => 'Name',
+            'type' => 'Type', //'type education building or hostel or something',
+            'gender' => 'Gender', // 'room gender male 1 female 0',
+            'empty_count' => 'Empty Count', // 'bosh joylar soni',
+            'price' => 'room price',
+            // 'name' => 'Name',
             'building_id' => 'Building ID',
             'capacity' => 'capacity',
             'order' => _e('Order'),
@@ -86,6 +98,10 @@ class Room extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            'type',
+            'gender',
+            'empty_count',
+            'price',
             'building_id',
             'capacity',
             'order',
@@ -94,10 +110,28 @@ class Room extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
+            'is_deleted',
+
 
         ];
 
         return $fields;
+    }
+
+    public function extraFields()
+    {
+        $extraFields =  [
+            'building',
+            'timeTables',
+            'description',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+
+        return $extraFields;
     }
 
     /**
@@ -118,21 +152,6 @@ class Room extends \yii\db\ActiveRecord
     public function getTimeTables()
     {
         return $this->hasMany(TimeTable::className(), ['room_id' => 'id']);
-    }
-
-    public function extraFields()
-    {
-        $extraFields =  [
-            'building',
-            'timeTables',
-            'description',
-            'createdBy',
-            'updatedBy',
-            'createdAt',
-            'updatedAt',
-        ];
-
-        return $extraFields;
     }
 
     public function getTranslate()

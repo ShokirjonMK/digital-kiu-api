@@ -7,6 +7,13 @@ function rawsql($query)
     echo '</pre>';
     die;
 }
+function sqlraw($query)
+{
+    echo '<pre>';
+    print_r($query->createCommand()->rawsql);
+    echo '</pre>';
+    die;
+}
 
 function dd($array)
 {
@@ -481,6 +488,7 @@ function getIpAddressData($ip_address = null)
 // Is IP in allowed  List
 function checkAllowedIP()
 {
+    // return true;
     $userIp = getIpMK();
 
     $ado = '172.25';

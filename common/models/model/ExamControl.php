@@ -89,7 +89,7 @@ class ExamControl extends \yii\db\ActiveRecord
     const UPLOADS_FOLDER = 'uploads/exam_control/question/';
     public $upload_file;
     public $upload2_file;
-    public $questionFileMaxSize = 1024 * 1024 * 10; // 10 Mb
+    public $questionFileMaxSize = 1024 * 1024 * 5; // 10 Mb
 
     /**
      * {@inheritdoc}
@@ -534,6 +534,15 @@ class ExamControl extends \yii\db\ActiveRecord
         $model->teacher_access_id = $model->timeTable->teacher_access_id;
         $model->teacher_user_id = $model->teacherAccess->user_id;
 
+        // faqat 4- kurslar uchun
+        if (
+            !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 131, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 55])
+        ) {
+            $errors[] = ["Ruxsat berilmagan"];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
@@ -603,6 +612,15 @@ class ExamControl extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        // faqat 4- kurslar uchun
+        // if (
+        //     !in_array($model->edu_plan_id, [15, 22, 27, 56, 132, 131, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 55])
+        // ) {
+        //     $errors[] = ["Ruxsat berilmagan"];
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
 
         if ($model->start > $model->finish) {
             $errors[] = _e("Start of exam can not be greater than finish");

@@ -152,6 +152,7 @@ $controllers = [
 
     'student-subject-restrict',
     'student-gpa-old',
+    'hostel-student',
 
     'telegram',
     'test-get-data',
@@ -216,6 +217,9 @@ $routes = [
     'GET <lang:\w{2}>/statistics/checking-chala' => 'statistic/checking-chala',
     'GET <lang:\w{2}>/statistics/exam-checking' => 'statistic/exam-checking',
 
+    // exam_student act qilish
+    'POST <lang:\w{2}>/exam-students/<id>/act' => 'exam-student/act',
+
     // ball statistics two, three, four, five
     'GET <lang:\w{2}>/exam-students/ball' => 'exam-student/ball',
     // ball statistics appeal
@@ -259,6 +263,12 @@ $routes = [
     'GET <lang:\w{2}>/exams/<id>/appeal-distribution' => 'exam/appeal-distribution',
     // exam announced // natijani e'lon qilish
     'GET <lang:\w{2}>/exams/<id>/ad' => 'exam/ad',
+
+    // exam conclusion defaulter
+    'GET <lang:\w{2}>/exams/conclution' => 'exam/conclution-get',
+    'POST <lang:\w{2}>/exams/conclution' => 'exam/conclution',
+    'PUT <lang:\w{2}>/exams/conclution/<id>' => 'exam/conclution-update',
+    'DELETE <lang:\w{2}>/exams/conclution/<id>' => 'exam/conclution-delete',
 
     // Department type list
     'GET <lang:\w{2}>/departments/types' => 'department/types',

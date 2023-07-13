@@ -29,7 +29,7 @@ class ExamAppealSemetaController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            ->andFilterWhere(['like', 'question', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'question', Yii::$app->request->get('query')]);
 
 
         /*  is Self  */

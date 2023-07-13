@@ -11,7 +11,12 @@ class m211204_055037_create_question_table extends Migration
      * {@inheritdoc}
      */
     public function safeUp()
-   {
+    {
+        $tableName = Yii::$app->db->tablePrefix . 'question';
+        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
+            $this->dropTable('question');
+        }
+
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation

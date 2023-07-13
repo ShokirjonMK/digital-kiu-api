@@ -29,7 +29,7 @@ class TeacherContentController extends ApiActiveController
             ->leftJoin('subject', "subject.id = $this->table_name.subject_id")
             ->leftJoin("translate tr", "tr.model_id = subject.id and tr.table_name = 'subject'")
             ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);;
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);;
 
         if (isRole('contenter')) {
             $query->andWhere(['in', $this->table_name . '.user_id', current_user_id()]);

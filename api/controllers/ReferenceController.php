@@ -40,7 +40,7 @@ class ReferenceController extends ApiActiveController
             // ->andWhere(['type' => $this->type, 'status' => 1, 'deleted' => 0])
             ->join('INNER JOIN', 'reference_info info', 'info.reference_id = reference.id')
             ->andWhere(['language' => $lang])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
 
         // filter
         $query = $this->filterAll($query, $model);

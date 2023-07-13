@@ -27,7 +27,8 @@ class TimeTableController extends ApiActiveController
         $student = Student::findOne(['user_id' => current_user_id()]);
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['archived' => 0]);
+            // ->andWhere(['archived' => 0])
+            ;
 
         if (isRole('student')) {
             if ($student) {
@@ -100,11 +101,10 @@ class TimeTableController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             ->andWhere(['parent_id' => null])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
 
 
         $student = Student::findOne(['user_id' => current_user_id()]);
-
 
         if ($student) {
 
@@ -115,8 +115,6 @@ class TimeTableController extends ApiActiveController
             //     return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
             // }
             // /** Kurs bo'yicha vaqt belgilash */
-
-
 
             $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
             $query->andWhere(['language_id' => $student->edu_lang_id]);
@@ -187,13 +185,16 @@ class TimeTableController extends ApiActiveController
             $errors[] = _e('Students started choosing!');
             return $this->response(0, _e('There is an error occurred while processing.'), null, $errors, ResponseStatus::UPROCESSABLE_ENTITY);
         } */
+
         $model = TimeTable::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
+        
         $result = TimeTable::updateItem($model, $post);
+        
         if (!is_array($result)) {
             return $this->response(1, _e('TimeTable successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -209,6 +210,7 @@ class TimeTableController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

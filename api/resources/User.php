@@ -17,6 +17,7 @@ use common\models\model\Faculty;
 use common\models\model\Kafedra;
 use common\models\model\Keys;
 use common\models\model\KpiMark;
+use common\models\model\LoginHistory;
 use common\models\model\Nationality;
 use common\models\model\Oferta;
 use common\models\model\Region;
@@ -32,7 +33,7 @@ class User extends CommonUser
 {
     use ResourceTrait;
 
-    const UPLOADS_FOLDER = 'uploads/user-images/';
+    const UPLOADS_FOLDER = 'user-images/';
     const PASSWORD_CHANED = 1;
     const PASSWORD_NO_CHANED = 0;
     // const UPLOADS_FOLDER_PASSPORT = 'uploads/user-passport/';
@@ -153,13 +154,29 @@ class User extends CommonUser
             'timeTables',
             'timeTablesCount',
 
+            'loginHistory',
+            'lastIn',
+
             'updatedBy',
-            'createdBy'
+            'createdBy',
 
-
+            'createdAt',
+            'updatedAt',
         ];
 
         return $extraFields;
+    }
+
+    // getLoginHistory
+    public function getLoginHistory()
+    {
+        return $this->hasMany(LoginHistory::className(), ['user_id' => 'id']);
+    }
+
+    // getLoginHistory
+    public function getLastIn()
+    {
+        return $this->hasOne(LoginHistory::className(), ['user_id' => 'id'])->onCondition(['log_in_out' => LoginHistory::LOGIN])->orderBy(['id' => SORT_DESC]);
     }
 
     public function getPermissionsNoStudent()
@@ -586,8 +603,6 @@ class User extends CommonUser
                 $errors[] = ['role' => [_e('Role is not valid.')]];
             }
         }
-
-
 
         if (count($errors) == 0) {
 

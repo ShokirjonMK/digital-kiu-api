@@ -27,12 +27,12 @@ class ExamAppealController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            ->andFilterWhere(['like', $this->table_name . 'appeal_text', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', $this->table_name . 'appeal_text', Yii::$app->request->get('query')]);
 
 
         $query->join('INNER JOIN', 'student', 'student.id = exam_appeal.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
-            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
 
 
         //  Filter from Profile 

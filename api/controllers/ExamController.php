@@ -8,6 +8,7 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\EduSemestrSubject;
 use common\models\model\Exam;
+use common\models\model\ExamConclution;
 use common\models\model\ExamSemeta;
 use common\models\model\Faculty;
 use common\models\model\Kafedra;
@@ -61,7 +62,7 @@ class ExamController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new Exam();
-        $student = Student::findOne(['user_id' => Current_user_id()]);
+        $student = Student::findOne(['user_id' => current_user_id()]);
         // return $student;
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
@@ -70,20 +71,28 @@ class ExamController extends ApiActiveController
         $query = $query->andWhere([$this->table_name . '.is_deleted' => 0])
             ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
             ->groupBy($this->table_name . '.id')
-            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
-        // if (current_user_id() == 5510) {
-        //     $query = $query->andFilterWhere([
-        //         'in', $this->table_name . '.edu_semestr_subject_id', [569]
-        //     ]);
-        //     // filter
-        //     $query = $this->filterAll($query, $model);
-        //     // sort
-        //     $query = $this->sort($query);
-        //     // data
-        //     $data = $this->getData($query);
-        //     return $this->response(1, _e('Success'), $data);
-        // }
+        if (Yii::$app->request->get('no')) {
+            $query->andFilterWhere([
+                'not in', $this->table_name . '.id',
+                [
+                    483, 439, 438, 437, 432, 431, 428, 425, 424, 423, 422, 421, 420, 419, 415, 414, 413, 412, 411, 410, 409, 408, 387, 385, 384, 379, 378, 377, 374, 373, 371, 370, 369, 365, 364, 363, 362, 361, 360, 355, 354, 353, 351, 323, 321, 300, 299, 298, 297, 296, 295, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273, 272
+                ]
+            ]);
+            $query->andFilterWhere([
+                '>=',
+                $this->table_name . '.id',
+                272
+            ]);
+            $query->andFilterWhere([
+                '<=',
+                $this->table_name . '.id',
+                515
+            ]);
+
+            // exam_id>=272 and exam_id<=515 
+        }
 
         $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
 
@@ -93,9 +102,6 @@ class ExamController extends ApiActiveController
                 $statuses
             ]);
         }
-
-
-
 
         $subjectId = Yii::$app->request->get('subject_id');
         if ($subjectId) {
@@ -208,6 +214,7 @@ class ExamController extends ApiActiveController
         }
     }
 
+
     public function actionCreate($lang)
     {
         $model = new Exam();
@@ -243,6 +250,9 @@ class ExamController extends ApiActiveController
     {
         $model = Exam::findOne($id);
 
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
         /*  is Self  */
         $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
         if ($t['status'] == 1) {
@@ -262,8 +272,11 @@ class ExamController extends ApiActiveController
         if (isset($post->finish)) {
             $model->finish = date('Y-m-d H:i:s', strtotime($post->finish));
         }
-        if (!$model) {
-            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        if (isset($post['appeal_start'])) {
+            $post['appeal_start'] = strtotime($post['appeal_start']);
+        }
+        if (isset($post['appeal_finish'])) {
+            $post['appeal_finish'] = strtotime($post['appeal_finish']);
         }
 
         if (isset($post['duration'])) {
@@ -276,6 +289,7 @@ class ExamController extends ApiActiveController
         }
 
         $this->load($model, $post);
+        // return $model;
         $result = Exam::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
@@ -417,5 +431,96 @@ class ExamController extends ApiActiveController
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+    }
+
+    public function actionConclution($lang)
+    {
+        $model = new ExamConclution();
+        $post = Yii::$app->request->post();
+        if (isset($post['id'])) {
+            $model = ExamConclution::find()
+                ->andWhere(['id' => $post['id'], 'is_deleted' => 0])
+                ->one();
+            $this->load($model, $post);
+
+            $result = ExamConclution::createItem($model, $post);
+            if (!is_array($result)) {
+                return $this->response(1, _e('ExamConclution successfully updated.'), $model, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
+        $this->load($model, $post);
+
+        $result = ExamConclution::createItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('ExamConclution successfully created.'), $model, null, ResponseStatus::CREATED);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionConclutionGet($lang)
+    {
+        $model = new ExamConclution();
+        $query = $model->find();
+        $query->filterWhere(['is_deleted' => 0]);
+        if (!isRole('admin')) {
+            $query->filterWhere(['created_by' => current_user_id()]);
+        }
+
+        // filter
+        $query = $this->filterAll($query, $model);
+        // sort
+        $query = $this->sort($query);
+        // data
+        $data = $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionConclutionUpdate($lang, $id)
+    {
+        $model = new ExamConclution();
+        $post = Yii::$app->request->post();
+        $model = ExamConclution::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $this->load($model, $post);
+
+        $result = ExamConclution::createItem($model, $post);
+        if (!is_array($result)) {
+            return $this->response(1, _e('ExamConclution successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function actionConclutionDelete($lang, $id)
+    {
+        $model = new ExamConclution();
+        $post = Yii::$app->request->post();
+        $model = ExamConclution::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if ($model) {
+            $model->is_deleted = 1;
+            $model->update();
+
+            return $this->response(1, _e('ExamConclution succesfully removed.'), null, null, ResponseStatus::OK);
+        }
+        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 }

@@ -120,6 +120,7 @@ class Subject extends \yii\db\ActiveRecord
             'child',
             'parent',
             'timeTables',
+            'timeTableCount',
             'teacherAccesses',
             'kafedra',
             'semestrSubjects',
@@ -283,7 +284,7 @@ class Subject extends \yii\db\ActiveRecord
 
     public function getQuestionActive()
     {
-        return $this->hasMany(Question::className(), ['subject_id' => 'id'])->onCondition(['status' => 1, 'is_deleted' => 0]);
+        return $this->hasMany(Question::className(), ['subject_id' => 'id'])->onCondition(['status' => 1, 'is_deleted' => 0, 'archived' => 0]);
     }
 
     public function getQuestionsCount()
@@ -411,6 +412,10 @@ class Subject extends \yii\db\ActiveRecord
     public function getTimeTables()
     {
         return $this->hasMany(TimeTable::className(), ['subject_id' => 'id']);
+    }
+    public function getTimeTableCount()
+    {
+        return count($this->timeTables);
     }
 
     /**

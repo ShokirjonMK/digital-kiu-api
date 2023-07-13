@@ -6,6 +6,8 @@ use Yii;
 use base\ResponseStatus;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
+use common\models\model\ExamStudentReaxam;
+use common\models\model\ExamStudentReexam;
 use common\models\model\Profile;
 use yii\db\Query;
 
@@ -50,7 +52,7 @@ class ExamStudentController extends ApiActiveController
             ->andWhere([$model->tableName() . '.is_deleted' => 0])
             ->join('INNER JOIN', 'student', 'student.id = ' . $model->tableName() . '.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
-            ->andFilterWhere(['like', 'option', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
 
 
         //  Filter from Profile 
@@ -286,6 +288,26 @@ class ExamStudentController extends ApiActiveController
         return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
     }
 
+    public function actionAct($lang, $id)
+    {
+        $model = ExamStudent::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
+
+        if (!$model) {
+            return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        $result = ExamStudent::actItem($model, Yii::$app->request->post());
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+
+        return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
+    }
+
     public function actionView($lang, $id)
     {
         if (isRole('teacher')) {
@@ -329,8 +351,18 @@ class ExamStudentController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+        $post = Yii::$app->request->post();
+
+        // return $post;
+
+        $resultWriteReason = ExamStudentReexam::createItem($post, $model->id);
+        if (is_array($resultWriteReason)) {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $resultWriteReason, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
 
         $result = ExamStudent::deleteMK($model);
+
+        // $resul
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' succesfully cleared for next attempt.'), null, null, ResponseStatus::OK);
         } else {

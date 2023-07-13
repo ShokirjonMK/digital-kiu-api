@@ -11,6 +11,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property int $id
  * @property string $name
+ * @property int|1 $type
  * @property int|null $order
  * @property int|null $status
  * @property int $created_at
@@ -26,6 +27,9 @@ class Building extends \yii\db\ActiveRecord
     public static $selected_language = 'uz';
 
     use ResourceTrait;
+
+    const TYPE_EDUCATIoN = 1;
+    const TYPE_HOSTEL = 2;
 
     public function behaviors()
     {
@@ -49,7 +53,7 @@ class Building extends \yii\db\ActiveRecord
     {
         return [
             // [['name'], 'required'],
-            [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['order', 'type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             // [['name'], 'string', 'max' => 255],
         ];
     }
@@ -62,6 +66,7 @@ class Building extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             // 'name' => 'Name',
+            'type' => _e('type'),
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -79,6 +84,7 @@ class Building extends \yii\db\ActiveRecord
             'name' => function ($model) {
                 return $model->translate->name ?? '';
             },
+            'type',
             'order',
             'status',
             'created_at',
@@ -102,7 +108,7 @@ class Building extends \yii\db\ActiveRecord
             'roomsCount',
             'roomsLectureCount',
             'roomSeminarCount',
-            
+
             'description',
             'createdBy',
             'updatedBy',
@@ -181,8 +187,6 @@ class Building extends \yii\db\ActiveRecord
     {
         return count($this->roomSeminar);
     }
-
-
 
     public static function createItem($model, $post)
     {

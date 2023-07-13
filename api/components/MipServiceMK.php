@@ -258,9 +258,9 @@ class MipServiceMK
     private static function saveTo($imgBase64, $pin)
     {
         // $imgBase64 = '';
-        $uploadPathMK   = STORAGE_PATH  . 'user_images_100/';
-        if (!file_exists(STORAGE_PATH  . 'user_images_100/')) {
-            mkdir(STORAGE_PATH . 'user_images_100/', 0777, true);
+        $uploadPathMK   = STORAGE_PATH  . 'user_images_new/';
+        if (!file_exists(STORAGE_PATH  . 'user_images_new/')) {
+            mkdir(STORAGE_PATH . 'user_images_new/', 0777, true);
         }
 
         $parts        = explode(
@@ -274,7 +274,7 @@ class MipServiceMK
 
         file_put_contents($file, $imagebase64);
 
-        return 'storage/user_images/' . $miniurl;
+        return 'storage/user_images_new/' . $miniurl;
     }
 
     private static function saveToTurniket($imgBase64, $pin, $first_name, $last_name)

@@ -432,6 +432,15 @@ class Attend extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+        if (
+            !in_array($model->edu_plan_id, [
+                55, 131
+            ])
+        ) {
+            $errors[] = ["Ruxsat berilmagan"];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         if ($model->save()) {
 
@@ -513,29 +522,36 @@ class Attend extends \yii\db\ActiveRecord
         //     return simplify_errors($errors);
         // }
 
+        if (!in_array($model->edu_plan_id, [
+            55, 131
+        ])) {
+            $errors[] = ["Ruxsat berilmagan"];
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         if ($model->save()) {
 
             $old_deff = array_diff($old_student_ids, $model->student_ids);
             $new_deff = array_diff($model->student_ids, $old_student_ids);
 
 
+            // if (!isRole('tutor')) {
+            if (!empty($old_deff)) {
 
-            if (!isRole('tutor')) {
-                if (!empty($old_deff)) {
-
-                    if (!StudentAttend::deleteAll([
-                        'AND',
-                        ['in', 'student_id', $old_deff],
-                        ['attend_id' => $model->id]
-                    ])) {
-                        $errors[] = _e('Error on deleting StudentAttend');
-                        $transaction->rollBack();
-                        return simplify_errors($errors);
-                    }
+                if (!StudentAttend::deleteAll([
+                    'AND',
+                    ['in', 'student_id', $old_deff],
+                    ['attend_id' => $model->id]
+                ])) {
+                    $errors[] = _e('No access to delete student');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
                 }
-            } else {
-                $model->student_ids = array_merge($old_deff, $model->student_ids);
             }
+            // } else {
+            //     $model->student_ids = array_merge($old_deff, $model->student_ids);
+            // }
 
             // if (StudentAttend::find()->where(['attend_id' => $model->id])->exists())
             //     if (StudentAttend::deleteAll(['attend_id' => $model->id])) {

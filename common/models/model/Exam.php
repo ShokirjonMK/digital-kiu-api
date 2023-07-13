@@ -16,6 +16,7 @@ use yii\db\Expression;
  * @property int $exam_type_id
  * @property int $faculty_id
  * @property int $edu_semestr_subject_id
+ * @property int $edu_plan_id
  * @property string $start
  * @property string $finish
  * @property float|null $max_ball
@@ -93,6 +94,7 @@ class Exam extends \yii\db\ActiveRecord
                     'duration',
                     'subject_id',
                     'edu_semestr_subject_id',
+                    'edu_plan_id',
                     'order',
                     'status',
                     'created_at',
@@ -136,6 +138,7 @@ class Exam extends \yii\db\ActiveRecord
             'question_count_by_type' => 'Question Count By Type',
             'exam_type_id' => 'Exam Type ID',
             'edu_semestr_subject_id' => 'Edu Semestr Subject ID',
+            'edu_plan_id' => 'Edu Plan ID',
             'start' => 'Start',
             'finish' => 'Finish',
             'is_protected' => 'Is Protected',
@@ -253,6 +256,7 @@ class Exam extends \yii\db\ActiveRecord
 
 
             'examStudentNo',
+            'examStudentNoAnswer',
 
             'description',
             'createdBy',
@@ -465,7 +469,18 @@ class Exam extends \yii\db\ActiveRecord
                     ->select('student_id')
                     ->where(['exam_id' => $this->id])
             ])
+            // ->select(['id', 'last_name', 'first_name', 'middle_name', 'pasport_pin', 'faculty_id'])
             ->all();
+    }
+
+    public function getExamStudentNoAnswer()
+    {
+        return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
+            ->andWhere([
+                'NOT EXISTS', ExamStudentAnswerSubQuestion::find()
+                    ->select('exam_student_id')
+                    ->where('exam_student_id = exam_student.id')
+            ]);
     }
 
     public function getExamStudent()
@@ -503,8 +518,8 @@ class Exam extends \yii\db\ActiveRecord
         $query = $model->find();
         $query->andWhere([$model->tableName() . '.exam_id' => $this->id]);
 
-        // if (isRole('teacher') && (!isRole('mudir'))) {
-        if (isRole('teacher')) {
+        // if (isRole('teacher')) {
+        if (isRole('teacher') && (!isRole('mudir'))) {
             $query->andWhere(['in', $model->tableName() . '.teacher_access_id', self::teacher_access()]);
         }
         $query->leftJoin("exam_student_answer", "exam_student_answer.exam_student_id = " . $model->tableName() . ".id ")
@@ -515,9 +530,6 @@ class Exam extends \yii\db\ActiveRecord
             ->andWhere(['IS NOT', 'exam_student_answer_sub_question.teacher_conclusion', null])
             ->groupBy('exam_student.id');
 
-        // dd($query->createCommand()->getRawSql());
-        // dd("qweqwe");
-        // return 122;
         return count($query->all());
     }
 
@@ -872,13 +884,14 @@ class Exam extends \yii\db\ActiveRecord
             $errors[] = _e("Start of exam can not be greater than finish");
         }
 
-        $model->type = $model->eduSemestr->type ?? 1;
-        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
-        $model->subject_id = $model->eduSemestrSubject->subject_id;
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+        $model->type = $model->eduSemestr->type ?? 1;
+        $model->edu_year_id = $model->eduSemestrSubject->eduSemestr->edu_year_id;
+        $model->subject_id = $model->eduSemestrSubject->subject_id;
+        $model->edu_plan_id = $model->eduSemestrSubject->eduSemestr->edu_plan_id;
 
         /** question_count_by_type_with_ball */
         if (isset($post['question_count_by_type_with_ball'])) {
@@ -977,7 +990,6 @@ class Exam extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-
 
         /** question_count_by_type_with_ball */
         if (isset($post['question_count_by_type_with_ball'])) {

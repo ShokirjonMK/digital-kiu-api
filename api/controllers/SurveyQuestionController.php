@@ -30,7 +30,7 @@ class SurveyQuestionController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             // ->andWhere(['sqinfo.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['sqinfo.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'sqinfo.question', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'sqinfo.question', Yii::$app->request->get('query')]);
 
 
         // filter

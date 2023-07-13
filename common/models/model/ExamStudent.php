@@ -56,13 +56,17 @@ class ExamStudent extends \yii\db\ActiveRecord
     const TYPE_NOGIRON = 2;
     const TYPE_JAPAN = 3;
 
-    const UPLOADS_FOLDER = 'uploads/plagiat_files/';
+    const UPLOADS_FOLDER = 'uploads/exam_student/plagiat_files/';
+    const UPLOADS_FOLDER_ACT = 'uploads/exam_student/act_files/';
+    public $actFile;
     public $plagiatFile;
-    public $plagiatFileMaxSize = 1024 * 1024 * 5; // 3 Mb
+    public $fileMaxSize = 1024 * 1024 * 5; // 5 Mb
 
     // conclusion
     // plagiat_file
     // plagiat_percent
+
+    // act_file
 
     const ACT_FALSE = 0;
     const ACT_TRUE = 1;
@@ -114,7 +118,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             ],
             [['ball', 'in_ball', 'on1', 'on2'], 'double'],
 
-            [['plagiat_file'], 'string', 'max' => 255],
+            [['plagiat_file', 'act_reason', 'act_file'], 'string', 'max' => 255],
             [['password'], 'safe'],
             [['plagiat_percent'], 'double'],
             [['conclusion'], 'string'],
@@ -122,7 +126,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['teacher_access_id'], 'exist', 'skipOnError' => true, 'targetClass' => TeacherAccess::className(), 'targetAttribute' => ['teacher_access_id' => 'id']],
             [['lang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['lang_id' => 'id']],
-            [['plagiatFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->plagiatFileMaxSize],
+            [['plagiatFile', 'actFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg,jepg,zip,mp4,avi', 'maxSize' => $this->fileMaxSize],
 
         ];
     }
@@ -152,6 +156,8 @@ class ExamStudent extends \yii\db\ActiveRecord
             'act' => _e('act'),
             'on1' => _e('on1'),
             'on2' => _e('on2'),
+            'act_file' => _e('act_file'),
+            'act_reason' => _e('act_reason'),
 
 
             'in_ball' => _e('in_ball'),
@@ -202,10 +208,13 @@ class ExamStudent extends \yii\db\ActiveRecord
             // },
             'correct',
             'archived',
-
+            'act_file',
+            'act_reason',
             'conclusion',
             'plagiat_file',
             'plagiat_percent',
+            'reexam',
+            'examStudentReexam',
 
             'in_ball',
             'is_checked',
@@ -269,24 +278,80 @@ class ExamStudent extends \yii\db\ActiveRecord
         return $this->start ? date('Y-m-d H:i:s', $this->start) : '';
     }
 
+
+    public function getConclution12()
+    {
+        if (!isRole('admin')) {
+            if (Yii::$app->request->get('subject_id') != null) {
+                return ExamConclution::find()
+                    ->where(['subject_id' => Yii::$app->request->get('subject_id')])
+                    ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+                    ->andWhere(['created_by' => current_user_id()])
+                    ->all();
+            }
+            return ExamConclution::find()
+                ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+                ->andWhere(['created_by' => current_user_id()])
+                ->all();
+        }
+        if (Yii::$app->request->get('subject_id') != null) {
+            return ExamConclution::find()
+                ->where(['subject_id' => Yii::$app->request->get('subject_id')])
+                ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+                ->all();
+        }
+        return ExamConclution::find()
+            ->andWhere(['lang_code' => Yii::$app->request->get('lang')])
+            ->all();
+
+        return ExamConclution::find()->all();
+    }
+
+    public function getConclution()
+    {
+        $query = ExamConclution::find()
+            ->andWhere(['lang_code' => Yii::$app->request->get('lang')]);
+
+        if (!isRole('admin')) {
+            $query->andWhere(['created_by' => current_user_id()]);
+        }
+
+        if (Yii::$app->request->get('subject_id') != null) {
+            $query->andWhere(['subject_id' => Yii::$app->request->get('subject_id')]);
+        }
+
+        return $query->all();
+    }
+
+
     public function getCorrect()
     {
-        $on1 = ExamControlStudent::findOne([
-            'student_id' => $this->student_id,
-            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
-            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
-        ])->ball ?? null;
+        $on1 = ExamControlStudent::find()
+            ->where([
+                'student_id' => $this->student_id,
+                // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+                'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+            ])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+
+        $on1 = $on1->ball ?? null;
 
         if (is_null($this->on1)) {
             $this->on1 = $on1;
             $this->save();
         }
 
-        $on2 = ExamControlStudent::findOne([
-            'student_id' => $this->student_id,
-            // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
-            'subject_id' => $this->exam->eduSemestrSubject->subject_id,
-        ])->ball2 ?? null;
+        $on2 = ExamControlStudent::find()
+            ->where([
+                'student_id' => $this->student_id,
+                // 'edu_semester_id' => $this->exam->eduSemestrSubject->edu_semestr_id,
+                'subject_id' => $this->exam->eduSemestrSubject->subject_id,
+            ])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+
+        $on2 = $on2->ball2 ?? null;
 
         if (is_null($this->on2)) {
             $this->on2 = $on2;
@@ -518,11 +583,27 @@ class ExamStudent extends \yii\db\ActiveRecord
         return $this->hasOne(Exam::className(), ['id' => 'exam_id']);
     }
 
+    /**
+     * Gets query for [[Exam]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getExamStudentReexam()
+    {
+        return $this->hasMany(Exam::className(), ['id' => 'exam_id']);
+    }
+
+    public function getReexam()
+    {
+        return $this->hasMany(Exam::className(), ['id' => 'exam_id']);
+    }
+
 
     public function getAppeal()
     {
         return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
     }
+
     public function getExamAppeal()
     {
         return $this->hasOne(ExamAppeal::className(), ['exam_student_id' => 'id']);
@@ -551,6 +632,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
         return null;
     }
+
     public function getTeacher()
     {
         return $this->teacherAccess->profile;
@@ -655,6 +737,42 @@ class ExamStudent extends \yii\db\ActiveRecord
         if ($model->plagiat_percent > Yii::$app->params['plagiat_percent_max']) {
             $model->is_plagiat = self::IS_PLAGIAT_TRUE;
         }
+        if ($model->save() && count($errors) == 0) {
+            // $model->deleteFile($oldFile);
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function actItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+
+        $oldFile = $model->act_file;
+        // act file saqlaymiz
+
+        $model->actFile = UploadedFile::getInstancesByName('actFile');
+        if ($model->actFile) {
+            $model->actFile = $model->actFile[0];
+            $actFileUrl = $model->uploadActFile();
+
+            if ($actFileUrl) {
+                $model->act_file = $actFileUrl;
+            } else {
+                $errors[] = $model->errors;
+            }
+        }
+        $model->act = self::ACT_TRUE;
+        $model->act_reason = $post['act_reason'];
+
         if ($model->save() && count($errors) == 0) {
             // $model->deleteFile($oldFile);
             $transaction->commit();
@@ -802,6 +920,25 @@ class ExamStudent extends \yii\db\ActiveRecord
             $miniUrl = $filePath . $fileName;
             $url = STORAGE_PATH . $miniUrl;
             $this->plagiatFile->saveAs($url, false);
+            return "storage/" . $miniUrl;
+        } else {
+            return false;
+        }
+    }
+    public function uploadActFile()
+    {
+        if ($this->validate()) {
+            $filePath = self::UPLOADS_FOLDER_ACT . $this->exam_id . '/';
+            if (!file_exists(STORAGE_PATH . $filePath)) {
+                mkdir(STORAGE_PATH . $filePath, 0777, true);
+            }
+
+            // kim qachonm qilgani yoziladi act fayl nomida
+            $fileName = current_user_id() . "_" . time() . "_" . $this->student_id . '.' . $this->actFile->extension;
+
+            $miniUrl = $filePath . $fileName;
+            $url = STORAGE_PATH . $miniUrl;
+            $this->actFile->saveAs($url, false);
             return "storage/" . $miniUrl;
         } else {
             return false;

@@ -30,7 +30,7 @@ class KpiCategoryController extends ApiActiveController
             ->groupBy($this->table_name . '.id')
             // ->andWhere(['kcinfo.language' => Yii::$app->request->get('lang')])
             // ->andWhere(['kcinfo.tabel_name' => 'faculty'])
-            ->andFilterWhere(['like', 'kcinfo.name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'kcinfo.name', Yii::$app->request->get('query')]);
 
 
         // filter

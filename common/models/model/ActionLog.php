@@ -57,7 +57,7 @@ class ActionLog extends \yii\db\ActiveRecord
                 [
                     'controller',
                     'action',
-                    'role',
+                    // 'role',
                     'method',
                     'message'
                 ], 'string', 'max' => 255

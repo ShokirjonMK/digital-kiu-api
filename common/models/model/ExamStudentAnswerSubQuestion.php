@@ -154,6 +154,12 @@ class ExamStudentAnswerSubQuestion extends \yii\db\ActiveRecord
             'is_cheked',
 
             'archived',
+            'student_updated_at' => function ($model) {
+                return date('Y-m-d H:i:s', $this->student_updated_at);
+            },
+            'student_created_at' => function ($model) {
+                return date('Y-m-d H:i:s', $this->student_created_at);
+            },
 
             'order',
             'status',

@@ -29,16 +29,17 @@ class  StudentTimeTableController extends ApiActiveController
         $model = new StudentTimeTable();
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
+            // ->andWhere([$this->table_name . '.archived' => 0])
             ->join('INNER JOIN', 'student', 'student.id = ' . $this->table_name . '.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id');
 
-        $student = Student::findOne(['user_id' => Current_user_id()]);
+        $student = Student::findOne(['user_id' => current_user_id()]);
 
         $semester = Semestr::findOne(Yii::$app->request->get('semester_id'));
 
         if ($student && isRole('student')) {
             if ($semester) {
-                $query->andWhere([$this->table_name . '.semester_id' => $semester]);
+                $query->andWhere([$this->table_name . '.semester_id' => $semester->id]);
                 // $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'semestr_id' => $semester->id]);
             } else {
                 $eduSemestr = EduSemestr::findOne(['edu_plan_id' => $student->edu_plan_id, 'status' => 1]);
@@ -58,7 +59,7 @@ class  StudentTimeTableController extends ApiActiveController
 
                 $query->andWhere([$this->table_name . '.semester_id' => $semester]);
 
-               /*  $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
+                /*  $eduSemestr = EduSemestr::findOne(['semestr_id' => $semester->id]);
                 if ($eduSemestr) {
 
                     $query->andWhere([

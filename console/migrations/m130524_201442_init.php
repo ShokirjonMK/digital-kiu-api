@@ -46,6 +46,7 @@ class m130524_201442_init extends Migration
             'middle_name' => $this->string(255)->null(),
             'image' => $this->string(255)->null(),
             'dob' => $this->timestamp()->null(),
+            'birthday' => $this->timestamp()->null(),
             'gender' => $this->tinyInteger(1)->null(),
             'phone' => $this->string(50)->null(),
             'phone_secondary' => $this->string(50)->null(),

@@ -31,7 +31,7 @@ class m211021_142749_profile_table extends Migration
             'passport_seria' => $this->string(255)->notNull(),
             'passport_number' => $this->string(255)->notNull(),
             'passport_pin' => $this->string(255)->notNull(),
-            'birthday' => $this->integer()->notNull(),
+            'birthday' => $this->date()->null(),
             'passport_file' => $this->string(255)->notNull(),
             'country_id' => $this->integer()->notNull(),
             'region_id' => $this->integer()->notNull(),

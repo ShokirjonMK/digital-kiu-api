@@ -82,6 +82,7 @@ class HostelCategory extends \yii\db\ActiveRecord
             },
 
             'key',
+            'ball',
 
             'order',
             'status',

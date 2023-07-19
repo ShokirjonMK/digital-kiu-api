@@ -302,6 +302,10 @@ $routes = [
     /**  */
 
 
+    /**Builduing Type list */
+    'GET <lang:\w{2}>/buildings/type' => 'building/type',
+
+
     // Student Attendees By
     'GET <lang:\w{2}>/attends/not' => 'attend/not',
 

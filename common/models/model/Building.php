@@ -248,6 +248,15 @@ class Building extends \yii\db\ActiveRecord
         }
     }
 
+    public static function typeList()
+    {
+        return
+            [
+                self::TYPE_EDUCATIoN => _e("O'quv"),
+                self::TYPE_HOSTEL => _e("TTJ"),
+            ];
+    }
+
 
     public function beforeSave($insert)
     {

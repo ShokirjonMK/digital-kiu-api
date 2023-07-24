@@ -56,9 +56,9 @@ class m230718_072815_create_student_subject_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
 
         ], $tableOptions);
-        $this->addForeignKey('mark_student_mark_student_id', 'student_mark', 'student_id', 'student', 'id');
-        $this->addForeignKey('mark_student_mark_subject_id', 'student_mark', 'subject_id', 'subject', 'id');
-        $this->addForeignKey('mark_student_mark_edu_year_id', 'student_mark', 'edu_year_id', 'edu_year', 'id');
+        $this->addForeignKey('mark_student_subject_student_id', 'student_subject', 'student_id', 'student', 'id');
+        $this->addForeignKey('mark_student_subject_subject_id', 'student_subject', 'subject_id', 'subject', 'id');
+        $this->addForeignKey('mark_student_subject_edu_year_id', 'student_subject', 'edu_year_id', 'edu_year', 'id');
     }
 
     /**
@@ -66,9 +66,9 @@ class m230718_072815_create_student_subject_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('mark_student_mark_student_id', 'student_order');
-        $this->dropForeignKey('mark_student_mark_subject_id', 'student_order');
-        $this->dropForeignKey('mark_student_mark_edu_year_id', 'student_order');
+        $this->dropForeignKey('mark_student_subject_student_id', 'student_order');
+        $this->dropForeignKey('mark_student_subject_subject_id', 'student_order');
+        $this->dropForeignKey('mark_student_subject_edu_year_id', 'student_order');
 
         $this->dropTable('{{%student_subject}}');
     }

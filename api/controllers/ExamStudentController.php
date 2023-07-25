@@ -86,7 +86,7 @@ class ExamStudentController extends ApiActiveController
 
         if (isRole("student")) {
             $query = $query->andWhere([
-                'student_id' => -1 //$this->student()
+                'student_id' => $this->student()
             ]);
         }
 

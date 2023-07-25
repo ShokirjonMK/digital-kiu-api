@@ -635,7 +635,7 @@ class ExamStudent extends \yii\db\ActiveRecord
 
     public function getTeacher()
     {
-        return $this->teacherAccess->profile;
+        return $this->teacherAccess->profile ?? null;
         if (current_user_id() == 1) {
         }
 

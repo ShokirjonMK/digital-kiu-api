@@ -70,6 +70,7 @@ class HostelDoc extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
+                    'archived'
                 ], 'integer'
             ],
 

@@ -23,7 +23,9 @@ class HostelDocController extends ApiActiveController
         $model = new HostelDoc();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0]);
+
 
         if (isRole("student")) {
             $query = $query->andWhere([

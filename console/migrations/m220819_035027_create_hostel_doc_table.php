@@ -48,6 +48,8 @@ class m220819_035027_create_hostel_doc_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
+
         ], $tableOptions);
 
         $this->addForeignKey('hostel_doc_hostel_student_id', 'hostel_doc', 'student_id', 'student', 'id');

@@ -24,13 +24,13 @@ class AccessControlController extends ApiActiveController
 
         $user_id = current_user_id();
 
-
         if (isRole('admin')) {
             $roles = new AuthItem();
             $queryRole = $roles->find()
                 ->where(['type' => 1])
-                // ->andFilterWhere(['like', 'child', Yii::$app->request->get('q')])
-                ;
+                ->andWhere(['!=','name', 'admin'])
+                // ->andFilterWhere(['like', 'child', Yii::$app->request->get('query')])
+            ;
 
             // sort
             $queryRole = $this->sort($queryRole);
@@ -47,7 +47,7 @@ class AccessControlController extends ApiActiveController
 
         $query = $model->find()
             ->where(['in', 'parent', $getMyRoles])
-            ->andFilterWhere(['like', 'child', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'child', Yii::$app->request->get('query')]);
 
         // sort
         $query = $this->sort($query);
@@ -79,7 +79,7 @@ class AccessControlController extends ApiActiveController
 
         $query = $model->find()
             ->where(['type' => AuthItem::TYPE_PERMISSION])
-            ->andFilterWhere(['like', 'name', Yii::$app->request->get('q')]);
+            ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
 
         // sort
         $query = $this->sort($query);

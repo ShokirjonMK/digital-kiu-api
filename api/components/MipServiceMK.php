@@ -11,7 +11,74 @@ class MipServiceMK
     public $user_number = '';
     public $numbers_array = [];
 
-    private $_token = 'BF9F9B0C-9273-4072-A815-A51AC905FE9A';
+    private static $_token = 'BF9F9B0C-9273-4072-A815-A51AC905FE9A';
+
+    public static function getToken()
+    {
+        return self::$_token;
+    }
+
+    public static function healthHasDisability($pin, $document_serial_number)
+    {
+        // $pin = "61801045840029";
+        // $document_issue_date =  "2021-01-13";
+
+        $data = [];
+        $error = [];
+        $data['status'] = false;
+
+
+        $client = new Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Api-token' => self::getToken(),
+            ]
+        ]);
+
+        $response = $client->post(
+            'http://10.190.24.138:7075',
+            ['body' => json_encode(
+                [
+                    'jsonrpc' => '2.2',
+                    "id" => "ID",
+                    "method" => "external.health_has_disability_by_pin_document_serial_number",
+                    "params" => [
+                        "pin" => $pin,
+                        "document_serial_number" => $document_serial_number
+                    ]
+                ]
+            )]
+        );
+        if ($response->getStatusCode() == 200) {
+            // dd($response);
+
+            $res = json_decode($response->getBody()->getContents());
+            if (isset($res->result)) {
+                $result = $res->result;
+
+
+                $data['status'] = true;
+                $profile = Profile::findOne(['passport_pin' => $pin]);
+
+                if ($profile) {
+                    $profile->has_disability = $result->has_disability;
+                    if (!$profile->save(false)) $error = $profile->errors;
+                }
+
+                $data['data'] = $result;
+                $data['error'] = $error;
+
+                return $data;
+            } else {
+                $error[] = $res->error;
+                $data['error'] = $error;
+                return $data;
+            }
+        } else {
+            $data['status'] = false;
+            return $data;
+        }
+    }
 
     public static function corrent($profile)
     {
@@ -26,7 +93,7 @@ class MipServiceMK
         $client = new Client([
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Api-token' => 'BF9F9B0C-9273-4072-A815-A51AC905FE9A',
+                'Api-token' => $_token,
             ]
         ]);
 
@@ -194,7 +261,7 @@ class MipServiceMK
         $client = new Client([
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Api-token' => 'BF9F9B0C-9273-4072-A815-A51AC905FE9A',
+                'Api-token' => $_token,
             ]
         ]);
 

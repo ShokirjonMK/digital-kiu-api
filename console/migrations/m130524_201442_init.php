@@ -61,6 +61,8 @@ class m130524_201442_init extends Migration
             'temporary_place_id' => $this->integer()->null(),
             'temporary_address' => $this->string()->null(),
 
+            'has_disability' => $this->integer()->notNull()->defaultValue(0)->comment("nogirognligi bormi"),
+
             'passport_serial' => $this->string()->null(),
             'passport_number' => $this->string()->null(),
             'passport_pinip' => $this->string(14)->null(),

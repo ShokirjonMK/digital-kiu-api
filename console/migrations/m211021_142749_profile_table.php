@@ -57,6 +57,7 @@ class m211021_142749_profile_table extends Migration
             'checked' => $this->integer()->notNull()->defaultValue(0),
             'checked_full' => $this->integer()->notNull()->defaultValue(0),
 
+            'has_disability' => $this->integer()->notNull()->defaultValue(0)->comment("nogirognligi bormi"),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

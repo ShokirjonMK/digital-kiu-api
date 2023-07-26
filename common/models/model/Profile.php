@@ -54,6 +54,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int|null $academic_degree_id academic_degree id
  * @property int|null $degree_info_id degree_info id
  * @property int|null $partiya_id partiya id
+ * @property int|null $has_disability nogironlik
  *
  * @property Area $area
  * @property Citizenship $citizenship
@@ -137,7 +138,8 @@ class Profile extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
-                    'telegram_chat_id'
+                    'telegram_chat_id',
+                    'has_disability',
                 ],
                 'integer'
             ],

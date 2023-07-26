@@ -46,6 +46,8 @@ class m211021_142749_profile_table extends Migration
             'permanent_area_id' => $this->integer()->notNull(),
             'permanent_address' => $this->string(255)->notNull(),
 
+            'has_disability' => $this->integer()->notNull()->defaultValue(0)->comment("nogirognligi bormi"),
+
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->notNull(),

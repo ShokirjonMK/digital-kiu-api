@@ -292,6 +292,7 @@ class Profile extends \yii\db\ActiveRecord
             'academic_degree_id',
             'degree_info_id',
             'partiya_id',
+            'has_disability',
         ];
 
 

@@ -43,8 +43,7 @@ class UserController extends ApiActiveController
     }
     public function actionGet($pin, $document_issue_date)
     {
-        $mip = MipServiceMK::healthHasDisability($pin, $document_issue_date);
-        // $mip = MipServiceMK::getData($pin, $document_issue_date);
+        $mip = MipServiceMK::getData($pin, $document_issue_date);
 
         if ($mip['status']) {
             return $this->response(1, _e('Success'), $mip['data']);

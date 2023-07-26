@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\components\MipServiceMK;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -86,6 +87,8 @@ class HostelDoc extends \yii\db\ActiveRecord
             // [['exam_student_id'], 'unique', 'targetAttribute' => ['is_deleted']],
 
             [['hostel_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->hostelFileMaxSize],
+
+            [['hostel_category_id', 'hostel_app_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'archived', 'is_deleted', 'student_id', 'hostel_app_id']],
 
         ];
     }
@@ -204,6 +207,20 @@ class HostelDoc extends \yii\db\ActiveRecord
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);
+        }
+
+        if ($model->hostel_category_id == 3) {
+            $pin = $model->student->profile->passport_pin;
+            $document_serial_number = $model->student->profile->passport_seria . $model->student->profile->passport_number;
+            $mip = MipServiceMK::healthHasDisability($pin, $document_serial_number);
+            if ($mip['status']) {
+                if ($mip['data']->has_disability) {
+                    $model->status = 1;
+                    $model->hostelApp->ball += $model->hostelCategoryType->ball;
+                    $model->hostelApp->save();
+                }
+            }
+            $model->status = 0;
         }
 
         // hostel file saqlaymiz

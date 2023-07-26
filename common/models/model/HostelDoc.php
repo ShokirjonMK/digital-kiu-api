@@ -209,13 +209,28 @@ class HostelDoc extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        // nogironligi
         if ($model->hostel_category_id == 3) {
             $pin = $model->student->profile->passport_pin;
             $document_serial_number = $model->student->profile->passport_seria . $model->student->profile->passport_number;
             $mip = MipServiceMK::healthHasDisability($pin, $document_serial_number);
+            if ($mip['status'] && $mip['data']->has_disability) {
+                $model->status = 1;
+                $model->is_cheked = 1;
+                $model->hostelApp->ball += $model->hostelCategoryType->ball;
+                $model->hostelApp->save();
+            }
+            $model->status = 0;
+        }
+
+        // ijtimoiy himoya reesteri
+        if ($model->hostel_category_id == 1) {
+            $pin = $model->student->profile->passport_pin;
+            $mip = MipServiceMK::socialProtection($pin);
             if ($mip['status']) {
                 if ($mip['data']->has_disability) {
                     $model->status = 1;
+                    $model->is_cheked = 1;
                     $model->hostelApp->ball += $model->hostelCategoryType->ball;
                     $model->hostelApp->save();
                 }

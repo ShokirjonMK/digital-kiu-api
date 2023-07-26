@@ -144,7 +144,8 @@ class UserController extends ApiActiveController
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
-        $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
+        if (current_user_id() != 1)
+            $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
 
 
         $userIds = AuthAssignment::find()->select('user_id')->where([

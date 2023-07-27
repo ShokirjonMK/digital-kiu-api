@@ -39,6 +39,8 @@ class m220819_035027_create_hostel_doc_table extends Migration
             'finish' => $this->date()->Null(),
             'conclution' => $this->text()->Null(),
             'description' => $this->text()->Null(),
+            'ball' => $this->double()->Null(),
+            'data' => $this->text()->Null(),
 
             'user_id' => $this->integer()->notNull(),
             'status' => $this->tinyInteger(1)->defaultValue(0),

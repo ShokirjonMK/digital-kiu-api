@@ -75,7 +75,7 @@ class HostelDoc extends \yii\db\ActiveRecord
                 ], 'integer'
             ],
 
-            [['description', 'conclution'], 'string'],
+            [['data', 'description', 'conclution'], 'string'],
             [['ball'], 'double'],
             [['file'], 'string', 'max' => 255],
 
@@ -215,6 +215,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             $document_serial_number = $model->student->profile->passport_seria . $model->student->profile->passport_number;
             $mip = MipServiceMK::healthHasDisability($pin, $document_serial_number);
             if ($mip['status'] && $mip['data']->has_disability) {
+                $model->data = $mip['data'];
                 $model->status = 1;
                 $model->is_cheked = 1;
                 $model->hostelApp->ball += $model->hostelCategoryType->ball;
@@ -228,12 +229,11 @@ class HostelDoc extends \yii\db\ActiveRecord
             $pin = $model->student->profile->passport_pin;
             $mip = MipServiceMK::socialProtection($pin);
             if ($mip['status']) {
-                if ($mip['data']->has_disability) {
-                    $model->status = 1;
-                    $model->is_cheked = 1;
-                    $model->hostelApp->ball += $model->hostelCategoryType->ball;
-                    $model->hostelApp->save();
-                }
+                $model->data = $mip['data'];
+                $model->status = 1;
+                $model->is_cheked = 1;
+                $model->hostelApp->ball += $model->hostelCategoryType->ball;
+                $model->hostelApp->save();
             }
             $model->status = 0;
         }

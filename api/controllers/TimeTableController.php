@@ -120,22 +120,22 @@ class TimeTableController extends ApiActiveController
             $query->andWhere(['language_id' => $student->edu_lang_id]);
         } else {
 
-            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-            if ($k['status'] == 1) {
+            // $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            // if ($k['status'] == 1) {
 
-                $query->andFilterWhere([
-                    'in', 'subject_id', Subject::find()->where([
-                        'kafedra_id' => $k['UserAccess']->table_id
-                    ])->select('id')
-                ]);
-            }
+            //     $query->andFilterWhere([
+            //         'in', 'subject_id', Subject::find()->where([
+            //             'kafedra_id' => $k['UserAccess']->table_id
+            //         ])->select('id')
+            //     ]);
+            // }
         }
 
-        if (isRole('teacher') && !isRole('mudir')) {
-            $query->andFilterWhere([
-                'teacher_user_id' => current_user_id()
-            ]);
-        }
+        // if (isRole('teacher') && !isRole('mudir')) {
+        //     $query->andFilterWhere([
+        //         'teacher_user_id' => current_user_id()
+        //     ]);
+        // }
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
         if (isset($kafedraId)) {

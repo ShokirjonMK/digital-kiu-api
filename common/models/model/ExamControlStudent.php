@@ -512,21 +512,21 @@ class ExamControlStudent extends ActiveRecord
             return simplify_errors($errors);
         }
 
-        // faqat 4- kurslar uchun
-        if (
-            !in_array(current_user_id(), [4559]) &&
-            !in_array($model->edu_plan_id, [])
+        // ruxsatni chegaralash
+        // if (
+        //     !in_array(current_user_id(), [4559]) &&
+        //     !in_array($model->edu_plan_id, [])
 
-            && !in_array(
-                $model->student->profile->passport_pin,
-                []
-            )
+        //     && !in_array(
+        //         $model->student->profile->passport_pin,
+        //         []
+        //     )
 
-        ) {
-            $errors[] = ["Ruxsat berilmagan"];
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+        // ) {
+        //     $errors[] = ["Ruxsat berilmagan"];
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
 
 
         if ($model->save()) {

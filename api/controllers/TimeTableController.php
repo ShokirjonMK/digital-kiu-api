@@ -28,7 +28,7 @@ class TimeTableController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             // ->andWhere(['archived' => 0])
-            ;
+        ;
 
         if (isRole('student')) {
             if ($student) {
@@ -106,7 +106,7 @@ class TimeTableController extends ApiActiveController
 
         $student = Student::findOne(['user_id' => current_user_id()]);
 
-        if ($student) {
+        if ($student && isRole('student')) {
 
             // /** Kurs bo'yicha vaqt belgilash */
             // $errors = [];
@@ -152,7 +152,7 @@ class TimeTableController extends ApiActiveController
         // sort
         $query = $this->sort($query);
 
-        dd($query->createCommand()->getRawSql());
+        // dd($query->createCommand()->getRawSql());
 
         // data
         $data =  $this->getData($query);
@@ -192,9 +192,9 @@ class TimeTableController extends ApiActiveController
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        
+
         $result = TimeTable::updateItem($model, $post);
-        
+
         if (!is_array($result)) {
             return $this->response(1, _e('TimeTable successfully updated.'), $model, null, ResponseStatus::OK);
         } else {

@@ -37,22 +37,22 @@ class TimeTableController extends ApiActiveController
             }
         } else {
 
-            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-            if ($k['status'] == 1) {
+            // $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            // if ($k['status'] == 1) {
 
-                $query->andFilterWhere([
-                    'in', 'subject_id', Subject::find()->where([
-                        'kafedra_id' => $k['UserAccess']->table_id
-                    ])->select('id')
-                ]);
-            }
+            //     $query->andFilterWhere([
+            //         'in', 'subject_id', Subject::find()->where([
+            //             'kafedra_id' => $k['UserAccess']->table_id
+            //         ])->select('id')
+            //     ]);
+            // }
         }
 
-        if (isRole('teacher') && !isRole('mudir')) {
-            $query->andFilterWhere([
-                'teacher_user_id' => current_user_id()
-            ]);
-        }
+        // if (isRole('teacher') && !isRole('mudir')) {
+        //     $query->andFilterWhere([
+        //         'teacher_user_id' => current_user_id()
+        //     ]);
+        // }
 
         $mudirSelf = Yii::$app->request->get('self');
 

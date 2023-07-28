@@ -193,6 +193,8 @@ class Building extends \yii\db\ActiveRecord
     {
         return HostelStudentRoom::find()
             ->where(['in', 'room_id', $this->getRooms()->select('id')])
+            ->andWhere(['is_deleted' => 0])
+            ->andWhere(['archived' => 0])
             ->count();
     }
 

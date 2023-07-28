@@ -109,6 +109,7 @@ class Building extends \yii\db\ActiveRecord
             'capacityCount',
             'roomsLectureCount',
             'roomSeminarCount',
+            'hostelStudentCount',
 
             'description',
             'createdBy',
@@ -187,6 +188,14 @@ class Building extends \yii\db\ActiveRecord
 
         return count($this->rooms);
     }
+
+    public function getHostelStudentCount()
+    {
+        return HostelStudentRoom::find()
+            ->where(['in', 'room_id', $this->getRooms()->select('id')])
+            ->count();
+    }
+
 
     public function getRoomsLectureCount()
     {

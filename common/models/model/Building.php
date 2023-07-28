@@ -106,6 +106,7 @@ class Building extends \yii\db\ActiveRecord
             'roomLecture',
             'roomSeminar',
             'roomsCount',
+            'capacityCount',
             'roomsLectureCount',
             'roomSeminarCount',
 
@@ -179,6 +180,14 @@ class Building extends \yii\db\ActiveRecord
     {
         return count($this->rooms);
     }
+
+    public function getCapacityCount()
+    {
+        return $this->getRooms()->sum('capacity');
+
+        return count($this->rooms);
+    }
+
     public function getRoomsLectureCount()
     {
         return count($this->roomLecture);
@@ -226,7 +235,7 @@ class Building extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
-        
+
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {

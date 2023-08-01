@@ -26,6 +26,7 @@ class HostelDoc extends \yii\db\ActiveRecord
 
     const IS_CHECKED_TRUE = 1;
     const IS_CHECKED_FALSE = 0;
+    const IS_CHECKED_REJECT = 2;
 
 
     const UPLOADS_FOLDER = 'uploads/hostel_doc/';
@@ -291,6 +292,48 @@ class HostelDoc extends \yii\db\ActiveRecord
                 $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
             } else {
                 $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+            }
+        }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function checkItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if ($model->hostel_category_id > 0) {
+            $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+        } else {
+            $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+        }
+        if (!isset($post['is_checked'])) {
+            $errors[] = _e('is_checked not sending');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $model->is_checked = $post['is_checked'];
+
+        if ($model->is_checked = HostelDoc::IS_CHECKED_TRUE) {
+            if ($model->hostel_category_id > 0) {
+                $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+            } else {
+                $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+            }
+
+            $model->hostelApp->ball += $model->ball;
+            if (!$model->hostelApp->save()) {
+                $errors[] = $model->hostelApp->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
 

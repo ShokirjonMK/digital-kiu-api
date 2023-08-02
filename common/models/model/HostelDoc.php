@@ -287,7 +287,7 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
         // ***
 
-        if ($model->is_checked = HostelDoc::IS_CHECKED_TRUE) {
+        if ($model->is_checked == HostelDoc::IS_CHECKED_TRUE) {
             if ($model->hostel_category_id > 0) {
                 $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
             } else {
@@ -316,6 +316,11 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
         if (!isset($post['is_checked'])) {
             $errors[] = _e('is_checked not sending');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        if ($model->hostel_category_id == 3 || $model->hostel_category_id == 1) {
+            $errors[] = _e('This category will be checked automatically');
             $transaction->rollBack();
             return simplify_errors($errors);
         }

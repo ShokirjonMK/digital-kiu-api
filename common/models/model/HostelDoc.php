@@ -322,7 +322,7 @@ class HostelDoc extends \yii\db\ActiveRecord
 
         $model->is_checked = $post['is_checked'];
 
-        if ($model->is_checked = HostelDoc::IS_CHECKED_TRUE) {
+        if ($model->is_checked == HostelDoc::IS_CHECKED_TRUE) {
             if ($model->hostel_category_id > 0) {
                 $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
             } else {

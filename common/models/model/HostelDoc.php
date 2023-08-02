@@ -222,6 +222,8 @@ class HostelDoc extends \yii\db\ActiveRecord
                 $model->is_cheked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();
+            } else {
+                $model->is_cheked = self::IS_CHECKED_REJECT;
             }
             $model->status = 0;
         }
@@ -237,6 +239,8 @@ class HostelDoc extends \yii\db\ActiveRecord
                 $model->is_cheked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();
+            } else {
+                $model->is_cheked = self::IS_CHECKED_REJECT;
             }
             $model->status = 0;
         }

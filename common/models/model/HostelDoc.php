@@ -218,7 +218,8 @@ class HostelDoc extends \yii\db\ActiveRecord
             if ($mip['status'] && $mip['data']->has_disability) {
                 $model->data = $mip['data'];
                 $model->status = 1;
-                $model->is_cheked = 1;
+                $model->ball = $model->hostelCategoryType->ball;
+                $model->is_cheked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->hostelCategoryType->ball;
                 $model->hostelApp->save();
             }
@@ -232,7 +233,8 @@ class HostelDoc extends \yii\db\ActiveRecord
             if ($mip['status']) {
                 $model->data = $mip['data'];
                 $model->status = 1;
-                $model->is_cheked = 1;
+                $model->ball = $model->hostelCategoryType->ball;
+                $model->is_cheked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->hostelCategoryType->ball;
                 $model->hostelApp->save();
             }
@@ -287,13 +289,13 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
         // ***
 
-        if ($model->is_checked == HostelDoc::IS_CHECKED_TRUE) {
-            if ($model->hostel_category_id > 0) {
-                $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
-            } else {
-                $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
-            }
-        }
+        // if ($model->is_checked == HostelDoc::IS_CHECKED_TRUE) {
+        //     if ($model->hostel_category_id > 0) {
+        //         $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+        //     } else {
+        //         $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+        //     }
+        // }
 
         if ($model->save()) {
             $transaction->commit();
@@ -343,10 +345,7 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
 
         if ($model->is_checked == HostelDoc::IS_CHECKED_REJECT) {
-
             $model->ball = 0;
-
-
             $model->hostelApp->ball -= $model->ball;
             if (!$model->hostelApp->save()) {
                 $errors[] = $model->hostelApp->errors;

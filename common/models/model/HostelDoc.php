@@ -218,9 +218,9 @@ class HostelDoc extends \yii\db\ActiveRecord
             if ($mip['status'] && $mip['data']->has_disability) {
                 $model->data = $mip['data'];
                 $model->status = 1;
-                $model->ball = $model->hostelCategoryType->ball;
+                $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : null;
                 $model->is_cheked = self::IS_CHECKED_TRUE;
-                $model->hostelApp->ball += $model->hostelCategoryType->ball;
+                $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();
             }
             $model->status = 0;
@@ -233,9 +233,9 @@ class HostelDoc extends \yii\db\ActiveRecord
             if ($mip['status']) {
                 $model->data = $mip['data'];
                 $model->status = 1;
-                $model->ball = $model->hostelCategoryType->ball;
+                $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : null;
                 $model->is_cheked = self::IS_CHECKED_TRUE;
-                $model->hostelApp->ball += $model->hostelCategoryType->ball;
+                $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();
             }
             $model->status = 0;

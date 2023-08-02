@@ -349,8 +349,9 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
 
         if ($model->is_checked == HostelDoc::IS_CHECKED_REJECT) {
+            
+            $model->hostelApp->ball = $model->hostelApp->ball - $model->ball;
             $model->ball = 0;
-            $model->hostelApp->ball -= $model->ball;
             if (!$model->hostelApp->save()) {
                 $errors[] = $model->hostelApp->errors;
                 $transaction->rollBack();

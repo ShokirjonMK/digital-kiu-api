@@ -222,8 +222,10 @@ class HostelDoc extends \yii\db\ActiveRecord
                 $model->is_checked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();
+            } else {
+                $model->is_checked = self::IS_CHECKED_REJECT;
+                $model->status = 0;
             }
-            $model->status = 0;
         }
 
         // ijtimoiy himoya reesteri
@@ -237,8 +239,10 @@ class HostelDoc extends \yii\db\ActiveRecord
                 $model->is_checked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();
+            } else {
+                $model->is_checked = self::IS_CHECKED_REJECT;
+                $model->status = 0;
             }
-            $model->status = 0;
         }
 
         // hostel file saqlaymiz

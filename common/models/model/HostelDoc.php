@@ -233,7 +233,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             $pin = $model->student->profile->passport_pin;
             $mip = MipServiceMK::socialProtection($pin);
             if ($mip['status']) {
-                $model->data = $mip['data'];
+                $model->data = json_decode($mip['data']);
                 $model->status = 1;
                 $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : null;
                 $model->is_checked = self::IS_CHECKED_TRUE;

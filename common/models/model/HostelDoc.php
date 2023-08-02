@@ -235,7 +235,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             if ($mip['status']) {
                 $model->data = json_encode($mip['data']);
                 $model->status = 1;
-                $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : $model->getHostelCategory->ball;
+                $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : $model->hostelCategory->ball;
                 $model->is_checked = self::IS_CHECKED_TRUE;
                 $model->hostelApp->ball += $model->ball;
                 $model->hostelApp->save();

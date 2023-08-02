@@ -349,7 +349,7 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
 
         if ($model->is_checked == HostelDoc::IS_CHECKED_REJECT) {
-            
+
             $model->hostelApp->ball = $model->hostelApp->ball - $model->ball;
             $model->ball = 0;
             if (!$model->hostelApp->save()) {
@@ -370,7 +370,6 @@ class HostelDoc extends \yii\db\ActiveRecord
 
     public function uploadFile()
     {
-
         $folder = self::UPLOADS_FOLDER . $this->student_id . "/";
 
         if ($this->validate()) {

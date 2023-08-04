@@ -216,7 +216,7 @@ class HostelDoc extends \yii\db\ActiveRecord
             $document_serial_number = $model->student->profile->passport_seria . $model->student->profile->passport_number;
             $mip = MipServiceMK::healthHasDisability($pin, $document_serial_number);
             if ($mip['status'] && $mip['data']->has_disability) {
-                $model->data = $mip['data'];
+                $model->data = json_encode($mip['data']);
                 $model->status = 1;
                 $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : $model->getHostelCategory->ball;
                 $model->is_checked = self::IS_CHECKED_TRUE;

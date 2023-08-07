@@ -89,8 +89,8 @@ class HostelDoc extends \yii\db\ActiveRecord
 
             [['hostel_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->hostelFileMaxSize],
 
-            [['hostel_category_id', 'hostel_app_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'archived', 'is_deleted', 'student_id', 'hostel_app_id']],
-
+            // [['hostel_category_id', 'hostel_app_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'archived', 'is_deleted', 'student_id', 'hostel_app_id']],
+            [['hostel_category_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id']],
         ];
     }
 

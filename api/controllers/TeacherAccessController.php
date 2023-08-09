@@ -164,7 +164,7 @@ class TeacherAccessController extends ApiActiveController
 
     public function actionCreate($lang)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
+        // return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::FORBIDDEN);
 
         $model = new TeacherAccess();
         $post = Yii::$app->request->post();
@@ -211,17 +211,16 @@ class TeacherAccessController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = TeacherAccess::findOne($id);
+        $model = TeacherAccess::find()
+            ->andWhere(['id' => $id, 'is_deleted' => 0])
+            ->one();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove model
-        $result = TeacherAccess::findOne($id);
-
-        if ($result) {
-            $result->is_deleted = 1;
-            $result->update();
+        if ($model) {
+            $model->is_deleted = 1;
+            $model->update();
 
             return $this->response(1, _e('TeacherAccess succesfully removed.'), null, null, ResponseStatus::OK);
         }

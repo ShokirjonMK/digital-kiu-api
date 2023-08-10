@@ -127,7 +127,6 @@ class TeacherAccessController extends ApiActiveController
 
         $query->andWhere(['users.status' => User::STATUS_ACTIVE, 'deleted' => 0]);
 
-
         //  Filter from Profile 
         $profile = new Profile();
 
@@ -218,9 +217,8 @@ class TeacherAccessController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if ($model) {
-            $model->is_deleted = 1;
-            $model->update();
+        $model->is_deleted = 1;
+        if ($model->update()) {
 
             return $this->response(1, _e('TeacherAccess succesfully removed.'), null, null, ResponseStatus::OK);
         }

@@ -32,11 +32,10 @@ class HostelAppController extends ApiActiveController
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
         $query->join('INNER JOIN', 'student', 'student.id = ' . $model->tableName() . '.student_id');
 
-
-
         //  Filter from Student Profile 
         $profile = new Profile();
         $student = new Student();
+
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {
@@ -59,13 +58,6 @@ class HostelAppController extends ApiActiveController
         }
         // ***
 
-        //  Filter from Student 
-
-        if (isset($filter)) {
-            foreach ($filter as $attribute => $id) {
-            }
-        }
-        // ***
 
 
         if (isRole("student")) {

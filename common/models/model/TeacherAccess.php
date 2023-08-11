@@ -70,10 +70,10 @@ class TeacherAccess extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             // [['user_id', 'subject_id', 'is_deleted'], 'unique', 'targetAttribute' => ['user_id', 'subject_id', 'is_deleted'], 'message' => 'The combination of User ID, Subject ID and Is Deleted has already been taken.'],
             [
-                ['user_id', 'subject_id', 'is_deleted'],
+                ['user_id', 'is_lecture', 'subject_id', 'is_deleted'],
                 'unique',
-                'targetAttribute' => ['user_id', 'subject_id', 'is_deleted'],
-                'message' => 'The combination of User ID, Subject ID, and Is Deleted has already been taken.',
+                'targetAttribute' => ['user_id', 'subject_id', 'is_lecture', 'is_deleted'],
+                'message' => 'The combination of User ID, is_lecture, Subject ID, and Is Deleted has already been taken.',
                 'when' => function ($model) {
                     return $model->is_deleted == 0;
                 },

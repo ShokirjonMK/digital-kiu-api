@@ -218,7 +218,7 @@ class TeacherAccessController extends ApiActiveController
         }
 
         $model->is_deleted = 1;
-        if ($model->update()) {
+        if ($model->delete()) {
             return $this->response(1, _e('TeacherAccess succesfully removed.'), null, null, ResponseStatus::OK);
         } else {
             return $this->response(0, _e('There is an error occurred while processing.'), null, $model->errors, ResponseStatus::BAD_REQUEST);

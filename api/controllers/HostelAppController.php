@@ -54,7 +54,7 @@ class HostelAppController extends ApiActiveController
                 if (in_array($attributeq, $profile->attributes())) {
                     $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
                 }
-                if (in_array($attribute, $student->attributes())) {
+                if (in_array($attributeq, $student->attributes())) {
                     $query = $query->andFilterWhere(['like', 'student.' . $attributeq, '%' . $word . '%', false]);
                     // $query = $query->andFilterWhere(['student.' . $attribute => $id]);
                 }

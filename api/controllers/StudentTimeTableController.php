@@ -170,9 +170,9 @@ class  StudentTimeTableController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if ($model->timeTable->archived != 0) {
-            return $this->response(0, _e('Old Student Time  can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
-        }
+        // if ($model->timeTable->archived != 0) {
+        //     return $this->response(0, _e('Old Student Time  can not be deleted.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        // }
 
         if (isRole('admin') || isRole('edu_admin') || isRole('tutor')) {
             $result = StudentTimeTable::deleteItem($model);

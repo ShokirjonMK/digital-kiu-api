@@ -2,6 +2,7 @@
 
 namespace common\models\model;
 
+use api\components\MipServiceMK;
 use api\resources\ResourceTrait;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -25,6 +26,7 @@ class HostelDoc extends \yii\db\ActiveRecord
 
     const IS_CHECKED_TRUE = 1;
     const IS_CHECKED_FALSE = 0;
+    const IS_CHECKED_REJECT = 2;
 
 
     const UPLOADS_FOLDER = 'uploads/hostel_doc/';
@@ -70,10 +72,11 @@ class HostelDoc extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted',
+                    'archived'
                 ], 'integer'
             ],
 
-            [['description', 'conclution'], 'string'],
+            [['data', 'description', 'conclution'], 'string'],
             [['ball'], 'double'],
             [['file'], 'string', 'max' => 255],
 
@@ -86,6 +89,8 @@ class HostelDoc extends \yii\db\ActiveRecord
 
             [['hostel_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf,doc,docx,png,jpg', 'maxSize' => $this->hostelFileMaxSize],
 
+            // [['hostel_category_id', 'hostel_app_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'archived', 'is_deleted', 'student_id', 'hostel_app_id']],
+            [['hostel_category_id', 'hostel_category_type_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'hostel_category_type_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id']],
         ];
     }
 
@@ -205,6 +210,41 @@ class HostelDoc extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        // nogironligi
+        if ($model->hostel_category_id == 3) {
+            $pin = $model->student->profile->passport_pin;
+            $document_serial_number = $model->student->profile->passport_seria . $model->student->profile->passport_number;
+            $mip = MipServiceMK::healthHasDisability($pin, $document_serial_number);
+            if ($mip['status'] && $mip['data']->has_disability) {
+                $model->data = json_encode($mip['data']);
+                $model->status = 1;
+                $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : $model->getHostelCategory->ball;
+                $model->is_checked = self::IS_CHECKED_TRUE;
+                $model->hostelApp->ball += $model->ball;
+                $model->hostelApp->save();
+            } else {
+                $model->is_checked = self::IS_CHECKED_REJECT;
+                $model->status = 0;
+            }
+        }
+
+        // ijtimoiy himoya reesteri
+        if ($model->hostel_category_id == 1) {
+            $pin = $model->student->profile->passport_pin;
+            $mip = MipServiceMK::socialProtection($pin);
+            if ($mip['status']) {
+                $model->data = json_encode($mip['data']);
+                $model->status = 1;
+                $model->ball = $model->hostelCategoryType ? $model->hostelCategoryType->ball : $model->hostelCategory->ball;
+                $model->is_checked = self::IS_CHECKED_TRUE;
+                $model->hostelApp->ball += $model->ball;
+                $model->hostelApp->save();
+            } else {
+                $model->is_checked = self::IS_CHECKED_REJECT;
+                $model->status = 0;
+            }
+        }
+
         // hostel file saqlaymiz
         $model->hostel_file = UploadedFile::getInstancesByName('hostel_file');
         if ($model->hostel_file) {
@@ -253,11 +293,69 @@ class HostelDoc extends \yii\db\ActiveRecord
         }
         // ***
 
-        if ($model->is_checked = HostelDoc::IS_CHECKED_TRUE) {
+        // if ($model->is_checked == HostelDoc::IS_CHECKED_TRUE) {
+        //     if ($model->hostel_category_id > 0) {
+        //         $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+        //     } else {
+        //         $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+        //     }
+        // }
+
+        if ($model->save()) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function checkItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if ($model->hostel_category_id > 0) {
+            $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
+        } else {
+            $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+        }
+        if (!isset($post['is_checked'])) {
+            $errors[] = _e('is_checked not sending');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        if ($model->hostel_category_id == 3 || $model->hostel_category_id == 1) {
+            $errors[] = _e('This category will be checked automatically');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $model->is_checked = $post['is_checked'];
+
+        if ($model->is_checked == HostelDoc::IS_CHECKED_TRUE) {
             if ($model->hostel_category_id > 0) {
                 $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
             } else {
                 $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
+            }
+
+            $model->hostelApp->ball += $model->ball;
+            if (!$model->hostelApp->save()) {
+                $errors[] = $model->hostelApp->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        if ($model->is_checked == HostelDoc::IS_CHECKED_REJECT) {
+
+            $model->hostelApp->ball = $model->hostelApp->ball - $model->ball;
+            $model->ball = 0;
+            if (!$model->hostelApp->save()) {
+                $errors[] = $model->hostelApp->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
             }
         }
 
@@ -272,7 +370,6 @@ class HostelDoc extends \yii\db\ActiveRecord
 
     public function uploadFile()
     {
-
         $folder = self::UPLOADS_FOLDER . $this->student_id . "/";
 
         if ($this->validate()) {

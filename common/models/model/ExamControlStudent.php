@@ -512,39 +512,21 @@ class ExamControlStudent extends ActiveRecord
             return simplify_errors($errors);
         }
 
-        // faqat 4- kurslar uchun
-        if (
-            !in_array(current_user_id(), [11704, 11]) &&
-            !in_array($model->edu_plan_id, [
-                // 55,
-                // 131,
-                // 132,
+        // ruxsatni chegaralash
+        // if (
+        //     !in_array(current_user_id(), [4559]) &&
+        //     !in_array($model->edu_plan_id, [])
 
-                // 56,
-                // 22,
-                // 27,
-                // 15
-            ])
+        //     && !in_array(
+        //         $model->student->profile->passport_pin,
+        //         []
+        //     )
 
-            && !in_array(
-                $model->student->profile->passport_pin,
-                [
-                    61504005700066,
-                    50108055350053,
-                    61612045670026,
-                    50709047230056,
-                    32306996320050,
-                    40710875590026
-
-
-                ]
-            )
-
-        ) {
-            $errors[] = ["Ruxsat berilmagan"];
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+        // ) {
+        //     $errors[] = ["Ruxsat berilmagan"];
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
 
 
         if ($model->save()) {
@@ -669,38 +651,19 @@ class ExamControlStudent extends ActiveRecord
         $model->main_ball = ($model->ball ?? 0) + ($model->ball2 ?? 0);
 
         // faqat 4- kurslar uchun
-        if (
-            !in_array(current_user_id(), [11704, 11]) &&
-            !in_array($model->edu_plan_id, [
-                55,
-                131,
-                132,
-
-
-                56,
-                22,
-                27,
-                15
-            ])
-            && !in_array(
-                $model->student->profile->passport_pin,
-                [
-                    61504005700066,
-                    50108055350053,
-                    61612045670026,
-                    50709047230056,
-                    32306996320050,
-                    40710875590026
-
-
-                ]
-            )
-        ) {
-            $errors[] = ["Ruxsat berilmagan"];
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-        // faqat sirtqi uchun 
+        // if (
+        //     !in_array(current_user_id(), [4559]) &&
+        //     !in_array($model->edu_plan_id, [])
+        //     && !in_array(
+        //         $model->student->profile->passport_pin,
+        //         []
+        //     )
+        // ) {
+        //     $errors[] = ["Ruxsat berilmagan"];
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
+      
 
         if ($model->save()) {
 

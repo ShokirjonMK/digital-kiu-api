@@ -124,6 +124,9 @@ class Room extends \yii\db\ActiveRecord
             'building',
             'timeTables',
             'description',
+            'hostelStudentCount',
+            'hostelStudens',
+            'HostelStudentsCount',
 
             'createdBy',
             'updatedBy',
@@ -180,6 +183,25 @@ class Room extends \yii\db\ActiveRecord
         // self::$selected_language = array_value(admin_current_lang(), 'lang_code', 'en');
         return $this->hasMany(Translate::class, ['model_id' => 'id'])
             ->andOnCondition(['language' => self::$selected_language, 'table_name' => $this->tableName()]);
+    }
+
+    public function getHostelStudents()
+    {
+        return $this->hasMany(HostelStudentRoom::class, ['room_id' => 'id'])->onCondition(['is_deleted' => 0, 'archived' => 0]);
+    }
+
+    public function getHostelStudentsCount()
+    {
+        return $this->getHostelStudent()->count();
+    }
+
+    public function getHostelStudentCount()
+    {
+        return HostelStudentRoom::find()
+            ->where(['in', 'room_id', $this->getRooms()->select('id')])
+            ->andWhere(['is_deleted' => 0])
+            ->andWhere(['archived' => 0])
+            ->count();
     }
 
 

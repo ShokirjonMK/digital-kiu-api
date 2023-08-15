@@ -26,4 +26,5 @@
 
   'control work' => 'oraliq nazorat',
   'You are not allowed to this exam' => 'Sizga bu imtihonga ruxsat berilmagan',
+  'You have no access for this category' => 'Sizga bu ketegoruya uchun ruxsat yo\'q',
 ];

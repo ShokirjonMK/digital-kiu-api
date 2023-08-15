@@ -28,7 +28,7 @@ class TimeTableController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             // ->andWhere(['archived' => 0])
-            ;
+        ;
 
         if (isRole('student')) {
             if ($student) {
@@ -106,7 +106,7 @@ class TimeTableController extends ApiActiveController
 
         $student = Student::findOne(['user_id' => current_user_id()]);
 
-        if ($student) {
+        if ($student && isRole('student')) {
 
             // /** Kurs bo'yicha vaqt belgilash */
             // $errors = [];
@@ -120,22 +120,22 @@ class TimeTableController extends ApiActiveController
             $query->andWhere(['language_id' => $student->edu_lang_id]);
         } else {
 
-            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
-            if ($k['status'] == 1) {
+            // $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+            // if ($k['status'] == 1) {
 
-                $query->andFilterWhere([
-                    'in', 'subject_id', Subject::find()->where([
-                        'kafedra_id' => $k['UserAccess']->table_id
-                    ])->select('id')
-                ]);
-            }
+            //     $query->andFilterWhere([
+            //         'in', 'subject_id', Subject::find()->where([
+            //             'kafedra_id' => $k['UserAccess']->table_id
+            //         ])->select('id')
+            //     ]);
+            // }
         }
 
-        if (isRole('teacher') && !isRole('mudir')) {
-            $query->andFilterWhere([
-                'teacher_user_id' => current_user_id()
-            ]);
-        }
+        // if (isRole('teacher') && !isRole('mudir')) {
+        //     $query->andFilterWhere([
+        //         'teacher_user_id' => current_user_id()
+        //     ]);
+        // }
 
         $kafedraId = Yii::$app->request->get('kafedra_id');
         if (isset($kafedraId)) {
@@ -192,9 +192,9 @@ class TimeTableController extends ApiActiveController
         }
         $post = Yii::$app->request->post();
         $this->load($model, $post);
-        
+
         $result = TimeTable::updateItem($model, $post);
-        
+
         if (!is_array($result)) {
             return $this->response(1, _e('TimeTable successfully updated.'), $model, null, ResponseStatus::OK);
         } else {

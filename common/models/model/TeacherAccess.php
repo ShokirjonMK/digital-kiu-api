@@ -50,6 +50,16 @@ class TeacherAccess extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    // public function rules()
+    // {
+    //     return [
+    //         [['user_id', 'subject_id', 'language_id'], 'required'],
+    //         [['is_lecture', 'user_id', 'subject_id', 'language_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+    //         [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
+    //         [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
+    //         [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+    //     ];
+    // }
     public function rules()
     {
         return [
@@ -58,8 +68,23 @@ class TeacherAccess extends \yii\db\ActiveRecord
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => Languages::className(), 'targetAttribute' => ['language_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            // [['user_id', 'is_lecture', 'subject_id', 'is_deleted'], 'unique', 'targetAttribute' => ['user_id', 'subject_id','is_lecture', 'is_deleted'], 'message' => 'The combination of User ID, Subject ID and Is Deleted has already been taken.'],
+    //         [
+    //             ['user_id', 'is_lecture', 'subject_id', 'is_deleted'],
+    //             'unique',
+    //             'targetAttribute' => ['user_id', 'subject_id', 'is_lecture', 'is_deleted'],
+    //             'message' => 'The combination of User ID, is_lecture, Subject ID, and Is Deleted has already been taken.',
+    //             'when' => function ($model) {
+    //                 return $model->is_deleted == 0;
+    //             },
+    //             'whenClient' => "function (attribute, value) {
+    //     return $('#model-is_deleted').val() == 0;
+    // }"
+    //         ],
+
         ];
     }
+
 
     /**
      * {@inheritdoc}

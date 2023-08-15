@@ -763,11 +763,10 @@ class ExamStudentAnswer extends \yii\db\ActiveRecord
 
         if (count($errors) == 0) {
             if ($model->save()) {
-                $examStudent = ExamStudent::findOne(2487);
-                $examStudent->ball = $model->examStudent->allBall;
-                $examStudent->save();
+                $model->examStudent->ball = $model->examStudent->allBall;
+                $model->examStudent->save();
 
-                $transaction->commit();
+                $transaction->commit(false);
                 // dd($examStudent);
                 return true;
             } else {

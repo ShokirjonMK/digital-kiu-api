@@ -80,7 +80,7 @@ class HostelCategoryType extends \yii\db\ActiveRecord
             },
             'hostel_category_id',
             'ball',
-            // 'order',
+            'order',
             'status',
             'created_at',
             'updated_at',

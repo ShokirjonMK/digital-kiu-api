@@ -3,8 +3,11 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use api\resources\User;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+
+use function PHPSTORM_META\type;
 
 /**
  * This is the model class for table "direction".
@@ -71,6 +74,9 @@ class KpiCategory extends \yii\db\ActiveRecord
             //         'fields',
             //     ], 'json'
             // ],
+            [[
+                'user_ids'
+            ], 'safe'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['status'], 'default', 'value' => 1],
 
@@ -93,6 +99,7 @@ class KpiCategory extends \yii\db\ActiveRecord
             'max_ball',
             'term',
             'tab',
+            'user_ids',
 
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -113,6 +120,7 @@ class KpiCategory extends \yii\db\ActiveRecord
             },
 
             'fields',
+            'user_ids',
             'max_ball',
             'termName',
             'tab',
@@ -219,10 +227,6 @@ class KpiCategory extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        // if (!($model->validate())) {
-        //     $errors[] = $model->errors;
-        // }
-
         if (isset($post['fields'])) {
 
             if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
@@ -242,6 +246,38 @@ class KpiCategory extends \yii\db\ActiveRecord
             }
         }
 
+        if (isset($post['user_ids'])) {
+            // Remove single quotes if present at the beginning and end of the string
+            if (($post['user_ids'][0] === "'") && ($post['user_ids'][strlen($post['user_ids']) - 1] === "'")) {
+                $post['user_ids'] = substr($post['user_ids'], 1, -1);
+            }
+
+            // Decode the JSON data into an array and handle errors
+            try {
+                $user_ids = \yii\helpers\Json::decode($post['user_ids'], true);
+            } catch (\yii\base\InvalidArgumentException $e) {
+                // JSON decoding error occurred
+                $errors['user_ids'] = [_e('Invalid JSON format')];
+            }
+
+            // Check if each user ID exists in the users table
+            $existingUsers = User::find()->select('id')->indexBy('id')->column();
+            $nonExistingIds = array_diff($user_ids, array_keys($existingUsers));
+
+            if (!empty($nonExistingIds)) {
+                $errors['user_ids'] = [_e('Invalid user IDs: ') . implode(', ', $nonExistingIds)];
+            } else {
+                // Assign the array to the $model->user_ids attribute
+                $model->user_ids = $user_ids;
+            }
+        }
+
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         if ($model->save()) {
             if (isset($post['name'])) {
@@ -280,18 +316,65 @@ class KpiCategory extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        // if (!($model->validate())) {
-        //     $errors[] = $model->errors;
-        // }
+        if (isset($post['fields'])) {
+            if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
+                $post['fields'] =  substr($post['fields'], 1, -1);
+            }
 
-        if (($post['fields'][0] == "'") && ($post['fields'][strlen($post['fields']) - 1] == "'")) {
-            $post['fields'] =  substr($post['fields'], 1, -1);
+            if (!isJsonMK($post['fields'])) {
+                $errors['fields'] = [_e('Must be Json')];
+            } else {
+                $model->fields = ((array)json_decode($post['fields']));
+            }
         }
 
-        if (!isJsonMK($post['fields'])) {
-            $errors['fields'] = [_e('Must be Json')];
-        } else {
-            $model->fields = ((array)json_decode($post['fields']));
+
+        if (isset($post['user_ids'])) {
+
+            if (($post['user_ids'][0] == "'") && ($post['user_ids'][strlen($post['user_ids']) - 1] == "'")) {
+                $post['user_ids'] =  substr($post['user_ids'], 1, -1);
+            }
+
+            if (!isJsonMK($post['user_ids'])) {
+                $errors['user_ids'] = [_e('Must be Json')];
+            } else {
+                $user_ids = ((array)json_decode($post['user_ids']));
+                $model->user_ids = $user_ids;
+            }
+        }
+
+
+        // if (isset($post['user_ids'])) {
+        //     // Remove single quotes if present at the beginning and end of the string
+        //     if (($post['user_ids'][0] === "'") && ($post['user_ids'][strlen($post['user_ids']) - 1] === "'")) {
+        //         $post['user_ids'] = substr($post['user_ids'], 1, -1);
+        //     }
+
+        //     // Decode the JSON data into an array and handle errors
+        //     try {
+        //         $user_ids = \yii\helpers\Json::decode($post['user_ids'], true);
+        //     } catch (\yii\base\InvalidArgumentException $e) {
+        //         // JSON decoding error occurred
+        //         $errors['user_ids'] = [_e('Invalid JSON format')];
+        //     }
+
+        //     // Check if each user ID exists in the users table
+        //     $existingUsers = User::find()->select('id')->indexBy('id')->column();
+        //     $nonExistingIds = array_diff($user_ids, array_keys($existingUsers));
+
+        //     if (!empty($nonExistingIds)) {
+        //         $errors['user_ids'] = [_e('Invalid user IDs: ') . implode(', ', $nonExistingIds)];
+        //     } else {
+        //         // Assign the array to the $model->user_ids attribute
+        //         $model->user_ids = $user_ids;
+        //     }
+        // }
+
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if ($model->save()) {
@@ -321,8 +404,6 @@ class KpiCategory extends \yii\db\ActiveRecord
                         }
                     }
                 }
-            } else {
-                $errors[] = [_e('Please send at least one Question attribute.')];
             }
         } else {
             $errors[] = $model->getErrorSummary(true);

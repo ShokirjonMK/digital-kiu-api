@@ -191,7 +191,7 @@ $routes = [
     'GET <lang:\w{2}>/students/time-option-not/' => 'student/time-option-not',
 
     /** Hostel Yotoqxona */
-    'GET <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
+    'POST <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
     'GET <lang:\w{2}>/hostel-docs/not/<id>/' => 'hostel-doc/not',
 
     /** attend-reason  */
@@ -300,6 +300,10 @@ $routes = [
     'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
     'POST <lang:\w{2}>/rooms/free' => 'room/free',
     /**  */
+
+
+    /**Builduing Type list */
+    'GET <lang:\w{2}>/buildings/type' => 'building/type',
 
 
     // Student Attendees By

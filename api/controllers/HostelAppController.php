@@ -6,6 +6,7 @@ use common\models\model\HostelApp;
 use Yii;
 use base\ResponseStatus;
 use common\models\model\Profile;
+use common\models\model\Student;
 
 class HostelAppController extends ApiActiveController
 {
@@ -24,18 +25,24 @@ class HostelAppController extends ApiActiveController
         $model = new HostelApp();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
-
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0]);
+        //
         $query->join('INNER JOIN', 'profile', 'profile.user_id = hostel_app.user_id')
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
+        $query->join('INNER JOIN', 'student', 'student.id = ' . $model->tableName() . '.student_id');
 
-
-        //  Filter from Profile 
+        //  Filter from Student Profile 
         $profile = new Profile();
+        $student = new Student();
+
         if (isset($filter)) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {
                     $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $student->attributes())) {
+                    $query = $query->andFilterWhere(['student.' . $attribute => $id]);
                 }
             }
         }
@@ -47,9 +54,14 @@ class HostelAppController extends ApiActiveController
                 if (in_array($attributeq, $profile->attributes())) {
                     $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
                 }
+                if (in_array($attributeq, $student->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'student.' . $attributeq, '%' . $word . '%', false]);
+                    // $query = $query->andFilterWhere(['student.' . $attribute => $id]);
+                }
             }
         }
         // ***
+
 
 
         if (isRole("student")) {

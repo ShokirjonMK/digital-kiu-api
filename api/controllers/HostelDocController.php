@@ -23,7 +23,9 @@ class HostelDocController extends ApiActiveController
         $model = new HostelDoc();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0]);
+
 
         if (isRole("student")) {
             $query = $query->andWhere([
@@ -45,12 +47,12 @@ class HostelDocController extends ApiActiveController
     public function actionCreate($lang)
     {
         $model = new HostelDoc();
-        $post = Yii::$app->request->post();
-
 
         if (!isRole("student")) {
             return $this->response(0, _e('This action is only for students.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
         }
+
+        $post = Yii::$app->request->post();
 
         $post['student_id'] = $this->student();
         $post['user_id'] = current_user_id();
@@ -127,23 +129,23 @@ class HostelDocController extends ApiActiveController
         $model = HostelDoc::find()
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if ($model->hostel_category_id > 0) {
-            $model->ball = $model->hostelCategoryType ?  $model->hostelCategoryType->ball : null;
-        } else {
-            $model->ball = $model->hostelCategory ? $model->hostelCategory->ball : null;
-        }
-        $model->is_checked = HostelDoc::IS_CHECKED_TRUE;
+        $post = Yii::$app->request->post();
 
-        if ($model->save()) {
+        $this->load($model, $post);
+        $result = HostelDoc::checkItem($model, $post);
+
+        if (!is_array($result)) {
             return $this->response(1, _e('Conformed.'), $model, null, ResponseStatus::OK);
         } else {
-            return $this->response(0, _e('There is an error occurred while processing.'), null, $model->errors, ResponseStatus::BAD_REQUEST);
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
+
     public function actionNot($lang, $id)
     {
         $model = HostelDoc::find()

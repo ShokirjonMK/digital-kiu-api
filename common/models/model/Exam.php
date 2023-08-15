@@ -420,7 +420,8 @@ class Exam extends \yii\db\ActiveRecord
         if (isRole('student')) {
             return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->onCondition(['student_id' => $this->student()]);
         }
-        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id']);
+
+        return $this->hasMany(ExamStudent::className(), ['exam_id' => 'id'])->orderBy(new \yii\db\Expression('RAND()'));
     }
 
     public function getSurveyAnswer()

@@ -318,22 +318,23 @@ class ExamStudentController extends ApiActiveController
             $model = ExamStudent::find()
                 ->andWhere(['id' => $id, 'is_deleted' => 0])
                 ->one();
-            if ($model->type == null) {
-                // if ($model->type > 0) {
-                $model->ball = $model->allBall;
-                $model->is_checked = $model->isChecked;
-                $model->is_checked_full = $model->isCheckedFull;
-                $model->has_answer = $model->hasAnswer;
-
-                $model->update();
-                // }
-            }
         }
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
+        if ($model->type == null) {
+            // if ($model->type > 0) {
+            $model->ball = $model->allBall;
+            $model->is_checked = $model->isChecked;
+            $model->is_checked_full = $model->isCheckedFull;
+            $model->has_answer = $model->hasAnswer;
+
+            $model->update();
+            // }
+        }
+        
         if (isRole("teacher")) {
             if ($model->teacherAccess->user_id != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

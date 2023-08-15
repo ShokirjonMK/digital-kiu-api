@@ -39,8 +39,8 @@ class SubjectController extends ApiActiveController
                 ->where(['faculty_id' => $facultyId])
                 ->select('id')]);
         }
-        
-        if (isRole('content_assign') || isRole('edu_quality')) {
+
+        if (isRole('content_assign') || isRole('edu_quality') || isRole('otv')) {
 
             // filter
             $query = $this->filterAll($query, $model);

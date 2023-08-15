@@ -157,10 +157,27 @@ class KpiMark extends \yii\db\ActiveRecord
         }
 
         if ($model->ball > $model->kpiCategory->max_ball) {
-            $errors[] = _e('Ushbu tur uchun max ball ' . $model->kpiCategory->max_ball);
+            $errors[] = _e('Ushbu tur uchun max ball ') . $model->kpiCategory->max_ball;
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        $userIds = $model->kpiCategory->user_ids;
+        if (!(is_array($userIds) && in_array(current_user_id(), $userIds))) {
+            $errors[] = _e('You have no access for this category');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+
+        // $userIds = json_decode(trim($model->kpiCategory->user_ids, "'"), true);
+        // if (!(is_array($userIds) && in_array(current_user_id(), $userIds))) {
+        //     $errors[] = _e('You have no access for this category');
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
+
+        // if($model->kpiCategory->user_ids)
 
         if ($model->save()) {
             $transaction->commit();

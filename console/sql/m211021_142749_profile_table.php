@@ -31,7 +31,7 @@ class m211021_142749_profile_table extends Migration
             'passport_seria' => $this->string(255)->notNull(),
             'passport_number' => $this->string(255)->notNull(),
             'passport_pin' => $this->string(255)->notNull(),
-            'birthday' => $this->integer()->notNull(),
+            'birthday' => $this->date()->null(),
             'passport_file' => $this->string(255)->notNull(),
             'country_id' => $this->integer()->notNull(),
             'region_id' => $this->integer()->notNull(),
@@ -45,6 +45,8 @@ class m211021_142749_profile_table extends Migration
             'permanent_region_id' => $this->integer()->notNull(),
             'permanent_area_id' => $this->integer()->notNull(),
             'permanent_address' => $this->string(255)->notNull(),
+
+            'has_disability' => $this->integer()->notNull()->defaultValue(0)->comment("nogirognligi bormi"),
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'status' => $this->tinyInteger(1)->defaultValue(1),

@@ -106,8 +106,10 @@ class Building extends \yii\db\ActiveRecord
             'roomLecture',
             'roomSeminar',
             'roomsCount',
+            'capacityCount',
             'roomsLectureCount',
             'roomSeminarCount',
+            'hostelStudentCount',
 
             'description',
             'createdBy',
@@ -179,6 +181,24 @@ class Building extends \yii\db\ActiveRecord
     {
         return count($this->rooms);
     }
+
+    public function getCapacityCount()
+    {
+        return $this->getRooms()->sum('capacity');
+
+        return count($this->rooms);
+    }
+
+    public function getHostelStudentCount()
+    {
+        return HostelStudentRoom::find()
+            ->where(['in', 'room_id', $this->getRooms()->select('id')])
+            ->andWhere(['is_deleted' => 0])
+            ->andWhere(['archived' => 0])
+            ->count();
+    }
+
+
     public function getRoomsLectureCount()
     {
         return count($this->roomLecture);
@@ -226,6 +246,7 @@ class Building extends \yii\db\ActiveRecord
         if (!($model->validate())) {
             $errors[] = $model->errors;
         }
+
         $has_error = Translate::checkingUpdate($post);
         if ($has_error['status']) {
             if ($model->save()) {
@@ -246,6 +267,15 @@ class Building extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return double_errors($errors, $has_error['errors']);
         }
+    }
+
+    public static function typeList()
+    {
+        return
+            [
+                self::TYPE_EDUCATIoN => _e("O'quv"),
+                self::TYPE_HOSTEL => _e("TTJ"),
+            ];
     }
 
 

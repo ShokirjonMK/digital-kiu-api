@@ -255,6 +255,7 @@ class ExamStudent extends \yii\db\ActiveRecord
             'examSemeta',
 
             'accessKey',
+            'decodedKey',
 
             'examControlStudent',
             'reExam',
@@ -476,6 +477,13 @@ class ExamStudent extends \yii\db\ActiveRecord
     public function getAccessKey()
     {
         return $this->encodemk5MK($this->id . '-' . $this->student_id);
+
+        return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
+    }
+
+    public function getDecodedKey()
+    {
+        return $this->decodemk5MK('ODEwODMtNzg3MQ');
 
         return $this->encodeMK($this->student_id) . '-' . $this->encodeMK($this->id);
     }
@@ -972,10 +980,19 @@ class ExamStudent extends \yii\db\ActiveRecord
     public static function correct($i)
     {
         $soni = $i * 5000;
+        // $model = ExamStudent::find()
+        //     // ->where(['type' => null])
+        //     // ->andWhere(['is_checked_full' => 0])
+        //     ->limit(5000)->offset($soni)->all();
+
         $model = ExamStudent::find()
             // ->where(['type' => null])
             // ->andWhere(['is_checked_full' => 0])
-            ->limit(5000)->offset($soni)->all();
+            ->orderBy(['id' => SORT_DESC])
+            ->limit(5000)
+            ->offset($soni)
+            ->all();
+
 
         foreach ($model as $modelOne) {
             if (!($modelOne->type > 0)) {

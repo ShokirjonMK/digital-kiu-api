@@ -20,6 +20,7 @@ use yii\web\UploadedFile;
  * @property int $created_by
  * @property int $updated_by
  * @property int $is_deleted
+ * @property int $archived
  */
 class SubjectContent extends \yii\db\ActiveRecord
 {
@@ -87,6 +88,7 @@ class SubjectContent extends \yii\db\ActiveRecord
                     'subject_topic_id',
                     'subject_id',
                     'teacher_access_id',
+                    'archived',
                 ],
                 'integer'
             ],

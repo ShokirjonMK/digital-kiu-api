@@ -91,6 +91,8 @@ class HostelDoc extends \yii\db\ActiveRecord
 
             // [['hostel_category_id', 'hostel_app_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'archived', 'is_deleted', 'student_id', 'hostel_app_id']],
             [['hostel_category_id', 'hostel_category_type_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id'], 'unique', 'targetAttribute' => ['hostel_category_id', 'hostel_category_type_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id']],
+            // [['hostel_category_id', 'hostel_app_id', 'archived', 'is_deleted', 'student_id'], 'unique']
+
         ];
     }
 

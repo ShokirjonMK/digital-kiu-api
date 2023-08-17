@@ -210,7 +210,7 @@ class KpiCategory extends \yii\db\ActiveRecord
 
     public function getKpiMark()
     {
-        return $this->hasOne(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
+        return $this->hasOne(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'archived' => 0, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);
         // $edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
         // 
         // return $this->hasOne(KpiMark::className(), ['kpi_category_id' => 'id'])->onCondition(['is_deleted' => 0, 'edu_year_id' => $edu_year_id, 'user_id' => Yii::$app->request->get('user_id') ?? current_user_id()]);

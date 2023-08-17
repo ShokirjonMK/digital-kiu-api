@@ -68,6 +68,7 @@ class KpiStore extends \yii\db\ActiveRecord
                     'subject_category_id',
                     'count_of_copyright',
                     'user_id',
+                    'archived',
                 ], 'integer'
             ],
             [['date'], 'date', 'format' => 'php:Y-m-d'],

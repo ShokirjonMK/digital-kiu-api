@@ -607,7 +607,8 @@ class StatisticController extends ApiActiveController
                 $hasKpiMark = KpiMark::findOne([
                     'user_id' => $userOne->id,
                     'kpi_category_id' => 8,
-                    'is_deleted' => 0
+                    'is_deleted' => 0,
+                    'archived' => 0
                 ]);
 
                 if ($hasKpiMark) {
@@ -711,7 +712,8 @@ class StatisticController extends ApiActiveController
             $hasKpiMark = KpiMark::findOne([
                 'user_id' => $userOne->id,
                 'kpi_category_id' => 12,
-                'is_deleted' => 0
+                'is_deleted' => 0,
+                'archived' => 0
             ]);
 
             if ($hasKpiMark) {
@@ -802,7 +804,8 @@ class StatisticController extends ApiActiveController
                 $hasKpiMark = KpiMark::findOne([
                     'user_id' => $userOne->id,
                     'kpi_category_id' => 12,
-                    'is_deleted' => 0
+                    'is_deleted' => 0,
+                    'archived' => 0
                 ]);
 
                 if ($hasKpiMark) {

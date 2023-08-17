@@ -60,6 +60,7 @@ class KpiData extends \yii\db\ActiveRecord
                     'event_type',
                     'event_form',
                     'count_of_copyright',
+                    'archived',
                     'user_id',
 
                 ], 'integer'

@@ -24,6 +24,7 @@ class KpiDataController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0])
 
             ->andFilterWhere(['like', 'link', Yii::$app->request->get('query')]);
 

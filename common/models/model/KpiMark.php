@@ -52,7 +52,7 @@ class KpiMark extends \yii\db\ActiveRecord
         return [
             [['user_id', 'kpi_category_id', 'ball'], 'required'],
             [['ball'], 'double',],
-            [['user_id', 'type', 'edu_year_id', 'kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['user_id', 'archived', 'type', 'edu_year_id', 'kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['kpi_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => KpiCategory::class, 'targetAttribute' => ['kpi_category_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::class, 'targetAttribute' => ['edu_year_id' => 'id']],

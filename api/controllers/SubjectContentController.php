@@ -30,7 +30,8 @@ class SubjectContentController extends ApiActiveController
         $model = new SubjectContent();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 1]);
+            ->andWhere([$this->table_name . '.is_deleted' => 1])
+            ->andWhere([$this->table_name . '.archived' => 0]);
 
         if (isRole('teacher') && !isRole('mudir')) {
             $query->andWhere([$this->table_name . '.created_by' => current_user_id()]);
@@ -56,7 +57,8 @@ class SubjectContentController extends ApiActiveController
         $model = new SubjectContent();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0]);
 
         if (isRole('teacher') && (!isRole('mudir') && !isRole('contenter'))) {
             // if (isRole('teacher') && !isRole('mudir')) {

@@ -69,18 +69,18 @@ class TeacherAccess extends \yii\db\ActiveRecord
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             // [['user_id', 'is_lecture', 'subject_id', 'is_deleted'], 'unique', 'targetAttribute' => ['user_id', 'subject_id','is_lecture', 'is_deleted'], 'message' => 'The combination of User ID, Subject ID and Is Deleted has already been taken.'],
-    //         [
-    //             ['user_id', 'is_lecture', 'subject_id', 'is_deleted'],
-    //             'unique',
-    //             'targetAttribute' => ['user_id', 'subject_id', 'is_lecture', 'is_deleted'],
-    //             'message' => 'The combination of User ID, is_lecture, Subject ID, and Is Deleted has already been taken.',
-    //             'when' => function ($model) {
-    //                 return $model->is_deleted == 0;
-    //             },
-    //             'whenClient' => "function (attribute, value) {
-    //     return $('#model-is_deleted').val() == 0;
-    // }"
-    //         ],
+            //         [
+            //             ['user_id', 'is_lecture', 'subject_id', 'is_deleted'],
+            //             'unique',
+            //             'targetAttribute' => ['user_id', 'subject_id', 'is_lecture', 'is_deleted'],
+            //             'message' => 'The combination of User ID, is_lecture, Subject ID, and Is Deleted has already been taken.',
+            //             'when' => function ($model) {
+            //                 return $model->is_deleted == 0;
+            //             },
+            //             'whenClient' => "function (attribute, value) {
+            //     return $('#model-is_deleted').val() == 0;
+            // }"
+            //         ],
 
         ];
     }
@@ -232,7 +232,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
 
         $query = $model->find()
             ->andWhere(
-                ['user_id' => $this->user_id]
+                ['user_id' => $this->user_id, 'is_deleted' => 0, 'archived' => 0]
             )
             ->andWhere([
                 'in', 'subject_topic_id',
@@ -250,7 +250,7 @@ class TeacherAccess extends \yii\db\ActiveRecord
 
         $query = $model->find()
             ->andWhere(
-                ['user_id' => $this->user_id]
+                ['user_id' => $this->user_id, 'is_deleted' => 0, 'archived' => 0]
             )
             ->andWhere([
                 'in', 'subject_topic_id',

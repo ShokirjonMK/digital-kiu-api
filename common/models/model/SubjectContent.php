@@ -292,6 +292,8 @@ class SubjectContent extends \yii\db\ActiveRecord
             if (!isset($post['order'])) {
                 $lastOrder = SubjectContent::find()
                     ->where(['subject_topic_id' => $model->subject_topic_id])
+                    ->andWhere(['archived' => 0])
+                    ->andWhere(['is_deleted' => 0])
                     ->orderBy(['order' => SORT_DESC])
                     ->select('order')
                     ->one();

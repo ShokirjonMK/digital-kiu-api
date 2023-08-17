@@ -196,7 +196,7 @@ class Subject extends \yii\db\ActiveRecord
     public  function getHasContent()
     {
         $model = new SubjectContent();
-        $query = $model->find();
+        $query = $model->find()->where([$this->table_name . '.is_deleted' => 0])->andWhere([$this->table_name . '.archived' => 0]);
 
         $query = $query->andWhere([
             'in', $model->tableName() . '.subject_topic_id',

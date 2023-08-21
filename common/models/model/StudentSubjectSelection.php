@@ -81,6 +81,7 @@ class StudentSubjectSelection extends \yii\db\ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
+                    'archived',
                 ], 'integer'
             ],
             [
@@ -112,7 +113,7 @@ class StudentSubjectSelection extends \yii\db\ActiveRecord
                 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::class, 'targetAttribute' => ['edu_plan_id' => 'id']
             ],
 
-            ['edu_semestr_subject_id', 'unique', 'targetAttribute' => ['edu_semestr_subject_id', 'user_id']],
+            ['edu_semestr_subject_id', 'unique', 'targetAttribute' => ['edu_semestr_subject_id', 'user_id', 'archived']],
 
 
         ];

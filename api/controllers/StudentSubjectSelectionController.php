@@ -26,7 +26,8 @@ class StudentSubjectSelectionController extends ApiActiveController
         $model = new StudentSubjectSelection();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0]);
 
         if (isRole('student')) {
             $query->andWhere([$this->table_name . '.user_id' => current_user_id()]);

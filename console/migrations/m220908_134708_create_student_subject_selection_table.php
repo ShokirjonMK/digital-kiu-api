@@ -42,6 +42,7 @@ class m220908_134708_create_student_subject_selection_table extends Migration
             'updated_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
+            'archived' => $this->integer()->notNull()->defaultValue(0),
         ], $tableOptions);
         $this->addForeignKey('student_subject_selection_user_id', 'student_subject_selection', 'user_id', 'users', 'id');
         $this->addForeignKey('student_subject_selection_edu_semestr_subject_id', 'student_subject_selection', 'edu_semestr_subject_id', 'edu_semestr_subject', 'id');

@@ -24,7 +24,8 @@ class SubjectTopicReferenceController extends ApiActiveController
         $model = new SubjectTopicReference();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->andWhere([$this->table_name . '.archived' => 0]);
 
 
         if (isRole('teacher') && (!isRole('mudir') && !isRole('contenter'))) {

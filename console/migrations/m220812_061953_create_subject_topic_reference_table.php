@@ -44,6 +44,7 @@ class m220812_061953_create_subject_topic_reference_table extends Migration
             'created_by' => $this->integer()->notNull()->defaultValue(0),
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->notNull()->defaultValue(0),
+            'archived' => $this->tinyInteger()->notNull()->defaultValue(0),
 
         ], $tableOptions);
 

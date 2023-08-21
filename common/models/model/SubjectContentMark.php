@@ -72,7 +72,8 @@ class SubjectContentMark extends \yii\db\ActiveRecord
                 'updated_at',
                 'created_by',
                 'updated_by',
-                'is_deleted'
+                'is_deleted',
+                'archived',
             ], 'integer'],
             [
                 ['user_id'], 'exist',

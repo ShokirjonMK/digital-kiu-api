@@ -96,10 +96,10 @@ trait ResourceTrait
 
     public static function teacher_access_user_id($teacher_access_id)
     {
-        return TeacherAccess::findOne($teacher_access_id)
-            ->user_id ?? null;
+        $teacherAccess = TeacherAccess::findOne($teacher_access_id);
+        return $teacherAccess ? $teacherAccess->user_id : null;
     }
-
+   
     public static function student_now($type = 1, $user_id = null)
     {
         // Agar $user_id berilmagan bo'lsa, uning qiymatini joriy foydalanuvchidan oling

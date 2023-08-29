@@ -100,83 +100,162 @@ trait ResourceTrait
             ->user_id ?? null;
     }
 
-    public static function student_now($type = null, $user_id = null)
+    public static function student_now($type = 1, $user_id = null)
     {
-        if ($user_id == null) {
-            $user_id = current_user_id();
-        }
-        if ($type == null) {
-            $type = 1;
-        }
+        // Agar $user_id berilmagan bo'lsa, uning qiymatini joriy foydalanuvchidan oling
+        $user_id = $user_id ?? current_user_id();
+
+        // Talabani toping, aks holda null qaytaring
         $student = Student::findOne(['user_id' => $user_id]);
-        if ($type == 1) {
-            return  $student->id ?? null;
-        } elseif ($type == 2) {
-            return  $student ?? null;
+        if ($student === null) {
+            return null;
+        }
+
+        // Turiga qarab natijani qaytaring
+        return ($type === 1) ? $student->id : $student;
+    }
+    // public static function student_now00($type = null, $user_id = null)
+    // {
+    //     if ($user_id == null) {
+    //         $user_id = current_user_id();
+    //     }
+    //     if ($type == null) {
+    //         $type = 1;
+    //     }
+    //     $student = Student::findOne(['user_id' => $user_id]);
+    //     if ($type == 1) {
+    //         return  $student->id ?? null;
+    //     } elseif ($type == 2) {
+    //         return  $student ?? null;
+    //     }
+    // }
+
+    public static function student($type = 1, $user_id = null)
+    {
+        // Agar $user_id berilmagan bo'lsa, uning qiymatini joriy foydalanuvchidan oling
+        $user_id = $user_id ?? current_user_id();
+
+        // Talabani toping, aks holda null qaytaring
+        $student = Student::findOne(['user_id' => $user_id]);
+        if ($student === null) {
+            return null;
+        }
+
+        // Turiga qarab natijani qaytaring
+        if ($type === 1) {
+            return $student->id;
+        }
+
+        if ($type === 2) {
+            return $student;
         }
     }
+    // public static function student00($type = null, $user_id = null)
+    // {
+    //     if ($user_id == null) {
+    //         $user_id = current_user_id();
+    //     }
+    //     if ($type == null) {
+    //         $type = 1;
+    //     }
+    //     $student = Student::findOne(['user_id' => $user_id]);
+    //     if ($type == 1) {
+    //         return  $student->id ?? null;
+    //     } elseif ($type == 2) {
+    //         return  $student ?? null;
+    //     }
+    // }
 
-    public static function student($type = null, $user_id = null)
+    public static function findByStudentId($id, $type = 1)
     {
-        if ($user_id == null) {
-            $user_id = current_user_id();
-        }
-        if ($type == null) {
-            $type = 1;
-        }
-        $student = Student::findOne(['user_id' => $user_id]);
-        if ($type == 1) {
-            return  $student->id ?? null;
-        } elseif ($type == 2) {
-            return  $student ?? null;
-        }
-    }
-
-    public static function findByStudentId($id, $type = null)
-    {
-        if ($type == null) {
-            $type = 1;
-        }
         $student = Student::findOne(['id' => $id]);
-        if ($type == 1) {
-            return  $student->user_id ?? null;
-        } elseif ($type == 2) {
-            return  $student ?? null;
-        }
-    }
 
-    public static function teacher_access($type = null, $select = [], $user_id = null)
+        // Early return if no student found
+        if ($student === null) {
+            return null;
+        }
+
+        if ($type === 1) {
+            return $student->user_id;
+        }
+
+        if ($type === 2) {
+            return $student;
+        }
+
+        // Optionally, handle invalid type values here
+    }
+    // public static function findByStudentId00($id, $type = null)
+    // {
+    //     if ($type == null) {
+    //         $type = 1;
+    //     }
+    //     $student = Student::findOne(['id' => $id]);
+    //     if ($type == 1) {
+    //         return  $student->user_id ?? null;
+    //     } elseif ($type == 2) {
+    //         return  $student ?? null;
+    //     }
+    // }
+
+    public static function teacher_access($type = 1, $select = ['id'], $user_id = null)
     {
-        if (is_null($user_id)) {
-            $user_id = current_user_id();
-        }
+        // Set the default user_id to current_user_id if null
+        $user_id = $user_id ?? current_user_id();
 
-        if (is_null($type)) {
-            $type = 1;
-        }
-
-        if (empty($select)) {
-            $select = ['id'];
-        }
-        if ($type == 1) {
-            return TeacherAccess::find()
-                ->where(['user_id' => $user_id, 'is_deleted' => 0])
-                ->andWhere(['in', 'subject_id', Subject::find()
+        // Common query part
+        $query = TeacherAccess::find()
+            ->where(['user_id' => $user_id, 'is_deleted' => 0])
+            ->andWhere([
+                'in', 'subject_id',
+                Subject::find()
                     ->where(['is_deleted' => 0])
-                    ->select('id')])
-                ->select($select);
-        } elseif ($type == 2) {
-            return TeacherAccess::find()
-                ->asArray()
-                ->where(['user_id' => $user_id, 'is_deleted' => 0])
-                ->andWhere(['in', 'subject_id', Subject::find()
-                    ->where(['is_deleted' => 0])
-                    ->select('id')])
-                ->select($select)
+                    ->select('id')
+            ])
+            ->select($select);
 
-                ->all();
+        if ($type === 1) {
+            return $query;
         }
+
+        if ($type === 2) {
+            return $query->asArray()->all();
+        }
+
+        // Optionally, handle invalid type values here
     }
+    // public static function teacher_access00($type = null, $select = [], $user_id = null)
+    // {
+    //     if (is_null($user_id)) {
+    //         $user_id = current_user_id();
+    //     }
+
+    //     if (is_null($type)) {
+    //         $type = 1;
+    //     }
+
+    //     if (empty($select)) {
+    //         $select = ['id'];
+    //     }
+    //     if ($type == 1) {
+    //         return TeacherAccess::find()
+    //             ->where(['user_id' => $user_id, 'is_deleted' => 0])
+    //             ->andWhere(['in', 'subject_id', Subject::find()
+    //                 ->where(['is_deleted' => 0])
+    //                 ->select('id')])
+    //             ->select($select);
+    //     } elseif ($type == 2) {
+    //         return TeacherAccess::find()
+    //             ->asArray()
+    //             ->where(['user_id' => $user_id, 'is_deleted' => 0])
+    //             ->andWhere(['in', 'subject_id', Subject::find()
+    //                 ->where(['is_deleted' => 0])
+    //                 ->select('id')])
+    //             ->select($select)
+
+    //             ->all();
+    //     }
+    // }
 
     public static function encodemk5MK($key)
     {

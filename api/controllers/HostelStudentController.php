@@ -96,7 +96,7 @@ class HostelStudentController extends ApiActiveController
 
         if ($model) {
             $model->is_deleted = 1;
-            $model->update();
+            $model->delete();
 
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }

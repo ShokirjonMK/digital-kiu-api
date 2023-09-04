@@ -99,9 +99,9 @@ class RoomController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0]);
 
-        // if (isset($roomIds)) {
-        //     $query->andFilterWhere(['not in', 'id', $roomIds]);
-        // }
+        if (isset($roomIds)) {
+            $query->andFilterWhere(['not in', 'id', $roomIds]);
+        }
 
         $query = $this->filterAll($query, $model);
 

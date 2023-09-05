@@ -698,13 +698,16 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isset($model->parent->time_option_id)) {
             $model->time_option_id = $model->parent->time_option_id;
         }
+        if (isset($model->lecture->time_option_id)) {
+            $model->time_option_id = $model->lecture->time_option_id;
+        }
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        
+
         // $timeTable = TimeTable::findOne([
         //     'room_id' => $model->room_id,
         //     'para_id' => $model->para_id,
@@ -780,7 +783,7 @@ class TimeTable extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-       
+
         $timeTable = TimeTable::findOne([
             'room_id' => $model->room_id,
             'para_id' => $model->para_id,

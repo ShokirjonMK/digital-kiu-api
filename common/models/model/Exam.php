@@ -230,6 +230,8 @@ class Exam extends \yii\db\ActiveRecord
             'examAppealByLang',
             'appealCount',
             'appeal',
+            'appealCheckedCount',
+            'appealCheked',
             'examAppealSemeta',
 
             'checkCount',
@@ -379,10 +381,28 @@ class Exam extends \yii\db\ActiveRecord
 
         return $this->hasMany(ExamAppeal::className(), ['exam_id' => 'id']);
     }
-
     public function getAppealCount()
     {
         return count($this->appeal);
+    }
+
+    public function getAppealCheked()
+    {
+        if (isRole('teacher') && (!isRole('mudir'))) {
+            return  ExamAppeal::find()
+                ->where(['exam_id' => $this->id])
+                ->andWhere(['not null', 'type'])
+                ->andWhere(['in', 'teacher_access_id', self::teacher_access()])
+                ->all();
+        }
+
+        return $this->hasMany(ExamAppeal::className(), ['exam_id' => 'id']);
+    }
+
+
+    public function getAppealCheckedCount()
+    {
+        return count($this->appealCheked);
     }
 
     public function getEduPlan()

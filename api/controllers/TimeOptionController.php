@@ -34,16 +34,16 @@ class TimeOptionController extends ApiActiveController
             // $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id, 'status' => 1])->select('id')]);
         } else {
             /*  is Self  */
-            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-            if ($t['status'] == 1) {
-                $query->andFilterWhere([
-                    'faculty_id' => $t['UserAccess']->table_id
-                ]);
-            } elseif ($t['status'] == 2) {
-                $query->andFilterWhere([
-                    'faculty_id' => -1
-                ]);
-            }
+            // $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            // if ($t['status'] == 1) {
+            //     $query->andFilterWhere([
+            //         'faculty_id' => $t['UserAccess']->table_id
+            //     ]);
+            // } elseif ($t['status'] == 2) {
+            //     $query->andFilterWhere([
+            //         'faculty_id' => -1
+            //     ]);
+            // }
             // /*  is Self  */
         }
 

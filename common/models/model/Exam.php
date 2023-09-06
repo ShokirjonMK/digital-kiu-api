@@ -394,15 +394,27 @@ class Exam extends \yii\db\ActiveRecord
     public function getAppealCheked()
     {
         if (isRole('teacher') && (!isRole('mudir'))) {
-            return  ExamAppeal::find()
+            return ExamAppeal::find()
                 ->where(['exam_id' => $this->id])
-                ->andWhere(['not null', 'type'])
+                ->andWhere(['IS NOT', 'type', new \yii\db\Expression('NULL')])
                 ->andWhere(['in', 'teacher_access_id', self::teacher_access()])
                 ->all();
         }
 
         return $this->hasMany(ExamAppeal::className(), ['exam_id' => 'id']);
     }
+    // public function getAppealCheked()
+    // {
+    //     if (isRole('teacher') && (!isRole('mudir'))) {
+    //         return  ExamAppeal::find()
+    //             ->where(['exam_id' => $this->id])
+    //             ->andWhere(['not null', 'type'])
+    //             ->andWhere(['in', 'teacher_access_id', self::teacher_access()])
+    //             ->all();
+    //     }
+
+    //     return $this->hasMany(ExamAppeal::className(), ['exam_id' => 'id']);
+    // }
 
 
     public function getAppealCheckedCount()

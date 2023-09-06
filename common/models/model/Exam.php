@@ -528,10 +528,17 @@ class Exam extends \yii\db\ActiveRecord
             ->select('exam_student_id')
             ->where('exam_student_id = exam_student.id');
 
-        return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
+        $query = $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
             ->andWhere(['EXISTS', $subQuery])
             ->andWhere(['act' => 0]);
+
+        if (isRole('teacher') && (!isRole('mudir'))) {
+            $query->andWhere(['in', 'teacher_access_id', self::teacher_access()]);
+        }
+
+        return $query;
     }
+
 
     public function getExamStudentOriginCount()
     {

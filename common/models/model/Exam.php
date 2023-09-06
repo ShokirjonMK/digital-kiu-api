@@ -259,6 +259,9 @@ class Exam extends \yii\db\ActiveRecord
 
             'examStudentNo',
             'examStudentNoAnswer',
+            'examStudentNoAnswerCount',
+            'examStudentAct',
+            'examStudentActCount',
 
             'description',
             'createdBy',
@@ -494,6 +497,16 @@ class Exam extends \yii\db\ActiveRecord
             ->all();
     }
 
+    public function getExamStudentAct()
+    {
+        return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
+            ->andWhere(['act' => 1]);
+    }
+    public function getExamStudentActCount()
+    {
+        return count($this->examStudentAct);
+    }
+
     public function getExamStudentNoAnswer()
     {
         return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
@@ -502,6 +515,10 @@ class Exam extends \yii\db\ActiveRecord
                     ->select('exam_student_id')
                     ->where('exam_student_id = exam_student.id')
             ]);
+    }
+    public function getExamStudentNoAnswerCount()
+    {
+        return count($this->examStudentNoAnswer);
     }
 
     public function getExamStudent()

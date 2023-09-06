@@ -509,20 +509,37 @@ class Exam extends \yii\db\ActiveRecord
         return count($this->examStudentAct);
     }
 
-    public function getExamStudentOrigin()
+
+    public function getExamStudentOriginQuery()
     {
+        $subQuery = ExamStudentAnswerSubQuestion::find()
+            ->select('exam_student_id')
+            ->where('exam_student_id = exam_student.id');
+
         return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
-            ->andWhere([
-                'EXISTS', ExamStudentAnswerSubQuestion::find()
-                    ->select('exam_student_id')
-                    ->where('exam_student_id = exam_student.id')
-            ])
+            ->andWhere(['EXISTS', $subQuery])
             ->andWhere(['act' => 0]);
     }
+
     public function getExamStudentOriginCount()
     {
-        return count($this->examStudentOrigin);
+        // Count records in SQL, not PHP
+        return $this->getExamStudentOriginQuery()->count();
     }
+    // public function getExamStudentOrigin()
+    // {
+    //     return $this->hasMany(ExamStudent::class, ['exam_id' => 'id'])
+    //         ->andWhere([
+    //             'EXISTS', ExamStudentAnswerSubQuestion::find()
+    //                 ->select('exam_student_id')
+    //                 ->where('exam_student_id = exam_student.id')
+    //         ])
+    //         ->andWhere(['act' => 0]);
+    // }
+    // public function getExamStudentOriginCount()
+    // {
+    //     return count($this->examStudentOrigin);
+    // }
 
     public function getExamStudentNoAnswer()
     {
@@ -577,6 +594,7 @@ class Exam extends \yii\db\ActiveRecord
         if (isRole('teacher') && (!isRole('mudir'))) {
             $query->andWhere(['in', $model->tableName() . '.teacher_access_id', self::teacher_access()]);
         }
+
         $query->leftJoin("exam_student_answer", "exam_student_answer.exam_student_id = " . $model->tableName() . ".id ")
             ->leftJoin("exam_student_answer_sub_question", "exam_student_answer_sub_question.exam_student_answer_id = exam_student_answer.id")
             // ->andWhere(['not', ['esasq.ball' => null, 'esasq.teacher_conclusion' => null]])

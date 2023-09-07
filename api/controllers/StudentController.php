@@ -559,9 +559,9 @@ class  StudentController extends ApiActiveController
             $count = $std->id + 10001;
         }
 
-        $post['username'] = 'kiu-std-' . $count;
+        $post['username'] = 'tsul-std-' . $count;
         if (!(isset($post['email']))) {
-            $post['email'] = 'kiu-std-' . $count . '@kiu.uz';
+            $post['email'] = 'tsul-std-' . $count . '@tsul.uz';
         }
 
         $this->load($model, $post);

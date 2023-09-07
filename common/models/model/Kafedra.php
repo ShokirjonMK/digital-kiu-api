@@ -191,7 +191,7 @@ class Kafedra extends \yii\db\ActiveRecord
      */
     public function getLeader()
     {
-        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id'])->select(['first_name', 'last_name', 'middle_name','user_id']);
 
         // return $this->hasOne(User::className(), ['id' => 'user_id']);
     }

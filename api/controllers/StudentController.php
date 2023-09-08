@@ -271,23 +271,25 @@ class  StudentController extends ApiActiveController
 
         // return $model->tableName();
         /*  is Self  */
-        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-        if ($t['status'] == 1) {
-            $query = $query->andWhere([
-                'faculty_id' => $t['UserAccess']->table_id
-            ]);
-        } elseif ($t['status'] == 2) {
-            $query->andFilterWhere([
-                'faculty_id' => -1
-            ]);
-        }
 
         /*  is Role check  */
         if (isRole('tutor')) {
             $query = $query->andWhere([
                 'tutor_id' => current_user_id()
             ]);
+        } else {
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                $query = $query->andWhere([
+                    'faculty_id' => $t['UserAccess']->table_id
+                ]);
+            } elseif ($t['status'] == 2) {
+                $query->andFilterWhere([
+                    'faculty_id' => -1
+                ]);
+            }
         }
+
 
         //  Filter from Profile 
         $profile = new Profile();

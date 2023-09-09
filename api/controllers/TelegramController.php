@@ -23,6 +23,15 @@ class TelegramController extends ActiveController
     public function actionBot()
     {
         $telegram = Yii::$app->telegram;
+
+        $telegram->sendMessage([
+            'chat_id' => 813225336,
+            'text' => "Assalomu alaykum " . $username . " ",
+            'reply_markup' => $keyboards
+        ]);
+
+        die;
+        
         $text = $telegram->input->message->text;
         $username = $telegram->input->message->chat->username;
         $telegram_id = $telegram->input->message->chat->id;

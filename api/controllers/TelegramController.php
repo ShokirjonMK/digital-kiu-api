@@ -26,8 +26,7 @@ class TelegramController extends ActiveController
 
         $telegram->sendMessage([
             'chat_id' => 813225336,
-            'text' => "Assalomu alaykum " . $username . " ",
-            'reply_markup' => $keyboards
+            'text' => "Assalomu alaykum "  . " ",
         ]);
 
         die;

@@ -26,7 +26,7 @@ $main_config = array(
         ],
         'telegram' => [
             'class' => 'aki\telegram\Telegram',
-            'botToken' => '5430656539:AAHR820HyyiltIfDAZ5xBqO05nYoJFNV1Jk',
+            'botToken' => '6582420199:AAE6_Aq2oOfqYU1eUVGx-0-9815PWqFmR2g',
         ],
         'user' => [
             'identityClass' => 'common\models\User',

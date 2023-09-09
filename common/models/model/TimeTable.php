@@ -701,6 +701,9 @@ class TimeTable extends \yii\db\ActiveRecord
         if (isset($model->lecture->time_option_id)) {
             $model->time_option_id = $model->lecture->time_option_id;
         }
+        if (isset($model->parent_id)) {
+            $model->lecture_id = $model->parent->lecture_id;
+        }
 
         if (!isset($eduSemester)) {
             $errors[] = _e("Edu Semester not found");

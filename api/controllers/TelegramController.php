@@ -24,11 +24,13 @@ class TelegramController extends ActiveController
     {
         $telegram = Yii::$app->telegram;
 
+        $text = $telegram->input->message->text;
+        if ($text == "/start") {
         $telegram->sendMessage([
             'chat_id' => 813225336,
             'text' => "Assalomu alaykum "  . " ",
         ]);
-
+    }
         die;
         
         $text = $telegram->input->message->text;

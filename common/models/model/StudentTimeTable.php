@@ -611,6 +611,12 @@ class StudentTimeTable extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+        if ($model->subject_category_id == 2 &&  count($studentTimeTable) > 35) {
+            $errors[] = _e('This Time Table is Full! (35)');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
 
         /**
          *  Student Edu Plan bo'yicha tekshirish

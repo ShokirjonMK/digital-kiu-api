@@ -176,35 +176,66 @@ class NotificationController extends ApiActiveController
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
+
+    /**
+     * Deletes a notification.
+     *
+     * @param string $lang Language parameter.
+     * @param int $id The ID of the notification to delete.
+     * @return Response The response object.
+     */
     public function actionDelete($lang, $id)
     {
-        $query = Notification::find()
-        ->where(['id' => $id, 'is_deleted' => 0]);
-
+        // Fetch the notification model based on the ID and user role.
+        $query = Notification::find()->where(['id' => $id, 'is_deleted' => 0]);
         if (!isRole('admin')) {
             $query->andWhere(['created_by' => Current_user_id()]);
         }
-
         $model = $query->one();
 
-
+        // If model doesn't exist, return a not found response.
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // remove model
-        if ($model) {
-            $result = Notification::deleteItem($model);
-            if (!is_array($result)) {
-                return $this->response(1, _e($this->controller_name . ' successfully deleted.'));
-            } else {
-                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
-            }
-
-            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+        // Delete the notification.
+        $result = Notification::deleteItem($model);
+        if (!is_array($result)) {
+            return $this->response(1, _e($this->controller_name . ' successfully deleted.'));
+        } else {
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
+
+
+    // public function actionDelete($lang, $id)
+    // {
+    //     $query = Notification::find()
+    //         ->where(['id' => $id, 'is_deleted' => 0]);
+
+    //     if (!isRole('admin')) {
+    //         $query->andWhere(['created_by' => Current_user_id()]);
+    //     }
+
+    //     $model = $query->one();
+
+    //     if (!$model) {
+    //         return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+    //     }
+
+    //     // remove model
+    //     if ($model) {
+    //         $result = Notification::deleteItem($model);
+    //         if (!is_array($result)) {
+    //             return $this->response(1, _e($this->controller_name . ' successfully deleted.'));
+    //         } else {
+    //             return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+    //         }
+
+    //         return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+    //     }
+    //     return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+    // }
 
     public function actionStatusList()
     {

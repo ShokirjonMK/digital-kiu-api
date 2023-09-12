@@ -52,6 +52,7 @@ class KpiMark extends \yii\db\ActiveRecord
         return [
             [['user_id', 'kpi_category_id', 'ball'], 'required'],
             [['ball'], 'double',],
+            ['ball', 'validateBallMK'],
             [['user_id', 'archived', 'type', 'edu_year_id', 'kpi_category_id', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             [['kpi_category_id'], 'exist', 'skipOnError' => true, 'targetClass' => KpiCategory::class, 'targetAttribute' => ['kpi_category_id' => 'id']],
@@ -118,6 +119,24 @@ class KpiMark extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    /**
+     * Validates the ball attribute.
+     */
+    public function validateBallMK($attribute, $params)
+    {
+        // Assuming you have a relation setup to access the related model
+        $relatedModel = $this->kpiCategory; // Replace 'relatedModel' with the correct relation name
+
+        if (!$relatedModel) {
+            $this->addError($attribute, 'Related model not found.');
+            return;
+        }
+
+        if ($this->$attribute >= 0 || $this->$attribute <= $relatedModel->max_ball) {
+            $this->addError($attribute, "Ball must be between 0 and {$relatedModel->max_ball}.");
+        }
     }
 
 

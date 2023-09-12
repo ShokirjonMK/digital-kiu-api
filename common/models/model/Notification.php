@@ -239,24 +239,52 @@ class Notification extends \yii\db\ActiveRecord
         }
     }
 
+
+    /**
+     * Deletes a notification and associated data from related tables.
+     *
+     * @param Notification $model The notification model to delete.
+     * @return mixed Returns true if deletion is successful, otherwise returns error messages.
+     */
     public static function deleteItem($model)
     {
         $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
 
+        // Remove related records.
         NotificationRole::deleteAll(['notification_id' => $model->id]);
         NotificationUser::deleteAll(['notification_id' => $model->id]);
         Translate::deleteAll(['model_id' => $model->id, 'table_name' => 'notification']);
 
+        // Try deleting the main notification.
         if ($model->delete()) {
             $transaction->commit();
             return true;
         } else {
-            $errors[] = _e('Error occurred on deleting');
+            // Rollback if an error occurs.
             $transaction->rollBack();
-            return simplify_errors($errors);
+            return [_e('Error occurred on deleting')];
         }
     }
+
+
+    // public static function deleteItem($model)
+    // {
+    //     $transaction = Yii::$app->db->beginTransaction();
+    //     $errors = [];
+
+    //     NotificationRole::deleteAll(['notification_id' => $model->id]);
+    //     NotificationUser::deleteAll(['notification_id' => $model->id]);
+    //     Translate::deleteAll(['model_id' => $model->id, 'table_name' => 'notification']);
+
+    //     if ($model->delete()) {
+    //         $transaction->commit();
+    //         return true;
+    //     } else {
+    //         $errors[] = _e('Error occurred on deleting');
+    //         $transaction->rollBack();
+    //         return simplify_errors($errors);
+    //     }
+    // }
 
     public function beforeSave($insert)
     {

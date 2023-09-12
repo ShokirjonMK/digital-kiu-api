@@ -161,26 +161,42 @@ class KpiMark extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * Creates an item for the given model.
+     * 
+     * @param  object  $model The primary model for the record.
+     * @param  array|null  $post Post data, if any.
+     * @return mixed Returns true on successful creation, otherwise returns an array of error messages.
+     */
     public static function createItem($model, $post = null)
     {
-        $transaction = Yii::$app->db->beginTransaction();
+        $transaction = Yii::$app->db->beginTransaction(); // Start the transaction
         $errors = [];
 
-        $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
+        // Setting the education year based on current date's year.
+        $eduYear = EduYear::findOne(['year' => date("Y")]);
+        if (!$eduYear) {
+            $errors[] = _e('Education year not found.');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+        $model->edu_year_id = $eduYear->id;
 
+        // Validate the model attributes.
         if (!($model->validate())) {
             $errors[] = $model->errors;
-
             $transaction->rollBack();
             return simplify_errors($errors);
         }
 
+        // Check the ball value against the max_ball of its category.
         if ($model->ball > $model->kpiCategory->max_ball) {
             $errors[] = _e('Ushbu tur uchun max ball ') . $model->kpiCategory->max_ball;
             $transaction->rollBack();
             return simplify_errors($errors);
         }
 
+        // Check user access to the category.
         $userIds = $model->kpiCategory->user_ids;
         if (!(is_array($userIds) && in_array(current_user_id(), $userIds))) {
             $errors[] = _e('You have no access for this category');
@@ -188,16 +204,7 @@ class KpiMark extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-
-        // $userIds = json_decode(trim($model->kpiCategory->user_ids, "'"), true);
-        // if (!(is_array($userIds) && in_array(current_user_id(), $userIds))) {
-        //     $errors[] = _e('You have no access for this category');
-        //     $transaction->rollBack();
-        //     return simplify_errors($errors);
-        // }
-
-        // if($model->kpiCategory->user_ids)
-
+        // Save the model.
         if ($model->save()) {
             $transaction->commit();
             return true;
@@ -206,6 +213,52 @@ class KpiMark extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
     }
+
+    // public static function createItem($model, $post = null)
+    // {
+    //     $transaction = Yii::$app->db->beginTransaction();
+    //     $errors = [];
+
+    //     $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
+
+    //     if (!($model->validate())) {
+    //         $errors[] = $model->errors;
+
+    //         $transaction->rollBack();
+    //         return simplify_errors($errors);
+    //     }
+
+    //     if ($model->ball > $model->kpiCategory->max_ball) {
+    //         $errors[] = _e('Ushbu tur uchun max ball ') . $model->kpiCategory->max_ball;
+    //         $transaction->rollBack();
+    //         return simplify_errors($errors);
+    //     }
+
+    //     $userIds = $model->kpiCategory->user_ids;
+    //     if (!(is_array($userIds) && in_array(current_user_id(), $userIds))) {
+    //         $errors[] = _e('You have no access for this category');
+    //         $transaction->rollBack();
+    //         return simplify_errors($errors);
+    //     }
+
+
+    //     // $userIds = json_decode(trim($model->kpiCategory->user_ids, "'"), true);
+    //     // if (!(is_array($userIds) && in_array(current_user_id(), $userIds))) {
+    //     //     $errors[] = _e('You have no access for this category');
+    //     //     $transaction->rollBack();
+    //     //     return simplify_errors($errors);
+    //     // }
+
+    //     // if($model->kpiCategory->user_ids)
+
+    //     if ($model->save()) {
+    //         $transaction->commit();
+    //         return true;
+    //     } else {
+    //         $transaction->rollBack();
+    //         return simplify_errors($errors);
+    //     }
+    // }
 
     public static function createItemStat($model)
     {

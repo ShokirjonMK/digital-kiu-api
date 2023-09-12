@@ -178,10 +178,12 @@ class NotificationController extends ApiActiveController
 
     public function actionDelete($lang, $id)
     {
-        $model = Notification::find()
-            ->andWhere(['id' => $id, 'is_deleted' => 0])
-            ->andWhere(['created_by' => Current_user_id()])
-            ->one();
+        $model = Notification::findOne();
+        $model->andWhere(['id' => $id, 'is_deleted' => 0]);
+        if (!isRole('admin')) {
+            $model->andWhere(['created_by' => Current_user_id()]);
+        }
+        $model->one();
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

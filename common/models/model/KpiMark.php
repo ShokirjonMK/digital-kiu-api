@@ -134,7 +134,7 @@ class KpiMark extends \yii\db\ActiveRecord
             return;
         }
 
-        if ($this->$attribute >= 0 || $this->$attribute <= $relatedModel->max_ball) {
+        if ($this->$attribute < 0 || $this->$attribute > $relatedModel->max_ball) {
             $this->addError($attribute, "Ball must be between 0 and {$relatedModel->max_ball}.");
         }
     }

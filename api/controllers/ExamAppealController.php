@@ -138,7 +138,7 @@ class ExamAppealController extends ApiActiveController
                 'diff_41_to_60' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 40 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 60 THEN 1 END)',
                 'total_appeals' => 'COUNT(*)'
             ])
-            ->from('exam_appeal');
+            ->from('exam_appeal')->where(['exam_appeal.archived' => 0]);
 
         if (null !== $request->get('faculty')) {
             $query = clone $baseQuery;

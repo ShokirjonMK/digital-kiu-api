@@ -197,83 +197,40 @@ class Attend extends \yii\db\ActiveRecord
     public function hasAccess()
     {
         $date = $this->date;
-
         $this->timeTable->eduSemestr;
-        // dd([
-        //     $date,
-        //     $this->timeTable->eduSemestr->id,
-        //     $this->timeTable->eduSemestr->start_date,
-        //     $this->timeTable->eduSemestr->id,
-        //     $this->timeTable->eduSemestr->end_date,
-        //     $date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date ? 1 : 0
-        // ]);
+
+        /** bir haftalik */
+        if ($date >= date('Y-m-d', strtotime('-7 days'))) {
+            return 1;
+        }
+        /** bir haftalik */
+
         if ($date >= $this->timeTable->eduSemestr->start_date && $date <= $this->timeTable->eduSemestr->end_date) {
             if (isset($date) && $date != null) {
+                //     'kun katta ',
                 if ($date > date('Y-m-d')) {
-                    // dd([
-                    //     'kun katta ',
-                    //     $this->timeTable->week_id,
-                    //     date('w', strtotime($date)),
-                    //     $this->timeTable->para->start_time,
-                    //     date('H:i')
-                    // ]);
                     return 0;
                 }
-
+                //     'kun teng ',
                 if ($date == date('Y-m-d')) {
                     if (($this->timeTable->week_id == date('w', strtotime($date))) && ($this->timeTable->para->start_time <  date('H:i'))) {
-
-                        // dd([
-                        //     'kun teng ',
-                        //     $this->timeTable->week_id,
-                        //     date('w', strtotime($date)),
-                        //     $this->timeTable->para->start_time,
-                        //     date('H:i')
-                        // ]);
                         return 1;
                     } else {
-                        // dd([
                         //     'kun teng kirmadi ichiga',
-                        //     $this->timeTable->week_id,
-                        //     date('w', strtotime($date)),
-                        //     $this->timeTable->para->start_time,
-                        //     date('H:i')
-                        // ]);
                         return 0;
                     }
                 } else {
+                    //     'farqi yo faqat week togri ',
                     if (($this->timeTable->week_id == date('w', strtotime($date)))) {
-                        // dd([
-                        //     'farqi yo faqat week togri ',
-                        //     $this->timeTable->week_id,
-                        //     date('w', strtotime($date)),
-                        //     $this->timeTable->para->start_time,
-                        //     date('H:i')
-                        // ]);
                         return 1;
                     } else {
-                        // dd([
                         //     'farqi yoo wek hato ',
-                        //     $this->timeTable->week_id,
-                        //     date('w', strtotime($date)),
-                        //     $this->timeTable->para->start_time,
-                        //     date('H:i')
-                        // ]);
                         return 0;
                     }
                 }
             }
         }
-        // dd([
-        //     'oxiri 0 ',
-        //     $date,
-        //     $date == date('Y-m-d'),
-        //     date('Y-m-d'),
-        //     $this->timeTable->week_id,
-        //     date('w', strtotime($date)),
-        //     $this->timeTable->para->start_time,
-        //     date('H:i')
-        // ]);
+        // 'oxiri 0 ',
         return 0;
     }
 

@@ -247,7 +247,7 @@ class TimeOption extends \yii\db\ActiveRecord
 
     public function getTimeTables()
     {
-        return $this->hasMany(TimeTable::className(), ['time_option_id' => 'id'])->onCondition(['parent_id' => null]);
+        return $this->hasMany(TimeTable::className(), ['time_option_id' => 'id'])->onCondition(['parent_id' => null, 'is_deleted' => 0]);
     }
 
     /**

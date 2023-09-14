@@ -154,7 +154,7 @@ class MipServiceMK
         $client = new Client([
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Api-token' => $_token,
+                'Api-token' => self::getToken(),
             ]
         ]);
 

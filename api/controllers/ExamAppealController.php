@@ -128,6 +128,107 @@ class ExamAppealController extends ApiActiveController
     public function actionBall($lang)
     {
         $request = Yii::$app->request;
+
+        // Base Query: Filtering appeals that are not archived and computing various differences.
+        $baseQuery = (new \yii\db\Query())
+            ->select([
+                'no_change' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) = 0 THEN 1 END)',
+                'diff_less_than_5' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5 THEN 1 END)',
+                // ... [other difference calculations]
+                'total_appeals' => 'COUNT(*)'
+            ])
+            ->from('exam_appeal')
+            ->where(['exam_appeal.archived' => 0]);
+
+        // Checking which grouping to apply based on the request parameters.
+        if (null !== $request->get('faculty')) {
+            $query = clone $baseQuery;
+            $query->addSelect([
+                'faculty_id',
+                'tr.name AS faculty_name'
+            ])
+                ->join('JOIN', 'translate tr', 'exam_appeal.faculty_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'faculty\'', [':lang' => $lang])
+                ->groupBy('faculty_id');
+        } elseif (null !== $request->get('subject')) {
+            $query = clone $baseQuery;
+            $query->addSelect([
+                'exam_appeal.subject_id',
+                'tr.name AS subject_name'
+            ])
+                ->join('JOIN', 'translate tr', 'exam_appeal.subject_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'subject\'', [':lang' => $lang])
+                ->groupBy('exam_appeal.subject_id');
+        } elseif (null !== $request->get('kafedra')) {
+            $query = clone $baseQuery;
+            $query->addSelect([
+                'subject.kafedra_id',
+                'tr.name AS kafedra_name'  // Changed to 'kafedra_name' for clarity.
+            ])
+                ->join('JOIN', 'subject', 'exam.subject_id = exam_appeal.subject_id')
+                ->join('JOIN', 'translate tr', 'subject.kafedra_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'kafedra\'', [':lang' => $lang]) // Adjusted join to 'kafedra' for clarity.
+                ->groupBy('subject.kafedra_id');
+        } else {
+            // If no specific group parameter is provided, return a success message with no data.
+            return $this->response(1, _e('Success'), null, null, ResponseStatus::OK);
+        }
+
+        // Execute the formulated query and retrieve the result.
+        $result = $query->all();
+        return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+    }
+
+    // public function actionBall($lang)
+    // {
+    //     $request = Yii::$app->request;
+    //     $baseQuery = (new \yii\db\Query())
+    //         ->select([
+    //             'no_change' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) = 0 THEN 1 END)',
+    //             'diff_less_than_5' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5 THEN 1 END)',
+    //             'diff_6_to_10' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 5 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 10 THEN 1 END)',
+    //             'diff_11_to_20' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 10 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 20 THEN 1 END)',
+    //             'diff_21_to_40' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 20 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 40 THEN 1 END)',
+    //             'diff_41_to_60' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 40 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 60 THEN 1 END)',
+    //             'total_appeals' => 'COUNT(*)'
+    //         ])
+    //         ->from('exam_appeal')->where(['exam_appeal.archived' => 0]);
+
+    //     if (null !== $request->get('faculty')) {
+    //         $query = clone $baseQuery;
+    //         $query->addSelect([
+    //             'faculty_id',
+    //             'tr.name AS faculty_name'
+    //         ])
+    //             ->join('JOIN', 'translate tr', 'exam_appeal.faculty_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'faculty\'', [':lang' => $lang])
+    //             ->groupBy('faculty_id');
+    //     } elseif (null !== $request->get('subject')) {
+    //         $query = clone $baseQuery;
+    //         $query->addSelect([
+    //             'exam_appeal.subject_id',
+    //             'tr.name AS subject_name'
+    //         ])
+    //             ->join('JOIN', 'translate tr', 'exam_appeal.subject_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'subject\'', [':lang' => $lang])
+    //             ->groupBy('exam_appeal.subject_id');
+    //     } elseif (null !== $request->get('kafedra')) {
+    //         $query = clone $baseQuery;
+    //         $query->addSelect([
+    //             'subject.kafedra_id',
+    //             'tr.name AS subject_name'
+    //         ])
+    //             // ->join('JOIN', 'exam', 'exam_student.exam_id = exam.id')
+    //             ->join('JOIN', 'subject', 'exam.subject_id = exam_appeal.subject_id')
+    //             ->join('JOIN', 'translate tr', 'exam_appeal.subject_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'subject\'', [':lang' => $lang])
+    //             ->groupBy('subject.kafedra_id');
+    //     } else {
+    //         // If no specific group parameter is provided, return a success message with no data.
+    //         return $this->response(1, _e('Success'), null, null, ResponseStatus::OK);
+    //     }
+
+    //     $result = $query->all();
+    //     return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
+    // }
+
+    public function actionKafedra($lang)
+    {
+        $request = Yii::$app->request;
         $baseQuery = (new \yii\db\Query())
             ->select([
                 'no_change' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) = 0 THEN 1 END)',

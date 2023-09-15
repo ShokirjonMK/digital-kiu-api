@@ -134,7 +134,10 @@ class ExamAppealController extends ApiActiveController
             ->select([
                 'no_change' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) = 0 THEN 1 END)',
                 'diff_less_than_5' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5 THEN 1 END)',
-                // ... [other difference calculations]
+                'diff_6_to_10' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 5 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 10 THEN 1 END)',
+                'diff_11_to_20' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 10 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 20 THEN 1 END)',
+                'diff_21_to_40' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 20 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 40 THEN 1 END)',
+                'diff_41_to_60' => 'COUNT(CASE WHEN ABS(exam_appeal.old_ball - exam_appeal.ball) > 40 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 60 THEN 1 END)',
                 'total_appeals' => 'COUNT(*)'
             ])
             ->from('exam_appeal')

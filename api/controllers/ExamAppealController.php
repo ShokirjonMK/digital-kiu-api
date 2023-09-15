@@ -163,7 +163,7 @@ class ExamAppealController extends ApiActiveController
                 'subject.kafedra_id',
                 'tr.name AS kafedra_name'  // Changed to 'kafedra_name' for clarity.
             ])
-                ->join('JOIN', 'subject', 'exam.subject_id = exam_appeal.subject_id')
+                ->join('JOIN', 'subject', 'subject.id = exam_appeal.subject_id')
                 ->join('JOIN', 'translate tr', 'subject.kafedra_id = tr.model_id AND tr.`language`=:lang AND tr.table_name =\'kafedra\'', [':lang' => $lang]) // Adjusted join to 'kafedra' for clarity.
                 ->groupBy('subject.kafedra_id');
         } else {

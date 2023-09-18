@@ -245,7 +245,7 @@ class  StudentController extends ApiActiveController
 
         // return $data->success;
         // return $data;
-        if ($data->success) {
+        if (isset($data->success)) {
             if (isset($data->data))
                 return $this->response(1, _e('Success'), $data->data);
 

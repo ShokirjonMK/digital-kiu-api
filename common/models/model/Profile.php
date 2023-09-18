@@ -293,6 +293,8 @@ class Profile extends \yii\db\ActiveRecord
             'degree_info_id',
             'partiya_id',
             'has_disability',
+            // unset($fields['password'], $fields['remember_token']);
+
         ];
 
 

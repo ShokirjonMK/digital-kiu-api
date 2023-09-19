@@ -179,7 +179,7 @@ class ExamAppealController extends ApiActiveController
         return $this->response(1, _e('Success'), $result, null, ResponseStatus::OK);
     }
 
-    // public function actionBall($lang)
+    // public function actionBall00($lang)
     // {
     //     $request = Yii::$app->request;
     //     $baseQuery = (new \yii\db\Query())
@@ -279,7 +279,7 @@ class ExamAppealController extends ApiActiveController
     }
 
 
-    // public function actionBall($lang)
+    // public function actionBall3($lang)
     // {
     //     $type = null;
     //     $table = null;
@@ -317,7 +317,7 @@ class ExamAppealController extends ApiActiveController
     //     return $query;
     // }
 
-    // public function actionBall($lang)
+    // public function actionBall321($lang)
     // {
     //     if (null !==  Yii::$app->request->get('faculty')) {
 

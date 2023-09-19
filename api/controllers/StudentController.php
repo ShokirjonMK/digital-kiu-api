@@ -331,9 +331,31 @@ class  StudentController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
+    // public function actionTimeOptionNot($lang)
+    // {
+
+    //     $model = new Student();
+
+    //     $query = $model->find()
+    //         ->with(['profile'])
+    //         ->leftJoin('student_time_option', 'student.id = student_time_option.student_id')
+    //         ->leftJoin('profile', 'student.user_id = profile.user_id')
+    //         ->leftJoin('translate AS fac', 'fac.model_id = student.faculty_id AND fac.table_name = "faculty" AND fac.language = "uz"')
+    //         ->leftJoin('translate AS eduplan', 'eduplan.model_id = student.edu_plan_id AND eduplan.table_name = "edu_plan" AND eduplan.language = "uz"')
+    //         ->where(['IS', 'student_time_option.student_id', new \yii\db\Expression('NULL')])
+    //         ->andWhere(['IN', 'student.edu_plan_id', [16, 21, 26, 57, 17, 20, 25, 58, 60, 61, 62, 63, 64, 88]])
+    //         ->andWhere(['<>', 'student.is_deleted', 1])
+    //         ->andWhere(['<>', 'student.faculty_id', 5]);
+
+    //     $students = $query->all();
+
+    //     return $this->response(1, _e('Success'), $students);
+    // }
+
+
     public function actionTimeOptionNot($lang)
     {
-
+        /*********/
         $model = new Student();
 
         $query = $model->find()
@@ -345,100 +367,71 @@ class  StudentController extends ApiActiveController
             ->where(['IS', 'student_time_option.student_id', new \yii\db\Expression('NULL')])
             ->andWhere(['IN', 'student.edu_plan_id', [16, 21, 26, 57, 17, 20, 25, 58, 60, 61, 62, 63, 64, 88]])
             ->andWhere(['<>', 'student.is_deleted', 1])
-            ->andWhere(['<>', 'student.faculty_id', 5]);
+            ->andWhere(['<>', 'student.faculty_id', 5]);;
 
-        $students = $query->all();
+        // return $model->tableName();
+        /*  is Self  */
+        $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+        if ($t['status'] == 1) {
+            $query = $query->andWhere([
+                $this->table_name . '.faculty_id' => $t['UserAccess']->table_id
+            ]);
+        } elseif ($t['status'] == 2) {
+            $query->andFilterWhere([
+                $this->table_name . '.faculty_id' => -1
+            ]);
+        }
 
-        return $this->response(1, _e('Success'), $students);
+        /*  is Role check  */
+        if (isRole('tutor')) {
+            $query = $query->andWhere([
+                $this->table_name . '.tutor_id' => current_user_id()
+            ]);
+        }
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        $user = new User();
+        $student_time_option = new StudentTimeOption();
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $user->attributes())) {
+                    $query = $query->andFilterWhere(['users.' . $attribute => $id]);
+                }
+                if (in_array($attribute, $student_time_option->attributes())) {
+                    $query = $query->andFilterWhere(['student_time_option.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+                if (in_array($attributeq, $user->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'users.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
+
+        // filter
+        $query = $this->filterAll($query, $model);
+
+        // sort
+        $query = $this->sort($query);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
     }
-
-
-    // public function actionTimeOptionNot($lang)
-    // {
-    //     /*********/
-    //     $model = new Student();
-
-    //     $query = $model->find()
-    //         ->with(['profile'])
-    //         ->where(['student.is_deleted' => 0])
-    //         ->andWhere(['<>', 'student.course_id', 9])
-
-    //         ->leftJoin('student_time_option', 'student.id = student_time_option.student_id')
-    //         ->leftJoin('profile', 'student.user_id = profile.user_id')
-    //         // ->leftJoin('translate AS fac', 'fac.model_id = student.faculty_id AND fac.table_name = "faculty" AND fac.language = "uz"')
-    //         // ->leftJoin('translate AS eduplan', 'eduplan.model_id = student.edu_plan_id AND eduplan.table_name = "edu_plan" AND eduplan.language = "uz"')
-    //         ->where(['IS', 'student_time_option.student_id', new \yii\db\Expression('NULL')])
-    //         ->andWhere(['IN', 'student.edu_plan_id', [16, 21, 26, 57, 17, 20, 25, 58, 60, 61, 62, 63, 64, 88]])
-    //         ->andWhere(['<>', 'student.is_deleted', 1])
-    //         ->andWhere(['<>', 'student.faculty_id', 5])
-    //         // ->andWhere(['<>', 'student_time_option.archived', 1])
-
-    //         // ->groupBy('student.id')
-    //     ;
-
-    //     // return $model->tableName();
-    //     /*  is Self  */
-    //     $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
-    //     if ($t['status'] == 1) {
-    //         $query = $query->andWhere([
-    //             $this->table_name . '.faculty_id' => $t['UserAccess']->table_id
-    //         ]);
-    //     } elseif ($t['status'] == 2) {
-    //         $query->andFilterWhere([
-    //             $this->table_name . '.faculty_id' => -1
-    //         ]);
-    //     }
-
-    //     /*  is Role check  */
-    //     if (isRole('tutor')) {
-    //         $query = $query->andWhere([
-    //             $this->table_name . '.tutor_id' => current_user_id()
-    //         ]);
-    //     }
-
-    //     //  Filter from Profile 
-    //     $profile = new Profile();
-    //     $user = new User();
-    //     $student_time_option = new StudentTimeOption();
-    //     if (isset($filter)) {
-    //         foreach ($filter as $attribute => $id) {
-    //             if (in_array($attribute, $profile->attributes())) {
-    //                 $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
-    //             }
-    //             if (in_array($attribute, $user->attributes())) {
-    //                 $query = $query->andFilterWhere(['users.' . $attribute => $id]);
-    //             }
-    //             if (in_array($attribute, $student_time_option->attributes())) {
-    //                 $query = $query->andFilterWhere(['student_time_option.' . $attribute => $id]);
-    //             }
-    //         }
-    //     }
-
-    //     $queryfilter = Yii::$app->request->get('filter-like');
-    //     $queryfilter = json_decode(str_replace("'", "", $queryfilter));
-    //     if (isset($queryfilter)) {
-    //         foreach ($queryfilter as $attributeq => $word) {
-    //             if (in_array($attributeq, $profile->attributes())) {
-    //                 $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
-    //             }
-    //             if (in_array($attributeq, $user->attributes())) {
-    //                 $query = $query->andFilterWhere(['like', 'users.' . $attributeq, '%' . $word . '%', false]);
-    //             }
-    //         }
-    //     }
-    //     // ***
-
-    //     // filter
-    //     $query = $this->filterAll($query, $model);
-
-    //     // sort
-    //     $query = $this->sort($query);
-
-    //     // data
-    //     $data =  $this->getData($query);
-
-    //     return $this->response(1, _e('Success'), $data);
-    // }
 
 
     public function actionExport($lang)

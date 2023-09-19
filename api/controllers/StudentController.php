@@ -344,12 +344,13 @@ class  StudentController extends ApiActiveController
 
             ->leftJoin('student_time_option', 'student.id = student_time_option.student_id')
             ->leftJoin('profile', 'student.user_id = profile.user_id')
-            ->leftJoin('translate AS fac', 'fac.model_id = student.faculty_id AND fac.table_name = "faculty" AND fac.language = "uz"')
-            ->leftJoin('translate AS eduplan', 'eduplan.model_id = student.edu_plan_id AND eduplan.table_name = "edu_plan" AND eduplan.language = "uz"')
+            // ->leftJoin('translate AS fac', 'fac.model_id = student.faculty_id AND fac.table_name = "faculty" AND fac.language = "uz"')
+            // ->leftJoin('translate AS eduplan', 'eduplan.model_id = student.edu_plan_id AND eduplan.table_name = "edu_plan" AND eduplan.language = "uz"')
             ->where(['IS', 'student_time_option.student_id', new \yii\db\Expression('NULL')])
             ->andWhere(['IN', 'student.edu_plan_id', [16, 21, 26, 57, 17, 20, 25, 58, 60, 61, 62, 63, 64, 88]])
             ->andWhere(['<>', 'student.is_deleted', 1])
             ->andWhere(['<>', 'student.faculty_id', 5])
+            ->andWhere(['<>', 'student_time_option.archived', 1])
 
             // ->groupBy('student.id')
         ;

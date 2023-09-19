@@ -113,6 +113,9 @@ class Building extends \yii\db\ActiveRecord
             'roomsCapacity',
             'roomsCapacityFemale',
             'roomsCapacityMale',
+
+            'roomsBusyFemale',
+            'roomsBusyMale',
             'description',
             'createdBy',
             'updatedBy',
@@ -211,11 +214,52 @@ class Building extends \yii\db\ActiveRecord
             ->where([
                 'building_id' => $this->id,     // Fetches rooms from the current building
                 'status' => 1,                  // Ensures that the room is active (assuming 1 means active)
-                'type' => Rooms::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
+                'type' => Room::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
                 'is_deleted' => 0               // Ensures that the room is not marked as deleted
             ])
             ->sum('capacity');  // Sum the capacity of the fetched rooms
     }
+
+    public function getRoomsBusyFemale()
+    {
+        return HostelStudentRoom::find()
+            ->where([
+                'in', 'room_id', Room::find()
+                    ->where([
+                        'building_id' => $this->id,     // Fetches rooms from the current building
+                        'gender' => 0,                  // Ensures that the room is active (assuming 1 means active)
+                        'status' => 1,                  // Ensures that the room is active (assuming 1 means active)
+                        'type' => Room::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
+                        'is_deleted' => 0               // Ensures that the room is not marked as deleted
+                    ])
+            ])
+            ->andWhere([
+                'is_deleted' => 0,
+                'status' => 1,
+            ])
+            ->count();
+    }
+
+    public function getRoomsBusyMale()
+    {
+        return HostelStudentRoom::find()
+            ->where([
+                'in', 'room_id', Room::find()
+                    ->where([
+                        'building_id' => $this->id,     // Fetches rooms from the current building
+                        'status' => 1,                  // Ensures that the room is active (assuming 1 means active)
+                        'gender' => 1,                  // Ensures that the room is active (assuming 1 means active)
+                        'type' => Room::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
+                        'is_deleted' => 0               // Ensures that the room is not marked as deleted
+                    ])
+            ])
+            ->andWhere([
+                'is_deleted' => 0,
+                'status' => 1,
+            ])
+            ->count();
+    }
+
 
     public function getRoomsCapacityFemale()
     {
@@ -224,7 +268,7 @@ class Building extends \yii\db\ActiveRecord
                 'building_id' => $this->id,
                 'gender' => 0,
                 'status' => 1,
-                'type' => Rooms::TYPE_HOSTEL,
+                'type' => Room::TYPE_HOSTEL,
                 'is_deleted' => 0
             ])
             ->sum('capacity');  // Sum the capacity of the fetched rooms
@@ -237,7 +281,7 @@ class Building extends \yii\db\ActiveRecord
                 'building_id' => $this->id,
                 'gender' => 1,
                 'status' => 1,
-                'type' => Rooms::TYPE_HOSTEL,
+                'type' => Room::TYPE_HOSTEL,
                 'is_deleted' => 0
             ])
             ->sum('capacity');  // Sum the capacity of the fetched rooms

@@ -208,7 +208,7 @@ class NotificationController extends ApiActiveController
     }
 
 
-    // public function actionDelete($lang, $id)
+    // public function actionDelete12($lang, $id)
     // {
     //     $query = Notification::find()
     //         ->where(['id' => $id, 'is_deleted' => 0]);

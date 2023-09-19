@@ -98,7 +98,6 @@ class Attend extends \yii\db\ActiveRecord
             [['time_table_id'], 'exist', 'skipOnError' => true, 'targetClass' => TimeTable::className(), 'targetAttribute' => ['time_table_id' => 'id']],
 
             [['time_table_id', 'date'], 'unique', 'targetAttribute' => ['time_table_id', 'date'], 'message' => "This TimeTable already exists in this date"]
-
         ];
     }
 

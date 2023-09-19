@@ -349,7 +349,7 @@ class  StudentController extends ApiActiveController
             ->andWhere(['IN', 'student.edu_plan_id', [16, 21, 26, 57, 17, 20, 25, 58, 60, 61, 62, 63, 64, 88]])
             ->andWhere(['<>', 'student.is_deleted', 1])
             ->andWhere(['<>', 'student.faculty_id', 5])
-            ->andWhere(['<>', 'student_time_option.archived', 1])
+            // ->andWhere(['<>', 'student_time_option.archived', 1])
 
             // ->groupBy('student.id')
         ;

@@ -126,7 +126,8 @@ class Room extends \yii\db\ActiveRecord
             'description',
             'hostelStudentCount',
             'hostelStudens',
-            'HostelStudentsCount',
+            'hostelStudentsCount',
+            'busyCount',
 
             'createdBy',
             'updatedBy',
@@ -198,11 +199,22 @@ class Room extends \yii\db\ActiveRecord
     public function getHostelStudentCount()
     {
         return HostelStudentRoom::find()
-            ->where(['in', 'room_id', $this->getRooms()->select('id')])
+            ->where(['in', 'room_id', $this->id])
             ->andWhere(['is_deleted' => 0])
             ->andWhere(['archived' => 0])
             ->count();
     }
+    public function getBusyCount()
+    {
+        return HostelStudentRoom::find()
+            ->where(['in', 'room_id', $this->id])
+            ->andWhere([
+                'is_deleted' => 0,
+                'status' => 1
+            ])
+            ->count();
+    }
+
 
 
     public static function createItem($model, $post)

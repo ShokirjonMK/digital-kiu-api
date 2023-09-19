@@ -199,7 +199,7 @@ class Room extends \yii\db\ActiveRecord
     public function getHostelStudentCount()
     {
         return HostelStudentRoom::find()
-            ->where(['in', 'room_id', $this->id])
+            ->where(['room_id'=> $this->id])
             ->andWhere(['is_deleted' => 0])
             ->andWhere(['archived' => 0])
             ->count();

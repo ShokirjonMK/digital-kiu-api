@@ -96,13 +96,17 @@ class TeacherAccessController extends ApiActiveController
         $model = new TeacherAccess();
 
         $query = $model->find()
-            ->andWhere(['is_deleted' => 0]);
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->join('INNER JOIN', 'users', 'users.id = ' . $this->table_name . '.user_id');
+
+        $query->andWhere(['users.is_deleted' => 0]);
+        $query->andWhere(['users.status' => 10]);
 
 
         // sirtqi uchun ochildi
-        // if (isset($teacheIds)) {
-        //     $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
-        // }
+        if (isset($teacheIds)) {
+            $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
+        }
 
         // filter
         $query = $this->filterAll($query, $model);

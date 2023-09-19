@@ -222,42 +222,54 @@ class Building extends \yii\db\ActiveRecord
 
     public function getRoomsBusyFemale()
     {
-        return HostelStudentRoom::find()
+        // Define a subquery to fetch the room_ids from the Room table based on the conditions provided.
+        // This will be used to find how many HostelStudentRooms are associated with these room_ids.
+        $subQuery = Room::find()
+            ->select('id')  // Only the ID is required for the IN condition
             ->where([
-                'in', 'room_id', Room::find()
-                    ->where([
-                        'building_id' => $this->id,     // Fetches rooms from the current building
-                        'gender' => 0,                  // Ensures that the room is active (assuming 1 means active)
-                        'status' => 1,                  // Ensures that the room is active (assuming 1 means active)
-                        'type' => Room::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
-                        'is_deleted' => 0               // Ensures that the room is not marked as deleted
-                    ])
-            ])
+                'building_id' => $this->id,          // Matches rooms from the current building
+                'status' => 1,                       // Ensures the room is active (assuming 1 means active)
+                'gender' => 0,                       // Matches male rooms (assuming 1 represents male)
+                'type' => Room::TYPE_HOSTEL,         // Considers only rooms of type 'TYPE_HOSTEL'
+                'is_deleted' => 0                    // Ensures the room is not marked as deleted
+            ]);
+
+        // Now, let's count how many active and non-deleted HostelStudentRooms are associated with the room_ids from the subquery.
+        $count = HostelStudentRoom::find()
+            ->where(['in', 'room_id', $subQuery])  // Uses the room IDs from the subquery
             ->andWhere([
-                'is_deleted' => 0,
-                'status' => 1,
+                'is_deleted' => 0,                  // Ensures the record is not marked as deleted
+                'status' => 1                       // Ensures the record is active (assuming 1 means active)
             ])
             ->count();
+
+        return $count;
     }
 
     public function getRoomsBusyMale()
     {
-        return HostelStudentRoom::find()
+        // Define a subquery to fetch the room_ids from the Room table based on the conditions provided.
+        // This will be used to find how many HostelStudentRooms are associated with these room_ids.
+        $subQuery = Room::find()
+            ->select('id')  // Only the ID is required for the IN condition
             ->where([
-                'in', 'room_id', Room::find()
-                    ->where([
-                        'building_id' => $this->id,     // Fetches rooms from the current building
-                        'status' => 1,                  // Ensures that the room is active (assuming 1 means active)
-                        'gender' => 1,                  // Ensures that the room is active (assuming 1 means active)
-                        'type' => Room::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
-                        'is_deleted' => 0               // Ensures that the room is not marked as deleted
-                    ])
-            ])
+                'building_id' => $this->id,          // Matches rooms from the current building
+                'status' => 1,                       // Ensures the room is active (assuming 1 means active)
+                'gender' => 1,                       // Matches male rooms (assuming 1 represents male)
+                'type' => Room::TYPE_HOSTEL,         // Considers only rooms of type 'TYPE_HOSTEL'
+                'is_deleted' => 0                    // Ensures the room is not marked as deleted
+            ]);
+
+        // Now, let's count how many active and non-deleted HostelStudentRooms are associated with the room_ids from the subquery.
+        $count = HostelStudentRoom::find()
+            ->where(['in', 'room_id', $subQuery])  // Uses the room IDs from the subquery
             ->andWhere([
-                'is_deleted' => 0,
-                'status' => 1,
+                'is_deleted' => 0,                  // Ensures the record is not marked as deleted
+                'status' => 1                       // Ensures the record is active (assuming 1 means active)
             ])
             ->count();
+
+        return $count;
     }
 
 

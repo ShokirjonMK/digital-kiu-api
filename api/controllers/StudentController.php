@@ -335,12 +335,7 @@ class  StudentController extends ApiActiveController
     {
         $query = Student::find()
             ->select([
-                'user_id',
-                'id',
-                'faculty_id',
-                'fac.name AS faculty_name',
-                'edu_plan_id',
-                'eduplan.name AS edu_plan_name',
+                
                 'profile.last_name',
                 'profile.first_name',
                 'profile.middle_name',

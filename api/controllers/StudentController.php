@@ -333,16 +333,11 @@ class  StudentController extends ApiActiveController
 
     public function actionTimeOptionNot($lang)
     {
-        $query = Student::find()
-            ->select([
-                
-                'profile.last_name',
-                'profile.first_name',
-                'profile.middle_name',
-                'profile.passport_seria',
-                'profile.passport_number',
-                'profile.passport_pin'
-            ])
+
+        $model = new Student();
+
+        $query = $model->find()
+            ->with(['profile'])
             ->leftJoin('student_time_option', 'student.id = student_time_option.student_id')
             ->leftJoin('profile', 'student.user_id = profile.user_id')
             ->leftJoin('translate AS fac', 'fac.model_id = student.faculty_id AND fac.table_name = "faculty" AND fac.language = "uz"')

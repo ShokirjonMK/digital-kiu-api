@@ -20,6 +20,8 @@ use common\models\model\StudentExport;
 use common\models\model\StudentPinn;
 use common\models\model\StudentTimeOption;
 use Exception;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 
@@ -331,7 +333,7 @@ class  StudentController extends ApiActiveController
         return $this->response(1, _e('Success'), $data);
     }
 
-    // public function actionTimeOptionNot($lang)
+    // public function actionTimeOptionNotasd($lang)
     // {
 
     //     $model = new Student();
@@ -351,6 +353,63 @@ class  StudentController extends ApiActiveController
 
     //     return $this->response(1, _e('Success'), $students);
     // }
+
+
+    public function actionTimeTableProbmes($lang)
+    {
+        // Subquery
+        $subQuery = (new Query())
+            ->select([
+                'student.id',
+                'student.faculty_id',
+                'student.edu_plan_id',
+                'student.edu_lang_id',
+                'student.course_id',
+                '`profile`.last_name',
+                '`profile`.first_name',
+                '`profile`.middle_name',
+                '`profile`.passport_pin',
+                'count(*) as soni'
+            ])
+            ->from('student')
+            ->leftJoin('student_time_table', 'student.id = student_time_table.student_id')
+            ->leftJoin('profile', 'student.user_id = `profile`.user_id')
+            ->where(['in', 'student.course_id', [2, 3, 4]])
+            ->andWhere(['student_time_table.archived' => 0])
+            ->andWhere(['<>', 'student.faculty_id', 5])
+            ->andWhere(['<>', 'student.is_deleted', 1])
+            ->groupBy([
+                'student.id',
+                'student.faculty_id',
+                'student.edu_plan_id',
+                'student.edu_lang_id',
+                'student.course_id',
+                '`profile`.last_name',
+                '`profile`.first_name',
+                '`profile`.middle_name',
+                '`profile`.passport_pin'
+            ]);
+
+        // Main query
+        $query = (new Query())
+            ->from(['subquery' => $subQuery])
+            ->where(
+                new Expression(
+                    "CASE
+                WHEN course_id = 2 THEN soni <> 24
+                WHEN course_id = 3 THEN soni <> 20
+                WHEN course_id = 4 THEN soni <> 16
+                ELSE 1 = 1
+            END"
+                )
+            )
+            ->orderBy(['course_id' => SORT_ASC]);
+
+        // data
+        $data =  $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
 
 
     public function actionTimeOptionNot($lang)

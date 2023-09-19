@@ -68,7 +68,18 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['room_id'], 'exist', 'skipOnError' => true, 'targetClass' => Room::className(), 'targetAttribute' => ['room_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
-            [['student_id'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id', 'is_deleted']],
+            // [['student_id', 'edu_year_id', 'is_deleted'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id', 'is_deleted']],
+            // [['student_id', 'edu_year_id'], 'unique', 'targetAttribute' => ['student_id', 'edu_year_id'], 'filter' => ['is_deleted' => 0]],
+            /**
+             * Ensures that for each record with `is_deleted` set to 0 (i.e., not deleted),
+             * the combination of `student_id` and `edu_year_id` is unique.
+             */
+            [
+                ['student_id', 'edu_year_id'],
+                'unique',
+                'targetAttribute' => ['student_id', 'edu_year_id'],
+                'filter' => ['is_deleted' => 0]
+            ],
 
         ];
     }
@@ -248,7 +259,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
-        
+
         if ($model->save()) {
             $transaction->commit();
             return true;

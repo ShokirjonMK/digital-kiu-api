@@ -204,17 +204,22 @@ class Room extends \yii\db\ActiveRecord
             ->andWhere(['archived' => 0])
             ->count();
     }
+
+    /**
+     * Gets the count of busy (occupied) hostel student rooms for the current room ID.
+     *
+     * @return int The count of busy hostel student rooms.
+     */
     public function getBusyCount()
     {
         return HostelStudentRoom::find()
-            ->where(['in', 'room_id', $this->id])
-            ->andWhere([
+            ->where([
+                'room_id' => $this->id,
                 'is_deleted' => 0,
                 'status' => 1
             ])
             ->count();
     }
-
 
 
     public static function createItem($model, $post)

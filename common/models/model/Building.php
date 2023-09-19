@@ -110,7 +110,9 @@ class Building extends \yii\db\ActiveRecord
             'roomsLectureCount',
             'roomSeminarCount',
             'hostelStudentCount',
-
+            'roomsCapacity',
+            'roomsCapacityFemale',
+            'roomsCapacityMale',
             'description',
             'createdBy',
             'updatedBy',
@@ -198,6 +200,48 @@ class Building extends \yii\db\ActiveRecord
             ->count();
     }
 
+    /**
+     * Get the total capacity of rooms of type TYPE_HOSTEL in the building.
+     *
+     * @return integer Total capacity of the rooms.
+     */
+    public function getRoomsCapacity()
+    {
+        return Room::find()
+            ->where([
+                'building_id' => $this->id,     // Fetches rooms from the current building
+                'status' => 1,                  // Ensures that the room is active (assuming 1 means active)
+                'type' => Rooms::TYPE_HOSTEL,   // Fetches only rooms of type 'TYPE_HOSTEL'
+                'is_deleted' => 0               // Ensures that the room is not marked as deleted
+            ])
+            ->sum('capacity');  // Sum the capacity of the fetched rooms
+    }
+
+    public function getRoomsCapacityFemale()
+    {
+        return Room::find()
+            ->where([
+                'building_id' => $this->id,
+                'gender' => 0,
+                'status' => 1,
+                'type' => Rooms::TYPE_HOSTEL,
+                'is_deleted' => 0
+            ])
+            ->sum('capacity');  // Sum the capacity of the fetched rooms
+    }
+
+    public function getRoomsCapacityMale()
+    {
+        return Room::find()
+            ->where([
+                'building_id' => $this->id,
+                'gender' => 1,
+                'status' => 1,
+                'type' => Rooms::TYPE_HOSTEL,
+                'is_deleted' => 0
+            ])
+            ->sum('capacity');  // Sum the capacity of the fetched rooms
+    }
 
     public function getRoomsLectureCount()
     {

@@ -340,7 +340,7 @@ class  StudentController extends ApiActiveController
             ->with(['profile'])
             ->where(['student.is_deleted' => 0])
             ->andWhere(['<>', 'student.course_id', 9])
-            ->andWhere(['<>', 'student_time_option.archived', 0])
+            ->andWhere(['<>', 'student_time_option.archived', 1])
             ->leftJoin('student_time_option', 'student.id = student_time_option.student_id')
             ->leftJoin('profile', 'profile.user_id = student.user_id')
             // ->groupBy('student.id')

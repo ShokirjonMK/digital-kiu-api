@@ -39,7 +39,7 @@ class m230615_115512_create_hostel_student_room_table extends Migration
 
             'archived' => $this->tinyInteger(1)->defaultValue(0),
 
-            'status' => $this->tinyInteger(1)->defaultValue(0),
+            'status' => $this->tinyInteger(1)->defaultValue(1),
             'order' => $this->tinyInteger(1)->defaultValue(1),
             'created_at' => $this->integer()->Null(),
             'updated_at' => $this->integer()->Null(),

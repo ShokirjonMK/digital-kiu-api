@@ -102,7 +102,6 @@ class TeacherAccessController extends ApiActiveController
         $query->andWhere(['users.deleted' => 0]);
         $query->andWhere(['users.status' => 10]);
 
-
         // sirtqi uchun ochildi
         if (isset($teacheIds)) {
             $query->andFilterWhere(['not in', $model->tableName() . '.user_id', $teacheIds]);

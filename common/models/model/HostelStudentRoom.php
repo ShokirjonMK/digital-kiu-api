@@ -300,6 +300,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
         $model->faculty_id = $model->student->faculty_id;
         $model->edu_plan_id = $model->student->edu_plan_id;
         $model->is_contract = $model->student->is_contract;
+        $model->building_id = $model->room->building_id;
 
         if (!isset($post['edu_year_id'])) {
             $eduYear = EduYear::findOne(['status' => 1], ['order' => ['id' => SORT_DESC]]);

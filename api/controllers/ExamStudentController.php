@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Exam;
 use common\models\model\ExamNoStudent;
 use common\models\model\ExamStudent;
 use common\models\model\ExamStudentReaxam;
@@ -43,63 +44,166 @@ class ExamStudentController extends ApiActiveController
     }
 
 
+    // public function actionIndex00000($lang)
+    // {
+    //     $model = new ExamStudent();
+
+    //     $query = $model->find()
+    //         ->andWhere([$model->tableName() . '.is_deleted' => 0])
+    //         ->join('INNER JOIN', 'student', 'student.id = ' . $model->tableName() . '.student_id')
+    //         ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+    //         ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
+
+
+    //     //  Filter from Profile 
+    //     $profile = new Profile();
+    //     $filter = Yii::$app->request->get('filter');
+    //     $filter = json_decode(str_replace("'", "", $filter));
+    //     if (isset($filter)) {
+    //         foreach ($filter as $attribute => $id) {
+    //             if (in_array($attribute, $profile->attributes())) {
+    //                 $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+    //             }
+    //         }
+    //     }
+    //     // 'two' => 'COUNT(CASE WHEN main_ball < 56 THEN 1 END)',
+    //     // 'three' => 'COUNT(CASE WHEN main_ball >= 56 AND main_ball <= 70 THEN 1 END)',
+    //     // 'four' => 'COUNT(CASE WHEN main_ball >= 71 AND main_ball <= 85 THEN 1 END)',
+    //     // 'five' => 'COUNT(CASE WHEN main_ball > 85 THEN 1 END)',
+    //     // 'all' => 'COUNT(*)'
+    //     $ball = Yii::$app->request->get('ball');
+    //     if (isset($queryfilter)) {
+    //         if ($ball == 'two') {
+    //             $query = $query->andFilterWhere(['<', $model->tableName() . 'main_ball', 56]);
+    //         }
+    //         if ($ball == 'three') {
+    //             $query = $query->andFilterWhere(['>=', $model->tableName() . 'main_ball', 56]);
+    //             $query = $query->andFilterWhere(['<', $model->tableName() . 'main_ball', 71]);
+    //         }
+    //         if ($ball == 'four') {
+    //             $query = $query->andFilterWhere(['>=', $model->tableName() . 'main_ball', 71]);
+    //             $query = $query->andFilterWhere(['<', $model->tableName() . 'main_ball', 86]);
+    //         }
+    //         if ($ball == 'five') {
+    //             $query = $query->andFilterWhere(['>=', $model->tableName() . 'main_ball', 86]);
+    //         }
+    //     }
+
+    //     $faculty_id = Yii::$app->request->get('faculty_id');
+    //     if (isset($faculty_id)) {
+    //         $query = $query->andWhere([
+    //             'in', 'exam_id', Exam::find()->where(['faculty_id' => $faculty_id])->select('id')
+    //         ]);
+    //     }
+
+    //     $queryfilter = Yii::$app->request->get('filter-like');
+    //     $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+    //     if (isset($queryfilter)) {
+    //         foreach ($queryfilter as $attributeq => $word) {
+    //             if (in_array($attributeq, $profile->attributes())) {
+    //                 $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+    //             }
+    //         }
+    //     }
+
+    //     if (isRole("teacher")) {
+    //         $query = $query->andWhere([
+    //             'in', 'teacher_access_id', $this->teacher_access()
+    //         ]);
+    //     }
+
+    //     if (isRole("student")) {
+    //         $query = $query->andWhere([
+    //             'student_id' => $this->student()
+    //         ]);
+    //     }
+
+    //     // filter
+    //     $query = $this->filterAll($query, $model);
+
+    //     // sort
+    //     $query = $this->sort($query);
+
+    //     // data
+    //     $data =  $this->getData($query);
+    //     return $this->response(1, _e('Success'), $data);
+    // }
+
     public function actionIndex($lang)
     {
-        /** */
         $model = new ExamStudent();
 
+        // Initialize base query
         $query = $model->find()
-            ->andWhere([$model->tableName() . '.is_deleted' => 0])
-            ->join('INNER JOIN', 'student', 'student.id = ' . $model->tableName() . '.student_id')
-            ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
+            ->alias('es')  // Assign alias for better clarity
+            ->andWhere(['es.is_deleted' => 0])
+            ->innerJoin('student s', 's.id = es.student_id')
+            ->innerJoin('profile p', 'p.user_id = s.user_id')
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
 
-
-        //  Filter from Profile 
+        // Apply filters from Profile model
         $profile = new Profile();
-        $filter = Yii::$app->request->get('filter');
-        $filter = json_decode(str_replace("'", "", $filter));
-        if (isset($filter)) {
+        $filter = json_decode(str_replace("'", "", Yii::$app->request->get('filter', '')), true);
+        if ($filter) {
             foreach ($filter as $attribute => $id) {
                 if (in_array($attribute, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                    $query->andFilterWhere(['p.' . $attribute => $id]);
                 }
             }
         }
 
-        $queryfilter = Yii::$app->request->get('filter-like');
-        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
-        if (isset($queryfilter)) {
+        // Filter based on ball value
+        $ball = Yii::$app->request->get('ball');
+        switch ($ball) {
+            case 'two':
+                $query->andFilterWhere(['<', 'es.' . $ball, 56]);
+                break;
+            case 'three':
+                $query->andFilterWhere(['between', 'es.' . $ball, 56, 70]);
+                break;
+            case 'four':
+                $query->andFilterWhere(['between', 'es.' . $ball, 71, 85]);
+                break;
+            case 'five':
+                $query->andFilterWhere(['>=', 'es.' . $ball, 86]);
+                break;
+        }
+
+        // Filter by faculty ID
+        $faculty_id = Yii::$app->request->get('faculty_id');
+        if ($faculty_id) {
+            $examIds = Exam::find()->where(['faculty_id' => $faculty_id])->select('id')->column();
+            $query->andWhere(['es.exam_id' => $examIds]);
+        }
+
+        // Search for attributes from profile model
+        $queryfilter = json_decode(str_replace("'", "", Yii::$app->request->get('filter-like', '')), true);
+        if ($queryfilter) {
             foreach ($queryfilter as $attributeq => $word) {
                 if (in_array($attributeq, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                    $query->andFilterWhere(['like', 'p.' . $attributeq, $word]);
                 }
             }
         }
-        // ***
 
+        // Role-based filtering
         if (isRole("teacher")) {
-            $query = $query->andWhere([
-                'in', 'teacher_access_id', $this->teacher_access()
-            ]);
+            $query->andWhere(['teacher_access_id' => $this->teacher_access()]);
         }
-
         if (isRole("student")) {
-            $query = $query->andWhere([
-                'student_id' => $this->student()
-            ]);
+            $query->andWhere(['student_id' => $this->student()]);
         }
 
-        // filter
+        // Apply generic filters and sort
         $query = $this->filterAll($query, $model);
-
-        // sort
         $query = $this->sort($query);
 
-        // data
-        $data =  $this->getData($query);
+        // Fetch data
+        $data = $this->getData($query);
+
         return $this->response(1, _e('Success'), $data);
     }
+
 
     public function actionCreate($lang)
     {
@@ -187,6 +291,7 @@ class ExamStudentController extends ApiActiveController
 
     public function actionBall($lang)
     {
+
         if (null !==  Yii::$app->request->get('faculty')) {
             $query = (new Query())
                 ->select([
@@ -334,7 +439,7 @@ class ExamStudentController extends ApiActiveController
             $model->update();
             // }
         }
-        
+
         if (isRole("teacher")) {
             if ($model->teacherAccess->user_id != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

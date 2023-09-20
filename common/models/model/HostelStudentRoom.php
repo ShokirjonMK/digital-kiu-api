@@ -3,6 +3,7 @@
 namespace common\models\model;
 
 use api\resources\ResourceTrait;
+use Codeception\Command\Build;
 use common\models\enums\Gender;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -60,7 +61,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['room_id', 'student_id', 'archived', 'faculty_id', 'edu_year_id', 'edu_plan_id', 'is_contract', 'is_free', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['room_id', 'building_id', 'student_id', 'archived', 'faculty_id', 'edu_year_id', 'edu_plan_id', 'is_contract', 'is_free', 'status', 'order', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['room_id', 'student_id',], 'required'],
             [['payed'], 'double'],
             [['edu_plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduPlan::className(), 'targetAttribute' => ['edu_plan_id' => 'id']],
@@ -92,6 +93,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'room_id' => 'Room ID',
+            'building_id' => 'Building ID',
             'student_id' => 'Student ID',
             'faculty_id' => 'Faculty ID',
             'edu_year_id' => 'Edu Year ID',
@@ -114,6 +116,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
         $fields =  [
             'id',
             'room_id',
+            'building_id',
             'student_id',
             'faculty_id',
             'edu_year_id',
@@ -144,6 +147,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
             'faculty',
             'room',
             'student',
+            'building',
 
             'createdBy',
             'updatedBy',
@@ -196,6 +200,16 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[building_id]].
+     *
+     * @return \yii\db\ActiveQuery|RoomQuery
+     */
+    public function getBuilding()
+    {
+        return $this->hasOne(Building::className(), ['id' => 'building_id']);
+    }
+
+    /**
      * Gets query for [[Student]].
      *
      * @return \yii\db\ActiveQuery|StudentQuery
@@ -220,6 +234,7 @@ class HostelStudentRoom  extends \yii\db\ActiveRecord
 
         $model->faculty_id = $model->student->faculty_id;
         $model->edu_plan_id = $model->student->edu_plan_id;
+        $model->building_id = $model->room->building_id;
         $model->is_contract = $model->student->is_contract;
 
         if (!isset($post['edu_year_id'])) {

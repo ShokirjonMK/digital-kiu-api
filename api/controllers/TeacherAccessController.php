@@ -99,7 +99,7 @@ class TeacherAccessController extends ApiActiveController
             ->andWhere([$this->table_name . '.is_deleted' => 0])
             ->join('INNER JOIN', 'users', 'users.id = ' . $this->table_name . '.user_id');
 
-        $query->andWhere(['users.is_deleted' => 0]);
+        $query->andWhere(['users.deleted' => 0]);
         $query->andWhere(['users.status' => 10]);
 
 

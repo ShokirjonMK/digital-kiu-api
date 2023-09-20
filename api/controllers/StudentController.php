@@ -426,8 +426,9 @@ class  StudentController extends ApiActiveController
             ->leftJoin('translate AS eduplan', 'eduplan.model_id = student.edu_plan_id AND eduplan.table_name = "edu_plan" AND eduplan.language = "uz"')
             ->where(['IS', 'student_time_option.student_id', new \yii\db\Expression('NULL')])
             // ->andWhere(['IN', 'student.edu_plan_id', [16, 21, 26, 57, 17, 20, 25, 58, 60, 61, 62, 63, 64, 88]])
-            ->andWhere(['<>', 'student.is_deleted', 1]);
-            // ->andWhere(['<>', 'student.faculty_id', 5]);
+            ->andWhere(['<>', 'student.is_deleted', 1])
+            ->andWhere(['<>', 'student.course_id', 9]);
+        // ->andWhere(['<>', 'student.faculty_id', 5]);
 
         // return $model->tableName();
         /*  is Self  */

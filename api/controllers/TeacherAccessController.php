@@ -105,7 +105,7 @@ class TeacherAccessController extends ApiActiveController
 
         // sirtqi uchun ochildi
         if (isset($teacheIds)) {
-            $query->andFilterWhere(['not in', 'user_id', $teacheIds]);
+            $query->andFilterWhere(['not in', $model->tableName() . '.user_id', $teacheIds]);
         }
 
         // filter

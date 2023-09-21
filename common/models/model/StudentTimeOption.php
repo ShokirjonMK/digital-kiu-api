@@ -281,12 +281,12 @@ class StudentTimeOption extends \yii\db\ActiveRecord
         }
 
 
-        /** faqat 2,3,4 kurslar uchun */
-        if (!in_array($model->student->course_id, [2, 3, 4])) {
-            $errors[] = ["Ruxsat berilmagan"];
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
+        // /** faqat 2,3,4 kurslar uchun */
+        // if (!in_array($model->student->course_id, [2, 3, 4])) {
+        //     $errors[] = ["Ruxsat berilmagan"];
+        //     $transaction->rollBack();
+        //     return simplify_errors($errors);
+        // }
 
         if ($model->save()) {
             $timeTableParentNull = TimeTable::find()

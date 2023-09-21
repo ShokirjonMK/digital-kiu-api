@@ -20,6 +20,7 @@ use common\models\model\FacultyStatistic;
 use common\models\model\KafedraStatistic;
 use common\models\model\KpiMark;
 use common\models\model\StudentTimeTable;
+use common\models\model\Subject;
 use common\models\model\SubjectContentMark;
 use common\models\model\SurveyAnswer;
 use common\models\model\SurveyAnswer16;
@@ -560,84 +561,173 @@ class StatisticController extends ApiActiveController
     }
 
 
+    // public function actionKpiContentStore231321321()
+    // {
+    //     // return "ok";
+    //     $model = new UserStatistic();
+
+    //     $query = $model->find()
+    //         ->with(['profile'])
+    //         ->andWhere(['users.deleted' => 0])
+    //         ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+    //         ->groupBy('users.id');
+
+    //     // dd($query->createCommand()->getRawSql());
+    //     $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
+
+    //     $errors = [];
+    //     $created_by = 7457;
+    //     $users = $query->all();
+    //     foreach ($users as $userOne) {
+
+    //         $balllllll = SubjectContentMark::find()
+    //             ->where([
+    //                 'user_id' => $userOne->id,
+    //                 'is_deleted' => 0,
+    //                 'archived' => 0
+    //             ])->andWhere([
+    //                 'in', 'subject_id',
+    //                 TeacherAccess::find()
+    //                     ->where([
+    //                         'in', 'subject_id',
+    //                         Subject::find()->where(['in', 'semestr_id', [1, 3, 5, 7]])
+    //                             ->select('id')
+    //                     ])
+    //                     ->andWhere([
+    //                         'user_id' => $userOne->id,
+    //                         'is_deleted' => 0,
+    //                         'status' => 1
+    //                     ])
+    //                     ->select('subject_id')
+    //             ])
+    //             ->average('ball');
+
+
+
+    //         $created = SubjectContentMark::findOne([
+    //             'user_id' => $userOne->id,
+    //             'is_deleted' => 0,
+    //             'archived' => 0
+    //         ]);
+
+    //         if ($created) $created_by  = $created->created_by;
+
+    //         $hasKpiMark = KpiMark::findOne([
+    //             'user_id' => $userOne->id,
+    //             'kpi_category_id' => 8,
+    //             'is_deleted' => 0,
+    //             'archived' => 0
+    //         ]);
+
+    //         if ($hasKpiMark) {
+    //             $newKpiMark = $hasKpiMark;
+    //         } else {
+    //             $newKpiMark = new KpiMark();
+    //         }
+    //         $newKpiMark->type = 1;
+    //         $newKpiMark->created_by = $created_by;
+    //         $newKpiMark->kpi_category_id = 8;
+    //         $newKpiMark->user_id = $userOne->id;
+    //         $newKpiMark->edu_year_id = 17;
+    //         $newKpiMark->ball = round($balllllll);
+    //         $result = KpiMark::createItemStat($newKpiMark);
+    //         if (is_array($result)) {
+    //             $errors[] = [$userOne->id => [$newKpiMark, $result]];
+    //         }
+    //     }
+
+    //     if (count($errors) > 0) {
+    //         return $errors;
+    //     }
+    //     return "ok";
+    // }
+
     public function actionKpiContentStore()
     {
-        // return "ok";
+        // Initialize the UserStatistic model
         $model = new UserStatistic();
 
+        // Base query to fetch users who are teachers and not deleted
         $query = $model->find()
             ->with(['profile'])
-            ->andWhere(['users.deleted' => 0])
-            ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
+            ->where(['users.deleted' => 0])
+            ->leftJoin('auth_assignment', 'auth_assignment.user_id = users.id')
+            ->andWhere(['auth_assignment.item_name' => "teacher"])
             ->groupBy('users.id');
 
-        // dd($query->createCommand()->getRawSql());
-        $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
-
-        $data = [];
+        // Initialize error container
         $errors = [];
+
+        // Default creator ID
         $created_by = 7457;
-        $users = $query->all();
-        foreach ($users as $userOne) {
 
-            $summ = SubjectContentMark::find()
+        // Loop through the user records and process them
+        foreach ($query->all() as $userOne) {
+
+            // Sub-query for fetching relevant subject IDs
+            $subjectQuery = TeacherAccess::find()
+                ->where([
+                    'user_id' => $userOne->id,
+                    'is_deleted' => 0,
+                    'status' => 1
+                ])
+                ->andWhere([
+                    'in', 'subject_id',
+                    Subject::find()->where(['in', 'semestr_id', [1, 3, 5, 7]])->select('id')
+                ])
+                ->select('subject_id');
+
+            // Calculate the average 'ball' value
+            $avgBall = SubjectContentMark::find()
                 ->where([
                     'user_id' => $userOne->id,
                     'is_deleted' => 0,
                     'archived' => 0
                 ])
-                ->sum('ball');
+                ->andWhere(['in', 'subject_id', $subjectQuery])
+                ->average('ball');
 
-            $count = SubjectContentMark::find()
-                ->where([
-                    'user_id' => $userOne->id,
-                    'is_deleted' => 0,
-                    'archived' => 0
-                ])
-                ->count();
-
+            // Fetch the creator ID if available
             $created = SubjectContentMark::findOne([
                 'user_id' => $userOne->id,
                 'is_deleted' => 0,
                 'archived' => 0
             ]);
+            if ($created) $created_by = $created->created_by;
 
-            if ($created) $created_by  = $created->created_by;
+            // Check for an existing KpiMark entry
+            $existingKpiMark = KpiMark::findOne([
+                'user_id' => $userOne->id,
+                'kpi_category_id' => 8,
+                'is_deleted' => 0,
+                'archived' => 0
+            ]);
 
-            // $data[$userOne->id]['sum'] = $summ;
-            // $data[$userOne->id]['count'] = $count;
-            if ($count > 0) {
+            // Initialize a new or existing KpiMark record
+            $kpiMark = $existingKpiMark ?? new KpiMark();
 
-                $hasKpiMark = KpiMark::findOne([
-                    'user_id' => $userOne->id,
-                    'kpi_category_id' => 8,
-                    'is_deleted' => 0,
-                    'archived' => 0
-                ]);
+            // Update the KpiMark details
+            $kpiMark->type = 1;
+            $kpiMark->created_by = $created_by;
+            $kpiMark->kpi_category_id = 8;
+            $kpiMark->user_id = $userOne->id;
+            $kpiMark->edu_year_id = 17;
+            $kpiMark->ball = round($avgBall);
 
-                if ($hasKpiMark) {
-                    $newKpiMark = $hasKpiMark;
-                } else {
-                    $newKpiMark = new KpiMark();
-                }
-                $newKpiMark->type = 1;
-                $newKpiMark->created_by = $created_by;
-                $newKpiMark->kpi_category_id = 8;
-                $newKpiMark->user_id = $userOne->id;
-                $newKpiMark->edu_year_id = 17;
-                $newKpiMark->ball = round($summ / $count);
-                $result = KpiMark::createItemStat($newKpiMark);
-                if (is_array($result)) {
-                    $errors[] = [$userOne->id => [$newKpiMark, $result]];
-                }
+            // Save or update the KpiMark entry
+            $result = KpiMark::createItemStat($kpiMark);
+            if (is_array($result)) {
+                $errors[] = [$userOne->id => [$kpiMark, $result]];
             }
         }
 
+        // Check if any errors occurred during processing
         if (count($errors) > 0) {
             return $errors;
         }
         return "ok";
     }
+
 
     public function actionKpiSurveyStore($i)
     {

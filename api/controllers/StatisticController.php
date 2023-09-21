@@ -733,7 +733,7 @@ class StatisticController extends ApiActiveController
             // $newKpiMark->ball = round($summ / $count);
             // $result = KpiMark::createItemStat($newKpiMark);
             if ($newKpiMark->save()) {
-                $errors[] = [$userOne->id => [$newKpiMark, $newKpiMark->error]];
+                $errors[] = [$userOne->id => [$newKpiMark, $newKpiMark->getErrors()]];
             }
         }
 

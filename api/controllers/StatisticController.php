@@ -22,6 +22,7 @@ use common\models\model\KpiMark;
 use common\models\model\StudentTimeTable;
 use common\models\model\SubjectContentMark;
 use common\models\model\SurveyAnswer;
+use common\models\model\SurveyAnswer16;
 use common\models\model\TeacherAccess;
 use common\models\model\TimeTable;
 use common\models\model\UserStatistic1;
@@ -684,7 +685,7 @@ class StatisticController extends ApiActiveController
         $users = $query->all();
         foreach ($users as $userOne) {
 
-            $surveyAnswerAverage = SurveyAnswer::find()
+            $surveyAnswerAverage = SurveyAnswer16::find()
                 ->where(['in', 'student_id', StudentTimeTable::find()
                     ->where(['in', 'time_table_id', TimeTable::find()
                         ->where([

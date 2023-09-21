@@ -705,7 +705,7 @@ class StatisticController extends ApiActiveController
                 ])->average('ball');
 
 
-            // dd($surveyAnswerAverage->createCommand()->getRawSql());
+            dd($surveyAnswerAverage->createCommand()->getRawSql());
 
 
 

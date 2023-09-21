@@ -702,13 +702,11 @@ class StatisticController extends ApiActiveController
                             'archived' => 1
                         ])
                         ->select('subject_id')
-                ]); //->average('ball');
+                ])
+                ->average('ball');
 
 
-            dd($surveyAnswerAverage->createCommand()->getRawSql());
-
-
-
+            // dd($surveyAnswerAverage->createCommand()->getRawSql());
 
             $created_by  = 591; // bosit oka
 

@@ -582,20 +582,23 @@ class StatisticController extends ApiActiveController
             $summ = SubjectContentMark::find()
                 ->where([
                     'user_id' => $userOne->id,
-                    'is_deleted' => 0
+                    'is_deleted' => 0,
+                    'archived' => 0
                 ])
                 ->sum('ball');
 
             $count = SubjectContentMark::find()
                 ->where([
                     'user_id' => $userOne->id,
-                    'is_deleted' => 0
+                    'is_deleted' => 0,
+                    'archived' => 0
                 ])
                 ->count();
 
             $created = SubjectContentMark::findOne([
                 'user_id' => $userOne->id,
-                'is_deleted' => 0
+                'is_deleted' => 0,
+                'archived' => 0
             ]);
 
             if ($created) $created_by  = $created->created_by;
@@ -620,7 +623,7 @@ class StatisticController extends ApiActiveController
                 $newKpiMark->created_by = $created_by;
                 $newKpiMark->kpi_category_id = 8;
                 $newKpiMark->user_id = $userOne->id;
-                $newKpiMark->edu_year_id = 16;
+                $newKpiMark->edu_year_id = 17;
                 $newKpiMark->ball = round($summ / $count);
                 $result = KpiMark::createItemStat($newKpiMark);
                 if (is_array($result)) {
@@ -637,7 +640,7 @@ class StatisticController extends ApiActiveController
 
     public function actionKpiSurveyStore($i)
     {
-        return "ok";
+        // return "ok";
 
         /*     SELECT
             time_table.teacher_user_id,

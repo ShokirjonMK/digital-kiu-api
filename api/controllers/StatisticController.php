@@ -694,14 +694,13 @@ class StatisticController extends ApiActiveController
                         ->select('id')])
                     ->select('created_by')])
                 ->andWhere([
-                    'in',  'edu_semestr_subject_id',
-                    EduSemestrSubject::find()->select('id')->where([
-                        'in', 'subject_id',
-                        TeacherAccess::find()->select('subject_id')
-                            ->where([
-                                'user_id' => $userOne->id
-                            ])
-                    ])
+                    'in',   'subject_id',
+                    TimeTable::find()
+                        ->where([
+                            'teacher_user_id' => $userOne->id,
+                            'archived' => 1
+                        ])
+                        ->select('subject_id')
                 ]); //->average('ball');
 
 

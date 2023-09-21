@@ -27,8 +27,7 @@ class TimeTableController extends ApiActiveController
         $student = Student::findOne(['user_id' => current_user_id()]);
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['archived' => 0])
-        ;
+            ->andWhere(['archived' => 0]);
 
         if (isRole('student')) {
             if ($student) {
@@ -48,7 +47,7 @@ class TimeTableController extends ApiActiveController
             }
         }
 
-        if (isRole('teacher') && !isRole('mudir')) {
+        if (isRole('teacher') && !isRole('mudir') && !isRole('dean')) {
             $query->andFilterWhere([
                 'teacher_user_id' => current_user_id()
             ]);

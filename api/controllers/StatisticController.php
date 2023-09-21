@@ -685,14 +685,14 @@ class StatisticController extends ApiActiveController
         foreach ($users as $userOne) {
 
             $surveyAnswerAverage = SurveyAnswer::find()
-                ->where(['in', 'created_by', StudentTimeTable::find()
+                ->where(['in', 'student_id', StudentTimeTable::find()
                     ->where(['in', 'time_table_id', TimeTable::find()
                         ->where([
                             'teacher_user_id' => $userOne->id,
                             'archived' => 1
                         ])
                         ->select('id')])
-                    ->select('created_by')])
+                    ->select('student_id')])
                 ->andWhere([
                     'in',   'subject_id',
                     TimeTable::find()
@@ -701,10 +701,10 @@ class StatisticController extends ApiActiveController
                             'archived' => 1
                         ])
                         ->select('subject_id')
-                ]); //->average('ball');
+                ])->average('ball');
 
 
-            dd($surveyAnswerAverage->createCommand()->getRawSql());
+            // dd($surveyAnswerAverage->createCommand()->getRawSql());
 
 
 
@@ -729,6 +729,7 @@ class StatisticController extends ApiActiveController
             $newKpiMark->kpi_category_id = 12;
             $newKpiMark->user_id = $userOne->id;
             $newKpiMark->edu_year_id = 17;
+            $newKpiMark->ball = $surveyAnswerAverage;
             // $newKpiMark->ball = round($summ / $count);
             $result = KpiMark::createItemStat($newKpiMark);
             if (is_array($result)) {

@@ -671,8 +671,8 @@ class StatisticController extends ApiActiveController
         $query = $query->andWhere(['=', 'auth_assignment.item_name', "teacher"]);
 
         $query = $query->orderBy(['users.id' => SORT_DESC]);
-        $soni = $i * 50;
-        $query = $query->limit(50)->offset($soni);
+        // $soni = $i * 50;
+        // $query = $query->limit(50)->offset($soni);
 
 
 

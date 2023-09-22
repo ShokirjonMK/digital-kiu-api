@@ -73,8 +73,8 @@ class ExamAppealController extends ApiActiveController
         if (isset($queryfilter)) {
             if ($ball_diff == 'diff_less_than_5') {
                 // specific filter diff_less_than_5 
-                $query->andWhere(['>', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 0])
-                    ->andWhere(['<=', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 5]);
+                // $query->andWhere(['>', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 0])
+                //     ->andWhere(['<=', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 5]);
                 $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5');
             }
             if ($ball_diff == 'diff_6_to_10') {

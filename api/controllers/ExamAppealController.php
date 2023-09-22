@@ -69,31 +69,67 @@ class ExamAppealController extends ApiActiveController
             'total_appeals' => 'COUNT(*)'
          */
 
+        // $ball_diff = Yii::$app->request->get('ball_diff');
+        // if (isset($queryfilter)) {
+        //     if ($ball_diff == 'diff_less_than_5') {
+        //         // specific filter diff_less_than_5 
+        //         // $query->andWhere(['>', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 0])
+        //         //     ->andWhere(['<=', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 5]);
+        //         $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5');
+        //     }
+        //     if ($ball_diff == 'diff_6_to_10') {
+
+        //         // specific filter diff_6_to_10 
+        //         $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 5 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 10');
+        //     }
+        //     if ($ball_diff == 'diff_11_to_20') {
+        //         // specific filter diff_11_to_20 
+        //         $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 10 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 20');
+        //     }
+        //     if ($ball_diff == 'diff_21_to_40') {
+        //         // specific filter diff_21_to_40 
+        //         $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 20 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 40');
+        //     }
+        //     if ($ball_diff == 'diff_41_to_60') {
+        //         // specific filter diff_41_to_60 
+        //         $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 40 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 60');
+        //     }
+        // }
         $ball_diff = Yii::$app->request->get('ball_diff');
 
+        // Check if the 'queryfilter' variable is set. If it is, proceed with further filtering based on 'ball_diff'.
         if (isset($queryfilter)) {
-            if ($ball_diff == 'diff_less_than_5') {
-                // specific filter diff_less_than_5 
-                // $query->andWhere(['>', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 0])
-                //     ->andWhere(['<=', new \yii\db\Expression('ABS(exam_appeal.old_ball - exam_appeal.ball)'), 5]);
-                $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5');
-            }
-            if ($ball_diff == 'diff_6_to_10') {
-                dd($ball_diff);
-                // specific filter diff_6_to_10 
-                $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 5 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 10');
-            }
-            if ($ball_diff == 'diff_11_to_20') {
-                // specific filter diff_11_to_20 
-                $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 10 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 20');
-            }
-            if ($ball_diff == 'diff_21_to_40') {
-                // specific filter diff_21_to_40 
-                $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 20 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 40');
-            }
-            if ($ball_diff == 'diff_41_to_60') {
-                // specific filter diff_41_to_60 
-                $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 40 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 60');
+
+            // Use a switch statement to handle multiple conditions based on the value of 'ball_diff'.
+            switch ($ball_diff) {
+                case 'diff_less_than_5':
+                    // Filter for cases where the absolute difference between old_ball and ball is less than or equal to 5 and greater than 0.
+                    $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 0 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 5');
+                    break;
+
+                case 'diff_6_to_10':
+                    // Filter for cases where the absolute difference between old_ball and ball is between 6 and 10.
+                    $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 5 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 10');
+                    break;
+
+                case 'diff_11_to_20':
+                    // Filter for cases where the absolute difference between old_ball and ball is between 11 and 20.
+                    $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 10 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 20');
+                    break;
+
+                case 'diff_21_to_40':
+                    // Filter for cases where the absolute difference between old_ball and ball is between 21 and 40.
+                    $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 20 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 40');
+                    break;
+
+                case 'diff_41_to_60':
+                    // Filter for cases where the absolute difference between old_ball and ball is between 41 and 60.
+                    $query->andWhere('ABS(exam_appeal.old_ball - exam_appeal.ball) > 40 AND ABS(exam_appeal.old_ball - exam_appeal.ball) <= 60');
+                    break;
+
+                default:
+                    // Optionally, handle other cases or do nothing.
+                    break;
             }
         }
 

@@ -668,8 +668,8 @@ class StatisticController extends ApiActiveController
             $subjectQuery = TeacherAccess::find()
                 ->where([
                     'user_id' => $userOne->id,
-                    'is_deleted' => 0,
-                    'status' => 1
+                    // 'is_deleted' => 0,
+                    // 'status' => 1
                 ])
                 // ->andWhere([
                 //     'in', 'subject_id',

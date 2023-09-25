@@ -671,10 +671,10 @@ class StatisticController extends ApiActiveController
                     'is_deleted' => 0,
                     'status' => 1
                 ])
-                ->andWhere([
-                    'in', 'subject_id',
-                    Subject::find()->where(['in', 'semestr_id', [1, 3, 5, 7]])->select('id')
-                ])
+                // ->andWhere([
+                //     'in', 'subject_id',
+                //     Subject::find()->where(['in', 'semestr_id', [1, 3, 5, 7]])->select('id')
+                // ])
                 ->select('subject_id');
 
             // Calculate the average 'ball' value
@@ -684,7 +684,7 @@ class StatisticController extends ApiActiveController
                     'is_deleted' => 0,
                     'archived' => 0
                 ])
-                ->andWhere(['in', 'subject_id', $subjectQuery])
+                // ->andWhere(['in', 'subject_id', $subjectQuery])
                 ->average('ball');
 
             // Fetch the creator ID if available

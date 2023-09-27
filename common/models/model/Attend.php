@@ -197,7 +197,7 @@ class Attend extends \yii\db\ActiveRecord
         $this->timeTable->eduSemestr;
 
         /** bir haftalik */
-        if ($date >= date('Y-m-d', strtotime('-7 days'))) {
+        if ($date >= date('Y-m-d', strtotime('-25 days'))) {
             return 1;
         }
         /** bir haftalik */

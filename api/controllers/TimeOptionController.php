@@ -23,7 +23,8 @@ class TimeOptionController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['archived' => 0]);
+            // ->andWhere(['archived' => 0])
+            ;
 
         if (isRole('student')) {
             $student = $this->student(2);

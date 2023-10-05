@@ -14,7 +14,6 @@ use common\models\model\TimeTable;
 
 class  StudentTimeTableController extends ApiActiveController
 {
-
     public $modelClass = 'api\resources\StudentTimeTable';
 
     public function actions()

@@ -29,7 +29,7 @@ class  StudentTimeTableController extends ApiActiveController
         $model = new StudentTimeTable();
         $query = $model->find()
             ->andWhere([$this->table_name . '.is_deleted' => 0])
-            ->andWhere([$this->table_name . '.archived' => 0])
+            // ->andWhere([$this->table_name . '.archived' => 0])
             ->join('INNER JOIN', 'student', 'student.id = ' . $this->table_name . '.student_id')
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id');
 

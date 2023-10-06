@@ -86,7 +86,7 @@ class TimeTableController extends ApiActiveController
 
         if ($statuses) {
             $query->andFilterWhere([
-                'in', $this->table_name . '.subject_category_id',
+                'in', 'subject_category_id',
                 $statuses
             ]);
         }

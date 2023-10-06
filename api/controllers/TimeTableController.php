@@ -234,6 +234,14 @@ class TimeTableController extends ApiActiveController
             ]);
         }
 
+        // Apply subject_category_ids filter
+        $subjectCategoryIds = json_decode(str_replace("'", "", Yii::$app->request->get('subject_category_ids')));
+        if ($subjectCategoryIds) {
+            $query->andFilterWhere([
+                'in', 'subject_category_id', $subjectCategoryIds
+            ]);
+        }
+
         // filter
         $query = $this->filterAll($query, $model);
 

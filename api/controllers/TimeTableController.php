@@ -100,7 +100,7 @@ class TimeTableController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            ->andWhere(['archived' => 0])
+            // ->andWhere(['archived' => 0])
             ->andWhere(['parent_id' => null])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
 

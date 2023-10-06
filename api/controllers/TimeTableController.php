@@ -81,7 +81,7 @@ class TimeTableController extends ApiActiveController
         $subjectCategoryIds = json_decode(str_replace("'", "", Yii::$app->request->get('subject_category_ids')));
         if ($subjectCategoryIds) {
             $query->andFilterWhere([
-                'in', $this->table_name . '.subject_category_id', $subjectCategoryIds
+                'in', 'subject_category_id', $subjectCategoryIds
             ]);
         }
 

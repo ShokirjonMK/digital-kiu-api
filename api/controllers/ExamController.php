@@ -63,6 +63,122 @@ class ExamController extends ApiActiveController
     {
         $model = new Exam();
         $student = Student::findOne(['user_id' => current_user_id()]);
+        $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
+
+        $query = $model->find()->with(['infoRelation']);
+
+        // Apply common filters
+        $query = $query
+            ->andWhere([$this->table_name . '.is_deleted' => 0])
+            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->groupBy($this->table_name . '.id')
+            ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
+
+        // Apply 'no' filter if provided
+        if (Yii::$app->request->get('no')) {
+            $query->andFilterWhere([
+                'not in', $this->table_name . '.id',
+                [
+                    483, 439, 438, 437, 432, 431, 428, 425, 424, 423, 422, 421, 420, 419, 415, 414, 413, 412, 411, 410, 409, 408, 387, 385, 384, 379, 378, 377, 374, 373, 371, 370, 369, 365, 364, 363, 362, 361, 360, 355, 354, 353, 351, 323, 321, 300, 299, 298, 297, 296, 295, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273, 272
+                ]
+            ]);
+            $query->andFilterWhere(['>=', $this->table_name . '.id', 272]);
+            $query->andFilterWhere(['<=', $this->table_name . '.id', 515]);
+        }
+
+        // Apply 'statuses' filter if provided
+        $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('statuses')));
+        if ($statuses) {
+            $query->andFilterWhere([
+                'in', $this->table_name . '.status', $statuses
+            ]);
+        }
+
+        // Apply 'subject_id' filter if provided
+        $subjectId = Yii::$app->request->get('subject_id');
+        if ($subjectId) {
+            $query = $query->andFilterWhere(['in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                ->where(['subject_id' => $subjectId])
+                ->andWhere(['is_deleted' => 0])
+                ->select('id')]);
+        }
+
+        // Apply filters based on user roles
+        if ($student && isRole('student')) {
+            if (isset($eduSmesterId)) {
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->andWhere(['edu_semestr_id' => $eduSmesterId])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
+                ]);
+            } else {
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->where(['in', 'edu_semestr_id', EduSemestr::find()
+                            ->where(['edu_plan_id' => $student->edu_plan_id])
+                            ->andWhere(['is_deleted' => 0])
+                            ->select('id')])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
+                ]);
+            }
+        }
+
+        if (isRole('teacher') && !isRole('mudir')) {
+            $query = $query->andFilterWhere([
+                'in', 'edu_semestr_subject_id',
+                EduSemestrSubject::find()
+                    ->where(['subject_id' => $this->teacher_access(1, ['subject_id'])])
+                    ->andWhere(['is_deleted' => 0])
+                    ->select('id')
+            ]);
+        }
+
+        if (isRole('mudir')) {
+            // Apply 'mudir' specific filters
+            $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID, 2);
+            if ($k['status'] == 1) {
+                $query = $query->andFilterWhere([
+                    'in', 'edu_semestr_subject_id',
+                    EduSemestrSubject::find()->where([
+                        'in', 'subject_id',
+                        Subject::find()->where(['kafedra_id' => $k['UserAccess']->table_id, 'is_deleted' => 0])->select('id')
+                    ])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
+                ]);
+            } elseif ($k['status'] == 2) {
+                $query->andFilterWhere([
+                    $this->table_name . '.faculty_id' => -1
+                ]);
+            }
+        } else {
+            // Apply role-based filters
+            $t = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
+            if ($t['status'] == 1) {
+                $query = $query->andWhere([
+                    $this->table_name . '.faculty_id' => $t['UserAccess']->table_id
+                ]);
+            } elseif ($t['status'] == 2) {
+                $query->andFilterWhere([
+                    $this->table_name . '.faculty_id' => -1
+                ]);
+            }
+        }
+
+        // Apply additional filtering, sorting, and data retrieval logic
+        $query = $this->filterAll($query, $model);
+        $query = $this->sort($query);
+        $data = $this->getData($query);
+
+        return $this->response(1, _e('Success'), $data);
+    }
+
+    public function actionIndex11($lang)
+    {
+        $model = new Exam();
+        $student = Student::findOne(['user_id' => current_user_id()]);
         // return $student;
         $eduSmesterId = Yii::$app->request->get('edu_semestr_id');
 
@@ -213,7 +329,6 @@ class ExamController extends ApiActiveController
             return $this->response(1, _e('Success'), $data);
         }
     }
-
 
     public function actionCreate($lang)
     {

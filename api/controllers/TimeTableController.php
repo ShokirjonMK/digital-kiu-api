@@ -28,7 +28,7 @@ class TimeTableController extends ApiActiveController
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
             // ->andWhere(['archived' => 0])
-            ;
+        ;
 
         if (isRole('student')) {
             if ($student) {
@@ -78,6 +78,16 @@ class TimeTableController extends ApiActiveController
                 'in', 'subject_id', Subject::find()->where([
                     'kafedra_id' => Kafedra::find()->where(['faculty_id' => $facultyId])->select('id')
                 ])->select('id')
+            ]);
+        }
+
+        /** filter with array subject_category_ids */
+        $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('subject_category_ids')));
+
+        if ($statuses) {
+            $query->andFilterWhere([
+                'in', $this->table_name . '.subject_category_id',
+                $statuses
             ]);
         }
 

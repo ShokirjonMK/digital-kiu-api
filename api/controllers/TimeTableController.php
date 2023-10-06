@@ -23,86 +23,163 @@ class TimeTableController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new TimeTable();
-
         $student = Student::findOne(['user_id' => current_user_id()]);
-        $query = $model->find()
-            ->andWhere(['is_deleted' => 0])
-            // ->andWhere(['archived' => 0])
-        ;
+        $query = $model->find()->andWhere(['is_deleted' => 0]);
 
+        // Apply role-based filters
         if (isRole('student')) {
             if ($student) {
-                $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
+                $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()
+                    ->where(['edu_plan_id' => $student->edu_plan_id])
+                    ->select('id')]);
                 $query->andWhere(['language_id' => $student->edu_lang_id]);
             }
         } else {
-
+            // Check if user has Kafedra access
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
             if ($k['status'] == 1) {
-
                 $query->andFilterWhere([
-                    'in', 'subject_id', Subject::find()->where([
-                        'kafedra_id' => $k['UserAccess']->table_id
-                    ])->select('id')
+                    'in', 'subject_id', Subject::find()
+                        ->where(['kafedra_id' => $k['UserAccess']->table_id])
+                        ->select('id')
                 ]);
             }
         }
 
+        // Apply teacher filter
         if (isRole('teacher') && !isRole('mudir') && !isRole('dean')) {
-            $query->andFilterWhere([
-                'teacher_user_id' => current_user_id()
-            ]);
+            $query->andFilterWhere(['teacher_user_id' => current_user_id()]);
         }
 
+        // Apply mudirSelf filter
         $mudirSelf = Yii::$app->request->get('self');
+        if (isset($mudirSelf) && $mudirSelf == 1) {
+            $query->andFilterWhere(['teacher_user_id' => current_user_id(), 'archived' => 0]);
+        }
 
-        if (isset($mudirSelf))
-            if ($mudirSelf == 1)  $query->andFilterWhere([
-                'teacher_user_id' => current_user_id(),
-                'archived' => 0,
-            ]);
-
+        // Apply kafedraId filter
         $kafedraId = Yii::$app->request->get('kafedra_id');
-
         if (isset($kafedraId)) {
             $query->andFilterWhere([
-                'in', 'subject_id', Subject::find()->where([
-                    'kafedra_id' => $kafedraId
-                ])->select('id')
+                'in', 'subject_id', Subject::find()
+                    ->where(['kafedra_id' => $kafedraId])
+                    ->select('id')
             ]);
         }
 
+        // Apply facultyId filter
         $facultyId = Yii::$app->request->get('faculty_id');
         if (isset($facultyId)) {
             $query->andFilterWhere([
-                'in', 'subject_id', Subject::find()->where([
-                    'kafedra_id' => Kafedra::find()->where(['faculty_id' => $facultyId])->select('id')
-                ])->select('id')
+                'in', 'subject_id', Subject::find()
+                    ->where(['kafedra_id' => Kafedra::find()->where(['faculty_id' => $facultyId])->select('id')])
+                    ->select('id')
             ]);
         }
 
-        /** filter with array subject_category_ids */
-        $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('subject_category_ids')));
-
-        if ($statuses) {
+        // Apply subject_category_ids filter
+        $subjectCategoryIds = json_decode(str_replace("'", "", Yii::$app->request->get('subject_category_ids')));
+        if ($subjectCategoryIds) {
             $query->andFilterWhere([
-                'in', 'subject_category_id',
-                $statuses
+                'in', $this->table_name . '.subject_category_id', $subjectCategoryIds
             ]);
         }
 
-        // filter
+        // Apply additional filtering, sorting, and data retrieval logic
         $query = $this->filterAll($query, $model);
-
-        // sort
         $query = $this->sort($query);
         // dd($query->createCommand()->getRawSql());
 
-        // data
+        // Retrieve and return the data
         $data =  $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);
     }
+
+
+    // public function actionIndex11($lang)
+    // {
+    //     $model = new TimeTable();
+
+    //     $student = Student::findOne(['user_id' => current_user_id()]);
+    //     $query = $model->find()
+    //         ->andWhere(['is_deleted' => 0])
+    //         // ->andWhere(['archived' => 0])
+    //     ;
+
+    //     if (isRole('student')) {
+    //         if ($student) {
+    //             $query->andWhere(['in', 'edu_semester_id', EduSemestr::find()->where(['edu_plan_id' => $student->edu_plan_id])->select('id')]);
+    //             $query->andWhere(['language_id' => $student->edu_lang_id]);
+    //         }
+    //     } else {
+
+    //         $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
+    //         if ($k['status'] == 1) {
+
+    //             $query->andFilterWhere([
+    //                 'in', 'subject_id', Subject::find()->where([
+    //                     'kafedra_id' => $k['UserAccess']->table_id
+    //                 ])->select('id')
+    //             ]);
+    //         }
+    //     }
+
+    //     if (isRole('teacher') && !isRole('mudir') && !isRole('dean')) {
+    //         $query->andFilterWhere([
+    //             'teacher_user_id' => current_user_id()
+    //         ]);
+    //     }
+
+    //     $mudirSelf = Yii::$app->request->get('self');
+
+    //     if (isset($mudirSelf))
+    //         if ($mudirSelf == 1)  $query->andFilterWhere([
+    //             'teacher_user_id' => current_user_id(),
+    //             'archived' => 0,
+    //         ]);
+
+    //     $kafedraId = Yii::$app->request->get('kafedra_id');
+
+    //     if (isset($kafedraId)) {
+    //         $query->andFilterWhere([
+    //             'in', 'subject_id', Subject::find()->where([
+    //                 'kafedra_id' => $kafedraId
+    //             ])->select('id')
+    //         ]);
+    //     }
+
+    //     $facultyId = Yii::$app->request->get('faculty_id');
+    //     if (isset($facultyId)) {
+    //         $query->andFilterWhere([
+    //             'in', 'subject_id', Subject::find()->where([
+    //                 'kafedra_id' => Kafedra::find()->where(['faculty_id' => $facultyId])->select('id')
+    //             ])->select('id')
+    //         ]);
+    //     }
+
+    //     /** filter with array subject_category_ids */
+    //     $statuses = json_decode(str_replace("'", "", Yii::$app->request->get('subject_category_ids')));
+
+    //     if ($statuses) {
+    //         $query->andFilterWhere([
+    //             'in', 'subject_category_id',
+    //             $statuses
+    //         ]);
+    //     }
+
+    //     // filter
+    //     $query = $this->filterAll($query, $model);
+
+    //     // sort
+    //     $query = $this->sort($query);
+    //     // dd($query->createCommand()->getRawSql());
+
+    //     // data
+    //     $data =  $this->getData($query);
+
+    //     return $this->response(1, _e('Success'), $data);
+    // }
 
     public function actionParentNull($lang)
     {

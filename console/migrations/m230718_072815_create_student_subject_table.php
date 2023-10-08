@@ -66,9 +66,9 @@ class m230718_072815_create_student_subject_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('mark_student_subject_student_id', 'student_order');
-        $this->dropForeignKey('mark_student_subject_subject_id', 'student_order');
-        $this->dropForeignKey('mark_student_subject_edu_year_id', 'student_order');
+        $this->dropForeignKey('mark_student_subject_student_id', 'student_subject');
+        $this->dropForeignKey('mark_student_subject_subject_id', 'student_subject');
+        $this->dropForeignKey('mark_student_subject_edu_year_id', 'student_subject');
 
         $this->dropTable('{{%student_subject}}');
     }

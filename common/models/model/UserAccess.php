@@ -360,6 +360,7 @@ class UserAccess extends \yii\db\ActiveRecord
 
 
         $userAcces = UserAccess::findOne(['user_id' => $user_id, 'table_id' => $table_id, 'user_access_type_id' => $user_access_type_id]);
+        $userAcces->is_leader = self::IS_LEADER_TRUE;
         if ($userAcces->save(false)) {
             return true;
         } else {

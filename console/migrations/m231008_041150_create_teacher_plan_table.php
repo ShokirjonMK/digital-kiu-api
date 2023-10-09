@@ -95,8 +95,8 @@ class m231008_041150_create_teacher_plan_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0),
 
         ], $tableOptions);
-        $this->addForeignKey('tpu_teacher_plan_user', 'student_subject', 'user_id', 'users', 'id');
-        $this->addForeignKey('tps_teacher_plan_subject', 'student_subject', 'subject_id', 'subject', 'id');
+        $this->addForeignKey('tpu_teacher_plan_user', 'teacher_plan', 'user_id', 'users', 'id');
+        $this->addForeignKey('tps_teacher_plan_subject', 'teacher_plan', 'subject_id', 'subject', 'id');
     }
 
     /**

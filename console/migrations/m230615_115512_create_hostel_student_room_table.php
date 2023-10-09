@@ -46,7 +46,7 @@ class m230615_115512_create_hostel_student_room_table extends Migration
             'created_by' => $this->integer()->null()->defaultValue(0),
             'updated_by' => $this->integer()->null()->defaultValue(0),
             'is_deleted' => $this->tinyInteger()->null()->defaultValue(0),
-        ]);
+        ], $tableOptions);;
         $this->addForeignKey('mk_hostel_student_room_room_id', 'hostel_student_room', 'room_id', 'room', 'id');
         $this->addForeignKey('mk_hostel_student_room_student_id', 'hostel_student_room', 'student_id', 'student', 'id');
         $this->addForeignKey('mk_hostel_student_room_faculty_id', 'hostel_student_room', 'faculty_id', 'faculty', 'id');

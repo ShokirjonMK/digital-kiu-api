@@ -24,7 +24,7 @@ class  ContractController extends ApiActiveController
         $model = new Contract();
 
         $query = $model->find()
-            ->andWhere([$this->table_name . '.is_deleted' => 0]);
+            ->andWhere([$model->tableName() . '.is_deleted' => 0]);
 
         // filter
         $query = $this->filterAll($query, $model);

@@ -24,7 +24,7 @@ class AcademicDegreeController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere([$model->tableName() . '.is_deleted' => 0])
-            ->leftJoin("translate tr", "tr.model_id = $this->table_name.id and tr.table_name = '$this->table_name'")
+            ->leftJoin("translate tr", "tr.model_id = " . $model->tableName() . ".id and tr.table_name = " . $model->tableName())
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
 

@@ -296,11 +296,66 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
+        $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        if (!isset($post['user_id'])) {
+            $model->user_id = current_user_id();
+        }
+
+        $model->lecture = TimeTable::find()->where([
+            'teacher_user_id' => $model->user_id,
+            'subject_id' => $model->subject_id,
+            'edu_year_id' => $model->edu_year_id,
+            'is_deleted' => 0,
+            'subject_category_id' => 1
+        ])->count();
+
+        $model->seminar =
+            TimeTable::find()->where([
+                'teacher_user_id' => $model->user_id,
+                'subject_id' => $model->subject_id,
+                'edu_year_id' => $model->edu_year_id,
+                'is_deleted' => 0,
+                'subject_category_id' => 2
+            ])->count();
+
+        $model->practical =
+            TimeTable::find()->where([
+                'teacher_user_id' => $model->user_id,
+                'subject_id' => $model->subject_id,
+                'edu_year_id' => $model->edu_year_id,
+                'is_deleted' => 0,
+                'subject_category_id' => 3
+            ])->count();
+
+        $model->labarothoria =
+            TimeTable::find()->where([
+                'teacher_user_id' => $model->user_id,
+                'subject_id' => $model->subject_id,
+                'edu_year_id' => $model->edu_year_id,
+                'is_deleted' => 0,
+                'subject_category_id' => 5
+            ])->count();
+
+        $model->checking = ExamStudent::find()->where([
+            'in', 'teacher_access_id',
+            TeacherAccess::find()->select('id')->where(['user_id' => $model->user_id])
+        ])->andWhere(['edu_year_id' => $model->edu_year_id])->count();
+
+        $model->checking_appeal = ExamAppeal::find()->where([
+            'in', 'teacher_access_id',
+            TeacherAccess::find()->select('id')->where(['user_id' => $model->user_id])
+        ])->andWhere(['edu_year_id' => $model->edu_year_id])->count();
+
+        $model->kazus_input = Question::find()->where(['created_by' => $model->user_id])->count();
+
 
         if ($model->save()) {
             $transaction->commit();
@@ -323,6 +378,55 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+
+        $model->lecture = TimeTable::find()->where([
+            'teacher_user_id' => $model->user_id,
+            'subject_id' => $model->subject_id,
+            'edu_year_id' => $model->edu_year_id,
+            'is_deleted' => 0,
+            'subject_category_id' => 1
+        ])->count();
+
+        $model->seminar =
+            TimeTable::find()->where([
+                'teacher_user_id' => $model->user_id,
+                'subject_id' => $model->subject_id,
+                'edu_year_id' => $model->edu_year_id,
+                'is_deleted' => 0,
+                'subject_category_id' => 2
+            ])->count();
+
+        $model->practical =
+            TimeTable::find()->where([
+                'teacher_user_id' => $model->user_id,
+                'subject_id' => $model->subject_id,
+                'edu_year_id' => $model->edu_year_id,
+                'is_deleted' => 0,
+                'subject_category_id' => 3
+            ])->count();
+
+        $model->labarothoria =
+            TimeTable::find()->where([
+                'teacher_user_id' => $model->user_id,
+                'subject_id' => $model->subject_id,
+                'edu_year_id' => $model->edu_year_id,
+                'is_deleted' => 0,
+                'subject_category_id' => 5
+            ])->count();
+
+        $model->checking = ExamStudent::find()->where([
+            'in', 'teacher_access_id',
+            TeacherAccess::find()->select('id')->where(['user_id' => $model->user_id])
+        ])->andWhere(['edu_year_id' => $model->edu_year_id])->count();
+
+        $model->checking_appeal = ExamAppeal::find()->where([
+            'in', 'teacher_access_id',
+            TeacherAccess::find()->select('id')->where(['user_id' => $model->user_id])
+        ])->andWhere(['edu_year_id' => $model->edu_year_id])->count();
+
+        $model->kazus_input = Question::find()->where(['created_by' => $model->user_id])->count();
+
 
         if ($model->save()) {
             $transaction->commit();

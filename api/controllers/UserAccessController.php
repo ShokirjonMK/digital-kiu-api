@@ -4,6 +4,7 @@ namespace api\controllers;
 
 use Yii;
 use base\ResponseStatus;
+use common\models\model\Profile;
 use common\models\model\UserAccess;
 
 class UserAccessController extends ApiActiveController
@@ -28,7 +29,34 @@ class UserAccessController extends ApiActiveController
     {
         $model = new UserAccess();
 
-        $query = $model->find();
+        $query = $model->find()
+            ->andWhere([$model->tableName() . '.is_deleted' => 0])
+            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $model->tableName() . '.user_id')
+            ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
+
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+
 
         // filter
         $query = $this->filterAll($query, $model);

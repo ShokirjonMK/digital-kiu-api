@@ -23,8 +23,11 @@ class TimeTableController extends ApiActiveController
     public function actionIndex($lang)
     {
         $model = new TimeTable();
+
         $student = Student::findOne(['user_id' => current_user_id()]);
-        $query = $model->find()->andWhere(['is_deleted' => 0]);
+        $query = $model->find()
+            ->andWhere(['is_deleted' => 0])
+            ->andWhere(['archived' => 0]);
 
         // Apply role-based filters
         if (isRole('student')) {
@@ -187,7 +190,7 @@ class TimeTableController extends ApiActiveController
 
         $query = $model->find()
             ->andWhere(['is_deleted' => 0])
-            // ->andWhere(['archived' => 0])
+            ->andWhere(['archived' => 0])
             ->andWhere(['parent_id' => null])
             ->andFilterWhere(['like', 'name', Yii::$app->request->get('query')]);
 

@@ -170,6 +170,8 @@ class ExamController extends ApiActiveController
         // Apply additional filtering, sorting, and data retrieval logic
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
+
+        rawsql($query);
         $data = $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);

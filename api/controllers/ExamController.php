@@ -104,26 +104,33 @@ class ExamController extends ApiActiveController
         }
 
         // Apply filters based on user roles
-        // if ($student && isRole('student')) {
-        //     if (isset($eduSmesterId)) {
-        //         $query = $query->andWhere([
-        //             'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
-        //                 ->andWhere(['edu_semestr_id' => $eduSmesterId])
-        //                 ->andWhere(['is_deleted' => 0])
-        //                 ->select('id')
-        //         ]);
-        //     } else {
-        //         $query = $query->andWhere([
-        //             'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
-        //                 ->where(['in', 'edu_semestr_id', EduSemestr::find()
-        //                     ->where(['edu_plan_id' => $student->edu_plan_id])
-        //                     ->andWhere(['is_deleted' => 0])
-        //                     ->select('id')])
-        //                 ->andWhere(['is_deleted' => 0])
-        //                 ->select('id')
-        //         ]);
-        //     }
-        // }
+        if ($student && isRole('student')) {
+            if (isset($eduSmesterId)) {
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->andWhere(['edu_semestr_id' => $eduSmesterId])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
+                ]);
+            } else {
+                $query = $query->andWhere([
+                    'in', 'edu_semestr_subject_id', EduSemestrSubject::find()
+                        ->where(['in', 'edu_semestr_id', EduSemestr::find()
+                            ->where(['edu_plan_id' => $student->edu_plan_id])
+                            ->andWhere(['is_deleted' => 0])
+                            ->select('id')])
+                        ->andWhere(['is_deleted' => 0])
+                        ->select('id')
+                ]);
+            }
+            // filter
+            $query = $this->filterAll($query, $model);
+            // sort
+            $query = $this->sort($query);
+            // data
+            $data = $this->getData($query);
+            return $this->response(1, _e('Success'), $data);
+        }
 
         if (isRole('teacher') && !isRole('mudir')) {
             $query = $query->andFilterWhere([
@@ -171,7 +178,7 @@ class ExamController extends ApiActiveController
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
 
-        rawsql($query);
+        // rawsql($query);
         $data = $this->getData($query);
 
         return $this->response(1, _e('Success'), $data);

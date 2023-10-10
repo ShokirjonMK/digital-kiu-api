@@ -175,6 +175,7 @@ class UserAccess extends \yii\db\ActiveRecord
 
     public function getDepartment()
     {
+        return $this->hasOne($this->userAccessType->table_name::className(), ['id' => 'table_id']);
         $data = [];
         $data['user_access_type_id'] = $this->user_access_type_id;
         $data['model'] = $this->userAccessType->table_name::findOne($this->table_id);

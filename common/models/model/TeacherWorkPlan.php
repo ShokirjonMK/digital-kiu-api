@@ -94,7 +94,7 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'subject_id', 'edu_year_id', 'created_at', 'updated_at'], 'required'],
+            [['user_id', 'subject_id', 'edu_year_id'], 'required'],
             [['user_id', 'subject_id', 'edu_year_id', 'semestr_type', 'course_id', 'semestr_id', 'student_count', 'student_count_plan', 'lecture', 'lecture_plan', 'seminar', 'seminar_plan', 'practical', 'practical_plan', 'labarothoria', 'labarothoria_plan', 'advice', 'advice_plan', 'prepare', 'prepare_plan', 'checking', 'checking_plan', 'checking_appeal', 'checking_appeal_plan', 'lead_practice', 'lead_practice_plan', 'lead_graduation_work', 'lead_graduation_work_plan', 'dissertation_advicer', 'dissertation_advicer_plan', 'doctoral_consultation', 'doctoral_consultation_plan', 'supervisor_exam', 'supervisor_exam_plan', 'kazus_input', 'kazus_input_plan', 'legal_clinic', 'legal_clinic_plan', 'final_attestation', 'final_attestation_plan', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['description'], 'string'],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
@@ -102,6 +102,11 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
             [['semestr_id'], 'exist', 'skipOnError' => true, 'targetClass' => Semestr::className(), 'targetAttribute' => ['semestr_id' => 'id']],
             [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => Subject::className(), 'targetAttribute' => ['subject_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+
+
+            // ['user_id', 'subject_id', 'edu_year_id', 'unique', 'targetAttribute' => ['user_id', 'subject_id', 'edu_year_id', 'is_deleted',]],
+            // ['user_id', 'subject_id', 'edu_year_id', 'unique', 'targetAttribute' => ['user_id', 'subject_id', 'edu_year_id', 'is_deleted',]],
+            // [['user_id', 'subject_id', 'edu_year_id'], 'unique', 'targetAttribute' => ['user_id', 'subject_id', 'edu_year_id', 'is_deleted',]],
         ];
     }
 
@@ -111,54 +116,54 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'subject_id' => Yii::t('app', 'Subject ID'),
-            'edu_year_id' => Yii::t('app', 'Edu Year ID'),
-            'semestr_type' => Yii::t('app', '1 kuz 2 bahor'),
-            'course_id' => Yii::t('app', 'Course ID'),
-            'semestr_id' => Yii::t('app', 'Semestr ID'),
-            'student_count' => Yii::t('app', 'Talaba soni'),
-            'student_count_plan' => Yii::t('app', 'Talaba soni reja'),
-            'lecture' => Yii::t('app', 'ma\'ruza mashg\'uloti'),
-            'lecture_plan' => Yii::t('app', 'ma\'ruza mashg\'uloti reja'),
-            'seminar' => Yii::t('app', 'Seminar mashg\'uloti'),
-            'seminar_plan' => Yii::t('app', 'Seminar mashg\'uloti reja'),
-            'practical' => Yii::t('app', 'Amaliy mashg\'ulot'),
-            'practical_plan' => Yii::t('app', 'Amaliy mashg\'ulot reja'),
-            'labarothoria' => Yii::t('app', 'Labarotoriya mashg\'uloti'),
-            'labarothoria_plan' => Yii::t('app', 'Labarotoriya mashg\'uloti reja'),
-            'advice' => Yii::t('app', 'Maslahatlar o\'tkazish'),
-            'advice_plan' => Yii::t('app', 'Maslahatlar o\'tkazish reja'),
-            'prepare' => Yii::t('app', 'Ma\'ruza va seminar (amaliy) mashg\'ulotlarga tayyorgarlik ko\'rish'),
-            'prepare_plan' => Yii::t('app', 'Ma\'ruza va seminar (amaliy) mashg\'ulotlarga tayyorgarlik ko\'rish reja'),
-            'checking' => Yii::t('app', 'Oraliq va yakuniy nazoratlarni tekshirish'),
-            'checking_plan' => Yii::t('app', 'Oraliq va yakuniy nazoratlarni tekshirish reja'),
-            'checking_appeal' => Yii::t('app', 'Yakuniy nazorat turi bo\'yicha qo\'yilgan balldan norozi bo\'lgan talabaning apellyasiya shikoyati ko\'rib chiqish bo\'yicha apellyasiya komissiyasi a\'zosi sifatida ishtirok etish'),
-            'checking_appeal_plan' => Yii::t('app', 'Yakuniy nazorat turi bo\'yicha qo\'yilgan balldan norozi bo\'lgan talabaning apellyasiya shikoyati ko\'rib chiqish bo\'yicha apellyasiya komissiyasi a\'zosi sifatida ishtirok etish reja'),
-            'lead_practice' => Yii::t('app', 'Bakalavriat talabalari amaliyotiga rahbarlik qilish va b.'),
-            'lead_practice_plan' => Yii::t('app', 'Bakalavriat talabalari amaliyotiga rahbarlik qilish va b. reja'),
-            'lead_graduation_work' => Yii::t('app', 'Bakalavriat talabalarining bitiruv malakaviy ishiga rahbarlik qilish, xulosalar yozish'),
-            'lead_graduation_work_plan' => Yii::t('app', 'Bakalavriat talabalarining bitiruv malakaviy ishiga rahbarlik qilish, xulosalar yozish reja'),
-            'dissertation_advicer' => Yii::t('app', 'Magistratura talabasining ilmiy tadqiqot ishi va magistrlik dissertasiyasiga ilmiy maslahatchilik qilish'),
-            'dissertation_advicer_plan' => Yii::t('app', 'Magistratura talabasining ilmiy tadqiqot ishi va magistrlik dissertasiyasiga ilmiy maslahatchilik qilish reja'),
-            'doctoral_consultation' => Yii::t('app', 'TDYU doktorantiga ilmiy maslahatchilik qilish'),
-            'doctoral_consultation_plan' => Yii::t('app', 'TDYU doktorantiga ilmiy maslahatchilik qilish reja'),
-            'supervisor_exam' => Yii::t('app', 'Yakuniy nazorat yozma imtihonlarida nazoratchi sifatida ishtirok etish'),
-            'supervisor_exam_plan' => Yii::t('app', 'Yakuniy nazorat yozma imtihonlarida nazoratchi sifatida ishtirok etish reja'),
-            'kazus_input' => Yii::t('app', 'Talabalar bilimini aniqlash bo\'yicha nazorat turlari uchun mantiqiy savollar, muammoli masalalar (kazuslar) ishlab chiqish'),
-            'kazus_input_plan' => Yii::t('app', 'Talabalar bilimini aniqlash bo\'yicha nazorat turlari uchun mantiqiy savollar, muammoli masalalar (kazuslar) ishlab chiqish reja'),
-            'legal_clinic' => Yii::t('app', 'Toshkent davlat yuridik universiteti yuridik klinikasi faoliyatida ishtirok etish'),
-            'legal_clinic_plan' => Yii::t('app', 'Toshkent davlat yuridik universiteti yuridik klinikasi faoliyatida ishtirok etish reja'),
-            'final_attestation' => Yii::t('app', 'Yakuniy davlat attestasiyasini o\'tkazish'),
-            'final_attestation_plan' => Yii::t('app', 'Yakuniy davlat attestasiyasini o\'tkazish reja'),
-            'description' => Yii::t('app', 'Description'),
-            'status' => Yii::t('app', 'Status'),
-            'is_deleted' => Yii::t('app', 'Is Deleted'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-            'created_by' => Yii::t('app', 'Created By'),
-            'updated_by' => Yii::t('app', 'Updated By'),
+            'id' => _e('ID'),
+            'user_id' => _e('User ID'),
+            'subject_id' => _e('Subject ID'),
+            'edu_year_id' => _e('Edu Year ID'),
+            'semestr_type' => _e('1 kuz 2 bahor'),
+            'course_id' => _e('Course ID'),
+            'semestr_id' => _e('Semestr ID'),
+            'student_count' => _e('Talaba soni'),
+            'student_count_plan' => _e('Talaba soni reja'),
+            'lecture' => _e('ma\'ruza mashg\'uloti'),
+            'lecture_plan' => _e('ma\'ruza mashg\'uloti reja'),
+            'seminar' => _e('Seminar mashg\'uloti'),
+            'seminar_plan' => _e('Seminar mashg\'uloti reja'),
+            'practical' => _e('Amaliy mashg\'ulot'),
+            'practical_plan' => _e('Amaliy mashg\'ulot reja'),
+            'labarothoria' => _e('Labarotoriya mashg\'uloti'),
+            'labarothoria_plan' => _e('Labarotoriya mashg\'uloti reja'),
+            'advice' => _e('Maslahatlar o\'tkazish'),
+            'advice_plan' => _e('Maslahatlar o\'tkazish reja'),
+            'prepare' => _e('Ma\'ruza va seminar (amaliy) mashg\'ulotlarga tayyorgarlik ko\'rish'),
+            'prepare_plan' => _e('Ma\'ruza va seminar (amaliy) mashg\'ulotlarga tayyorgarlik ko\'rish reja'),
+            'checking' => _e('Oraliq va yakuniy nazoratlarni tekshirish'),
+            'checking_plan' => _e('Oraliq va yakuniy nazoratlarni tekshirish reja'),
+            'checking_appeal' => _e('Yakuniy nazorat turi bo\'yicha qo\'yilgan balldan norozi bo\'lgan talabaning apellyasiya shikoyati ko\'rib chiqish bo\'yicha apellyasiya komissiyasi a\'zosi sifatida ishtirok etish'),
+            'checking_appeal_plan' => _e('Yakuniy nazorat turi bo\'yicha qo\'yilgan balldan norozi bo\'lgan talabaning apellyasiya shikoyati ko\'rib chiqish bo\'yicha apellyasiya komissiyasi a\'zosi sifatida ishtirok etish reja'),
+            'lead_practice' => _e('Bakalavriat talabalari amaliyotiga rahbarlik qilish va b.'),
+            'lead_practice_plan' => _e('Bakalavriat talabalari amaliyotiga rahbarlik qilish va b. reja'),
+            'lead_graduation_work' => _e('Bakalavriat talabalarining bitiruv malakaviy ishiga rahbarlik qilish, xulosalar yozish'),
+            'lead_graduation_work_plan' => _e('Bakalavriat talabalarining bitiruv malakaviy ishiga rahbarlik qilish, xulosalar yozish reja'),
+            'dissertation_advicer' => _e('Magistratura talabasining ilmiy tadqiqot ishi va magistrlik dissertasiyasiga ilmiy maslahatchilik qilish'),
+            'dissertation_advicer_plan' => _e('Magistratura talabasining ilmiy tadqiqot ishi va magistrlik dissertasiyasiga ilmiy maslahatchilik qilish reja'),
+            'doctoral_consultation' => _e('TDYU doktorantiga ilmiy maslahatchilik qilish'),
+            'doctoral_consultation_plan' => _e('TDYU doktorantiga ilmiy maslahatchilik qilish reja'),
+            'supervisor_exam' => _e('Yakuniy nazorat yozma imtihonlarida nazoratchi sifatida ishtirok etish'),
+            'supervisor_exam_plan' => _e('Yakuniy nazorat yozma imtihonlarida nazoratchi sifatida ishtirok etish reja'),
+            'kazus_input' => _e('Talabalar bilimini aniqlash bo\'yicha nazorat turlari uchun mantiqiy savollar, muammoli masalalar (kazuslar) ishlab chiqish'),
+            'kazus_input_plan' => _e('Talabalar bilimini aniqlash bo\'yicha nazorat turlari uchun mantiqiy savollar, muammoli masalalar (kazuslar) ishlab chiqish reja'),
+            'legal_clinic' => _e('Toshkent davlat yuridik universiteti yuridik klinikasi faoliyatida ishtirok etish'),
+            'legal_clinic_plan' => _e('Toshkent davlat yuridik universiteti yuridik klinikasi faoliyatida ishtirok etish reja'),
+            'final_attestation' => _e('Yakuniy davlat attestasiyasini o\'tkazish'),
+            'final_attestation_plan' => _e('Yakuniy davlat attestasiyasini o\'tkazish reja'),
+            'description' => _e('Description'),
+            'status' => _e('Status'),
+            'is_deleted' => _e('Is Deleted'),
+            'created_at' => _e('Created At'),
+            'updated_at' => _e('Updated At'),
+            'created_by' => _e('Created By'),
+            'updated_by' => _e('Updated By'),
         ];
     }
 
@@ -299,15 +304,17 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
 
         $model->edu_year_id = EduYear::findOne(['year' => date("Y")])->id;
 
+        if (!isset($post['user_id'])) {
+            $model->user_id = current_user_id();
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
             $transaction->rollBack();
             return simplify_errors($errors);
         }
 
-        if (!isset($post['user_id'])) {
-            $model->user_id = current_user_id();
-        }
+
 
         $model->lecture = TimeTable::find()->where([
             'teacher_user_id' => $model->user_id,
@@ -356,6 +363,12 @@ class TeacherWorkPlan extends \yii\db\ActiveRecord
 
         $model->kazus_input = Question::find()->where(['created_by' => $model->user_id])->count();
 
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         if ($model->save()) {
             $transaction->commit();

@@ -22,7 +22,6 @@ class TeacherWorkPlanController extends ApiActiveController
         $model = new TeacherWorkPlan();
 
         $query = $model->find()
-            ->with(['infoRelation'])
             ->andWhere([$model->tableName() . '.is_deleted' => 0]);
 
         if (isRole('teacher') && (!isRole('mudir') && !isRole('dean'))) {

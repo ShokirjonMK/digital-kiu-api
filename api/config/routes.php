@@ -156,6 +156,7 @@ $controllers = [
 
     'telegram',
     'test-get-data',
+    'teacher-work-plan',
     'tourniquet-absent'
 ];
 

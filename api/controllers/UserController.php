@@ -140,14 +140,11 @@ class UserController extends ApiActiveController
             ->andWhere(['users.deleted' => 0])
             ->join('LEFT JOIN', 'profile', 'profile.user_id = users.id')
             ->join('LEFT JOIN', 'auth_assignment', 'auth_assignment.user_id = users.id')
-            ->groupBy('users.id')
+            // ->groupBy('users.id')
             ->andFilterWhere(['like', 'username', Yii::$app->request->get('query')]);
 
         // dd($query->createCommand()->getRawSql());
-        if (current_user_id() != 1)
-            $query = $query->andWhere(['!=', 'auth_assignment.item_name', "admin"]);
-
-
+      
         $userIds = AuthAssignment::find()->select('user_id')->where([
             'in', 'auth_assignment.item_name',
             AuthChild::find()->select('child')->where([
@@ -187,7 +184,6 @@ class UserController extends ApiActiveController
         }
 
         if (!(isRole('admin')  || isRole('content_assign') || isRole('kpi_check'))) {
-            // dd(123);
             $f = $this->isSelf(Faculty::USER_ACCESS_TYPE_ID);
             $k = $this->isSelf(Kafedra::USER_ACCESS_TYPE_ID);
             $d = $this->isSelf(Department::USER_ACCESS_TYPE_ID);

@@ -25,7 +25,7 @@ O'rnatish tartibi:
 -------------------
 GitHubdan nusxa olamiz:
 
-`git clone https://github.com/ShokirjonMK/digitap-kiu-api.git`
+`git clone https://github.com/ShokirjonMK/digital-kiu-api.git`
 
 Composer bilan paketlarni yangilaymiz:
 

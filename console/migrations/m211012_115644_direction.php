@@ -22,6 +22,7 @@ class m211012_115644_direction extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),
             'faculty_id' => $this->integer()->notNull(),
+            'building_id' => $this->integer()->notNull(),
 
 
             'order' => $this->tinyInteger(1)->defaultValue(1),
@@ -34,6 +35,7 @@ class m211012_115644_direction extends Migration
         ], $tableOptions);
 
         $this->addForeignKey('fd_direction_faculty_id', 'direction', 'faculty_id', 'faculty', 'id');
+        $this->addForeignKey('fd_direction_building_id', 'direction', 'building_id', 'building', 'id');
     }
 
     /**
@@ -42,6 +44,7 @@ class m211012_115644_direction extends Migration
     public function safeDown()
     {
         $this->dropForeignKey('fd_direction_faculty_id', 'direction');
+        $this->dropForeignKey('fd_direction_building_id', 'direction');
         $this->dropTable('direction');
     }
 

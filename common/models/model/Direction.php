@@ -53,7 +53,7 @@ class Direction extends \yii\db\ActiveRecord
     {
         return [
             [['faculty_id'], 'required'],
-            [['faculty_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['faculty_id', 'building_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['code'], 'string', 'max' => 255],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
         ];
@@ -69,6 +69,7 @@ class Direction extends \yii\db\ActiveRecord
             'id' => 'ID',
             //            'name' => 'Name',
             'faculty_id' => 'Faculty ID',
+            'building_id' => 'Building ID',
             'code' => 'Code',
             'order' => _e('Order'),
             'status' => _e('Status'),
@@ -88,6 +89,7 @@ class Direction extends \yii\db\ActiveRecord
                 return $model->translate->name ?? '';
             },
             'faculty_id',
+            'building_id',
             'code',
             'order',
             'status',
@@ -105,6 +107,7 @@ class Direction extends \yii\db\ActiveRecord
     {
         $extraFields =  [
             'faculty',
+            'building',
             'eduPlans',
             'kafedras',
             'description',
@@ -153,6 +156,11 @@ class Direction extends \yii\db\ActiveRecord
     public function getFaculty()
     {
         return $this->hasOne(Faculty::className(), ['id' => 'faculty_id']);
+    }
+
+    public function getBuilding()
+    {
+        return $this->hasOne(Building::className(), ['id' => 'building_id']);
     }
 
     /**

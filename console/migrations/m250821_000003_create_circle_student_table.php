@@ -44,7 +44,6 @@ class m250821_000003_create_circle_student_table extends Migration
         $this->createIndex('idx_unique_enroll', 'circle_student', ['circle_schedule_id', 'student_user_id', 'is_deleted'], true);
         $this->createIndex('idx_circle_student_circle_schedule_id', 'circle_student', 'circle_schedule_id');
         $this->createIndex('idx_circle_student_student_user_id', 'circle_student', 'student_user_id');
-        $this->createIndex('idx_circle_student_student_number', 'circle_student', 'student_number');
         $this->createIndex('idx_circle_student_status', 'circle_student', 'status');
         $this->createIndex('idx_circle_student_is_deleted', 'circle_student', 'is_deleted');
         $this->createIndex('idx_circle_student_created_at', 'circle_student', 'created_at');
@@ -59,7 +58,6 @@ class m250821_000003_create_circle_student_table extends Migration
         $this->dropForeignKey('fk_circle_student_student', 'circle_student');
         $this->dropIndex('idx_circle_student_circle_schedule_id', 'circle_student');
         $this->dropIndex('idx_circle_student_student_user_id', 'circle_student');
-        $this->dropIndex('idx_circle_student_student_number', 'circle_student');
         $this->dropIndex('idx_circle_student_status', 'circle_student');
         $this->dropIndex('idx_circle_student_is_deleted', 'circle_student');
         $this->dropIndex('idx_circle_student_created_at', 'circle_student');

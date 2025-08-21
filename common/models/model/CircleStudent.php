@@ -23,15 +23,19 @@ class CircleStudent extends \yii\db\ActiveRecord
         ];
     }
 
+    const MAX_SCHEDULES_PER_SEMESTER = 2;
+
     public function rules()
     {
         return [
-            [['circle_id', 'circle_schedule_id', 'student_user_id', 'student_id'], 'required'],
+            [['circle_schedule_id'], 'required'],
             [['circle_id', 'circle_schedule_id', 'student_user_id', 'student_id', 'is_finished', 'abs_status', 'certificate_status', 'certificate_date', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['certificate_file'], 'string', 'max' => 255],
             [['circle_id'], 'exist', 'skipOnError' => true, 'targetClass' => Circle::className(), 'targetAttribute' => ['circle_id' => 'id']],
             [['circle_schedule_id'], 'exist', 'skipOnError' => true, 'targetClass' => CircleSchedule::className(), 'targetAttribute' => ['circle_schedule_id' => 'id']],
             [['student_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['student_user_id' => 'id']],
+
+            ['student_id', 'unique', 'targetAttribute' => ['student_id', 'circle_id', 'is_deleted'], 'message' => _e('Student already enrolled to this circle in current semester.')],
         ];
     }
 
@@ -79,20 +83,43 @@ class CircleStudent extends \yii\db\ActiveRecord
         return $this->hasMany(CircleAttendance::className(), ['circle_student_id' => 'id']);
     }
 
-    public static function createItem($model)
+    public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
 
-        $schedule = CircleSchedule::findOne($model->circle_schedule_id);
-        if (!$schedule || $schedule->is_deleted) {
-            return [_e('Schedule not found.')];
+        $t = false;
+        if (isRole('student')) {
+            $model->student_id = self::student();
+        } else {
+            if (!$post['student_id']) {
+                $errors[] = _e('Student id is required.');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+            $model->student_id = $post['student_id'];
+            $t = true;
         }
 
-        // per migration: max_student_count limit
-        $currentCount = self::find()->where(['circle_schedule_id' => $model->circle_schedule_id, 'is_deleted' => 0])->count();
-        if ($currentCount >= (int) $schedule->max_student_count) {
-            return [_e('Schedule capacity reached.')];
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        $model->student_user_id = $model->student->user_id();
+
+
+        $schedule = $model->circleSchedule;
+
+        // per migration: max_student_count limit admin can add more students to the schedule
+        if ($t) {
+            $currentCount = self::find()->where(['circle_schedule_id' => $model->circle_schedule_id, 'is_deleted' => 0])->count();
+            if ($currentCount >= (int) $schedule->max_student_count) {
+                $errors[] = _e('Schedule capacity reached');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
         }
 
         // cannot reselect same circle in same semester and year
@@ -100,15 +127,17 @@ class CircleStudent extends \yii\db\ActiveRecord
             ->alias('cs')
             ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
             ->where([
-                'cs.student_user_id' => $model->student_user_id,
+                'cs.student_id' => $model->student_id,
                 'cs.is_deleted' => 0,
                 'sch.circle_id' => $schedule->circle_id,
-                'sch.edu_year_id' => $schedule->edu_year_id,
-                'sch.semestr_type' => $schedule->semestr_type,
+                'sch.edu_year_id' => $schedule->edu_year_id
             ])
             ->exists();
+
         if ($existsSameCircle) {
-            return [_e('Student already enrolled to this circle in current semester.')];
+            $errors[] = _e('You already enrolled to this circle');
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         // max 2 schedules per semester
@@ -116,14 +145,16 @@ class CircleStudent extends \yii\db\ActiveRecord
             ->alias('cs')
             ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
             ->where([
-                'cs.student_user_id' => $model->student_user_id,
+                'cs.student_id' => $model->student_id,
                 'cs.is_deleted' => 0,
-                'sch.edu_year_id' => $schedule->edu_year_id,
-                'sch.semestr_type' => $schedule->semestr_type,
+                'sch.edu_year_id' => $schedule->edu_year_id
             ])
             ->count();
-        if ($countThisSemester >= 2) {
-            return [_e('Student cannot enroll more than 2 schedules in a semester.')];
+
+        if ($countThisSemester >= self::MAX_SCHEDULES_PER_SEMESTER) {
+            $errors[] = _e('You cannot enroll more than') . self::MAX_SCHEDULES_PER_SEMESTER . _e('schedules in a semester');
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         // set derived fields per migration comments
@@ -131,6 +162,12 @@ class CircleStudent extends \yii\db\ActiveRecord
 
         if (!($model->validate())) {
             $errors[] = $model->errors;
+        }
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if (empty($errors)) {
@@ -142,6 +179,32 @@ class CircleStudent extends \yii\db\ActiveRecord
                 $transaction->commit();
                 return true;
             } else {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        $transaction->rollBack();
+        return simplify_errors($errors);
+    }
+
+    public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (empty($errors)) {
+            if ($model->save()) {
+                $transaction->commit();
+                return true;
+            } else {
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
@@ -150,5 +213,15 @@ class CircleStudent extends \yii\db\ActiveRecord
         return simplify_errors($errors);
     }
 
-    
+
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->created_by = Current_user_id();
+        } else {
+            $this->updated_by = Current_user_id();
+        }
+        return parent::beforeSave($insert);
+    }
 }

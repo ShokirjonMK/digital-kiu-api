@@ -31,7 +31,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
     {
         return [
             // required per comments
-            [['circle_id', 'building_id', 'room_id', 'start_date', 'end_date', 'start_time', 'end_time', 'week_id', 'teacher_user_id', 'edu_year_id', 'semestr_type'], 'required'],
+            [['circle_id', 'building_id', 'start_time', 'end_time', 'week_id', 'teacher_user_id', 'edu_year_id'], 'required'],
             // integers
             [['circle_id', 'building_id', 'room_id', 'week_id', 'abs_count', 'max_student_count', 'student_count', 'teacher_user_id', 'edu_year_id', 'semestr_type', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             // date/time stored as strings or safe
@@ -44,6 +44,8 @@ class CircleSchedule extends \yii\db\ActiveRecord
             [['week_id'], 'exist', 'skipOnError' => true, 'targetClass' => Week::className(), 'targetAttribute' => ['week_id' => 'id']],
             [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],
             [['edu_year_id'], 'exist', 'skipOnError' => true, 'targetClass' => EduYear::className(), 'targetAttribute' => ['edu_year_id' => 'id']],
+
+            ['teacher_user_id', 'unique', 'targetAttribute' => ['teacher_user_id', 'start_time', 'week_id', 'edu_year_id'], 'message' => _e('This teacher already has a schedule for this time and week')],
         ];
     }
 
@@ -112,9 +114,56 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'teacher',
             'eduYear',
             'enrollments',
+            'circleStudents',
+            'circleAttendances',
+            'attDates',
+            'dates',
+
+            'created_by',
+            'updated_by',
+            'created_at',
+            'updated_at',
         ];
 
         return $extraFields;
+    }
+
+    public function getAttDates()
+    {
+        $dateFromString = $this->start_date;
+        $dateToString = $this->end_date;
+
+        $dateFrom = new \DateTime($dateFromString);
+        $dateTo = new \DateTime($dateToString);
+        $dates = [];
+
+        if ($dateFrom > $dateTo) {
+            return $dates;
+        }
+
+        if ($this->week_id != $dateFrom->format('N')) {
+            $dateFrom->modify('next ' . $this->dayName()[$this->week_id]);
+        }
+
+        while ($dateFrom <= $dateTo) {
+            $dates[$dateFrom->format('Y-m-d')] = $this->getAttend($dateFrom->format('Y-m-d'));
+            $dateFrom->modify('+1 week');
+        }
+
+        return $dates;
+    }
+
+    public function dayName()
+    {
+        return [
+            1 => _e('monday'),
+            2 => _e('tuesday'),
+            3 => _e('wednesday'),
+            4 => _e('thursday'),
+            5 => _e('friday'),
+            6 => _e('saturday'),
+            7 => _e('sunday'),
+        ];
     }
 
     public function getCircle()
@@ -154,13 +203,108 @@ class CircleSchedule extends \yii\db\ActiveRecord
             ->where(['is_deleted' => 0]);
     }
 
+    /**
+     * Computed list of dates (Y-m-d) for this schedule's weekday
+     * between start_date and end_date (inclusive).
+     * Does NOT rely on localized weekday strings.
+     *
+     * @return string[]
+     */
+    public function getDates()
+    {
+        $dates = [];
+
+        if (empty($this->start_date) || empty($this->end_date) || empty($this->week_id)) {
+            return $dates;
+        }
+
+        try {
+            $start = new \DateTime((string)$this->start_date);
+            $end = new \DateTime((string)$this->end_date);
+            // Make end inclusive
+            $end->setTime(23, 59, 59);
+
+            $targetDow = (int)$this->week_id; // 1..7 (Mon..Sun)
+            if ($targetDow < 1 || $targetDow > 7) {
+                return $dates;
+            }
+
+            $current = clone $start;
+            $startDow = (int)$current->format('N');
+            $deltaDays = ($targetDow - $startDow + 7) % 7;
+            if ($deltaDays > 0) {
+                $current->modify("+{$deltaDays} day");
+            }
+
+            while ($current <= $end) {
+                $dates[] = $current->format('Y-m-d');
+                $current->modify('+7 day');
+            }
+        } catch (\Exception $e) {
+            // return empty on parse errors
+            return [];
+        }
+
+        return $dates;
+    }
+
+    public function getCircleStudents()
+    {
+        return $this
+            ->hasMany(CircleStudent::className(), ['circle_schedule_id' => 'id'])
+            ->where(['is_deleted' => 0]);
+    }
+
+    public function getCircleAttendances()
+    {
+        return $this
+            ->hasMany(CircleAttendance::className(), ['circle_schedule_id' => 'id'])
+            ->where(['is_deleted' => 0]);
+    }
+
     public static function createItem($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
+
+        $model->semestr_type = $model->eduYear->type ?? 1;
+
+        if ($model->start_date) {
+            $model->start_date = date('Y-m-d', strtotime($model->start_date));
+        }
+        if ($model->end_date) {
+            $model->end_date = date('Y-m-d', strtotime($model->end_date));
+
+
+            if ($model->start_date >= $model->end_date) {
+                $errors[] = _e('Start date must be less than end date');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        $model->start_time = date('H:i', strtotime($model->start_time));
+        $model->end_time = date('H:i', strtotime($model->end_time));
+
+        if ($model->start_time >= $model->end_time) {
+            $errors[] = _e('Start time must be less than end time');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+
         if (empty($errors)) {
             if ($model->save()) {
                 $transaction->commit();
@@ -178,9 +322,35 @@ class CircleSchedule extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        if ($model->start_date) {
+            $model->start_date = date('Y-m-d', strtotime($model->start_date));
+        }
+        if ($model->end_date) {
+            $model->end_date = date('Y-m-d', strtotime($model->end_date));
+
+
+            if ($model->start_date >= $model->end_date) {
+                $errors[] = _e('Start date must be less than end date');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        $model->start_time = date('H:i', strtotime($model->start_time));
+        $model->end_time = date('H:i', strtotime($model->end_time));
+
+        if ($model->start_time >= $model->end_time) {
+            $errors[] = _e('Start time must be less than end time');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
         if (!($model->validate())) {
             $errors[] = $model->errors;
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
+
         if (empty($errors)) {
             if ($model->save()) {
                 $transaction->commit();

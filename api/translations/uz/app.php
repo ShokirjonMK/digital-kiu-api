@@ -27,4 +27,20 @@
   'control work' => 'oraliq nazorat',
   'You are not allowed to this exam' => 'Sizga bu imtihonga ruxsat berilmagan',
   'You have no access for this category' => 'Sizga bu ketegoruya uchun ruxsat yo\'q',
+
+  'This teacher already has a schedule for this time and week' => 'Ushbu vaqtda va haftada ushbu o\'qituvchi band',
+  'You already enrolled to this circle' => 'Siz bu to\'garakka ro\'yxatdan o\'tgan',
+  'You cannot enroll more than' => 'Siz semestrda',
+  'schedules in a semester' => 'ta to\'garakka ro\'yxatdan o\'ta olasiz',
+  'Schedule capacity reached' => 'To\'garakka ro\'yxatdan o\'tish cheklangan',
+  'Student id is required' => 'Talaba ID majburiy!',
+
+
+  'monday' => 'dushanba',
+  'tuesday' => 'seshanba',
+  'wednesday' => 'chorshanba',
+  'thursday' => 'payshanba',
+  'friday' => 'juma',
+  'saturday' => 'shanba',
+  'sunday' => 'yakshanba',
 ];

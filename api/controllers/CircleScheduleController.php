@@ -27,12 +27,23 @@ class CircleScheduleController extends ApiActiveController
             ->find()
             ->andWhere([$model->tableName() . '.is_deleted' => 0]);
 
-        if (isRole('student')) {
-            $student = $this->student();
-            $building_id = $student->direction->building_id ?? null;
-            if ($building_id !== null) {
-                $query->andWhere(['building_id' => $building_id]);
+        try {
+            if (isRole('student')) {
+                $student = $this->student(2);
+                $building_id = null;
+                if ($student && isset($student->direction) && isset($student->direction->building_id)) {
+                    $building_id = $student->direction->building_id;
+                }
+                if ($building_id !== null) {
+                    $query->andWhere(['building_id' => $building_id]);
+                }
             }
+        } catch (\Throwable $e) {
+            Yii::error("Error filtering by student building_id: " . $e->getMessage(), __METHOD__);
+        }
+
+        if (isRole('teacher')) {
+            $query->andWhere(['teacher_user_id' => current_user_id()]);
         }
 
         $query = $this->filterAll($query, $model);
@@ -114,7 +125,7 @@ class CircleScheduleController extends ApiActiveController
         }
         $model->student_id = (int) $post['student_id'];
 
-        $result = CircleStudent::createItem($model);
+        $result = CircleStudent::createItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e('Enrollment successfully created.'), $model, null, ResponseStatus::CREATED);
         } else {

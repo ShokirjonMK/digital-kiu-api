@@ -20,20 +20,20 @@ class m250821_000002_create_circle_schedule_table extends Migration
             'id' => $this->primaryKey(),
             'circle_id' => $this->integer()->notNull()->comment('circle id'),
             'building_id' => $this->integer()->notNull()->comment('building id'),
-            'room_id' => $this->integer()->notNull()->comment('room id'),
-            'start_date' => $this->date()->notNull()->comment('boshlash sanasi'),
-            'end_date' => $this->date()->notNull()->comment('tugash sana'),
+            'room_id' => $this->integer()->null()->comment('room id'),
+            'start_date' => $this->date()->null()->comment('boshlash sanasi'),
+            'end_date' => $this->date()->null()->comment('tugash sana'),
             'start_time' => $this->string(10)->notNull()->comment('boshlanish vaqti: 10:00'),
             'end_time' => $this->string(10)->notNull()->comment('tugash vaqti: 12:00'),
             'week_id' => $this->integer()->notNull()->comment('hafta id'),
-            'abs_count' => $this->integer()->notNull()->comment('nb lar soni'),
-            'max_student_count' => $this->integer()->defaultValue(30)->notNull()->comment('maksimal talaba soni'), // 30 ta talaba qo'shiladi
-            'student_count' => $this->integer()->notNull()->comment('talaba soni'), // circle_student count update qilinadi
+            'abs_count' => $this->integer()->null()->defaultValue(4)->comment('nb lar soni'),
+            'max_student_count' => $this->integer()->defaultValue(30)->notNull()->comment('maksimal talaba soni'),  // 30 ta talaba qo'shiladi
+            'student_count' => $this->integer()->notNull()->defaultValue(0)->comment('talaba soni'),  // circle_student count update qilinadi
             'teacher_user_id' => $this->integer()->notNull()->comment('teacher id'),
             'edu_year_id' => $this->integer()->notNull()->comment('edu year id'),
-            'semestr_type' => $this->tinyInteger(1)->defaultValue(1)->comment('1 kuz 2 bahor'), // eduYear->type yoziladi
+            'semestr_type' => $this->tinyInteger(1)->defaultValue(1)->comment('1 kuz 2 bahor'),  // eduYear->type yoziladi
             'status' => $this->tinyInteger(1)->defaultValue(1)->comment('1 aktiv 0 deaktiv'),
-            'is_deleted' => $this->tinyInteger(1)->defaultValue(0)->comment('1 o\'chirilgan 0 aktiv'),
+            'is_deleted' => $this->tinyInteger(1)->defaultValue(0)->comment("1 o'chirilgan 0 aktiv"),
             'created_at' => $this->integer()->notNull()->comment('yaratilgan vaqt'),
             'updated_at' => $this->integer()->notNull()->comment('yangilangan vaqt'),
             'created_by' => $this->integer()->notNull()->defaultValue(0)->comment('yaratilgan foydalanuvchi id'),
@@ -82,4 +82,3 @@ class m250821_000002_create_circle_schedule_table extends Migration
         $this->dropTable('circle_schedule');
     }
 }
-

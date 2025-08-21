@@ -25,6 +25,7 @@ class m250821_000004_create_circle_attendance_table extends Migration
             'teacher_user_id' => $this->integer()->null()->comment('teacher user id'),  // circle_student->teacher_user_id ni yozish kerak
             'date' => $this->integer()->notNull()->comment('attendance date'),  // circle_schedule->start_date va circle_schedule->end_date orasida yozish kerak
             'reason' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('attendance reason'),  // sababli qilish yoki qilmaslik 1 sababli qilish 0 sababli qilmaslik admin yoki circle_schedule->teacher_user_id yozishi mumkin
+            'reason_text' => $this->string()->null()->comment('attendance reason text'),  // sababli qilish yoki qilmaslik 1 sababli qilish 0 sababli qilmaslik admin yoki circle_schedule->teacher_user_id yozishi mumkin
             'status' => $this->tinyInteger(1)->notNull()->defaultValue(1)->comment('1 aktiv 0 deaktiv'),
             'created_at' => $this->integer()->notNull()->comment('yaratilgan vaqt'),
             'updated_at' => $this->integer()->notNull()->comment('yangilangan vaqt'),
@@ -32,6 +33,7 @@ class m250821_000004_create_circle_attendance_table extends Migration
             'updated_by' => $this->integer()->notNull()->defaultValue(0)->comment('yangilangan foydalanuvchi id'),
         ], $tableOptions);
 
+        $this->addForeignKey('fk_circle_attendance_circle_student', 'circle_attendance', 'circle_student_id', 'circle_student', 'id');
         $this->addForeignKey('fk_circle_attendance_circle', 'circle_attendance', 'circle_id', 'circle', 'id');
         $this->addForeignKey('fk_circle_attendance_schedule', 'circle_attendance', 'circle_schedule_id', 'circle_schedule', 'id');
         $this->addForeignKey('fk_circle_attendance_student', 'circle_attendance', 'student_id', 'users', 'id');
@@ -50,6 +52,7 @@ class m250821_000004_create_circle_attendance_table extends Migration
 
     public function safeDown()
     {
+        $this->dropForeignKey('fk_circle_attendance_circle_student', 'circle_attendance');
         $this->dropForeignKey('fk_circle_attendance_circle', 'circle_attendance');
         $this->dropForeignKey('fk_circle_attendance_schedule', 'circle_attendance');
         $this->dropForeignKey('fk_circle_attendance_student', 'circle_attendance');

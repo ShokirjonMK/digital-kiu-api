@@ -62,6 +62,22 @@ class CircleStudent extends \yii\db\ActiveRecord
         ];
     }
 
+    public function extraFields()
+    {
+        return [
+            'circle',
+            'circleSchedule',
+            'student',
+            'teacher',
+            'attendances',
+
+            'createdBy',
+            'updatedBy',
+            'createdAt',
+            'updatedAt',
+        ];
+    }
+
     public function getCircle()
     {
         return $this->hasOne(Circle::className(), ['id' => 'circle_id']);
@@ -79,7 +95,7 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public function getTeacher()
     {
-        return $this->hasOne(User::className(), ['id' => 'teacher_user_id']);
+        return $this->circleSchedule->teacher;
     }
 
     public function getAttendances()

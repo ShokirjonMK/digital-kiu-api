@@ -146,6 +146,45 @@ class CircleStudent extends \yii\db\ActiveRecord
 
             $schedule = $model->circleSchedule;
 
+            // ✅ 0) Course-based selection window check
+            $studentModel = $model->student; // relation
+            if ($studentModel && $studentModel->course_id) {
+                $course = Course::findOne($studentModel->course_id);
+                if ($course) {
+                    $now = time();
+                    // Determine term window by schedule semestr_type: 1=kuz (fall), 2=bahor (spring)
+                    $useFall = ((int)$schedule->semestr_type === 1);
+
+                    $fromStr = $useFall ? ($course->circle_kuz_from ?? '') : ($course->circle_bahor_from ?? '');
+                    $toStr   = $useFall ? ($course->circle_kuz_to ?? '')   : ($course->circle_bahor_to ?? '');
+
+                    if ($fromStr && $toStr) {
+                        // Compose with current year (or schedule edu_year_id if that is a year value)
+                        $year = (int)date('Y');
+                        $fromTs = strtotime($year . '-' . $fromStr);
+                        $toTs   = strtotime($year . '-' . $toStr);
+
+                        // If window crosses year boundary (e.g., Dec -> Jan), adjust
+                        if ($toTs !== false && $fromTs !== false && $toTs < $fromTs) {
+                            // assume to is next year
+                            $toTs = strtotime(($year + 1) . '-' . $toStr);
+                        }
+
+                        if ($fromTs === false || $toTs === false) {
+                            $errors[] = _e('Course selection window has invalid format. Expected mm-dd HH:ii:ss');
+                            $transaction->rollBack();
+                            return simplify_errors($errors);
+                        }
+
+                        if (!($now >= $fromTs && $now <= $toTs)) {
+                            $errors[] = _e('Circle selection is closed for your course at this time.');
+                            $transaction->rollBack();
+                            return simplify_errors($errors);
+                        }
+                    }
+                }
+            }
+
             // ✅ 1) Max student limit check (admin qo‘lda oshirishi mumkin)
             $currentCount = self::find()
                 ->where(['circle_schedule_id' => $model->circle_schedule_id, 'is_deleted' => 0])

@@ -45,6 +45,7 @@ class Course extends \yii\db\ActiveRecord
         return [
             //            [['name'], 'required'],
             [['order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['circle_kuz_from', 'circle_kuz_to', 'circle_bahor_from', 'circle_bahor_to'], 'string', 'max' => 16],
             //            [['name'], 'string', 'max' => 255],
         ];
     }
@@ -73,6 +74,10 @@ class Course extends \yii\db\ActiveRecord
             },
             'order',
             'status',
+            'circle_kuz_from',
+            'circle_kuz_to',
+            'circle_bahor_from',
+            'circle_bahor_to',
             'created_at',
             'updated_at',
             'created_by',

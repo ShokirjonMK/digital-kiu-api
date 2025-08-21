@@ -118,6 +118,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'circleAttendances',
             'attDates',
             'dates',
+            'attendDates',
 
             'created_by',
             'updated_by',
@@ -126,6 +127,80 @@ class CircleSchedule extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    /**
+     * CircleSchedule uchun haftalik dars sanalari va ularga mos attendance ma'lumotlari
+     *
+     * @return array [ 'Y-m-d' => [student_id1, student_id2, ...], ... ]
+     */
+    public function getAttendDates()
+    {
+        $dates = [];
+
+        // start_date, end_date, week_id yo‘q bo‘lsa darhol bo‘sh qaytar
+        if (empty($this->start_date) || empty($this->end_date) || empty($this->week_id)) {
+            return $dates;
+        }
+
+        try {
+            $start = new \DateTime($this->start_date);
+            $end   = new \DateTime($this->end_date);
+            $end->setTime(23, 59, 59); // oxirgi kun ham kirishi uchun
+
+            $targetDow = (int)$this->week_id; // 1..7 (Mon..Sun)
+            if ($targetDow < 1 || $targetDow > 7) {
+                return $dates;
+            }
+
+            // Start dan boshlab kerakli haftalik kunni topish
+            $current = clone $start;
+            $startDow = (int)$current->format('N');
+            $deltaDays = ($targetDow - $startDow + 7) % 7;
+            if ($deltaDays > 0) {
+                $current->modify("+{$deltaDays} day");
+            }
+
+            // Har hafta shu kunni qo‘shib borish
+            while ($current <= $end) {
+                $dateStr = $current->format('Y-m-d');
+                $dates[$dateStr] = $this->getAttend($dateStr);
+                $current->modify('+7 day');
+            }
+        } catch (\Exception $e) {
+            return []; // xato bo‘lsa bo‘sh qaytar
+        }
+
+        return $dates;
+    }
+
+    /**
+     * Berilgan sana uchun shu schedule'dagi talabalarning davomat ro‘yxati
+     *
+     * @param string $date  'Y-m-d' format
+     * @return array        student_id lar ro‘yxati
+     */
+    public function getAttend($date)
+    {
+        $dateStr = (new \DateTime($date))->format('Y-m-d');
+        $attendances = CircleAttendance::find()
+            ->select(['id', 'student_id', 'reason', 'reason_text'])
+            ->asArray()
+            ->where([
+                'circle_schedule_id' => $this->id,
+                'date'               => $dateStr,
+                'is_deleted'         => 0
+            ])
+            ->all(); // faqat student_id lar ro‘yxatini array ko‘rinishda qaytaradi
+
+        return $attendances;
+    }
+
+
+
+    public function getAttendance($date)
+    {
+        return $this->circleAttendances->where(['date' => $date])->one();
     }
 
     public function getAttDates()

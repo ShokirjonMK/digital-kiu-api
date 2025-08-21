@@ -27,9 +27,11 @@ class CircleAttendance extends \yii\db\ActiveRecord
     {
         return [
             [['circle_student_id', 'date'], 'required'],
-            [['circle_id', 'circle_student_id', 'circle_schedule_id', 'student_id', 'teacher_user_id', 'date', 'reason', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['circle_id', 'circle_student_id', 'circle_schedule_id', 'student_id', 'teacher_user_id', 'reason', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['circle_schedule_id'], 'exist', 'skipOnError' => true, 'targetClass' => CircleSchedule::className(), 'targetAttribute' => ['circle_schedule_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['date'], 'safe'],
+            // [['start_time', 'end_time'], 'string', 'max' => 10],
             [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],
             ['reason_text', 'string'],
             ['circle_student_id', 'unique', 'targetAttribute' => ['circle_student_id', 'date', 'is_deleted'], 'message' => 'Attendance already exists'],
@@ -152,7 +154,7 @@ class CircleAttendance extends \yii\db\ActiveRecord
                 $attendance->student_id         = $circleStudent->student_id;
                 $attendance->teacher_user_id    = $circle_schedule->teacher_user_id;
                 // store as integer timestamp per migration
-                $attendance->date               = strtotime($date);
+                $attendance->date               = $date;
 
                 if (!$attendance->save()) {
                     $errors[] = $attendance->errors;

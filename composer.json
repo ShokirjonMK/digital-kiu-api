@@ -25,7 +25,9 @@
         "symfony/finder": "^5.1",
         "phpoffice/phpspreadsheet": "^1.21",
         "yiisoft/yii2-httpclient": "*",
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "mpdf/mpdf": "^8.2",
+        "endroid/qr-code": "^5.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -23,7 +23,7 @@ class m250821_000004_create_circle_attendance_table extends Migration
             'circle_schedule_id' => $this->integer()->notNull()->comment('circle schedule id'),  // circle_student->circle_schedule_id ni yozish kerak
             'student_id' => $this->integer()->notNull()->comment('student id'),  // circle_student->student_id ni yozish kerak
             'teacher_user_id' => $this->integer()->null()->comment('teacher user id'),  // circle_student->teacher_user_id ni yozish kerak
-            'date' => $this->integer()->notNull()->comment('attendance date'),  // circle_schedule->start_date va circle_schedule->end_date orasida yozish kerak
+            'date' => $this->date()->notNull()->comment('attendance date'),  // circle_schedule->start_date va circle_schedule->end_date orasida yozish kerak
             'reason' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('attendance reason'),  // sababli qilish yoki qilmaslik 1 sababli qilish 0 sababli qilmaslik admin yoki circle_schedule->teacher_user_id yozishi mumkin
             'reason_text' => $this->string()->null()->comment('attendance reason text'),  // sababli qilish yoki qilmaslik 1 sababli qilish 0 sababli qilmaslik admin yoki circle_schedule->teacher_user_id yozishi mumkin
             'status' => $this->tinyInteger(1)->notNull()->defaultValue(1)->comment('1 aktiv 0 deaktiv'),

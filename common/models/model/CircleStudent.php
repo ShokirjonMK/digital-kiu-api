@@ -479,6 +479,66 @@ class CircleStudent extends \yii\db\ActiveRecord
 
 
 
+
+    public static function generateCertificate($model)
+    {
+        $circle = $model->circle; // expects relation
+        $student = $model->student; // expects relation
+
+        $circleName = ($circle && $circle->translate) ? ($circle->translate->name ?? '') : '';
+        $studentName = '';
+        if ($student) {
+            $studentName = $student->fullName
+                ?? trim(($student->last_name ?? '') . ' ' . ($student->first_name ?? '') . ' ' . ($student->middle_name ?? ''));
+        }
+
+        $qrUrl = 'https://domen.uz/circle-student/' . $model->id;
+        $qrImg = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($qrUrl);
+
+        $logoUrl = Yii::$app->params['certificateLogo'] ?? null; // optional logo path/url
+
+        $html = '<html><head><meta charset="UTF-8"><style>
+            body { font-family: DejaVu Sans, sans-serif; }
+            .page { padding: 40px; position: relative; min-height: 100%; }
+            .top-left { position: absolute; left: 40px; top: 40px; }
+            .title { text-align: center; margin-top: 120px; font-size: 28px; font-weight: bold; }
+            .student { text-align: center; margin-top: 20px; font-size: 20px; }
+            .bottom-right { position: absolute; right: 40px; bottom: 40px; text-align: right; }
+        </style></head><body><div class="page">';
+
+        if (!empty($logoUrl)) {
+            $html .= '<div class="top-left"><img src="' . htmlspecialchars($logoUrl) . '" height="60"/></div>';
+        }
+
+        $html .= '<div class="title">' . htmlspecialchars($circleName) . '</div>';
+        $html .= '<div class="student">' . htmlspecialchars($studentName) . '</div>';
+        $html .= '<div class="bottom-right"><img src="' . htmlspecialchars($qrImg) . '" height="120"/><div style="font-size:10px">' . htmlspecialchars($qrUrl) . '</div></div>';
+        $html .= '</div></body></html>';
+
+        $dir = rtrim(STORAGE_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'certificate' . DIRECTORY_SEPARATOR;
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+
+        $fileName = 'circle_cert_' . $model->id . '_' . time() . '.pdf';
+        $absPath = $dir . $fileName;
+
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir()]);
+        $mpdf->WriteHTML($html);
+        $mpdf->Output($absPath, \Mpdf\Output\Destination::FILE);
+
+        $publicPath = 'storage/uploads/certificate/' . $fileName;
+        $model->certificate_file = $publicPath;
+        $model->certificate_date = time();
+        $model->certificate_status = 1;
+        $model->save(false);
+
+        return $this->response(1, _e('Certificate generated.'), [
+            'file' => $publicPath,
+            'url' => (Yii::$app->params['domain_name'] ?? '') . '/' . $publicPath,
+        ], null, ResponseStatus::OK);
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) {

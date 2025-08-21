@@ -156,14 +156,9 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
-    // Circles nested routes
-    'GET <lang:\w{2}>/circles/<id>/schedules' => 'circle-schedule/schedules',
-    'POST <lang:\w{2}>/circles/<id>/schedules' => 'circle-schedule/schedules',
-    // Schedule actions
-    'POST <lang:\w{2}>/schedules/<id>/enroll' => 'schedules/enroll',
-    'GET <lang:\w{2}>/schedules/<id>/students' => 'schedules/students',
-    'GET <lang:\w{2}>/schedules/<id>/attendance' => 'schedules/attendance',
-    'POST <lang:\w{2}>/schedules/<id>/attendance' => 'schedules/attendance',
+    //  certificate
+    'GET <lang:\w{2}>/circle-students/<id>/certificate' => 'circle-student/certificate',
+
     /** telegram */
     'GET <lang:\w{2}>/telegrams/bot' => 'telegram/bot',
     /** MIP pinfl */

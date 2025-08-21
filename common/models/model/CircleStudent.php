@@ -5,6 +5,9 @@ namespace common\models\model;
 use api\resources\ResourceTrait;
 use api\resources\User;
 use yii\behaviors\TimestampBehavior;
+
+use Mpdf\Mpdf;
+
 use Yii;
 
 class CircleStudent extends \yii\db\ActiveRecord
@@ -482,61 +485,57 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public static function generateCertificate($model)
     {
-        $circle = $model->circle; // expects relation
-        $student = $model->student; // expects relation
+        $circleName  = "To'garak nomi"; // yoki $model->circle->name
+        $studentName = "Ism Familiya";  // yoki $model->student->full_name
+        $certDate    = date('Y-m-d');
 
-        $circleName = ($circle && $circle->translate) ? ($circle->translate->name ?? '') : '';
-        $studentName = '';
-        if ($student) {
-            $studentName = $student->fullName
-                ?? trim(($student->last_name ?? '') . ' ' . ($student->first_name ?? '') . ' ' . ($student->middle_name ?? ''));
+        // Fayl papkasi va yo‘llar
+        $path = '/uploads/certificates/';
+        $dir = STORAGE_PATH . $path;
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true); // agar yo‘q bo‘lsa papkani yaratamiz
         }
 
-        $qrUrl = 'https://domen.uz/circle-student/' . $model->id;
-        $qrImg = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($qrUrl);
+        $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
+        $filePath = $dir . $fileName;
+        $fileUrl  =  'storage' . $path . $fileName;
 
-        $logoUrl = Yii::$app->params['certificateLogo'] ?? null; // optional logo path/url
 
-        $html = '<html><head><meta charset="UTF-8"><style>
-            body { font-family: DejaVu Sans, sans-serif; }
-            .page { padding: 40px; position: relative; min-height: 100%; }
-            .top-left { position: absolute; left: 40px; top: 40px; }
-            .title { text-align: center; margin-top: 120px; font-size: 28px; font-weight: bold; }
-            .student { text-align: center; margin-top: 20px; font-size: 20px; }
-            .bottom-right { position: absolute; right: 40px; bottom: 40px; text-align: right; }
-        </style></head><body><div class="page">';
+        // ⚡️ mPDF instance
+        $mpdf = new Mpdf();
 
-        if (!empty($logoUrl)) {
-            $html .= '<div class="top-left"><img src="' . htmlspecialchars($logoUrl) . '" height="60"/></div>';
-        }
+        ob_start();
+?>
+        <div style="position: relative; width:100%; height:100%; font-family: sans-serif;">
 
-        $html .= '<div class="title">' . htmlspecialchars($circleName) . '</div>';
-        $html .= '<div class="student">' . htmlspecialchars($studentName) . '</div>';
-        $html .= '<div class="bottom-right"><img src="' . htmlspecialchars($qrImg) . '" height="120"/><div style="font-size:10px">' . htmlspecialchars($qrUrl) . '</div></div>';
-        $html .= '</div></body></html>';
+            <!-- Top-left logo -->
+            <div style="position: absolute; top: 10px; left: 10px;">
+                <img src="<?= Yii::getAlias('@web/images/logo.png') ?>" width="100">
+            </div>
 
-        $dir = rtrim(STORAGE_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'certificate' . DIRECTORY_SEPARATOR;
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0777, true);
-        }
+            <!-- Center text -->
+            <div style="text-align: center; margin-top: 150px;">
+                <h1 style="font-size: 32px; margin-bottom: 20px;"><?= $circleName ?></h1>
+                <h2 style="font-size: 24px;"><?= $studentName ?></h2>
+                <p style="margin-top: 30px;">Certificate Date: <?= $certDate ?></p>
+            </div>
 
-        $fileName = 'circle_cert_' . $model->id . '_' . time() . '.pdf';
-        $absPath = $dir . $fileName;
+            <!-- Bottom-right QR -->
+            <div style="position: absolute; bottom: 20px; right: 20px;">
+                <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.2" error="M" class="barcode" />
+            </div>
 
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir()]);
+        </div>
+<?php
+        $html = ob_get_clean();
+
         $mpdf->WriteHTML($html);
-        $mpdf->Output($absPath, \Mpdf\Output\Destination::FILE);
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
 
-        $publicPath = 'storage/uploads/certificate/' . $fileName;
-        $model->certificate_file = $publicPath;
-        $model->certificate_date = time();
-        $model->certificate_status = 1;
+        // Model update
+        $model->certificate_file = $fileUrl;
+        $model->certificate_date = $certDate;
         $model->save(false);
-
-        return $this->response(1, _e('Certificate generated.'), [
-            'file' => $publicPath,
-            'url' => (Yii::$app->params['domain_name'] ?? '') . '/' . $publicPath,
-        ], null, ResponseStatus::OK);
     }
 
     public function beforeSave($insert)

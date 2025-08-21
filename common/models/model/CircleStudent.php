@@ -87,7 +87,128 @@ class CircleStudent extends \yii\db\ActiveRecord
         return $this->hasMany(CircleAttendance::className(), ['circle_student_id' => 'id']);
     }
 
+
+    /**
+     * Talabani Circle (to‘garak) schedule ga yozish
+     *
+     * @param CircleEnrollment $model  // yoziladigan enrollment modeli
+     * @param array $post              // request'dan keladigan ma'lumotlar
+     * @return bool|array              // true yoki xatolar massivi
+     */
     public static function createItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        try {
+            // 👤 Agar foydalanuvchi "student" bo'lsa, student_id avtomatik olinadi
+            if (isRole('student')) {
+                $model->student_id = self::student();
+            } else {
+                // Admin yoki boshqa rol orqali kelganda student_id majburiy
+                if (empty($post['student_id'])) {
+                    $errors[] = _e('Student id is required.');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+                $model->student_id = $post['student_id'];
+            }
+
+            // 🔍 Model validatsiyasi
+            if (!$model->validate()) {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // Student user_id ni avtomatik olish
+            $model->student_user_id = $model->student->user_id;
+            $model->circle_id = $model->circleSchedule->circle_id;
+
+            $schedule = $model->circleSchedule;
+
+            // ✅ 1) Max student limit check (admin qo‘lda oshirishi mumkin)
+            $currentCount = self::find()
+                ->where(['circle_schedule_id' => $model->circle_schedule_id, 'is_deleted' => 0])
+                ->count();
+
+            if ($currentCount >= (int) $schedule->max_student_count) {
+                $errors[] = _e('Schedule capacity reached');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // ✅ 2) Bir xil Circle ni qayta tanlashni bloklash
+            $existsSameCircle = self::find()
+                ->alias('cs')
+                ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                ->where([
+                    'cs.student_id'   => $model->student_id,
+                    'cs.is_deleted'   => 0,
+                    'sch.circle_id'   => $schedule->circle_id,
+                ])
+                ->exists();
+
+            if ($existsSameCircle) {
+                $errors[] = _e('You already enrolled to this circle');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // ✅ 3) Talabaning bir semestrda maksimal MAX_SCHEDULES_PER_SEMESTER ta schedule limiti
+            $countThisSemester = self::find()
+                ->alias('cs')
+                ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                ->where([
+                    'cs.student_id'   => $model->student_id,
+                    'cs.is_deleted'   => 0,
+                    'sch.edu_year_id' => $schedule->edu_year_id
+                ])
+                ->count();
+
+            if ($countThisSemester >= self::MAX_SCHEDULES_PER_SEMESTER) {
+                $errors[] = _e('You cannot enroll more than') . ' ' .
+                    self::MAX_SCHEDULES_PER_SEMESTER . ' ' .
+                    _e('schedules in a semester');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // 🔄 Circle_id ni schedule'dan avtomatik olish
+            $model->circle_id = $schedule->circle_id;
+
+            // Yana validatsiya (avvalgi xatoliklar bartaraf etilgan bo‘lsa)
+            if (!$model->validate()) {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // 📝 Saqlash
+            if ($model->save()) {
+                // Schedule ichidagi student_count ni yangilash
+                $schedule->student_count = self::find()
+                    ->where(['circle_schedule_id' => $schedule->id, 'is_deleted' => 0])
+                    ->count();
+
+                $schedule->save(false);
+
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        } catch (\Exception $e) {
+            // ❌ Exception bo‘lsa transaction rollback qilinadi
+            $transaction->rollBack();
+            $errors[] = $e->getMessage();
+            return simplify_errors($errors);
+        }
+    }
+
+    public static function createItemOld($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
@@ -111,9 +232,9 @@ class CircleStudent extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->student_user_id = $model->student->user_id();
+        $model->student_user_id = $model->student->user_id;
         $model->circle_id = $model->circleSchedule->circle_id;
-        
+
 
 
         $schedule = $model->circleSchedule;
@@ -195,7 +316,128 @@ class CircleStudent extends \yii\db\ActiveRecord
         return simplify_errors($errors);
     }
 
+    /**
+     * Talabaning Circle (to‘garak) schedule yozuvini yangilash
+     *
+     * @param CircleEnrollment $model  // mavjud enrollment modeli
+     * @param array $post              // request'dan keladigan ma'lumotlar
+     * @return bool|array              // true yoki xatolar massivi
+     */
     public static function updateItem($model, $post)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+
+        try {
+            // 🆔 Student ID ni yangilash (faqat admin yoki o‘qituvchi)
+            if (!isRole('student')) {
+                if (empty($post['student_id'])) {
+                    return simplify_errors([_e('Student id is required.')]);
+                }
+                $model->student_id = $post['student_id'];
+            }
+
+            // 🔄 Agar circle_schedule_id yangilanayotgan bo‘lsa
+            if (!empty($post['circle_schedule_id'])) {
+                $model->circle_schedule_id = $post['circle_schedule_id'];
+            }
+
+            // 🔍 Validatsiya
+            if (!$model->validate()) {
+                return simplify_errors($model->errors);
+            }
+
+            // 👤 student_user_id yangilash
+            $model->student_user_id = $model->student->user_id;
+            $model->circle_id = $model->circleSchedule->circle_id;
+            $schedule = $model->circleSchedule;
+
+            // ✅ 1) Max student limit check
+            $currentCount = self::find()
+                ->where(['circle_schedule_id' => $model->circle_schedule_id, 'is_deleted' => 0])
+                ->andWhere(['!=', 'id', $model->id]) // o‘zini hisobga olmasin
+                ->count();
+
+            if ($currentCount >= (int) $schedule->max_student_count) {
+                $errors[] = _e('Schedule capacity reached');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // ✅ 2) Bir xil Circle ni qayta tanlashni bloklash
+            $existsSameCircle = self::find()
+                ->alias('cs')
+                ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                ->where([
+                    'cs.student_id'   => $model->student_id,
+                    'cs.is_deleted'   => 0,
+                    'sch.circle_id'   => $schedule->circle_id,
+                    'sch.edu_year_id' => $schedule->edu_year_id
+                ])
+                ->andWhere(['!=', 'cs.id', $model->id]) // o‘zidan tashqari
+                ->exists();
+
+            if ($existsSameCircle) {
+                $errors[] = _e('You already enrolled to this circle');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // ✅ 3) Semestrdagi max schedule limiti
+            $countThisSemester = self::find()
+                ->alias('cs')
+                ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                ->where([
+                    'cs.student_id'   => $model->student_id,
+                    'cs.is_deleted'   => 0,
+                    'sch.edu_year_id' => $schedule->edu_year_id
+                ])
+                ->andWhere(['!=', 'cs.id', $model->id]) // o‘zidan tashqari
+                ->count();
+
+            if ($countThisSemester >= self::MAX_SCHEDULES_PER_SEMESTER) {
+                $errors[] = _e('You cannot enroll more than') . ' ' .
+                    self::MAX_SCHEDULES_PER_SEMESTER . ' ' .
+                    _e('schedules in a semester');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // 🔄 Circle_id ni yangilash
+            $model->circle_id = $schedule->circle_id;
+
+            // Yana validatsiya
+            if (!$model->validate()) {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // 📝 Saqlash
+            if ($model->save()) {
+                // student_count ni yangilash
+                $schedule->student_count = self::find()
+                    ->where(['circle_schedule_id' => $schedule->id, 'is_deleted' => 0])
+                    ->count();
+
+                $schedule->save(false);
+
+                $transaction->commit();
+                return true;
+            } else {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            $errors[] = $e->getMessage();
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public static function updateItemOld($model, $post)
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];

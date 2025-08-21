@@ -34,6 +34,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             [['circle_id'], 'exist', 'skipOnError' => true, 'targetClass' => Circle::className(), 'targetAttribute' => ['circle_id' => 'id']],
             [['circle_schedule_id'], 'exist', 'skipOnError' => true, 'targetClass' => CircleSchedule::className(), 'targetAttribute' => ['circle_schedule_id' => 'id']],
             [['student_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['student_user_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
 
             ['student_id', 'unique', 'targetAttribute' => ['student_id', 'circle_id', 'is_deleted'], 'message' => _e('Student already enrolled to this circle in current semester.')],
         ];
@@ -55,6 +56,9 @@ class CircleStudent extends \yii\db\ActiveRecord
             'status',
             'created_at',
             'updated_at',
+            'is_deleted',
+            'created_by',
+            'updated_by',
         ];
     }
 
@@ -108,6 +112,8 @@ class CircleStudent extends \yii\db\ActiveRecord
         }
 
         $model->student_user_id = $model->student->user_id();
+        $model->circle_id = $model->circleSchedule->circle_id;
+        
 
 
         $schedule = $model->circleSchedule;

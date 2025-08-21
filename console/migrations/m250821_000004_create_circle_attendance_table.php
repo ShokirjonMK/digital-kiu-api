@@ -27,6 +27,7 @@ class m250821_000004_create_circle_attendance_table extends Migration
             'reason' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('attendance reason'),  // sababli qilish yoki qilmaslik 1 sababli qilish 0 sababli qilmaslik admin yoki circle_schedule->teacher_user_id yozishi mumkin
             'reason_text' => $this->string()->null()->comment('attendance reason text'),  // sababli qilish yoki qilmaslik 1 sababli qilish 0 sababli qilmaslik admin yoki circle_schedule->teacher_user_id yozishi mumkin
             'status' => $this->tinyInteger(1)->notNull()->defaultValue(1)->comment('1 aktiv 0 deaktiv'),
+            'is_deleted' => $this->tinyInteger(1)->notNull()->defaultValue(0)->comment('1 o\'chirilgan 0 aktiv'),
             'created_at' => $this->integer()->notNull()->comment('yaratilgan vaqt'),
             'updated_at' => $this->integer()->notNull()->comment('yangilangan vaqt'),
             'created_by' => $this->integer()->notNull()->defaultValue(0)->comment('yaratilgan foydalanuvchi id'),

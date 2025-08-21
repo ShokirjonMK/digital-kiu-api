@@ -12,7 +12,11 @@ class m230614_142813_alter_building_table_add_type extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('building', 'type', $this->integer()->defaultValue(1)->after('id')->comment('type education building or hostel or something'));
+        $table = Yii::$app->db->tablePrefix . 'building';
+        $schema = Yii::$app->db->getTableSchema($table, true);
+        if ($schema !== null && !isset($schema->columns['type'])) {
+            $this->addColumn('building', 'type', $this->integer()->defaultValue(1)->after('id')->comment('type education building or hostel or something'));
+        }
 
         // $this->addColumn('building', 'type', $this->integer()->default(1)->after('id')->comment('type education building or hostel or something'));
     }

@@ -12,10 +12,21 @@ class m230614_142956_alter_room_table_hostel_things extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('room', 'price', $this->double()->null()->after('id')->comment('room price'));
-        $this->addColumn('room', 'empty_count', $this->integer()->null()->after('id')->comment('bosh joylar soni'));
-        $this->addColumn('room', 'gender', $this->integer()->defaultValue(1)->after('id')->comment('room gender male 1 female 0'));
-        $this->addColumn('room', 'type', $this->integer()->defaultValue(1)->after('id')->comment('type education building or hostel or something'));
+        $table = Yii::$app->db->tablePrefix . 'room';
+        $schema = Yii::$app->db->getTableSchema($table, true);
+
+        if ($schema !== null && !isset($schema->columns['price'])) {
+            $this->addColumn('room', 'price', $this->double()->null()->after('id')->comment('room price'));
+        }
+        if ($schema !== null && !isset($schema->columns['empty_count'])) {
+            $this->addColumn('room', 'empty_count', $this->integer()->null()->after('id')->comment('bosh joylar soni'));
+        }
+        if ($schema !== null && !isset($schema->columns['gender'])) {
+            $this->addColumn('room', 'gender', $this->integer()->defaultValue(1)->after('id')->comment('room gender male 1 female 0'));
+        }
+        if ($schema !== null && !isset($schema->columns['type'])) {
+            $this->addColumn('room', 'type', $this->integer()->defaultValue(1)->after('id')->comment('type education building or hostel or something'));
+        }
     }
 
     /**

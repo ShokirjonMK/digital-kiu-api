@@ -13,8 +13,9 @@ class m211204_065232_create_student_answer_table extends Migration
     public function safeUp()
     {
         $tableName = Yii::$app->db->tablePrefix . 'exam_student_answer';
-        if (!(Yii::$app->db->getTableSchema($tableName, true) === null)) {
-            $this->dropTable('exam_student_answer');
+        if (Yii::$app->db->getTableSchema($tableName, true) !== null) {
+            // Jadval bor, skip qilamiz
+            return;
         }
         if ($this->db->driverName === 'mysql') {
             // https://stackoverflow.com/questions/51278467/mysql-collation-utf8mb4-unicode-ci-vs-utf8mb4-default-collation

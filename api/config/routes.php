@@ -45,12 +45,10 @@ $controllers = [
     'area',
     'student-exam',
     'country',
-
     'time-table',
     'time-option',
     'student-time-table',
     'student-time-option',
-
     'exam',
     'exam-student',
     'exam-question',
@@ -58,19 +56,14 @@ $controllers = [
     'exam-question-option',
     'exam-student-answer',
     'exam-teacher-check',
-
     'subject-sillabus',
-
     'question',
     'question-type',
     'question-option',
     'exam-semeta',
-
     'user-access-type',
     'user-access',
-
     'subject-access',
-
     'subject-topic',
     'subject-content',
     'citizenship',
@@ -81,15 +74,10 @@ $controllers = [
     'residence-status',
     'social-category',
     'student-category',
-
-
-
     'teacher-checking-type',
     'statistic',
-
     'exam-checking',
     'exam-appeal',
-
     'survey-question',
     'survey-answer',
     'election',
@@ -98,23 +86,18 @@ $controllers = [
     'kpi-category',
     'kpi-store',
     'kpi-data',
-
-
     'partiya',
     'diploma-type',
     'degree',
     'degree-info',
     'academic-degree',
-
     'vocation',
     'holiday',
     'job-title',
     'work-rate',
-
     'table-store',
     'instruction',
     'exam-appeal-semeta',
-
     'student-order',
     'order-type',
     'relative-info',
@@ -126,7 +109,6 @@ $controllers = [
     'lang-certificate-type',
     'military',
     'cantract',
-
     'subject-content-mark',
     'kpi-mark',
     'subject-topic-reference',
@@ -134,30 +116,29 @@ $controllers = [
     'hostel-category-type',
     'hostel-app',
     'hostel-doc',
-
     'teacher-content',
     'student-subject-selection',
-
     'club-category',
     'club',
     'club-time',
     'student-club',
-
     'attend',
     'attend-reason',
     'student-attend',
-
     'exam-control',
     'exam-control-student',
-
     'student-subject-restrict',
     'student-gpa-old',
     'hostel-student',
-
     'telegram',
     'test-get-data',
     'teacher-work-plan',
-    'tourniquet-absent'
+    'tourniquet-absent',
+    // Circles nested routes
+    'circle',
+    'circle-schedule',
+    'circle-student',
+    'circle-attendance',
 ];
 
 $controllerRoutes = [];
@@ -175,71 +156,61 @@ foreach ($controllers as $controller) {
 }
 
 $routes = [
+    // Circles nested routes
+    'GET <lang:\w{2}>/circles/<id>/schedules' => 'circle-schedule/schedules',
+    'POST <lang:\w{2}>/circles/<id>/schedules' => 'circle-schedule/schedules',
+    // Schedule actions
+    'POST <lang:\w{2}>/schedules/<id>/enroll' => 'schedules/enroll',
+    'GET <lang:\w{2}>/schedules/<id>/students' => 'schedules/students',
+    'GET <lang:\w{2}>/schedules/<id>/attendance' => 'schedules/attendance',
+    'POST <lang:\w{2}>/schedules/<id>/attendance' => 'schedules/attendance',
     /** telegram */
     'GET <lang:\w{2}>/telegrams/bot' => 'telegram/bot',
-
-
     /** MIP pinfl */
     'GET <lang:\w{2}>/users/get/' => 'user/get',
     /** Oferta */
     'POST <lang:\w{2}>/users/oferta/' => 'user/oferta',
-
-
     /** Student from Hemis via pinfl */
     'GET <lang:\w{2}>/students/get/' => 'student/get',
     /** Student For turniket */
     'GET <lang:\w{2}>/students/by-pinfl/<pinfl>' => 'student/by-pinfl',
     'GET <lang:\w{2}>/students/time-option-not/' => 'student/time-option-not',
-
     /** Hostel Yotoqxona */
     'POST <lang:\w{2}>/hostel-docs/check/<id>/' => 'hostel-doc/check',
     'GET <lang:\w{2}>/hostel-docs/not/<id>/' => 'hostel-doc/not',
-
-    /** attend-reason  */
+    /** attend-reason */
     'GET <lang:\w{2}>/attend-reasons/confirm/<id>/' => 'attend-reason/confirm',
-
     /** Code Correctors */
     'GET <lang:\w{2}>/exam-students/correct/<key>/' => 'exam-student/correct',
     'POST <lang:\w{2}>/subject-contents/order' => 'subject-content/order',
     /** Code Correctors */
-
-    /** exam control student appeal 1 va 2  */
+    /** exam control student appeal 1 va 2 */
     'POST <lang:\w{2}>/exam-control-students/appeal/<id>/' => 'exam-control-student/appeal',
-
     /* statistics all */
     // statistic student-count-by-faculty
     'GET <lang:\w{2}>/statistics/student-count-by-faculty' => 'statistic/student-count-by-faculty',
     'GET <lang:\w{2}>/statistics/kpi-content-store' => 'statistic/kpi-content-store',
     'GET <lang:\w{2}>/statistics/kpi-survey-store' => 'statistic/kpi-survey-store',
-
     // statistic Kafedra Questions Teachers
     'GET <lang:\w{2}>/statistics/kafedra' => 'statistic/kafedra',
     'GET <lang:\w{2}>/statistics/checking' => 'statistic/checking',
     'GET <lang:\w{2}>/statistics/checking-chala' => 'statistic/checking-chala',
     'GET <lang:\w{2}>/statistics/exam-checking' => 'statistic/exam-checking',
-
     // exam_student act qilish
     'POST <lang:\w{2}>/exam-students/<id>/act' => 'exam-student/act',
-
     // ball statistics two, three, four, five
     'GET <lang:\w{2}>/exam-students/ball' => 'exam-student/ball',
     // ball statistics appeal
     'GET <lang:\w{2}>/exam-appeals/ball' => 'exam-appeal/ball',
     /* statistics all */
-
     // election password generator
     'GET <lang:\w{2}>/elections/<id>/password' => 'election/password',
-
     // Question status update
     'PUT <lang:\w{2}>/questions/status-update/<id>' => 'question/status-update',
     // Question status list
     'GET <lang:\w{2}>/questions/status-list' => 'question/status-list',
-
     // KpiCategory Extra fields, term, tab, status
     'GET <lang:\w{2}>/kpi-categories/extra' => 'kpi-category/extra',
-
-
-
     // Login and get access_token from server
     'POST <lang:\w{2}>/auth/login' => 'auth/login',
     // User Self update data
@@ -250,10 +221,8 @@ $routes = [
     'GET <lang:\w{2}>/users/me' => 'user/me',
     // Log out
     'POST <lang:\w{2}>/auth/logout' => 'user/logout',
-
     // TimeTable parent null
     'GET <lang:\w{2}>/time-tables/parent-null' => 'time-table/parent-null',
-
     // Exam Passwords
     'POST <lang:\w{2}>/exams/get-passwords' => 'exam/get-passwords',
     // Exam Passwords
@@ -264,82 +233,62 @@ $routes = [
     'GET <lang:\w{2}>/exams/<id>/appeal-distribution' => 'exam/appeal-distribution',
     // exam announced // natijani e'lon qilish
     'GET <lang:\w{2}>/exams/<id>/ad' => 'exam/ad',
-
     // exam conclusion defaulter
     'GET <lang:\w{2}>/exams/conclution' => 'exam/conclution-get',
     'POST <lang:\w{2}>/exams/conclution' => 'exam/conclution',
     'PUT <lang:\w{2}>/exams/conclution/<id>' => 'exam/conclution-update',
     'DELETE <lang:\w{2}>/exams/conclution/<id>' => 'exam/conclution-delete',
-
     // Department type list
     'GET <lang:\w{2}>/departments/types' => 'department/types',
-
     // studentga savollarni random tushirish
     'POST <lang:\w{2}>/exam-student-answers/get-question' => 'exam-student-answer/get-question',
     // ExamStudentAnswer Appeal checking
     'PUT <lang:\w{2}>/exam-checkings/<id>/appeal' => 'exam-checking/appeal',
-
     // teacherga studentlarni random tushirish
     'POST <lang:\w{2}>/exam-teacher-check/random-students' => 'exam-teacher-check/random-students',
-
     // Subject Content Trash ( get Deleted Content)
     'GET <lang:\w{2}>/subject-contents/trash' => 'subject-content/trash',
     // Subject Content Delete from Trash ( get Deleted Content)  bazadan o'chirish
     'DELETE <lang:\w{2}>/subject-contents/trash/<id>' => 'subject-content/trash-delete',
     // Subject Content type list
     'GET <lang:\w{2}>/subject-contents/types' => 'subject-content/types',
-
     // Faculty UserAccess fakultitetga user biriktirish
     'POST <lang:\w{2}>/faculties/user-access' => 'faculty/user-access',
     // Kafedra UserAccess fakultitetga user biriktirish
     'POST <lang:\w{2}>/kafedras/user-access' => 'kafedra/user-access',
     // Department UserAccess fakultitetga user biriktirish
     'POST <lang:\w{2}>/departments/user-access' => 'department/user-access',
-
-
     /** Free teachers for time tables */
     'GET <lang:\w{2}>/teacher-accesses/free' => 'teacher-access/free',
     'POST <lang:\w{2}>/rooms/free' => 'room/free',
-    /**  */
-
-
-    /**Builduing Type list */
+    /* Builduing Type list */
     'GET <lang:\w{2}>/buildings/type' => 'building/type',
-
-
     // Student Attendees By
     'GET <lang:\w{2}>/attends/not' => 'attend/not',
-
     // Student Attendees By
     'GET <lang:\w{2}>/student-attends/by-date' => 'student-attend/by-date',
-
     // Student Get me
     'GET <lang:\w{2}>/students/me' => 'student/me',
-
     // Student Import
     'POST <lang:\w{2}>/students/import' => 'student/import',
     // Student Export
     'GET <lang:\w{2}>/students/export' => 'student/export',
     // 'POST <lang:\w{2}>/students/read' => 'student/read',
-
     // My Notifications
     'GET <lang:\w{2}>/notifications/my' => 'notification/my',
     // Notifications Status list
     'GET <lang:\w{2}>/notifications/status-list' => 'notification/status-list',
     // Notifications Approved (tasdiqlavoring)
     'PUT <lang:\w{2}>/notifications/approved/<id>' => 'notification/approved',
-
     // Roles and permissions endpoint
-    'GET <lang:\w{2}>/roles' => 'access-control/roles', // Get roles list
-    'GET <lang:\w{2}>/roles/<role>/permissions' => 'access-control/role-permissions', // Get role permissions
-    'POST <lang:\w{2}>/roles' => 'access-control/create-role', // Create new role
-    'PUT <lang:\w{2}>/roles' => 'access-control/update-role', // Update role
-    'DELETE <lang:\w{2}>/roles/<role>' => 'access-control/delete-role', // Delete role
-    'GET <lang:\w{2}>/permissions' => 'access-control/permissions', // Get permissions list
+    'GET <lang:\w{2}>/roles' => 'access-control/roles',  // Get roles list
+    'GET <lang:\w{2}>/roles/<role>/permissions' => 'access-control/role-permissions',  // Get role permissions
+    'POST <lang:\w{2}>/roles' => 'access-control/create-role',  // Create new role
+    'PUT <lang:\w{2}>/roles' => 'access-control/update-role',  // Update role
+    'DELETE <lang:\w{2}>/roles/<role>' => 'access-control/delete-role',  // Delete role
+    'GET <lang:\w{2}>/permissions' => 'access-control/permissions',  // Get permissions list
     // ***
-
-    'GET <lang:\w{2}>/user-statuses' => 'user/status-list', // Get user statuses
-
+    'GET <lang:\w{2}>/user-statuses' => 'user/status-list',  // Get user statuses
     /* Enums */
     'GET <lang:\w{2}>/genders' => 'enum/genders',
     'GET <lang:\w{2}>/educations' => 'enum/educations',

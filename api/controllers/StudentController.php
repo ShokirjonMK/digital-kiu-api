@@ -138,8 +138,8 @@ class  StudentController extends ApiActiveController
                         $count = $std->id + 10001;
                     }
 
-                    $post['username'] = 'tsul_std_' . $count;
-                    $post['email'] = 'tsul_std_' . $count . '@tsul.uz';
+                    $post['username'] = 'kiu_std_' . $count;
+                    $post['email'] = 'kiu_std_' . $count . '@tsul.uz';
                     $this->load($model, $post);
                     $this->load($profile, $post);
                     $this->load($student, $post);
@@ -644,9 +644,9 @@ class  StudentController extends ApiActiveController
             $count = $std->id + 10001;
         }
 
-        $post['username'] = 'tsul-std-' . $count;
+        $post['username'] = 'kiu-std-' . $count;
         if (!(isset($post['email']))) {
-            $post['email'] = 'tsul-std-' . $count . '@tsul.uz';
+            $post['email'] = 'kiu-std-' . $count . '@tsul.uz';
         }
 
         $this->load($model, $post);

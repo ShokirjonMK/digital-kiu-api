@@ -119,7 +119,8 @@ class CircleStudentController extends ApiActiveController
             throw new NotFoundHttpException("CircleStudent not found.");
         }
 
-        $result = CircleStudent::generateCertificate($model);
+        // $result = CircleStudent::generateCertificate($model);
+        $result = CircleStudent::generateCertificateTest($model);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' certificate generated.'), $model, null, ResponseStatus::OK);
         } else {

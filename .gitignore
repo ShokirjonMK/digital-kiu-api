@@ -12,4 +12,5 @@ composer.lock
 storage/uploads
 composer.lock
 storage
-#api/config/params.php
+api/config/params.php
+composer.lock

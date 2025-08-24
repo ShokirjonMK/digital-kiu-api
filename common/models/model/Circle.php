@@ -84,6 +84,12 @@ class Circle extends \yii\db\ActiveRecord
         $extraFields = [
             'schedules',
             'description',
+            'schedules',
+            'students',
+            'countSchedules',
+            'countStudents',
+
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -91,6 +97,26 @@ class Circle extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getSchedules()
+    {
+        return $this->hasMany(CircleSchedule::className(), ['circle_id' => 'id'])->where(['is_deleted' => 0]);
+    }
+
+    public function getStudents()
+    {
+        return $this->hasMany(CircleStudent::className(), ['circle_id' => 'id'])->where(['is_deleted' => 0]);
+    }
+
+    public function getCountSchedules()
+    {
+        return $this->schedules->count();
+    }
+
+    public function getCountStudents()
+    {
+        return $this->students->count();
     }
 
     public function getInfoRelation()
@@ -115,12 +141,6 @@ class Circle extends \yii\db\ActiveRecord
         return $this->infoRelation[0] ?? $this->infoRelationDefaultLanguage[0];
     }
 
-    public function getSchedules()
-    {
-        return $this
-            ->hasMany(CircleSchedule::className(), ['circle_id' => 'id'])
-            ->where(['is_deleted' => 0]);
-    }
 
     public static function createItem($model, $post)
     {

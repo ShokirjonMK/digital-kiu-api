@@ -101,22 +101,28 @@ class Circle extends \yii\db\ActiveRecord
 
     public function getSchedules()
     {
-        return $this->hasMany(CircleSchedule::className(), ['circle_id' => 'id'])->where(['is_deleted' => 0]);
+        // Use relation definition with is_deleted filter for efficiency
+        return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
+            ->andWhere(['is_deleted' => 0]);
     }
 
     public function getStudents()
     {
-        return $this->hasMany(CircleStudent::className(), ['circle_id' => 'id'])->where(['is_deleted' => 0]);
+        // Use relation definition with is_deleted filter for efficiency
+        return $this->hasMany(CircleStudent::class, ['circle_id' => 'id'])
+            ->andWhere(['is_deleted' => 0]);
     }
 
     public function getCountSchedules()
     {
-        return $this->schedules->count();
+        // Use COUNT(*) in SQL for performance, avoid loading all models
+        return $this->getSchedules()->count();
     }
 
     public function getCountStudents()
     {
-        return $this->students->count();
+        // Use COUNT(*) in SQL for performance, avoid loading all models
+        return $this->getStudents()->count();
     }
 
     public function getInfoRelation()

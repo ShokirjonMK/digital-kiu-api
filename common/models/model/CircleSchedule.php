@@ -119,6 +119,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'attDates',
             'dates',
             'attendDates',
+            'my',
 
             'created_by',
             'updated_by',
@@ -127,6 +128,13 @@ class CircleSchedule extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+
+    public function getMy()
+    {
+        return $this->hasOne(CircleStudent::className(), ['circle_schedule_id' => 'id'])
+            ->andWhere(['student_user_id' => current_user_id()]);
     }
 
     /**

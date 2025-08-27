@@ -310,7 +310,7 @@ class CircleAttendance extends \yii\db\ActiveRecord
         $model->date = date('Y-m-d', strtotime($post['date']));
 
 
-        vd($model->circleSchedule->dates);
+        // vd($model->circleSchedule->dates);
         if (!in_array($model->date, $model->circleSchedule->dates)) {
             $errors[] = ['date' => [_e('Date must be in CircleSchedule\'s dates')]];
             $transaction->rollBack();

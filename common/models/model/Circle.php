@@ -82,8 +82,9 @@ class Circle extends \yii\db\ActiveRecord
     public function extraFields()
     {
         $extraFields = [
-            'schedules',
+            'circleSchedules',
             'description',
+
             'schedules',
             'students',
             'countSchedules',
@@ -100,6 +101,13 @@ class Circle extends \yii\db\ActiveRecord
     }
 
     public function getSchedules()
+    {
+        // Use relation definition with is_deleted filter for efficiency
+        return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
+            ->andWhere(['is_deleted' => 0]);
+    }
+
+    public function getCircleSchedules()
     {
         // Use relation definition with is_deleted filter for efficiency
         return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])

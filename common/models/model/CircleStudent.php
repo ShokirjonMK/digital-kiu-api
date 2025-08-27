@@ -577,6 +577,125 @@ class CircleStudent extends \yii\db\ActiveRecord
         $model->save(false);
     }
 
+    public static function generateCertificateTest($model)
+    {
+        $circleName   = $model->circle->name ?? "Psixologiya asoslari";
+        $studentName  = $model->student->full_name ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
+        $eduYear      = $model->eduYear->name ?? "2024-2025-o‘quv yili";
+        $semesterName = $model->eduYear->semester ?? "Bahorgi";
+        $certDate     = date('Y-m-d');
+
+
+
+        $text = "Qarshi xalqaro universitetida " . $eduYear . " \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
+
+
+        // Fayl papkasi
+        $path = '/uploads/certificates/';
+        $dir = STORAGE_PATH . $path;
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
+        $filePath = $dir . $fileName;
+        $fileUrl  = 'storage' . $path . $fileName;
+
+        // ⚡️ mPDF
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => 'A4-L',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+        ]);
+
+        // Shablon PNG rasmi
+        $bgImage = Yii::getAlias('@webroot/templates/template.png');
+
+        ob_start();
+    ?>
+        <div style="position: relative; width: 100%; height: 100%; font-family: sans-serif;
+                    background: url('<?= $bgImage ?>') no-repeat center center; 
+                    background-size: cover;">
+            <table style="width: 100%; height: 100%;">
+                <tr>
+                    <td colspan="2" style="width: 88%; text-align: center; padding-left: 10px;">
+                    </td>
+                    <td style="width: 12%; text-align: end; padding-right: 10px;">
+                        <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.2" error="M" class="barcode" />
+                        <br>
+                        &nbsp;&nbsp; &nbsp;<?= $certDate ?>
+                    </td>
+                </tr>
+                <div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+
+                <tr>
+                    <td colspan="3" style="text-align: center; padding-top: 10px;">
+                        <h2 style="font-style: italic;  font-size: 30px; font-family: serif; color: #1F3468;"><?= strtoupper($studentName) ?></h2>
+
+                    </td>
+                </tr>
+                <div>
+                    <br>
+                </div>
+                <tr style="margin-top: 100px;">
+                    <td style="width: 10%;"></td>
+                    <td style="text-align: center; padding-top: 10px; ">
+                        <h1 style="font-size: 26px; width: 80%; margin-right: 100px; font-family: Bahnschrift SemiLight Condensed; color: #666666;"><?= $text ?></h1>
+
+                    </td>
+                    <td></td>
+                </tr>
+
+            </table>
+            <div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <table>
+
+                <tr>
+                    <td style="width: 11%;"></td>
+                    <td style="width: 13%;">F.Haqqulov</td>
+                    <td style="width: 6%;"></td>
+                    <td style="width: 14%;"> Tr.Shermatov Javoxir</td>
+                    <td style="width: 14%;"></td>
+                    <td style="width: 14%;">Sh.Turdiyev</td>
+                    <td style="width: 14%;"></td>
+                </tr>
+            </table>
+        </div>
+    <?php
+        $html = ob_get_clean();
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+
+        // Model update
+        $model->certificate_file = $fileUrl;
+        $model->certificate_date = $certDate;
+        $model->save(false);
+    }
+
+
 
     public static function generateCertificateTest1($model)
     {
@@ -605,7 +724,7 @@ class CircleStudent extends \yii\db\ActiveRecord
         ]);
 
         // PDF shablon fon sifatida
-        $template = Yii::getAlias('@webroot/templates/certificate_template.pdf');
+        $template = Yii::getAlias('@webroot/templates/template.png');
         $mpdf->SetDocTemplate($template, true); // true => hamma sahifaga
 
         ob_start();
@@ -655,7 +774,7 @@ class CircleStudent extends \yii\db\ActiveRecord
         return parent::beforeSave($insert);
     }
 
-    public static function generateCertificateTest($model)
+    public static function generateCertificateTest123($model)
     {
         $circleName   = $model->circle->name ?? "To‘garak nomi";
         $studentName  = $model->student->full_name ?? "Ism Familiya";

@@ -28,6 +28,8 @@ class CircleController extends ApiActiveController
             ->leftJoin('translate tr', "tr.model_id = {$model->tableName()}.id and tr.table_name = '{$model->tableName()}'")
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
+        $query->groupBy($model->tableName() . 'id');
+
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
 

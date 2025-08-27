@@ -303,17 +303,18 @@ class CircleAttendance extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-
-
-
         $model->circle_schedule_id = $model->circleStudent->circle_schedule_id;
         $model->circle_id = $model->circleStudent->circle_id;
         $model->student_id = $model->circleStudent->student_id;
         $model->teacher_user_id = $model->circleSchedule->teacher_user_id;
         $model->date = date('Y-m-d', strtotime($post['date']));
 
+
+        vd($model->circleSchedule->dates);
         if (!in_array($model->date, $model->circleSchedule->dates)) {
-            return simplify_errors(['date' => [_e('Date must be in CircleSchedule\'s dates')]]);
+            $errors[] = ['date' => [_e('Date must be in CircleSchedule\'s dates')]];
+            $transaction->rollBack();
+            return simplify_errors($errors);
         }
 
         if (!$model->save()) {

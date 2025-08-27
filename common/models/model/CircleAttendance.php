@@ -297,10 +297,10 @@ class CircleAttendance extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
-        $model->circle_schedule_id = $model->circleSchedule->id;
-        $model->circle_id = $model->circleSchedule->circle_id;
-        $model->student_id = $model->circleSchedule->student_id;
-        $model->teacher_user_id = $model->circleSchedule->teacher_user_id;
+        $model->circle_schedule_id = $model->circleStudent->circle_schedule_id;
+        $model->circle_id = $model->circleStudent->circle_id;
+        $model->student_id = $model->circleStudent->student_id;
+        $model->teacher_user_id = $model->circleStudent->teacher_user_id;
         $model->date = date('Y-m-d', strtotime($post['date']));
 
         if (!$model->save()) {

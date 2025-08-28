@@ -707,6 +707,7 @@ class CircleStudent extends \yii\db\ActiveRecord
         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
 
         // Model update
+        $model->certificate_status = 1;
         $model->certificate_file = $fileUrl;
         $model->certificate_date = $certDate;
         $model->save(false);

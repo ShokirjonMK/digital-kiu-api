@@ -1013,7 +1013,7 @@ class CircleStudent extends \yii\db\ActiveRecord
      */
     public static function autoEnrollStudentsByCourse($courseId)
     {
-        // vd('courseId: ' . $courseId);
+
 
         $data = [];
         $data['status'] = 1;
@@ -1041,7 +1041,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                 ])
                 ->addParams([':eduYearId' => $eduYearId])
                 ->all();
-            // vd('talabalar: ' . count($students));
+
 
             foreach ($students as $student) {
 
@@ -1059,14 +1059,14 @@ class CircleStudent extends \yii\db\ActiveRecord
 
                 // Hali nechta kerak?
                 $currentCount = count($takenCircleIds);
-                // vd('currentCount: ' . $currentCount);
+
                 $need = 2 - $currentCount;
-                // vd('need: ' . $need);
+
                 if ($need <= 0) {
                     continue;
                 }
 
-                // vd('takenCircleIds: ' . count($takenCircleIds));
+
 
                 // 3️⃣ Mos bo‘sh circle_schedule larini olish
                 // Har bir circle_id bo'yicha faqat bittadan schedule olish
@@ -1101,7 +1101,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     $schedules[] = CircleSchedule::findOne($row['id']);
                 }
 
-                // vd('schedules: ' . count($schedules));
+
 
                 // 4️⃣ Studentni yozib chiqish
                 foreach ($schedules as $schedule) {

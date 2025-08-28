@@ -120,6 +120,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'dates',
             'attendDates',
             'my',
+            'now',
 
             'created_by',
             'updated_by',
@@ -128,6 +129,11 @@ class CircleSchedule extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getNow()
+    {
+        return date('Y-m-d');
     }
 
 

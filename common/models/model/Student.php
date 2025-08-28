@@ -406,7 +406,7 @@ class Student extends \yii\db\ActiveRecord
 
     public function getFullName()
     {
-        return $this->profile->full_name;
+        return $this->profile->fullname;
     }
 
     /**

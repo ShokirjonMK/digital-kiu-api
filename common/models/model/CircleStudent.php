@@ -597,7 +597,7 @@ class CircleStudent extends \yii\db\ActiveRecord
     public static function generateCertificateTest($model)
     {
         $circleName   = $model->circle->name ?? "Psixologiya asoslari";
-        $studentName  = $model->student->full_name ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
+        $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
         $eduYear      = $model->eduYear->name ?? "2024-2025-o‘quv yili";
         $semesterName = $model->eduYear->semester ?? "Bahorgi";
         $certDate     = date('Y-m-d');

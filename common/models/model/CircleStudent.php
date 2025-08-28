@@ -109,7 +109,30 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public function getAttendances()
     {
-        return $this->hasMany(CircleAttendance::className(), ['circle_student_id' => 'id']);
+        return $this->hasMany(CircleAttendance::class, ['circle_student_id' => 'id']);
+    }
+
+    public function getAbsCount()
+    {
+        return $this->getAttendances()
+            ->andWhere(['status' => 1, 'reason' => 0])
+            ->count();
+    }
+
+    public function getAbsCountAll()
+    {
+        return $this->getAttendances()->count();
+    }
+
+    public function getMyAttendance()
+    {
+        return $this->getAttendances()
+            ->andWhere([
+                'status' => 1,
+                'reason' => 0,
+                'student_id' => current_user_id()
+            ])
+            ->count();
     }
 
 
@@ -542,6 +565,312 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public static function generateCertificateTest($model)
     {
+        $errors = [];
+        $transaction = Yii::$app->db->beginTransaction();
+
+        if (isRole('student')) {
+            if ($model->student_user_id != current_user_id()) {
+                $errors[] = _e('You are not authorized to generate certificate');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            if ($model->circleSchedule->abs_count > $model->absCount) {
+                $errors[] = _e('Absence too much to get certificate');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            if ($model->is_finished == 0) {
+                $errors[] = _e('You have not finished yet');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            if ($model->certificate_status == 1) {
+                $errors[] = _e('You have already got certificate');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        try {
+            $circleName   = $model->circle->translate->name ?? "Psixologiya asoslari";
+            $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
+            $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
+            $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
+            $certDate     = date('Y-m-d');
+
+            $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
+
+            // Fayl papkasi
+            $path = '/uploads/certificates/';
+            $dir = STORAGE_PATH . $path;
+            if (!file_exists($dir)) {
+                if (!mkdir($dir, 0777, true) && !is_dir($dir)) {
+                    throw new \Exception(_e('Failed to create certificate directory.'));
+                }
+            }
+
+            $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
+            $filePath = $dir . $fileName;
+            $fileUrl  = 'storage' . $path . $fileName;
+
+            // ⚡️ mPDF
+            try {
+                $mpdf = new \Mpdf\Mpdf([
+                    'format' => 'A4-L',
+                    'margin_left' => 0,
+                    'margin_right' => 0,
+                    'margin_top' => 0,
+                    'margin_bottom' => 0,
+                ]);
+            } catch (\Mpdf\MpdfException $e) {
+                return simplify_errors([_e('Failed to initialize PDF generator: ') . $e->getMessage()]);
+            }
+
+            // Shablon PNG rasmi
+            $bgImage = Yii::getAlias('@webroot/templates/template.png');
+            if (!file_exists($bgImage)) {
+                return simplify_errors([_e('Certificate template image not found.')]);
+            }
+
+            ob_start();
+?>
+            <div style="position: relative; width: 100%; height: 100%; font-family: sans-serif;
+                            background: url('<?= $bgImage ?>') no-repeat center center; 
+                            background-size: cover;">
+                <table style="width: 100%; height: 100%;">
+                    <tr>
+                        <td colspan="2" style="width: 88%; text-align: center; padding-left: 10px;">
+                        </td>
+                        <td style="width: 12%; text-align: end; padding-right: 10px;">
+                            <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.2" error="M" class="barcode" />
+                            <br>
+                            &nbsp;&nbsp; &nbsp;<?= $certDate ?>
+                        </td>
+                    </tr>
+                    <div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding-top: 10px;">
+                            <h2 style="font-style: italic;  font-size: 30px; font-family: serif; color: #1F3468;"><?= strtoupper($studentName) ?></h2>
+
+                        </td>
+                    </tr>
+                    <div>
+                        <br>
+                    </div>
+                    <tr style="margin-top: 100px;">
+                        <td style="width: 10%;"></td>
+                        <td style="text-align: center; padding-top: 10px; ">
+                            <h1 style="font-size: 26px; width: 80%; margin-right: 100px; font-family: Bahnschrift SemiLight Condensed; color: #666666;"><?= $text ?></h1>
+
+                        </td>
+                        <td></td>
+                    </tr>
+
+                </table>
+                <div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <table>
+
+                    <tr>
+                        <td style="width: 11%;"></td>
+                        <td style="width: 13%;">F.Haqqulov</td>
+                        <td style="width: 6%;"></td>
+                        <td style="width: 14%;"> Tr.Shermatov Javoxir</td>
+                        <td style="width: 14%;"></td>
+                        <td style="width: 14%;">Sh.Turdiyev</td>
+                        <td style="width: 14%;"></td>
+                    </tr>
+                </table>
+            </div>
+            <?php
+            $html = ob_get_clean();
+
+            try {
+                $mpdf->WriteHTML($html);
+                $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+            } catch (\Exception $e) {
+                $errors[] = _e('Failed to generate or save PDF: ') . $e->getMessage();
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
+            // Model update
+            $model->certificate_status = 1;
+            $model->certificate_file = $fileUrl;
+            $model->certificate_date = $certDate;
+            if (!$model->save(false)) {
+                $errors[] = $model->errors;
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            $errors[] = _e('Certificate generation error: ') . $e->getMessage();
+            return simplify_errors($errors);
+        }
+    }
+
+
+    public static function generateCertificate($model)
+    {
+        try {
+            $circleName   = $model->circle->translate->name ?? "Psixologiya asoslari";
+            $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
+            $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
+            $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
+            $certDate     = date('Y-m-d');
+
+            $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
+
+            // Fayl papkasi
+            $path = '/uploads/certificates/';
+            $dir = STORAGE_PATH . $path;
+            if (!file_exists($dir)) {
+                if (!mkdir($dir, 0777, true) && !is_dir($dir)) {
+                    throw new \Exception(_e('Failed to create certificate directory.'));
+                }
+            }
+
+            $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
+            $filePath = $dir . $fileName;
+            $fileUrl  = 'storage' . $path . $fileName;
+
+            // ⚡️ mPDF
+            try {
+                $mpdf = new \Mpdf\Mpdf([
+                    'format' => 'A4-L',
+                    'margin_left' => 0,
+                    'margin_right' => 0,
+                    'margin_top' => 0,
+                    'margin_bottom' => 0,
+                ]);
+            } catch (\Mpdf\MpdfException $e) {
+                return simplify_errors([_e('Failed to initialize PDF generator: ') . $e->getMessage()]);
+            }
+
+            // Shablon PNG rasmi
+            $bgImage = Yii::getAlias('@webroot/templates/template.png');
+            if (!file_exists($bgImage)) {
+                return simplify_errors([_e('Certificate template image not found.')]);
+            }
+
+            ob_start();
+            ?>
+            <div style="position: relative; width: 100%; height: 100%; font-family: sans-serif;
+                            background: url('<?= $bgImage ?>') no-repeat center center; 
+                            background-size: cover;">
+                <table style="width: 100%; height: 100%;">
+                    <tr>
+                        <td colspan="2" style="width: 88%; text-align: center; padding-left: 10px;">
+                        </td>
+                        <td style="width: 12%; text-align: end; padding-right: 10px;">
+                            <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.2" error="M" class="barcode" />
+                            <br>
+                            &nbsp;&nbsp; &nbsp;<?= $certDate ?>
+                        </td>
+                    </tr>
+                    <div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding-top: 10px;">
+                            <h2 style="font-style: italic;  font-size: 30px; font-family: serif; color: #1F3468;"><?= strtoupper($studentName) ?></h2>
+
+                        </td>
+                    </tr>
+                    <div>
+                        <br>
+                    </div>
+                    <tr style="margin-top: 100px;">
+                        <td style="width: 10%;"></td>
+                        <td style="text-align: center; padding-top: 10px; ">
+                            <h1 style="font-size: 26px; width: 80%; margin-right: 100px; font-family: Bahnschrift SemiLight Condensed; color: #666666;"><?= $text ?></h1>
+
+                        </td>
+                        <td></td>
+                    </tr>
+
+                </table>
+                <div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <table>
+
+                    <tr>
+                        <td style="width: 11%;"></td>
+                        <td style="width: 13%;">F.Haqqulov</td>
+                        <td style="width: 6%;"></td>
+                        <td style="width: 14%;"> Tr.Shermatov Javoxir</td>
+                        <td style="width: 14%;"></td>
+                        <td style="width: 14%;">Sh.Turdiyev</td>
+                        <td style="width: 14%;"></td>
+                    </tr>
+                </table>
+            </div>
+        <?php
+            $html = ob_get_clean();
+
+            try {
+                $mpdf->WriteHTML($html);
+                $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+            } catch (\Exception $e) {
+                return simplify_errors([_e('Failed to generate or save PDF: ') . $e->getMessage()]);
+            }
+
+            // Model update
+            $model->certificate_status = 1;
+            $model->certificate_file = $fileUrl;
+            $model->certificate_date = $certDate;
+            if (!$model->save(false)) {
+                return simplify_errors([_e('Failed to update certificate info in database.'), $model->errors]);
+            }
+        } catch (\Exception $e) {
+            return simplify_errors([_e('Certificate generation error: ') . $e->getMessage()]);
+        }
+    }
+
+    public static function generateCertificateOrginal($model)
+    {
         $circleName   = $model->circle->translate->name ?? "Psixologiya asoslari";
         $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
         $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
@@ -576,7 +905,7 @@ class CircleStudent extends \yii\db\ActiveRecord
         $bgImage = Yii::getAlias('@webroot/templates/template.png');
 
         ob_start();
-?>
+        ?>
         <div style="position: relative; width: 100%; height: 100%; font-family: sans-serif;
                     background: url('<?= $bgImage ?>') no-repeat center center; 
                     background-size: cover;">
@@ -645,7 +974,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                 </tr>
             </table>
         </div>
-    <?php
+<?php
         $html = ob_get_clean();
 
         $mpdf->WriteHTML($html);
@@ -658,129 +987,6 @@ class CircleStudent extends \yii\db\ActiveRecord
         $model->save(false);
     }
 
-
-    public static function generateCertificate($model)
-    {
-        $circleName  = "To'garak nomi"; // yoki $model->circle->name
-        $studentName = "Ism Familiya";  // yoki $model->student->full_name
-        $certDate    = date('Y-m-d');
-
-        // Fayl papkasi va yo‘llar
-        $path = '/uploads/certificates/';
-        $dir = STORAGE_PATH . $path;
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true); // agar yo‘q bo‘lsa papkani yaratamiz
-        }
-
-        $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
-        $filePath = $dir . $fileName;
-        $fileUrl  =  'storage' . $path . $fileName;
-
-
-        // ⚡️ mPDF instance
-        $mpdf = new Mpdf();
-
-        ob_start();
-    ?>
-        <div style="position: relative; width:100%; height:100%; font-family: sans-serif;">
-
-            <!-- Top-left logo -->
-            <div style="position: absolute; top: 10px; left: 10px;">
-                <img src="<?= Yii::getAlias('@web/images/logo.png') ?>" width="100">
-            </div>
-
-            <!-- Center text -->
-            <div style="text-align: center; margin-top: 150px;">
-                <h1 style="font-size: 32px; margin-bottom: 20px;"><?= $circleName ?></h1>
-                <h2 style="font-size: 24px;"><?= $studentName ?></h2>
-                <p style="margin-top: 30px;">Certificate Date: <?= $certDate ?></p>
-            </div>
-
-            <!-- Bottom-right QR -->
-            <div style="position: absolute; bottom: 20px; right: 20px;">
-                <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.2" error="M" class="barcode" />
-            </div>
-
-        </div>
-    <?php
-        $html = ob_get_clean();
-
-        $mpdf->WriteHTML($html);
-        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-
-        // Model update
-        $model->certificate_file = $fileUrl;
-        $model->certificate_date = $certDate;
-        $model->save(false);
-    }
-
-    public static function generateCertificateTest1($model)
-    {
-        $circleName  = $model->circle->name ?? "To'garak nomi 333";
-        $studentName = $model->student->full_name ?? "Ism Familiya 333";
-        $certDate    = date('Y-m-d');
-
-        // Fayl papkasi
-        $path = '/uploads/certificates/';
-        $dir = STORAGE_PATH . $path;
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
-        $filePath = $dir . $fileName;
-        $fileUrl  = 'storage' . $path . $fileName;
-
-        // ⚡️ mPDF
-        $mpdf = new Mpdf([
-            'format' => 'A4-L',
-            'margin_left' => 0,
-            'margin_right' => 0,
-            'margin_top' => 0,
-            'margin_bottom' => 0,
-        ]);
-
-        // PDF shablon fon sifatida
-        $template = Yii::getAlias('@webroot/templates/template.png');
-        $mpdf->SetDocTemplate($template, true); // true => hamma sahifaga
-
-        ob_start();
-    ?>
-        <div style="position: relative; width: 100%; height: 100%; font-family: sans-serif;">
-
-            <!-- QR top-right -->
-            <div style="position: absolute; top: 40px; right: 40px;">
-                <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.2" error="M" class="barcode" />
-            </div>
-
-            <!-- Circle name -->
-            <div style="position: absolute; top: 320px; width: 100%; text-align: center;">
-                <h1 style="font-size: 30px; font-weight: bold;"><?= $circleName ?></h1>
-            </div>
-
-            <!-- Student name -->
-            <div style="position: absolute; top: 420px; width: 100%; text-align: center;">
-                <h2 style="font-size: 26px;"><?= $studentName ?></h2>
-            </div>
-
-            <!-- Certificate date -->
-            <div style="position: absolute; bottom: 80px; left: 100px;">
-                <p style="font-size: 14px;"><?= $certDate ?></p>
-            </div>
-        </div>
-    <?php
-        $html = ob_get_clean();
-
-        $mpdf->WriteHTML($html);
-        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-
-        // Model update
-        $model->certificate_file = $fileUrl;
-        $model->certificate_date = $certDate;
-        $model->save(false);
-    }
-
-
     public function beforeSave($insert)
     {
         if ($insert) {
@@ -789,75 +995,5 @@ class CircleStudent extends \yii\db\ActiveRecord
             $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
-    }
-
-    public static function generateCertificateTest123($model)
-    {
-        $circleName   = $model->circle->name ?? "To‘garak nomi";
-        $studentName  = $model->student->full_name ?? "Ism Familiya";
-        $eduYear      = $model->eduYear->name ?? "2024-2025-o‘quv yili";
-        $semesterName = $model->eduYear->semester ?? "Bahorgi";
-        $certDate     = date('Y-m-d');
-
-        $path = '/uploads/certificates/';
-        $dir = STORAGE_PATH . $path;
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $fileName = 'certificate_' . $model->id . '_' . current_user_id() . '_' . time() . '.pdf';
-        $filePath = $dir . $fileName;
-        $fileUrl  = 'storage' . $path . $fileName;
-
-        // ⚡️ mPDF
-        $mpdf = new \Mpdf\Mpdf([
-            'format'        => 'A3',
-            'orientation'   => 'L',
-            'margin_left'   => 0,
-            'margin_right'  => 0,
-            'margin_top'    => 0,
-            'margin_bottom' => 0,
-        ]);
-
-        // Shablon PDF
-        $template = Yii::getAlias('@webroot/templates/certificate_template.pdf');
-        $mpdf->SetDocTemplate($template, true);
-
-        ob_start();
-    ?>
-        <div style="position: relative; width: 100%; height: 100%; font-family: sans-serif;">
-
-            <!-- QR code top-left -->
-            <div style="position: absolute; top: 20px; left: 20px;">
-                <barcode code="https://digital.kiu.uz/certificate/<?= $model->id ?>" type="QR" size="1.0" error="M" class="barcode" />
-            </div>
-
-            <!-- Student name -->
-            <div style="position: absolute; top: 58%; width: 100%; text-align: center;">
-                <h2 style="font-size: 26px; font-weight: bold;"><?= strtoupper($studentName) ?></h2>
-            </div>
-
-            <!-- Circle name + EduYear -->
-            <div style="position: absolute; top: 67%; width: 100%; text-align: center;">
-                <p style="font-size: 18px; margin:0;">
-                    Qarshi xalqaro universitetida <?= $eduYear ?> "<?= $semesterName ?>" semestrida tashkil etilgan
-                    <b>“<?= $circleName ?>”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.
-                </p>
-            </div>
-
-            <!-- Certificate date -->
-            <div style="position: absolute; bottom: 60px; left: 100px;">
-                <p style="font-size: 14px;"><?= $certDate ?></p>
-            </div>
-        </div>
-<?php
-        $html = ob_get_clean();
-
-        $mpdf->WriteHTML($html);
-        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-
-        $model->certificate_file = $fileUrl;
-        $model->certificate_date = $certDate;
-        $model->save(false);
     }
 }

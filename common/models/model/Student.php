@@ -78,7 +78,8 @@ class Student extends \yii\db\ActiveRecord
                     // 'edu_type_id',
                     // 'is_contract',
                     // 'edu_lang_id'
-                ], 'required'
+                ],
+                'required'
             ],
             [
                 [
@@ -111,7 +112,8 @@ class Student extends \yii\db\ActiveRecord
                     'created_by',
                     'updated_by',
                     'is_deleted'
-                ], 'integer'
+                ],
+                'integer'
             ],
             [['diplom_date'], 'safe'],
             [
@@ -119,14 +121,17 @@ class Student extends \yii\db\ActiveRecord
                     'description',
                     'live_location',
                     'last_education'
-                ], 'string'
+                ],
+                'string'
             ],
             [['diplom_seria'], 'string', 'max' => 255],
             [
                 [
                     'parent_phone',
                     'res_person_phone'
-                ], 'string', 'max' => 55
+                ],
+                'string',
+                'max' => 55
             ],
             [['course_id'], 'exist', 'skipOnError' => true, 'targetClass' => Course::className(), 'targetAttribute' => ['course_id' => 'id']],
             [['direction_id'], 'exist', 'skipOnError' => true, 'targetClass' => Direction::className(), 'targetAttribute' => ['direction_id' => 'id']],
@@ -279,6 +284,7 @@ class Student extends \yii\db\ActiveRecord
 
             'studentSubjectRestrict',
             'contractInfo',
+            'fullName',
 
             'createdBy',
             'updatedBy',
@@ -396,6 +402,11 @@ class Student extends \yii\db\ActiveRecord
     public function getUsername()
     {
         return $this->user->username;
+    }
+
+    public function getFullName()
+    {
+        return $this->profile->full_name;
     }
 
     /**

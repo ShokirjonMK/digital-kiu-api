@@ -117,6 +117,11 @@ class EduYear extends \yii\db\ActiveRecord
         return $extraFields;
     }
 
+    public function getName()
+    {
+        return $this->year . '-' . ($this->year + 1);
+    }
+
     /**
      * Get Tranlate
      *

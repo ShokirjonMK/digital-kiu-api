@@ -406,7 +406,15 @@ class Student extends \yii\db\ActiveRecord
 
     public function getFullName()
     {
-        return $this->profile->fullname;
+        if (!$this->profile) {
+            return '';
+        }
+        $parts = array_filter([
+            $this->profile->last_name ?? '',
+            $this->profile->first_name ?? '',
+            $this->profile->middle_name ?? ''
+        ]);
+        return trim(implode(' ', $parts));
     }
 
     /**

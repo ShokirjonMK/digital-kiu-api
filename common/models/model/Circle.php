@@ -133,6 +133,11 @@ class Circle extends \yii\db\ActiveRecord
         return $this->getStudents()->count();
     }
 
+    public function getDescription()
+    {
+        return $this->translate->description ?? '';
+    }
+
     public function getInfoRelation()
     {
         return $this

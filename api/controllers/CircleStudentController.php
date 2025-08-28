@@ -118,13 +118,9 @@ class CircleStudentController extends ApiActiveController
         if (!$model) {
             throw new NotFoundHttpException("CircleStudent not found.");
         }
-
-        $reject = Yii::$app->request->get('reject', 0);
-        if ($reject) {
-            $result = CircleStudent::rejectCertificate($model);
-        } else {
-            $result = CircleStudent::generateCertificate($model);
-        }
+        // $result = CircleStudent::generateCertificateTest($model);
+        $reject = Yii::$app->request->get('reject');
+        $result = $reject ? CircleStudent::rejectCertificate($model) : CircleStudent::generateCertificateTest($model);
 
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' certificate generated.'), $model, null, ResponseStatus::OK);

@@ -1013,169 +1013,132 @@ class CircleStudent extends \yii\db\ActiveRecord
      */
     public static function autoEnrollStudentsByCourse($courseId)
     {
-        $transaction = Yii::$app->db->beginTransaction();
-        $errors = [];
-        $enrolledCount = 0;
-        $skippedCount = 0;
+        // vd('courseId: ' . $courseId);
 
+        $data = [];
+        $data['status'] = 1;
+        $data['message'] = 'Students enrolled successfully.';
+        $data['added'] = [];
+
+        $eduYearId = EduYear::find()
+            ->where(['is_deleted' => 0, 'status' => 1])
+            ->orderBy(['id' => SORT_DESC])
+            ->one()
+            ->id;
+        $added = [];
+
+        $transaction = Yii::$app->db->beginTransaction();
         try {
-            // 1. Course bo'yicha faol studentlarni olish
+            // 1️⃣ Shu yil bo‘yicha circle_student 2 tadan kam bo‘lgan studentlar
+            // Find students in the course who have less than 2 circle_student records for this year
             $students = Student::find()
                 ->alias('s')
-                ->innerJoin('users u', 'u.id = s.user_id')
-                ->where([
-                    's.course_id' => $courseId,
-                    's.is_deleted' => 0,
-                    'u.status' => 10, // faol foydalanuvchilar
+                ->where(['s.status' => 10, 's.course_id' => $courseId])
+                ->andWhere([
+                    '<',
+                    '(SELECT COUNT(*) FROM circle_student cs WHERE cs.student_id = s.id AND cs.edu_year_id = :eduYearId AND cs.is_deleted = 0)',
+                    2
                 ])
+                ->addParams([':eduYearId' => $eduYearId])
                 ->all();
+            // vd('talabalar: ' . count($students));
 
-            if (empty($students)) {
-                $transaction->rollBack();
-                return simplify_errors([_e('No active students found for this course.')]);
-            }
-
-            // 2. Hozirgi o'quv yili va semestrni aniqlash
-            $currentYear = date('Y');
-            $currentMonth = (int)date('n');
-            $semesterType = ($currentMonth >= 9 || $currentMonth <= 1) ? 1 : 2; // 1=kuz, 2=bahor
-            $semesterType = 1;
-
-            // Faol o'quv yilini topish
-            $activeEduYear = EduYear::find()
-                ->where(['is_deleted' => 0, 'status' => 1])
-                ->orderBy(['id' => SORT_DESC])
-                ->one();
-
-            if (!$activeEduYear) {
-                $transaction->rollBack();
-                return simplify_errors([_e('No active education year found.')]);
-            }
-
-            // 3. Circle schedule larni olish (30 tadan kam studentlari bor)
-            $availableSchedules = CircleSchedule::find()
-                ->alias('cs')
-                ->leftJoin('circle c', 'c.id = cs.circle_id')
-                ->where([
-                    'cs.edu_year_id' => $activeEduYear->id,
-                    'cs.semestr_type' => $semesterType,
-                    'cs.is_deleted' => 0,
-                    'c.is_deleted' => 0,
-                ])
-                ->andWhere(['<', 'cs.student_count', CircleSchedule::$max_student_count])
-                ->orderBy(['cs.student_count' => SORT_ASC]) // eng kam studentlari borlarini birinchi
-                ->all();
-
-            // dd([
-            //     'availableSchedules' => $availableSchedules,
-            //     'students' => $students,
-            //     'activeEduYear' => $activeEduYear->id,
-            //     'semesterType' => $semesterType,
-            // ]);
-
-            if (empty($availableSchedules)) {
-                $transaction->rollBack();
-                return simplify_errors([_e('No available circle schedules found.')]);
-            }
-
-            // 4. Har bir student uchun circle_student qo'shish
             foreach ($students as $student) {
-                // Studentning hozirgi semestrdagi circle_student sonini hisoblash
-                $currentEnrollments = self::find()
+
+                // 2️⃣ Studentning mavjud circle_id larini olish
+                $takenCircleIds = CircleStudent::find()
                     ->alias('cs')
                     ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
                     ->where([
                         'cs.student_id' => $student->id,
-                        'cs.is_deleted' => 0,
-                        'sch.edu_year_id' => $activeEduYear->id,
-                        'sch.semestr_type' => $semesterType,
+                        'cs.edu_year_id' => $eduYearId,
+                        'cs.is_deleted' => 0
                     ])
-                    ->count();
+                    ->select('sch.circle_id')
+                    ->column();
 
-                // Qancha qo'shish kerakligini hisoblash
-                $neededEnrollments = 2 - $currentEnrollments;
-
-                if ($neededEnrollments <= 0) {
-                    $skippedCount++;
-                    continue; // Student allaqachon 2 ta circle ga yozilgan
+                // Hali nechta kerak?
+                $currentCount = count($takenCircleIds);
+                // vd('currentCount: ' . $currentCount);
+                $need = 2 - $currentCount;
+                // vd('need: ' . $need);
+                if ($need <= 0) {
+                    continue;
                 }
 
-                // Student uchun mavjud schedule larni topish
-                $enrolledCircles = [];
-                $attempts = 0;
-                $maxAttempts = count($availableSchedules) * 2; // cheksiz loop ni oldini olish
+                // vd('takenCircleIds: ' . count($takenCircleIds));
 
-                while ($neededEnrollments > 0 && $attempts < $maxAttempts) {
-                    foreach ($availableSchedules as $schedule) {
-                        // Bu student allaqachon bu circle ga yozilmaganligini tekshirish
-                        $alreadyEnrolled = self::find()
-                            ->where([
-                                'student_id' => $student->id,
-                                'circle_schedule_id' => $schedule->id,
-                                'is_deleted' => 0,
-                            ])
-                            ->exists();
+                // 3️⃣ Mos bo‘sh circle_schedule larini olish
+                // Har bir circle_id bo'yicha faqat bittadan schedule olish
+                $schedules = CircleSchedule::find()
+                    ->where([
+                        'edu_year_id' => $eduYearId,
+                        'status' => 1,
+                        'is_deleted' => 0
+                    ])
+                    ->andWhere(['<', 'student_count', new \yii\db\Expression('max_student_count')])
+                    ->andFilterWhere(['not in', 'circle_id', $takenCircleIds])
+                    ->orderBy([
+                        'student_count' => SORT_ASC,
+                        // new \yii\db\Expression('RAND()')
+                    ])
+                    ->asArray()
+                    ->all();
 
-                        if ($alreadyEnrolled) {
-                            continue; // Bu circle ga allaqachon yozilgan
-                        }
-
-                        // Schedule da joy borligini tekshirish
-                        if ($schedule->student_count >= CircleSchedule::$max_student_count) {
-                            continue; // Schedule to'lgan
-                        }
-
-                        // Yangi circle_student yaratish
-                        $newEnrollment = new self();
-                        $newEnrollment->student_id = $student->id;
-                        $newEnrollment->student_user_id = $student->user_id;
-                        $newEnrollment->circle_schedule_id = $schedule->id;
-                        $newEnrollment->circle_id = $schedule->circle_id;
-                        $newEnrollment->status = 1;
-                        $newEnrollment->is_finished = 0;
-                        $newEnrollment->abs_status = 0;
-                        $newEnrollment->certificate_status = 0;
-
-                        if ($newEnrollment->save()) {
-                            // Schedule student_count ni yangilash
-                            $schedule->student_count = self::find()
-                                ->where(['circle_schedule_id' => $schedule->id, 'is_deleted' => 0])
-                                ->count();
-                            $schedule->save(false);
-
-                            $enrolledCount++;
-                            $neededEnrollments--;
-                            $enrolledCircles[] = $schedule->circle->translate->name ?? 'Unknown Circle';
-
-                            if ($neededEnrollments <= 0) {
-                                break; // Student uchun yetarli
-                            }
-                        } else {
-                            $errors[] = "Failed to enroll student {$student->id} to schedule {$schedule->id}: " . json_encode($newEnrollment->errors);
-                        }
+                // Har bir circle_id bo'yicha faqat bittadan schedule tanlab olish
+                $uniqueSchedules = [];
+                foreach ($schedules as $schedule) {
+                    if (!isset($uniqueSchedules[$schedule['circle_id']])) {
+                        $uniqueSchedules[$schedule['circle_id']] = $schedule;
                     }
-                    $attempts++;
+                    if (count($uniqueSchedules) >= $need) {
+                        break;
+                    }
+                }
+                // Obyektga aylantirish
+                $schedules = [];
+                foreach ($uniqueSchedules as $row) {
+                    $schedules[] = CircleSchedule::findOne($row['id']);
                 }
 
-                if ($neededEnrollments > 0) {
-                    $errors[] = "Student {$student->id} could not be enrolled to enough circles. Needed: {$neededEnrollments}";
+                // vd('schedules: ' . count($schedules));
+
+                // 4️⃣ Studentni yozib chiqish
+                foreach ($schedules as $schedule) {
+                    $circleStudent = new CircleStudent();
+                    $circleStudent->student_id        = $student->id;
+                    $circleStudent->student_user_id   = $student->user_id;
+                    $circleStudent->circle_id         = $schedule->circle_id;
+                    $circleStudent->circle_schedule_id = $schedule->id;
+                    $circleStudent->edu_year_id       = $eduYearId;
+                    $circleStudent->created_by        = Yii::$app->user->id ?? 0;
+                    $circleStudent->updated_by        = Yii::$app->user->id ?? 0;
+                    $circleStudent->created_at        = time();
+                    $circleStudent->updated_at        = time();
+
+                    if (!$circleStudent->save()) {
+                        throw new \Exception(json_encode($circleStudent->errors));
+                    }
+
+                    // student_count ni yangilash
+                    $schedule->updateCounters(['student_count' => 1]);
+
+                    $added[] = [
+                        'student_id' => $student->id,
+                        'circle_id' => $schedule->circle_id,
+                        'schedule_id' => $schedule->id
+                    ];
                 }
             }
-
-            if (empty($errors)) {
-                $transaction->commit();
-                return [
-                    'enrolled_count' => $enrolledCount,
-                    'skipped_count' => $skippedCount,
-                    'message' => "Successfully enrolled {$enrolledCount} students to circles. Skipped {$skippedCount} students who already had 2 enrollments."
-                ];
-            } else {
-                $transaction->rollBack();
-                return simplify_errors($errors);
-            }
+            $data['added'] = $added;
+            $transaction->commit();
+            return $data;
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return simplify_errors([_e('Auto enrollment error: ') . $e->getMessage()]);
+            $data['status'] = 0;
+            $data['message'] = 'Error';
+            $data['error'] = $e->getMessage();
+            return $data;
         }
     }
 }

@@ -158,6 +158,7 @@ foreach ($controllers as $controller) {
 $routes = [
     //  certificate
     'GET <lang:\w{2}>/circle-students/<id>/certificate' => 'circle-student/certificate',
+    'GET <lang:\w{2}>/circle-students/course' => 'circle-student/course',
 
     /** telegram */
     'GET <lang:\w{2}>/telegrams/bot' => 'telegram/bot',

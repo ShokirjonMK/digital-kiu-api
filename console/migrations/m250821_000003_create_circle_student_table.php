@@ -19,6 +19,8 @@ class m250821_000003_create_circle_student_table extends Migration
         $this->createTable('circle_student', [
             'id' => $this->primaryKey(),
             'circle_id' => $this->integer()->notNull()->comment('circle id'),  // circle_schedule->circle_id ni yozish kerak
+            'edu_year_id' => $this->integer()->notNull()->comment('o\'quv yili id'),  // EduYear->id ni yozish kerak
+            'semestr_type' => $this->integer()->notNull()->comment('semestr turi 1=kuz 2=bahor'),  // semestr turi 1=kuz 2=bahor
             'circle_schedule_id' => $this->integer()->notNull()->comment('circle schedule id'),
             'student_user_id' => $this->integer()->notNull()->comment('student user id'),
             'student_id' => $this->integer()->notNull()->comment('student id'),  // student->id ni yozish kerak

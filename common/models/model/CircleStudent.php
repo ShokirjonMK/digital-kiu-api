@@ -45,7 +45,7 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return [
+        $fields = [
             'id',
             'circle_id',
             'circle_schedule_id',
@@ -54,8 +54,6 @@ class CircleStudent extends \yii\db\ActiveRecord
             'is_finished',
             'abs_status',
             'certificate_status',
-            'certificate_file',
-            'certificate_date',
             'status',
             'created_at',
             'updated_at',
@@ -63,6 +61,14 @@ class CircleStudent extends \yii\db\ActiveRecord
             'created_by',
             'updated_by',
         ];
+
+        // Only include 'certificate_file' if certificate_status == 1
+        if ($this->certificate_status == 1) {
+            $fields[] = 'certificate_file';
+            $fields[] = 'certificate_date';
+        }
+
+        return $fields;
     }
 
     public function extraFields()
@@ -519,8 +525,19 @@ class CircleStudent extends \yii\db\ActiveRecord
         return simplify_errors($errors);
     }
 
-
-
+    public static function rejectCertificate($model)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $model->certificate_status = 0;
+        if ($model->save(false)) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($model->errors);
+        }
+        return true;
+    }
 
     public static function generateCertificate($model)
     {

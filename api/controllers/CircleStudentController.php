@@ -116,7 +116,7 @@ class CircleStudentController extends ApiActiveController
      */
     public function actionCertificate($id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        return $this->response(0, _e('Jarayonda'), null, null, ResponseStatus::OK);
 
         $model = CircleStudent::findOne($id);
         if (!$model) {

@@ -2209,7 +2209,14 @@ return [
         "user_self",
         "user_selfget",
         "week_index",
-        "week_view"
+        "week_view",
+        "circle-student_view",
+        "circle-student_certificate",
+        "circle-student_create",
+        "circle_index",
+        "circle_view",
+        "circle-attendance_index",
+        "circle-schedule_index"
     ],
 
     'contenter' => [

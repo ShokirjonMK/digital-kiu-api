@@ -56,14 +56,14 @@ class CircleStudentController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        // return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
 
         $model = CircleStudent::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
-        $this->load($model, $post);
+        // $this->load($model, $post);
         $result = CircleStudent::updateItem($model, $post);
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);

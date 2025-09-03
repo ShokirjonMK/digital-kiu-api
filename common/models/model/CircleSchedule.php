@@ -481,29 +481,25 @@ class CircleSchedule extends \yii\db\ActiveRecord
     public static function zipCertificates($model)
     {
         try {
-            // Bazaviy path ni tozalab olish
-            $basePath = rtrim(STORAGE_PATH, '/\\');
-
             // 📂 Manba papka (certificates)
-            $sourceDir = $basePath . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'certificates' .
-                DIRECTORY_SEPARATOR . $model->circle_id . DIRECTORY_SEPARATOR . $model->id . DIRECTORY_SEPARATOR;
+            $path = '/uploads/certificates/' . $model->circle_id . '/' . $model->id . '/';
+            $sourceDir = STORAGE_PATH . $path;
 
             if (!is_dir($sourceDir)) {
                 throw new \Exception("Source directory not found: " . $sourceDir);
             }
 
             // 📂 Chiqish papkasi (zip)
-            $targetDir = $basePath . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'certificates' .
-                DIRECTORY_SEPARATOR . 'zip' . DIRECTORY_SEPARATOR . $model->circle_id . DIRECTORY_SEPARATOR;
-
+            $zipPathDir = '/uploads/certificates/zip/' . $model->circle_id . '/';
+            $targetDir  = STORAGE_PATH . $zipPathDir;
             if (!file_exists($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
 
             // 📄 Zip fayl nomi
             $fileName = 'certificates_' . $model->id . '_' . current_user_id() . '_' . time() . '.zip';
-            $zipPath = $targetDir . $fileName;
-            $fileUrl = 'storage/uploads/certificates/zip/' . $model->circle_id . '/' . $fileName;
+            $zipPath  = $targetDir . $fileName;
+            $fileUrl  = 'storage' . $zipPathDir . $fileName;
 
             // ⚡️ Zip yaratish
             $zip = new \ZipArchive();
@@ -511,7 +507,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
                 throw new \Exception("Cannot create zip file: " . $zipPath);
             }
 
-            // 📂 Fayllarni qo‘shish (subfolder sifatida circle_schedule_id)
+            // 📂 Fayllarni qo‘shish (subfolder sifatida circle_schedule_id saqlanadi)
             $files = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($sourceDir, \FilesystemIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::LEAVES_ONLY
@@ -519,7 +515,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
 
             foreach ($files as $file) {
                 if ($file->isFile()) {
-                    $filePath = $file->getRealPath();
+                    $filePath     = $file->getRealPath();
                     $relativePath = $model->id . '/' . basename($filePath);
                     $zip->addFile($filePath, $relativePath);
                 }
@@ -527,19 +523,20 @@ class CircleSchedule extends \yii\db\ActiveRecord
 
             $zip->close();
 
+            // Modelga yozib qo‘yish
             $model->zip_file = $fileUrl;
             $model->save(false);
 
             return [
-                'status' => 1,
-                'message' => 'Certificates zipped successfully',
+                'status'   => 1,
+                'message'  => 'Certificates zipped successfully',
                 'zip_file' => $fileUrl
             ];
         } catch (\Exception $e) {
             return [
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Error while creating zip',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage()
             ];
         }
     }

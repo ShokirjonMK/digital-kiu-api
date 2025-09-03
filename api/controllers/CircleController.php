@@ -28,8 +28,8 @@ class CircleController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
 
-        $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted')]);
-        
+        $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
+
         $query->groupBy($model->tableName() . '.id');
 
         $query = $this->filterAll($query, $model);

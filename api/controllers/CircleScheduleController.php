@@ -46,6 +46,8 @@ class CircleScheduleController extends ApiActiveController
             $query->andWhere(['teacher_user_id' => current_user_id()]);
         }
 
+        $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
+
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
 

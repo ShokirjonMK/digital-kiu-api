@@ -28,7 +28,7 @@ class CircleStudentController extends ApiActiveController
 
         $query = $model
             ->find()
-            ->andWhere([$model->tableName() . '.is_deleted' => 0])
+            // ->andWhere([$model->tableName() . '.is_deleted' => 0])
             ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $model->tableName() . '.student_user_id');
 
         if (isRole('student')) {

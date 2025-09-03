@@ -641,16 +641,19 @@ class CircleStudent extends \yii\db\ActiveRecord
             $model->certificate_file = $fileUrl;
             $model->certificate_date = $certDate;
 
-            if (!$model->save()) {
+            if (!$model->save(false)) {
                 $errors[] = $model->errors;
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
+            $transaction->commit();
+            return true;
         } catch (\Exception $e) {
             $transaction->rollBack();
             $errors[] = _e('Certificate generation error: ') . $e->getMessage();
             return simplify_errors($errors);
         }
+        return simplify_errors($errors);
     }
 
 

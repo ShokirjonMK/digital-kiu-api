@@ -54,7 +54,6 @@ class ExamStudentController extends ApiActiveController
             ->join('INNER JOIN', 'profile', 'profile.user_id = student.user_id')
             ->andFilterWhere(['like', 'option', Yii::$app->request->get('query')]);
 
-
         //  Filter from Profile 
         $profile = new Profile();
         $filter = Yii::$app->request->get('filter');
@@ -80,7 +79,9 @@ class ExamStudentController extends ApiActiveController
 
         if (isRole("teacher")) {
             $query = $query->andWhere([
-                'in', 'teacher_access_id', $this->teacher_access()
+                'in',
+                'teacher_access_id',
+                $this->teacher_access()
             ]);
         }
 
@@ -334,7 +335,7 @@ class ExamStudentController extends ApiActiveController
             $model->update();
             // }
         }
-        
+
         if (isRole("teacher")) {
             if ($model->teacherAccess->user_id != current_user_id()) {
                 return $this->response(0, _e('You do not have access.'), null, null, ResponseStatus::FORBIDDEN);

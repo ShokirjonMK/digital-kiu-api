@@ -521,7 +521,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
 
             // Fayl papkasi
-            $path = '/uploads/certificates/';
+            $path = '/uploads/certificates/' .  $model->circle_id . '/' . $model->circle_schedule_id . '/';
             $dir = STORAGE_PATH . $path;
             if (!file_exists($dir)) {
                 if (!mkdir($dir, 0777, true) && !is_dir($dir)) {

@@ -286,6 +286,8 @@ class Student extends \yii\db\ActiveRecord
             'contractInfo',
             'fullName',
 
+            'circleStudents',
+
             'createdBy',
             'updatedBy',
             'createdAt',
@@ -303,6 +305,11 @@ class Student extends \yii\db\ActiveRecord
     public function getContractInfo()
     {
         return $this->profile->contractInfo;
+    }
+
+    public function getCircleStudents()
+    {
+        return $this->hasMany(CircleStudent::className(), ['student_id' => 'id'])->andWhere(['is_deleted' => 0]);
     }
 
     public function getStudentSubjectRestrict()

@@ -489,6 +489,13 @@ class CircleSchedule extends \yii\db\ActiveRecord
                 throw new \Exception("Source directory not found: " . $sourceDir);
             }
 
+            if (!is_dir($sourceDir)) {
+                return [
+                    'status'  => 0,
+                    'message' => 'Source directory not found',
+                    'error'   => 'Source directory not found: ' . $sourceDir
+                ];
+            }
             // 📂 Chiqish papkasi (zip)
             $zipPathDir = '/uploads/certificates/zip/' . $model->circle_id . '/';
             $targetDir  = STORAGE_PATH . $zipPathDir;

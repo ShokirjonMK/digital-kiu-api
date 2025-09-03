@@ -27,6 +27,8 @@ class m250821_000002_create_circle_schedule_table extends Migration
             'end_time' => $this->string(10)->notNull()->comment('tugash vaqti: 12:00'),
             'week_id' => $this->integer()->notNull()->comment('hafta id'),
             'abs_count' => $this->integer()->null()->defaultValue(4)->comment('nb lar soni'),
+
+            'zip_file' => $this->string(255)->null()->comment('zip fayl'),
             'max_student_count' => $this->integer()->defaultValue(30)->notNull()->comment('maksimal talaba soni'),  // 30 ta talaba qo'shiladi
             'student_count' => $this->integer()->notNull()->defaultValue(0)->comment('talaba soni'),  // circle_student count update qilinadi
             'teacher_user_id' => $this->integer()->notNull()->comment('teacher id'),

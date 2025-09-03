@@ -93,6 +93,16 @@ class CircleScheduleController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        $certificate = Yii::$app->request->get('zip', 0);
+        if ($certificate == 1) {
+            $result = CircleSchedule::zipCertificates($model);
+            if ($result['status'] == 1) {
+                return $this->response(1, _e('Certificates zipped successfully.'), $result, null, ResponseStatus::OK);
+            } else {
+                return $this->response(0, _e('There is an error occurred while processing.'), null, $result, ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 

@@ -39,6 +39,8 @@ class CircleSchedule extends \yii\db\ActiveRecord
             // date/time stored as strings or safe
             [['start_date', 'end_date'], 'safe'],
             [['start_time', 'end_time'], 'string', 'max' => 10],
+            [['zip_file'], 'string', 'max' => 255],
+
             // existence
             [['circle_id'], 'exist', 'skipOnError' => true, 'targetClass' => Circle::className(), 'targetAttribute' => ['circle_id' => 'id']],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Building::className(), 'targetAttribute' => ['building_id' => 'id']],
@@ -75,6 +77,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
             'updated_by' => _e('Updated By'),
+            'zip_file' => _e('Zip File'),
         ];
     }
 
@@ -102,6 +105,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
+            'zip_file',
         ];
         return $fields;
     }
@@ -472,5 +476,71 @@ class CircleSchedule extends \yii\db\ActiveRecord
             $this->updated_by = Current_user_id();
         }
         return parent::beforeSave($insert);
+    }
+
+    public static function zipCertificates($model)
+    {
+        try {
+            // Bazaviy path ni tozalab olish
+            $basePath = rtrim(STORAGE_PATH, '/\\');
+
+            // 📂 Manba papka (certificates)
+            $sourceDir = $basePath . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'certificates' .
+                DIRECTORY_SEPARATOR . $model->circle_id . DIRECTORY_SEPARATOR . $model->id . DIRECTORY_SEPARATOR;
+
+            if (!is_dir($sourceDir)) {
+                throw new \Exception("Source directory not found: " . $sourceDir);
+            }
+
+            // 📂 Chiqish papkasi (zip)
+            $targetDir = $basePath . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'certificates' .
+                DIRECTORY_SEPARATOR . 'zip' . DIRECTORY_SEPARATOR . $model->circle_id . DIRECTORY_SEPARATOR;
+
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            // 📄 Zip fayl nomi
+            $fileName = 'certificates_' . $model->id . '_' . current_user_id() . '_' . time() . '.zip';
+            $zipPath = $targetDir . $fileName;
+            $fileUrl = 'storage/uploads/certificates/zip/' . $model->circle_id . '/' . $fileName;
+
+            // ⚡️ Zip yaratish
+            $zip = new \ZipArchive();
+            if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+                throw new \Exception("Cannot create zip file: " . $zipPath);
+            }
+
+            // 📂 Fayllarni qo‘shish (subfolder sifatida circle_schedule_id)
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($sourceDir, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            foreach ($files as $file) {
+                if ($file->isFile()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = $model->id . '/' . basename($filePath);
+                    $zip->addFile($filePath, $relativePath);
+                }
+            }
+
+            $zip->close();
+
+            $model->zip_file = $fileUrl;
+            $model->save(false);
+
+            return [
+                'status' => 1,
+                'message' => 'Certificates zipped successfully',
+                'zip_file' => $fileUrl
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'message' => 'Error while creating zip',
+                'error' => $e->getMessage()
+            ];
+        }
     }
 }

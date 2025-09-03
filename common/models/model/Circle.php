@@ -54,6 +54,7 @@ class Circle extends \yii\db\ActiveRecord
             'updated_at' => _e('Updated At'),
             'created_by' => _e('Created By'),
             'updated_by' => _e('Updated By'),
+            'is_deleted' => _e('Is Deleted'),
         ];
     }
 
@@ -74,6 +75,7 @@ class Circle extends \yii\db\ActiveRecord
             'updated_at',
             'created_by',
             'updated_by',
+            'is_deleted',
         ];
 
         return $fields;

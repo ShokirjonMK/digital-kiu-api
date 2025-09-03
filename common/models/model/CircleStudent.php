@@ -624,6 +624,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                 </table>
             </div>
             <?php
+
             $html = ob_get_clean();
 
             try {

@@ -25,7 +25,8 @@ class CircleScheduleController extends ApiActiveController
 
         $query = $model
             ->find()
-            ->andWhere([$model->tableName() . '.is_deleted' => 0]);
+            // ->andWhere([$model->tableName() . '.is_deleted' => 0])
+        ;
 
         try {
             if (isRole('student')) {

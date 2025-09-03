@@ -35,8 +35,9 @@ class CircleStudent extends \yii\db\ActiveRecord
     {
         return [
             [['circle_schedule_id'], 'required'],
-            [['circle_id', 'edu_year_id', 'semestr_type', 'circle_schedule_id', 'student_user_id', 'student_id', 'is_finished', 'abs_status', 'certificate_status', 'certificate_date', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['circle_id', 'edu_year_id', 'semestr_type', 'circle_schedule_id', 'student_user_id', 'student_id', 'is_finished', 'abs_status', 'certificate_status', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['certificate_file'], 'string', 'max' => 255],
+            [['certificate_date'], 'safe'],
             [['circle_id'], 'exist', 'skipOnError' => true, 'targetClass' => Circle::className(), 'targetAttribute' => ['circle_id' => 'id']],
             [['circle_schedule_id'], 'exist', 'skipOnError' => true, 'targetClass' => CircleSchedule::className(), 'targetAttribute' => ['circle_schedule_id' => 'id']],
             [['student_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['student_user_id' => 'id']],
@@ -638,7 +639,8 @@ class CircleStudent extends \yii\db\ActiveRecord
             $model->certificate_status = 1;
             $model->certificate_file = $fileUrl;
             $model->certificate_date = $certDate;
-            if (!$model->save(false)) {
+
+            if (!$model->save()) {
                 $errors[] = $model->errors;
                 $transaction->rollBack();
                 return simplify_errors($errors);

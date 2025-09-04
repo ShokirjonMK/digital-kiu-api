@@ -176,4 +176,30 @@ class CircleStudentController extends ApiActiveController
             return $this->response(0, _e($result['message']), null, $result['error'], ResponseStatus::UPROCESSABLE_ENTITY);
         }
     }
+
+
+    public function actionNotSelectedStudents($courseId)
+    {
+        $eduYearId = Yii::$app->request->get('edu_year_id');
+        if (!$eduYearId) {
+            $eduYearId = EduYear::find()
+                ->where(['is_deleted' => 0, 'status' => 1])
+                ->orderBy(['id' => SORT_DESC])
+                ->one()
+                ->id;
+        }
+
+        $students = Student::find()
+            ->alias('s')
+            ->where(['s.status' => 10, 's.course_id' => $courseId])
+            ->andWhere([
+                '<',
+                '(SELECT COUNT(*) FROM circle_student cs WHERE cs.student_id = s.id AND cs.edu_year_id = :eduYearId AND cs.is_deleted = 0)',
+                2
+            ])
+            ->addParams([':eduYearId' => $eduYearId])
+            ->all();
+
+        return $this->response(1, _e('Success'), $students, null, ResponseStatus::OK);
+    }
 }

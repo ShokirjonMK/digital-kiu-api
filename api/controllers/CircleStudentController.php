@@ -24,6 +24,13 @@ class CircleStudentController extends ApiActiveController
 
     public function actionIndex($lang)
     {
+        $not = Yii::$app->request->get('not', 0);
+
+        // If not=1, return not selected students data
+        if ($not == 1) {
+            return $this->getNotSelectedStudents();
+        }
+
         $model = new CircleStudent();
 
         $query = $model
@@ -178,8 +185,16 @@ class CircleStudentController extends ApiActiveController
     }
 
 
-    public function actionNotSelectedStudents($courseId)
+    /**
+     * Get not selected students with filters and pagination support
+     */
+    private function getNotSelectedStudents()
     {
+        $courseId = Yii::$app->request->get('course_id');
+        if (empty($courseId)) {
+            return $this->response(0, _e('Course ID is required.'), null, null, ResponseStatus::BAD_REQUEST);
+        }
+
         $eduYearId = Yii::$app->request->get('edu_year_id');
         if (!$eduYearId) {
             $eduYearId = EduYear::find()
@@ -189,17 +204,48 @@ class CircleStudentController extends ApiActiveController
                 ->id;
         }
 
-        $students = Student::find()
+        $model = new Student();
+        $query = Student::find()
             ->alias('s')
-            ->where(['s.status' => 10, 's.course_id' => $courseId])
+            ->join('INNER JOIN', 'profile', 'profile.user_id = s.user_id')
+            ->where([
+                's.status' => 10,
+                's.course_id' => $courseId
+            ])
             ->andWhere([
                 '<',
                 '(SELECT COUNT(*) FROM circle_student cs WHERE cs.student_id = s.id AND cs.edu_year_id = :eduYearId AND cs.is_deleted = 0)',
                 2
             ])
-            ->addParams([':eduYearId' => $eduYearId])
-            ->all();
+            ->addParams([':eduYearId' => $eduYearId]);
 
-        return $this->response(1, _e('Success'), $students, null, ResponseStatus::OK);
+        // Apply Profile filters
+        $profile = new Profile();
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+
+        // Apply other filters and sorting
+        $query = $this->filterAll($query, $model);
+        $query = $this->sort($query);
+
+        $data = $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
     }
 }

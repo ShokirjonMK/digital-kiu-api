@@ -190,61 +190,88 @@ class CircleStudentController extends ApiActiveController
      */
     private function getNotSelectedStudents()
     {
-        $courseId = Yii::$app->request->get('course_id');
-        if (empty($courseId)) {
-            return $this->response(0, _e('Course ID is required.'), null, null, ResponseStatus::BAD_REQUEST);
-        }
+        $request   = Yii::$app->request;
+        $courseId  = $request->get('course_id');
+        $eduYearId = $request->get('edu_year_id');
 
-        $eduYearId = Yii::$app->request->get('edu_year_id');
-        if (!$eduYearId) {
-            $eduYearId = EduYear::find()
+        // 1) edu_year_id ni aniqlash (fallback sifatida oxirgi aktiv yilni olish)
+        if (empty($eduYearId)) {
+            $lastEduYearId = EduYear::find()
+                ->select('id')
                 ->where(['is_deleted' => 0, 'status' => 1])
                 ->orderBy(['id' => SORT_DESC])
-                ->one()
-                ->id;
+                ->limit(1)
+                ->scalar();
+
+            if (!$lastEduYearId) {
+                return $this->response(0, _e('Active edu year not found.'), null, null, ResponseStatus::BAD_REQUEST);
+            }
+            $eduYearId = (int)$lastEduYearId;
+        } else {
+            $eduYearId = (int)$eduYearId;
         }
 
-        $model = new Student();
+        // 2) Asosiy query
         $query = Student::find()
             ->alias('s')
-            ->join('INNER JOIN', 'profile', 'profile.user_id = s.user_id')
+            ->innerJoin(Profile::tableName() . ' p', 'p.user_id = s.user_id')
             ->where([
-                's.status' => 10,
-                's.course_id' => $courseId
-            ])
-            ->andWhere([
-                '<',
-                '(SELECT COUNT(*) FROM circle_student cs WHERE cs.student_id = s.id AND cs.edu_year_id = :eduYearId AND cs.is_deleted = 0)',
-                2
-            ])
-            ->addParams([':eduYearId' => $eduYearId]);
+                's.status'     => 10,
+                's.is_deleted' => 0,
+            ]);
 
-        // Apply Profile filters
+        // 3) Kurs bo‘yicha filter (xato shart to‘g‘rilandi)
+        if (!empty($courseId)) {
+            $query->andWhere(['s.course_id' => (int)$courseId]);
+        }
+
+        // 4) Shu o‘quv yilida circle_student yozuvlari 2 tadan kam bo‘lishi sharti
+        //    (agar 0 ta kerak bo‘lsa, ':maxCount' ni 1 ga tushiring)
+        $maxCount = 2;
+        $query->andWhere(new \yii\db\Expression(
+            '(SELECT COUNT(*) FROM {{%circle_student}} cs 
+          WHERE cs.student_id = s.id 
+            AND cs.edu_year_id = :eduYearId 
+            AND cs.is_deleted = 0) < :maxCount'
+        ), [
+            ':eduYearId' => $eduYearId,
+            ':maxCount'  => $maxCount,
+        ]);
+
+        // 5) Profile bo‘yicha aniq filterlar: ?filter={"region_id":8,"gender":1}
         $profile = new Profile();
-        $filter = Yii::$app->request->get('filter');
-        $filter = json_decode(str_replace("'", "", $filter));
-        if (isset($filter)) {
-            foreach ($filter as $attribute => $id) {
-                if (in_array($attribute, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+        $filter  = $request->get('filter');
+        if (!empty($filter)) {
+            $filterArr = json_decode(str_replace("'", "", $filter), true);
+            if (is_array($filterArr)) {
+                foreach ($filterArr as $attribute => $value) {
+                    if ($profile->hasAttribute($attribute)) {
+                        $query->andFilterWhere(['p.' . $attribute => $value]);
+                    }
                 }
             }
         }
 
-        $queryfilter = Yii::$app->request->get('filter-like');
-        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
-        if (isset($queryfilter)) {
-            foreach ($queryfilter as $attributeq => $word) {
-                if (in_array($attributeq, $profile->attributes())) {
-                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+        // 6) Profile bo‘yicha LIKE qidiruvlar: ?filter-like={"last_name":"Ali"}
+        $filterLike = $request->get('filter-like');
+        if (!empty($filterLike)) {
+            $filterLikeArr = json_decode(str_replace("'", "", $filterLike), true);
+            if (is_array($filterLikeArr)) {
+                foreach ($filterLikeArr as $attribute => $word) {
+                    if ($profile->hasAttribute($attribute) && $word !== '' && $word !== null) {
+                        // Yii2 LIKE %word% ni o‘zi qo‘llaydi (escape bilan)
+                        $query->andFilterWhere(['like', 'p.' . $attribute, $word]);
+                    }
                 }
             }
         }
 
-        // Apply other filters and sorting
+        // 7) Umumiy filter va sortlash
+        $model = new Student();
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
 
+        // 8) Ma’lumotni olish va javob
         $data = $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }

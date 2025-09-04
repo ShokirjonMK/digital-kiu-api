@@ -55,6 +55,22 @@ class CircleController extends ApiActiveController
 
     public function actionUpdate($lang, $id)
     {
+        if ($id == 0) {
+            $post = Yii::$app->request->post();
+            $finishStatus = $post['finish_status'] ?? null;
+
+            if ($finishStatus === null) {
+                return $this->response(0, _e('Finish status is required.'), null, null, ResponseStatus::BAD_REQUEST);
+            }
+
+            $updated = Circle::updateAll(['finish_status' => $finishStatus]);
+            if ($updated) {
+                return $this->response(1, _e('Success.'), null, null, ResponseStatus::OK);
+            }
+            return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::UPROCESSABLE_ENTITY);
+        }
+        // id = 0
+
         $model = Circle::findOne($id);
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);

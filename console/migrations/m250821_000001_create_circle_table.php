@@ -22,6 +22,7 @@ class m250821_000001_create_circle_table extends Migration
             'id' => $this->primaryKey(),
             'type' => $this->tinyInteger(1)->defaultValue(1),
             'image' => $this->string(255)->null(),
+            'finish_status' => $this->tinyInteger(1)->defaultValue(0),  // 0 bo'lsa tamomlanmagan qilishga ruxsat yo'q 1 bo'lsa bor
             'status' => $this->tinyInteger(1)->defaultValue(1),
             'is_deleted' => $this->tinyInteger(1)->defaultValue(0),
             'created_at' => $this->integer()->notNull(),

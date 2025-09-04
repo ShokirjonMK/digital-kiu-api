@@ -44,8 +44,23 @@ class CircleStudent extends \yii\db\ActiveRecord
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
 
             ['student_id', 'unique', 'targetAttribute' => ['student_id', 'circle_id', 'is_deleted'], 'message' => _e('Student already enrolled to this circle in current semester.')],
+            
+            // agar circle finished_status 1 bo'lsa, is_finished o'zgartirish mumkin aks holda xatolik chiqishi kerak
+            ['is_finished', 'validateIsFinished'],
+
         ];
     }
+
+
+    public function validateIsFinished($attribute, $params)
+    {
+        if ($this->isAttributeChanged($attribute)) {
+            if ($this->circle && $this->circle->finished_status != 1) {
+                $this->addError($attribute, 'Circle hali tugallanmaganligi sababli bu maydonni o‘zgartirish mumkin emas.');
+            }
+        }
+    }
+    
 
     public function fields()
     {

@@ -57,13 +57,13 @@ class CircleController extends ApiActiveController
     {
         if ($id == 0) {
             $post = Yii::$app->request->post();
-            $finishStatus = $post['finish_status'] ?? null;
+            $finishStatus = $post['finished_status'] ?? null;
 
             if ($finishStatus === null) {
-                return $this->response(0, _e('Finish status is required.'), null, null, ResponseStatus::BAD_REQUEST);
+                return $this->response(0, _e('Finished status is required.'), null, null, ResponseStatus::BAD_REQUEST);
             }
 
-            $updated = Circle::updateAll(['finish_status' => $finishStatus]);
+            $updated = Circle::updateAll(['finished_status' => $finishStatus]);
             if ($updated) {
                 return $this->response(1, _e('Success.'), null, null, ResponseStatus::OK);
             }

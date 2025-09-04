@@ -35,7 +35,7 @@ class Circle extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
+            [['type', 'finished_status', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['image'], 'string', 'max' => 255],
             [['upload_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg,jpeg,bmp', 'maxSize' => $this->circleImageMaxSize]
         ];
@@ -49,6 +49,7 @@ class Circle extends \yii\db\ActiveRecord
             'description' => _e('Description'),
             'type' => _e('Type'),
             'image' => _e('Image'),
+            'finished_status' => _e('Finished Status'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
             'updated_at' => _e('Updated At'),
@@ -70,6 +71,7 @@ class Circle extends \yii\db\ActiveRecord
             // },
             'type',
             'image',
+            'finished_status',
             'status',
             'created_at',
             'updated_at',

@@ -63,7 +63,10 @@ class CircleController extends ApiActiveController
                 return $this->response(0, _e('Finished status is required.'), null, null, ResponseStatus::BAD_REQUEST);
             }
 
-            $updated = Circle::updateAll(['finished_status' => $finishStatus]);
+            // Faqat kerakli yozuvlar yangilanishi kerak
+            $updated = Circle::updateAll(['finished_status' => $finishStatus], ['!=', 'finished_status', $finishStatus]);
+
+            // $updated = Circle::updateAll(['finished_status' => $finishStatus]);
             if ($updated) {
                 return $this->response(1, _e('Success.'), null, null, ResponseStatus::OK);
             }

@@ -43,7 +43,9 @@ class CircleStudent extends \yii\db\ActiveRecord
             [['student_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['student_user_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
 
-            ['student_id', 'unique', 'targetAttribute' => ['student_id', 'circle_id', 'is_deleted'], 'message' => _e('Student already enrolled to this circle in current semester.')],
+            // Custom validation for unique constraint considering is_deleted = 0
+            ['student_id', 'validateUniqueEnrollment'],
+            ['circle_schedule_id', 'validateUniqueScheduleEnrollment'],
 
             // agar circle finished_status 1 bo'lsa, is_finished o'zgartirish mumkin aks holda xatolik chiqishi kerak
             ['is_finished', 'validateIsFinished'],
@@ -57,6 +59,52 @@ class CircleStudent extends \yii\db\ActiveRecord
         if ($this->isAttributeChanged($attribute)) {
             if ($this->circle && $this->circle->finished_status != 1) {
                 $this->addError($attribute, 'Circle hali tugallanmaganligi sababli bu maydonni o‘zgartirish mumkin emas.');
+            }
+        }
+    }
+
+    /**
+     * Validate unique enrollment for student in circle (only when is_deleted = 0)
+     */
+    public function validateUniqueEnrollment($attribute, $params)
+    {
+        if ($this->isNewRecord || $this->isAttributeChanged($attribute) || $this->isAttributeChanged('circle_id')) {
+            $query = self::find()
+                ->where([
+                    'student_id' => $this->student_id,
+                    'circle_id' => $this->circle_id,
+                    'is_deleted' => 0
+                ]);
+
+            if (!$this->isNewRecord) {
+                $query->andWhere(['!=', 'id', $this->id]);
+            }
+
+            if ($query->exists()) {
+                $this->addError($attribute, _e('Student already enrolled to this circle.'));
+            }
+        }
+    }
+
+    /**
+     * Validate unique enrollment for student in circle schedule (only when is_deleted = 0)
+     */
+    public function validateUniqueScheduleEnrollment($attribute, $params)
+    {
+        if ($this->isNewRecord || $this->isAttributeChanged($attribute) || $this->isAttributeChanged('student_user_id')) {
+            $query = self::find()
+                ->where([
+                    'circle_schedule_id' => $this->circle_schedule_id,
+                    'student_user_id' => $this->student_user_id,
+                    'is_deleted' => 0
+                ]);
+
+            if (!$this->isNewRecord) {
+                $query->andWhere(['!=', 'id', $this->id]);
+            }
+
+            if ($query->exists()) {
+                $this->addError($attribute, _e('Student already enrolled to this schedule.'));
             }
         }
     }

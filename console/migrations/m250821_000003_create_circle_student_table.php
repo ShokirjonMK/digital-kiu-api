@@ -38,13 +38,13 @@ class m250821_000003_create_circle_student_table extends Migration
         ], $tableOptions);
 
         // circle_id, student_user_id, is_deleted UNIQUE qo'yiladi
-        // Create a unique index on (circle_id, student_user_id) only when is_deleted = 0
-        $this->execute('CREATE UNIQUE INDEX idx_unique_circle_student_is_deleted0 ON circle_student (circle_id, student_user_id) WHERE is_deleted = 0');
+        // For MySQL, we'll create regular unique indexes and handle uniqueness in application logic
+        $this->createIndex('idx_unique_circle_student', 'circle_student', ['circle_id', 'student_user_id']);
 
         $this->addForeignKey('fk_circle_student_circle', 'circle_student', 'circle_id', 'circle', 'id');
         $this->addForeignKey('fk_circle_student_schedule', 'circle_student', 'circle_schedule_id', 'circle_schedule', 'id');
         $this->addForeignKey('fk_circle_student_student', 'circle_student', 'student_user_id', 'users', 'id');
-        $this->execute('CREATE UNIQUE INDEX idx_unique_enroll_is_deleted0 ON circle_student (circle_schedule_id, student_user_id) WHERE is_deleted = 0');
+        $this->createIndex('idx_unique_enroll', 'circle_student', ['circle_schedule_id', 'student_user_id']);
         $this->createIndex('idx_circle_student_circle_schedule_id', 'circle_student', 'circle_schedule_id');
         $this->createIndex('idx_circle_student_student_user_id', 'circle_student', 'student_user_id');
         $this->createIndex('idx_circle_student_status', 'circle_student', 'status');
@@ -57,10 +57,11 @@ class m250821_000003_create_circle_student_table extends Migration
 
     public function safeDown()
     {
+        $this->dropForeignKey('fk_circle_student_circle', 'circle_student');
         $this->dropForeignKey('fk_circle_student_schedule', 'circle_student');
         $this->dropForeignKey('fk_circle_student_student', 'circle_student');
-        $this->dropIndex('idx_unique_circle_student_is_deleted0', 'circle_student');
-        $this->dropIndex('idx_unique_enroll_is_deleted0', 'circle_student');
+        $this->dropIndex('idx_unique_circle_student', 'circle_student');
+        $this->dropIndex('idx_unique_enroll', 'circle_student');
         $this->dropIndex('idx_circle_student_circle_schedule_id', 'circle_student');
         $this->dropIndex('idx_circle_student_student_user_id', 'circle_student');
         $this->dropIndex('idx_circle_student_status', 'circle_student');

@@ -38,12 +38,14 @@ class m250821_000003_create_circle_student_table extends Migration
         ], $tableOptions);
 
         // circle_id, student_user_id, is_deleted UNIQUE qo'yiladi
-        $this->createIndex('idx_unique_circle_student', 'circle_student', ['circle_id', 'student_user_id', 'is_deleted'], true);
+        // Create a unique index on (circle_id, student_user_id) only when is_deleted = 0
+        $this->execute('CREATE UNIQUE INDEX idx_unique_circle_student ON circle_student (circle_id, student_user_id) WHERE is_deleted = 0');
 
         $this->addForeignKey('fk_circle_student_circle', 'circle_student', 'circle_id', 'circle', 'id');
         $this->addForeignKey('fk_circle_student_schedule', 'circle_student', 'circle_schedule_id', 'circle_schedule', 'id');
         $this->addForeignKey('fk_circle_student_student', 'circle_student', 'student_user_id', 'users', 'id');
-        $this->createIndex('idx_unique_enroll', 'circle_student', ['circle_schedule_id', 'student_user_id', 'is_deleted'], true);
+        // Create a unique index on (circle_schedule_id, student_user_id) only when is_deleted = 0
+        $this->execute('CREATE UNIQUE INDEX idx_unique_enroll ON circle_student (circle_schedule_id, student_user_id) WHERE is_deleted = 0');
         $this->createIndex('idx_circle_student_circle_schedule_id', 'circle_student', 'circle_schedule_id');
         $this->createIndex('idx_circle_student_student_user_id', 'circle_student', 'student_user_id');
         $this->createIndex('idx_circle_student_status', 'circle_student', 'status');

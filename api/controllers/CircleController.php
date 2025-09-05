@@ -28,7 +28,25 @@ class CircleController extends ApiActiveController
             ->andFilterWhere(['like', 'tr.name', Yii::$app->request->get('query')]);
 
 
+        // if (isRole('teacher')) {
+        //     $query->leftJoin('circle_schedule cs', "cs.circle_id = {$model->tableName()}.id and cs.is_deleted = 0");
+        //     $query->andWhere(['cs.teacher_user_id' => current_user_id()]);
+        // }
+
+        if (isRole('teacher')) {
+            $table = $model->tableName();
+            $query->leftJoin(
+                'circle_schedule cs',
+                "cs.circle_id = {$table}.id AND cs.is_deleted = 0 AND cs.teacher_user_id = :teacher_id",
+                [':teacher_id' => current_user_id()]
+            );
+            $query->andWhere(['cs.teacher_user_id' => current_user_id()]);
+        }
+
+
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
+
+
 
         $query->groupBy($model->tableName() . '.id');
 

@@ -355,6 +355,11 @@ class CircleSchedule extends \yii\db\ActiveRecord
     {
         $this->student_count = $this->getCircleStudents()->count();
         $this->save(false, ['student_count']);
+
+        var_dump($this->student_count);
+        $this->refresh();
+        var_dump($this->student_count);
+        die();
     }
 
     public function getCircleAttendances()

@@ -146,7 +146,8 @@ class CircleSchedule extends \yii\db\ActiveRecord
     public function getMy()
     {
         return $this->hasOne(CircleStudent::className(), ['circle_schedule_id' => 'id'])
-            ->andWhere(['student_user_id' => current_user_id()]);
+            ->andWhere(['student_user_id' => current_user_id()])
+            ->andWhere(['or', ['is_deleted' => 0], ['is_deleted' => null]]);
     }
 
     /**
@@ -295,7 +296,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
     {
         return $this
             ->hasMany(CircleStudent::className(), ['circle_schedule_id' => 'id'])
-            ->where(['is_deleted' => 0]);
+            ->andWhere(['or', ['is_deleted' => 0], ['is_deleted' => null]]);
     }
 
     /**
@@ -354,7 +355,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
     {
         return $this
             ->hasMany(CircleAttendance::className(), ['circle_schedule_id' => 'id'])
-            ->where(['is_deleted' => 0]);
+            ->andWhere(['or', ['is_deleted' => 0], ['is_deleted' => null]]);
     }
 
     public static function createItem($model, $post)

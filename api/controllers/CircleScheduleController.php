@@ -49,6 +49,11 @@ class CircleScheduleController extends ApiActiveController
 
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
 
+        // if (!isRole('admin')) {
+        //     $query->andWhere([$model->tableName() . '.teacher_user_id' => current_user_id()]);
+        // }
+
+
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
 
@@ -93,6 +98,10 @@ class CircleScheduleController extends ApiActiveController
             ->one();
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if (isRole('teacher') && $model->teacher_user_id !== current_user_id()) {
+            return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
         $certificate = Yii::$app->request->get('zip', 0);

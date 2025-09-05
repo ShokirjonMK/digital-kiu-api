@@ -44,7 +44,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
 
             ['student_id', 'unique', 'targetAttribute' => ['student_id', 'circle_id', 'is_deleted'], 'message' => _e('Student already enrolled to this circle in current semester.')],
-            
+
             // agar circle finished_status 1 bo'lsa, is_finished o'zgartirish mumkin aks holda xatolik chiqishi kerak
             ['is_finished', 'validateIsFinished'],
 
@@ -60,7 +60,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             }
         }
     }
-    
+
 
     public function fields()
     {
@@ -446,6 +446,33 @@ class CircleStudent extends \yii\db\ActiveRecord
                 $transaction->rollBack();
                 return simplify_errors($model->errors);
             }
+        }
+
+        $errors[] = _e('There is an error occurred while processing.');
+        $transaction->rollBack();
+        return simplify_errors($errors);
+    }
+
+    public static function isFinished($model, $isFinished)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $errors = [];
+        if (!isRole('admin')) {
+            if ($model->circleSchedule->teacher_user_id !== current_user_id()) {
+                $errors[] = _e('You are not authorized to give finished status.');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+        }
+
+        $model->is_finished = $isFinished;
+
+        if ($model->save(false)) {
+            $transaction->commit();
+            return true;
+        } else {
+            $transaction->rollBack();
+            return simplify_errors($model->errors);
         }
 
         $errors[] = _e('There is an error occurred while processing.');

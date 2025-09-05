@@ -23,6 +23,12 @@ class CircleAttendanceController extends ApiActiveController
 
         $query = $model->find();
 
+        $query->leftJoin("circle_schedule", "circle_schedule.id = " . $model->tableName() . ".circle_schedule_id");
+
+        if (isRole('teacher')) {
+            $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
+        }
+
         if (isRole('student')) {
             $student_id = $this->student();
             if ($student_id !== null) {
@@ -84,6 +90,11 @@ class CircleAttendanceController extends ApiActiveController
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
+
+        if (isRole('teacher') && $model->circleSchedule->teacher_user_id !== current_user_id()) {
+            return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);
     }
 
@@ -95,6 +106,10 @@ class CircleAttendanceController extends ApiActiveController
 
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
+        }
+
+        if (isRole('teacher') && $model->circleSchedule->teacher_user_id !== current_user_id()) {
+            return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
         if ($model) {

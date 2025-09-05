@@ -106,6 +106,11 @@ class Circle extends \yii\db\ActiveRecord
 
     public function getSchedules()
     {
+        if (isRole('teacher')) {
+            return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['teacher_user_id' => current_user_id()]);
+        }
         // Use relation definition with is_deleted filter for efficiency
         return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
             ->andWhere(['is_deleted' => 0]);
@@ -113,6 +118,11 @@ class Circle extends \yii\db\ActiveRecord
 
     public function getCircleSchedules()
     {
+        if (isRole('teacher')) {
+            return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['teacher_user_id' => current_user_id()]);
+        }
         // Use relation definition with is_deleted filter for efficiency
         return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
             ->andWhere(['is_deleted' => 0]);

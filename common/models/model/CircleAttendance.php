@@ -88,6 +88,10 @@ class CircleAttendance extends \yii\db\ActiveRecord
 
     public function getCircleSchedule()
     {
+        if (isRole('teacher')) {
+            return $this->hasOne(CircleSchedule::className(), ['id' => 'circle_schedule_id'])
+                ->andWhere(['teacher_user_id' => current_user_id()]);
+        }
         return $this->hasOne(CircleSchedule::className(), ['id' => 'circle_schedule_id']);
     }
 
@@ -162,7 +166,9 @@ class CircleAttendance extends \yii\db\ActiveRecord
                 // store as integer timestamp per migration
                 $attendance->date               = $date;
 
-                if (!$attendance->save()) {
+                if (isRole('teacher') && $attendance->teacher_user_id !== current_user_id()) {
+                    $errors[] = _e('You are not authorized to create attendance');
+                } elseif (!$attendance->save()) {
                     $errors[] = $attendance->errors;
                 }
             }
@@ -309,6 +315,12 @@ class CircleAttendance extends \yii\db\ActiveRecord
         $model->teacher_user_id = $model->circleSchedule->teacher_user_id;
         $model->date = date('Y-m-d', strtotime($post['date']));
 
+
+        if (isRole('teacher') && $model->circleSchedule->teacher_user_id !== current_user_id()) {
+            $errors[] = _e('You are not authorized to create attendance');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
 
         // vd($model->circleSchedule->dates);
         if (!in_array($model->date, $model->circleSchedule->dates)) {

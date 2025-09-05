@@ -36,13 +36,18 @@ class CircleStudentController extends ApiActiveController
         $query = $model
             ->find()
             // ->andWhere([$model->tableName() . '.is_deleted' => 0])
-            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $model->tableName() . '.student_user_id');
+            ->join('INNER JOIN', 'profile', 'profile.user_id = ' . $model->tableName() . '.student_user_id')
+            ->leftJoin("circle_schedule", "circle_schedule.id = " . $model->tableName() . ".circle_schedule_id");
 
         if (isRole('student')) {
             $query->andWhere([$model->tableName() . '.student_user_id' => current_user_id()]);
         }
 
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
+
+        if (isRole('teacher')) {
+            $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
+        }
 
 
         //  Filter from Profile 
@@ -66,7 +71,6 @@ class CircleStudentController extends ApiActiveController
                 }
             }
         }
-
 
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
@@ -98,8 +102,11 @@ class CircleStudentController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         $post = Yii::$app->request->post();
-        // $this->load($model, $post);
-        $result = CircleStudent::updateItem($model, $post);
+        if (isset($post['is_finished'])) {
+            $result = CircleStudent::isFinished($model, $post['is_finished']);
+        } else {
+            $result = CircleStudent::updateItem($model, $post);
+        }
         if (!is_array($result)) {
             return $this->response(1, _e($this->controller_name . ' successfully updated.'), $model, null, ResponseStatus::OK);
         } else {
@@ -116,6 +123,10 @@ class CircleStudentController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
         if (isRole('student') && $model->student_user_id !== current_user_id()) {
+            return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
+        }
+
+        if (isRole('teacher') && $model->circleSchedule->teacher_user_id !== current_user_id()) {
             return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 

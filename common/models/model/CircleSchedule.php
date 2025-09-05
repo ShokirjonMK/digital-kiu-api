@@ -159,7 +159,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
                 return [
                     'start' => $fromTs,
                     'end' => $toTs,
-                    'now' => date('Y-m-d H:i:s'),
+                    'now' => time(),
                 ];
             }
         }

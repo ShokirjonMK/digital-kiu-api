@@ -148,10 +148,7 @@ class CircleStudentController extends ApiActiveController
             $model->is_deleted = 1;
             if ($model->update()) {
                 $schedule = $model->circleSchedule;
-                $schedule->student_count = CircleStudent::find()
-                    ->where(['circle_schedule_id' => $schedule->id, 'is_deleted' => 0])
-                    ->count();
-                $schedule->save(false);
+                $schedule->updateStudentCount();
                 return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
             }
         }

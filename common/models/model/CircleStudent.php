@@ -346,11 +346,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             // 📝 Saqlash
             if ($model->save()) {
                 // Schedule ichidagi student_count ni yangilash
-                $schedule->student_count = self::find()
-                    ->where(['circle_schedule_id' => $schedule->id, 'is_deleted' => 0])
-                    ->count();
-
-                $schedule->save(false);
+                $schedule->updateStudentCount();
 
                 $transaction->commit();
                 return true;
@@ -459,8 +455,7 @@ class CircleStudent extends \yii\db\ActiveRecord
         if (empty($errors)) {
             if ($model->save()) {
                 // keep schedule student_count in sync
-                $schedule->student_count = self::find()->where(['circle_schedule_id' => $schedule->id, 'is_deleted' => 0])->count();
-                $schedule->save(false);
+                $schedule->updateStudentCount();
 
                 $transaction->commit();
                 return true;
@@ -1129,7 +1124,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     }
 
                     // student_count ni yangilash
-                    $schedule->updateCounters(['student_count' => 1]);
+                    $schedule->updateStudentCount();
 
                     $added[] = [
                         'student_id' => $student->id,

@@ -100,12 +100,7 @@ class CircleScheduleController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        // Fix: Only update student_count if it has changed, and avoid unnecessary save
-        $studentCount = count($model->circleStudents);
-        if ($model->student_count != $studentCount) {
-            $model->student_count = $studentCount;
-            $model->save(false, ['student_count']);
-        }
+        $model->updateStudentCount();
 
         if (isRole('teacher') && $model->teacher_user_id !== current_user_id()) {
             return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);

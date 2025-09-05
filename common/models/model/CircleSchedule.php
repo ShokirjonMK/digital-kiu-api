@@ -348,7 +348,13 @@ class CircleSchedule extends \yii\db\ActiveRecord
     {
         return $this
             ->hasMany(CircleStudent::className(), ['circle_schedule_id' => 'id'])
-            ->where(['is_deleted' => 0]);
+            ->andWhere(['is_deleted' => 0]);
+    }
+
+    public function updateStudentCount()
+    {
+        $this->student_count = $this->getCircleStudents()->count();
+        $this->save(false, ['student_count']);
     }
 
     public function getCircleAttendances()

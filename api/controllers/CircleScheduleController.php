@@ -100,7 +100,7 @@ class CircleScheduleController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        $model->student_count = $model->enrollments->count();
+        $model->student_count = count($model->circleStudents);
         $model->save(false);
 
         if (isRole('teacher') && $model->teacher_user_id !== current_user_id()) {

@@ -134,6 +134,7 @@ class Circle extends \yii\db\ActiveRecord
             return $this->hasMany(CircleStudent::class, ['circle_id' => 'id'])
                 ->leftJoin('circle_schedule', 'circle_schedule.id = circle_student.circle_schedule_id')
                 ->andWhere(['circle_student.is_deleted' => 0])
+                ->andWhere(['circle_schedule.is_deleted' => 0])
                 ->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
         }
 

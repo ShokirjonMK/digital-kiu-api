@@ -104,6 +104,8 @@ class CircleAttendanceController extends ApiActiveController
             ->andWhere(['id' => $id, 'is_deleted' => 0])
             ->one();
 
+        vd($model);
+
         if (!$model) {
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }

@@ -93,6 +93,7 @@ class Circle extends \yii\db\ActiveRecord
             'students',
             'countSchedules',
             'countStudents',
+            'selecting',
 
 
             'createdBy',
@@ -102,6 +103,11 @@ class Circle extends \yii\db\ActiveRecord
         ];
 
         return $extraFields;
+    }
+
+    public function getSelecting()
+    {
+        return Course::find()->all();
     }
 
     public function getSchedules()

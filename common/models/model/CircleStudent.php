@@ -130,7 +130,8 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public function getAttendances()
     {
-        return $this->hasMany(CircleAttendance::class, ['circle_student_id' => 'id']);
+        return $this->hasMany(CircleAttendance::class, ['circle_student_id' => 'id'])
+            ->andWhere(['or', ['is_deleted' => 0], ['is_deleted' => null]]);
     }
 
     public function getAbsCount()

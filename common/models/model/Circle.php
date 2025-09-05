@@ -107,6 +107,16 @@ class Circle extends \yii\db\ActiveRecord
 
     public function getSelecting()
     {
+        if (isRole('student')) {
+            $course_id = self::student(2)->course_id;
+            $course = Course::find()->where(['id' => $course_id])->one();
+            return [
+                'circle_kuz_from' => $course->circle_kuz_from,
+                'circle_kuz_to' => $course->circle_kuz_to,
+                'circle_bahor_from' => $course->circle_bahor_from,
+                'circle_bahor_to' => $course->circle_bahor_to,
+            ];
+        }
         return Course::find()->all();
     }
 

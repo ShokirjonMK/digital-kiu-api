@@ -127,6 +127,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             'attendDates',
             'my',
             'now',
+            'selecting',
 
             'created_by',
             'updated_by',
@@ -136,6 +137,35 @@ class CircleSchedule extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+
+    public function getSelecting()
+    {
+        if (isRole('student')) {
+            $course_id = self::student(2)->course_id;
+            $course = Course::find()->where(['id' => $course_id])->one();
+
+            $useFall = ((int)$this->semestr_type === 1);
+
+            $fromStr = $useFall ? ($course->circle_kuz_from ?? '') : ($course->circle_bahor_from ?? '');
+            $toStr   = $useFall ? ($course->circle_kuz_to ?? '')   : ($course->circle_bahor_to ?? '');
+
+            if ($fromStr && $toStr) {
+                // Compose with current year (or schedule edu_year_id if that is a year value)
+                $year = (int)date('Y');
+                $fromTs = strtotime($year . '-' . $fromStr);
+                $toTs   = strtotime($year . '-' . $toStr);
+
+                return [
+                    'start' => $fromTs,
+                    'end' => $toTs,
+                    'now' => date('Y-m-d H:i:s'),
+                ];
+            }
+        }
+        return Course::find()->all();
+    }
+
 
     public function getNow()
     {

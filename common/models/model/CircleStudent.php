@@ -285,6 +285,8 @@ class CircleStudent extends \yii\db\ActiveRecord
 
             // 🔄 Circle_id ni schedule'dan avtomatik olish
             $model->circle_id = $schedule->circle_id;
+            $model->edu_year_id = $schedule->edu_year_id;
+            $model->semestr_type = $schedule->semestr_type;
 
             // Yana validatsiya (avvalgi xatoliklar bartaraf etilgan bo‘lsa)
             if (!$model->validate()) {

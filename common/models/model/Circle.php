@@ -130,6 +130,13 @@ class Circle extends \yii\db\ActiveRecord
 
     public function getStudents()
     {
+        if (isRole('teacher')) {
+            return $this->hasMany(CircleStudent::class, ['circle_id' => 'id'])
+                ->leftJoin('circle_schedule', 'circle_schedule.id = circle_student.circle_schedule_id')
+                ->andWhere(['circle_student.is_deleted' => 0])
+                ->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
+        }
+
         // Use relation definition with is_deleted filter for efficiency
         return $this->hasMany(CircleStudent::class, ['circle_id' => 'id'])
             ->andWhere(['is_deleted' => 0]);

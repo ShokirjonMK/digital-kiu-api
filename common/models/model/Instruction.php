@@ -71,7 +71,8 @@ class Instruction extends ActiveRecord
                     'updated_at',
                     'created_by',
                     'updated_by',
-                ], 'integer'
+                ],
+                'integer'
             ],
         ];
     }
@@ -259,7 +260,7 @@ class Instruction extends ActiveRecord
             $miniUrl = $folder . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
             $this->file->saveAs($url, false);
-            return "storage/" . $miniUrl;
+            return "storage/" . $url;
         } else {
             return false;
         }

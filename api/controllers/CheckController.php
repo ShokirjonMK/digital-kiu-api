@@ -46,6 +46,7 @@ class CheckController extends ActiveController
 
         $certificateData = [
             'id' => $model->id,
+            'certificate_status' => $model->certificate_status ?? '',
             'circle' => $model->circle->translate->name ?? '',
             'circle_schedule' => [
                 'start_date' => $model->circleSchedule->start_date ?? '',

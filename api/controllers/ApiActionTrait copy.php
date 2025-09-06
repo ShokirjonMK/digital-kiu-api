@@ -16,7 +16,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Response;
 
-trait ApiActionTrait
+trait ApiActionTraitCopy
 {
     public function behaviors()
     {

@@ -25,7 +25,7 @@ class CircleAttendanceController extends ApiActiveController
 
         $query->leftJoin("circle_schedule", "circle_schedule.id = " . $model->tableName() . ".circle_schedule_id");
 
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('admin')) {
             $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
         }
 

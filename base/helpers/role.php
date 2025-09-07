@@ -83,3 +83,18 @@ function isRole($roleName, $user_id = null)
         return false;
     }
 }
+
+function isRoleOnly($roleName, $user_id = null)
+{
+    if (is_null($user_id)) {
+        $user_id = current_user_id();
+    }
+
+    $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
+
+    if (property_exists($roles, $roleName) && count($roles) == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}

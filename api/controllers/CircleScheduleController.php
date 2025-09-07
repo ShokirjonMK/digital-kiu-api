@@ -43,7 +43,7 @@ class CircleScheduleController extends ApiActiveController
             Yii::error("Error filtering by student building_id: " . $e->getMessage(), __METHOD__);
         }
 
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('admin')) {
             $query->andWhere(['teacher_user_id' => current_user_id()]);
         }
 

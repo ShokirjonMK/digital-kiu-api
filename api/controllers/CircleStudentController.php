@@ -45,7 +45,7 @@ class CircleStudentController extends ApiActiveController
 
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
 
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('admin')) {
             $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
         }
 

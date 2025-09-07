@@ -88,7 +88,7 @@ class CircleAttendance extends \yii\db\ActiveRecord
 
     public function getCircleSchedule()
     {
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('admin')) {
             return $this->hasOne(CircleSchedule::className(), ['id' => 'circle_schedule_id'])
                 ->andWhere(['teacher_user_id' => current_user_id()]);
         }

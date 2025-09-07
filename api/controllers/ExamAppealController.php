@@ -495,7 +495,7 @@ class ExamAppealController extends ApiActiveController
         $post = Yii::$app->request->post();
 
 
-        if (isRole('teacher')) {
+        if (isRole('teacher') && !isRole('admin')) {
             if ($model->teacherAccess->user_id == current_user_id()) {
                 $result = ExamAppeal::teacherUpdateItem($model, $post);
                 if (!is_array($result)) {

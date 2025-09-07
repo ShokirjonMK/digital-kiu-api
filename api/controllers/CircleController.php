@@ -33,7 +33,7 @@ class CircleController extends ApiActiveController
         //     $query->andWhere(['cs.teacher_user_id' => current_user_id()]);
         // }
 
-        iif (isRole('teacher') && !isRole('admin')) {
+        if (isRole('teacher') && !isRole('admin')) {
             $table = $model->tableName();
             $query->leftJoin(
                 'circle_schedule cs',

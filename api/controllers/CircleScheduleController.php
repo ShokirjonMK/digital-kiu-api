@@ -102,7 +102,7 @@ class CircleScheduleController extends ApiActiveController
 
         $model->updateStudentCount();
 
-        if (isRole('teacher') && $model->teacher_user_id !== current_user_id()) {
+        if (isRoleOnly('teacher') && $model->teacher_user_id !== current_user_id()) {
             return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 

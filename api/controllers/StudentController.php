@@ -649,6 +649,17 @@ class  StudentController extends ApiActiveController
             $post['email'] = 'kiu-std-' . $count . '@tsul.uz';
         }
 
+        // Enforce unique profile.passport_pin before create passport_pin is required
+        // passport_pin is required and must be unique
+        if (empty($post['passport_pin'])) {
+            return $this->response(0, _e('Passport PIN is required.'), null, ['passport_pin' => [_e('Passport PIN is required.')]], ResponseStatus::UPROCESSABLE_ENTITY);
+        } else {
+            $existsProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
+            if ($existsProfile) {
+                return $this->response(0, _e('Passport PIN already exists.'), null, ['passport_pin' => [_e('Passport PIN must be unique.')]], ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
+
         $this->load($model, $post);
         $this->load($profile, $post);
         $this->load($student, $post);

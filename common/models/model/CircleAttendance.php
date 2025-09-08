@@ -29,7 +29,7 @@ class CircleAttendance extends \yii\db\ActiveRecord
             [['circle_student_id', 'date'], 'required'],
             [['circle_id', 'circle_student_id', 'circle_schedule_id', 'student_id', 'teacher_user_id', 'reason', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['circle_schedule_id'], 'exist', 'skipOnError' => true, 'targetClass' => CircleSchedule::className(), 'targetAttribute' => ['circle_schedule_id' => 'id']],
-            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['student_id' => 'id']],
+            [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Student::className(), 'targetAttribute' => ['student_id' => 'id']],
             [['date'], 'safe'],
             // [['start_time', 'end_time'], 'string', 'max' => 10],
             [['teacher_user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['teacher_user_id' => 'id']],

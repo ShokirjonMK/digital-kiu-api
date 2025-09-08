@@ -127,8 +127,10 @@ class CircleStudentController extends ApiActiveController
             return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
-        if (isRoleOnly('teacher') $model->circleSchedule->teacher_user_id !== current_user_id()) {
-            return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
+        if (isRoleOnly('teacher')) {
+            if (!$model->circleSchedule || $model->circleSchedule->teacher_user_id !== current_user_id()) {
+                return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
+            }
         }
 
         return $this->response(1, _e('Success.'), $model, null, ResponseStatus::OK);

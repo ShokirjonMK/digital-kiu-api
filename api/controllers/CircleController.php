@@ -5,6 +5,8 @@ namespace api\controllers;
 use base\ResponseStatus;
 use common\models\model\Circle;
 use common\models\model\CircleSchedule;
+use common\models\model\CircleStudent;
+use common\models\model\Student;
 use Yii;
 
 class CircleController extends ApiActiveController
@@ -134,6 +136,109 @@ class CircleController extends ApiActiveController
             return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
         }
         return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
+    }
+
+    public function actionStatistic($lang)
+    {
+        $eduYearId = Yii::$app->request->get('edu_year_id');
+        $courseId  = Yii::$app->request->get('course_id');
+        $cacheKey = 'circle_statistic:' . ($eduYearId ?? 'all') . ':' . ($courseId ?? 'all');
+
+        $cached = Yii::$app->cache->get($cacheKey);
+        if ($cached !== false) {
+            return $this->response(1, _e('Success'), $cached, null, ResponseStatus::OK);
+        }
+
+        // 1) Jami to'garaklar soni (circle)
+        $totalCircles = Circle::find()
+            ->andWhere(['is_deleted' => 0])
+            ->count();
+
+        // 2) Jami guruhlar soni (circle_schedule) [edu_year_id bo'yicha filter]
+        $scheduleQuery = CircleSchedule::find()
+            ->andWhere(['is_deleted' => 0]);
+        if (!empty($eduYearId)) {
+            $scheduleQuery->andWhere(['edu_year_id' => (int)$eduYearId]);
+        }
+        $totalSchedules = $scheduleQuery->count();
+
+        // 3) Tanlagan talabalar (circle_student)
+        $selectedByCourse = null;
+        if (!empty($courseId)) {
+            // course_id berilgan bo'lsa – umumiy son
+            $selectedQuery = CircleStudent::find()
+                ->alias('cs')
+                ->innerJoin('student s', 's.id = cs.student_id')
+                ->andWhere(['cs.is_deleted' => 0, 's.is_deleted' => 0, 's.course_id' => (int)$courseId]);
+            if (!empty($eduYearId)) {
+                $selectedQuery->andWhere(['cs.edu_year_id' => (int)$eduYearId]);
+            }
+            $totalSelectedStudents = $selectedQuery->count();
+        } else {
+            // course_id berilmagan bo'lsa – course bo'yicha guruhlab sanash
+            $selectedAgg = CircleStudent::find()
+                ->alias('cs')
+                ->select(['s.course_id', 'cnt' => 'COUNT(*)'])
+                ->innerJoin('student s', 's.id = cs.student_id')
+                ->andWhere(['cs.is_deleted' => 0, 's.is_deleted' => 0])
+                ->andFilterWhere(['cs.edu_year_id' => $eduYearId])
+                ->groupBy('s.course_id')
+                ->asArray()
+                ->all();
+            $totalSelectedStudents = null;
+            $selectedByCourse = $selectedAgg; // [ ['course_id'=>X,'cnt'=>N], ... ]
+        }
+
+        // 4) Jami tanlamagan talabalar (shu yilda 2 tadan kam tanlaganlar)
+        //    Student.status = 10, is_deleted = 0
+        $subQuery = '(SELECT COUNT(*) FROM {{%circle_student}} cs WHERE cs.student_id = s.id AND cs.is_deleted = 0'
+            . (!empty($eduYearId) ? ' AND cs.edu_year_id = :eduYearId' : '') . ') < :maxCount';
+
+        $params = [
+            ':maxCount' => 2,
+        ];
+        if (!empty($eduYearId)) {
+            $params[':eduYearId'] = (int)$eduYearId;
+        }
+
+        $notSelectedByCourse = null;
+        if (!empty($courseId)) {
+            // course_id berilgan – umumiy son
+            $notSelectedQuery = Student::find()
+                ->alias('s')
+                ->where(['s.status' => 10, 's.is_deleted' => 0, 's.course_id' => (int)$courseId])
+                ->andWhere(new \yii\db\Expression($subQuery), $params);
+            $totalNotSelectedStudents = $notSelectedQuery->count();
+        } else {
+            // course_id berilmagan – course bo'yicha guruhlab sanash
+            $notSelectedAgg = Student::find()
+                ->alias('s')
+                ->select(['s.course_id', 'cnt' => 'COUNT(*)'])
+                ->where(['s.status' => 10, 's.is_deleted' => 0])
+                ->andWhere(new \yii\db\Expression($subQuery), $params)
+                ->groupBy('s.course_id')
+                ->asArray()
+                ->all();
+            $totalNotSelectedStudents = null;
+            $notSelectedByCourse = $notSelectedAgg;
+        }
+
+        $data = [
+            'total_circles' => (int)$totalCircles,
+            'total_schedules' => (int)$totalSchedules,
+        ];
+        if (!empty($courseId)) {
+            $data['total_selected_students'] = (int)$totalSelectedStudents;
+            $data['total_not_selected_students'] = (int)$totalNotSelectedStudents;
+        } else {
+            $data['selected_by_course'] = $selectedByCourse;
+            $data['not_selected_by_course'] = $notSelectedByCourse;
+        }
+
+        // Cache for 60 minutes (3600 seconds)
+        Yii::$app->cache->set($cacheKey, $data, 3600);
+
+        return $this->response(1, _e('Success'), $data, null, ResponseStatus::OK);
     }
 
     // /api/circles/{id}/schedules [GET, POST]

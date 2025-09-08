@@ -160,6 +160,9 @@ $routes = [
     'GET <lang:\w{2}>/circle-students/<id>/certificate' => 'circle-student/certificate',
     'GET <lang:\w{2}>/circle-students/course' => 'circle-student/course',
 
+    // Circle Statistic
+    'GET <lang:\w{2}>/circles/statistic' => 'circle/statistic',
+
     // check Certificate by CircleStudent ID
     'GET <lang:\w{2}>/checks/certificate/<id>' => 'check/certificate',
 

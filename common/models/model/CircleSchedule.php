@@ -556,18 +556,53 @@ class CircleSchedule extends \yii\db\ActiveRecord
                 throw new \Exception("Cannot create zip file: " . $zipPath);
             }
 
-            // 📂 Fayllarni qo‘shish (subfolder sifatida circle_schedule_id saqlanadi)
+            // 📂 Fayllarni qo‘shish (faqat har bir circle_student_id uchun eng oxirgi yaratilgani)
+            // Fayl nomi formati: certificate_{circle_student_id}_{user_id}_{timestamp}.pdf
             $files = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($sourceDir, \FilesystemIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::LEAVES_ONLY
             );
 
+            $latestByStudent = []; // [circle_student_id => ['path' => ..., 'timestamp' => ..., 'basename' => ...]]
+
             foreach ($files as $file) {
-                if ($file->isFile()) {
-                    $filePath     = $file->getRealPath();
-                    $relativePath = $model->id . '/' . basename($filePath);
-                    $zip->addFile($filePath, $relativePath);
+                if (!$file->isFile()) {
+                    continue;
                 }
+
+                $basename = $file->getBasename();
+                if (stripos($basename, 'certificate_') !== 0) {
+                    continue; // only certificate files
+                }
+                if (substr($basename, -4) !== '.pdf') {
+                    continue; // only pdfs
+                }
+
+                // Parse: certificate_{circle_student_id}_{user_id}_{timestamp}.pdf
+                $nameWithoutExt = substr($basename, 0, -4);
+                $parts = explode('_', $nameWithoutExt);
+                if (count($parts) < 4) {
+                    continue; // unexpected format
+                }
+                // parts[0] = 'certificate'
+                $circleStudentId = $parts[1];
+                $timestampStr = $parts[count($parts) - 1];
+                $timestamp = ctype_digit($timestampStr) ? (int)$timestampStr : 0;
+
+                if (!isset($latestByStudent[$circleStudentId]) || $timestamp > $latestByStudent[$circleStudentId]['timestamp']) {
+                    $latestByStudent[$circleStudentId] = [
+                        'path' => $file->getRealPath(),
+                        'timestamp' => $timestamp,
+                        'basename' => $basename,
+                    ];
+                }
+            }
+
+            // Add only the latest files into zip under subfolder {circle_schedule_id}/
+            foreach ($latestByStudent as $item) {
+                $filePath = $item['path'];
+                $relativePath = $model->id . '/' . $item['basename'];
+                $zip->addFile($filePath, $relativePath);
             }
 
             $zip->close();

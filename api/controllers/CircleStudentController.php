@@ -45,7 +45,7 @@ class CircleStudentController extends ApiActiveController
 
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
 
-        if (isRole('teacher') && !isRole('admin')) {
+        if (isRoleOnly('teacher')) {
             $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
         }
 
@@ -127,7 +127,7 @@ class CircleStudentController extends ApiActiveController
             return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
-        if (isRoleOnly('teacher') && $model->circleSchedule->teacher_user_id !== current_user_id()) {
+        if (isRoleOnly('teacher') $model->circleSchedule->teacher_user_id !== current_user_id()) {
             return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
         }
 

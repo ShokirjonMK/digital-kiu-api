@@ -598,7 +598,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
 
-            if ($model->certificate_status == 1) {
+            if ($model->certificate_status == 1 && !empty($model->certificate_file)) {
                 $errors[] = _e('You have already got certificate');
                 $transaction->rollBack();
                 return simplify_errors($errors);
@@ -1021,8 +1021,6 @@ class CircleStudent extends \yii\db\ActiveRecord
      */
     public static function autoEnrollStudentsByCourse($courseId)
     {
-
-
         $data = [];
         $data['status'] = 1;
         $data['message'] = 'Students enrolled successfully.';

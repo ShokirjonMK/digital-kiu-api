@@ -90,9 +90,9 @@ function isRoleOnly($roleName, $user_id = null)
         $user_id = current_user_id();
     }
 
-    $roles = (object)\Yii::$app->authManager->getRolesByUser($user_id);
+    $roles = \Yii::$app->authManager->getRolesByUser($user_id);
 
-    if (property_exists($roles, $roleName) && count($roles) == 1) {
+    if (array_key_exists($roleName, $roles) && count($roles) == 1) {
         return true;
     } else {
         return false;

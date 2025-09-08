@@ -6,6 +6,7 @@ use base\ResponseStatus;
 use common\models\model\CircleAttendance;
 use common\models\model\CircleSchedule;
 use common\models\model\CircleStudent;
+use common\models\model\Profile;
 use Yii;
 
 class CircleScheduleController extends ApiActiveController

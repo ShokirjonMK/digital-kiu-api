@@ -231,8 +231,8 @@ class CircleController extends ApiActiveController
             $data['total_selected_students'] = (int)$totalSelectedStudents;
             $data['total_not_selected_students'] = (int)$totalNotSelectedStudents;
         } else {
-            $data['selected_by_course'] = $selectedByCourse;
-            $data['not_selected_by_course'] = $notSelectedByCourse;
+            $data['total_selected_students'] = $selectedByCourse;
+            $data['total_not_selected_students'] = $notSelectedByCourse;
         }
 
         // Cache for 60 minutes (3600 seconds)

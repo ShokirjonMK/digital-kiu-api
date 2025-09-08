@@ -166,7 +166,7 @@ class CircleAttendance extends \yii\db\ActiveRecord
                 // store as integer timestamp per migration
                 $attendance->date               = $date;
 
-                if (isRole('teacher') && $attendance->teacher_user_id !== current_user_id()) {
+                if (isRoleOnly('teacher') && $attendance->teacher_user_id !== current_user_id()) {
                     $errors[] = _e('You are not authorized to create attendance');
                 } elseif (!$attendance->save()) {
                     $errors[] = $attendance->errors;

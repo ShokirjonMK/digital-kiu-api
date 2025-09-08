@@ -43,15 +43,36 @@ class CircleScheduleController extends ApiActiveController
             Yii::error("Error filtering by student building_id: " . $e->getMessage(), __METHOD__);
         }
 
-        if (isRole('teacher') && !isRole('admin')) {
+        if (isRoleOnly('teacher')) {
             $query->andWhere(['teacher_user_id' => current_user_id()]);
         }
 
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
 
-        // if (!isRole('admin')) {
-        //     $query->andWhere([$model->tableName() . '.teacher_user_id' => current_user_id()]);
-        // }
+        $query->join('INNER JOIN', 'profile', 'profile.user_id = ' . $model->tableName() . '.teacher_user_id');
+
+        //  Filter from Profile 
+        $profile = new Profile();
+        $filter = Yii::$app->request->get('filter');
+        $filter = json_decode(str_replace("'", "", $filter));
+        if (isset($filter)) {
+            foreach ($filter as $attribute => $id) {
+                if (in_array($attribute, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['profile.' . $attribute => $id]);
+                }
+            }
+        }
+
+        $queryfilter = Yii::$app->request->get('filter-like');
+        $queryfilter = json_decode(str_replace("'", "", $queryfilter));
+        if (isset($queryfilter)) {
+            foreach ($queryfilter as $attributeq => $word) {
+                if (in_array($attributeq, $profile->attributes())) {
+                    $query = $query->andFilterWhere(['like', 'profile.' . $attributeq, '%' . $word . '%', false]);
+                }
+            }
+        }
+        // ***
 
 
         $query = $this->filterAll($query, $model);

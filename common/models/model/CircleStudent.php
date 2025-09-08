@@ -149,6 +149,11 @@ class CircleStudent extends \yii\db\ActiveRecord
             'teacher',
             'attendances',
 
+            'absCount',
+            'absCountAll',
+            'myAttendance',
+
+
             'createdBy',
             'updatedBy',
             'createdAt',

@@ -45,10 +45,11 @@ class CircleController extends ApiActiveController
             $query->andWhere(['cs.teacher_user_id' => current_user_id()]);
         }
 
+        if (isRole('student') && (($this->student(2)->edu_form_id ?? null) != 1)) {
+            $query->andWhere([$model->tableName() . '.id' => -1]);
+        }
 
         $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
-
-
 
         $query->groupBy($model->tableName() . '.id');
 

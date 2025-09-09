@@ -237,6 +237,12 @@ class CircleStudent extends \yii\db\ActiveRecord
                 $model->student_id = $post['student_id'];
             }
 
+            if ($model->student->edu_form_id != 1) {
+                $errors[] = _e('Student edu form is not allowed to enroll in circle.');
+                $transaction->rollBack();
+                return simplify_errors($errors);
+            }
+
             // 🔍 Model validatsiyasi
             if (!$model->validate()) {
                 $errors[] = $model->errors;

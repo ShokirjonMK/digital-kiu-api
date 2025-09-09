@@ -29,19 +29,18 @@ class CircleScheduleController extends ApiActiveController
             // ->andWhere([$model->tableName() . '.is_deleted' => 0])
         ;
 
-        try {
-            if (isRole('student')) {
+        if (isRole('student')) {
+            try {
                 $student = $this->student(2);
-                $building_id = null;
-                if ($student && isset($student->direction) && isset($student->direction->building_id)) {
-                    $building_id = $student->direction->building_id;
+                if ($student && !empty($student->direction->building_id)) {
+                    $query->andWhere(['building_id' => $student->direction->building_id]);
                 }
-                if ($building_id !== null) {
-                    $query->andWhere(['building_id' => $building_id]);
+                if (($student->edu_form_id ?? null) != 1) {
+                    $query->andWhere([$model->tableName() . '.id' => -1]);
                 }
+            } catch (\Throwable $e) {
+                Yii::error("Error filtering by student building_id: " . $e->getMessage(), __METHOD__);
             }
-        } catch (\Throwable $e) {
-            Yii::error("Error filtering by student building_id: " . $e->getMessage(), __METHOD__);
         }
 
         if (isRoleOnly('teacher')) {

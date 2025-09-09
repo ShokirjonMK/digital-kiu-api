@@ -701,6 +701,13 @@ class  StudentController extends ApiActiveController
         $model = User::findOne(['id' => $student->user_id]);
         $profile = Profile::findOne(['user_id' => $student->user_id]);
 
+        // Check passport_pin uniqueness before update
+        if (isset($post['passport_pin']) && !empty($post['passport_pin'])) {
+            $existingProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
+            if ($existingProfile && $existingProfile->id != $profile->id) {
+                return $this->response(0, _e('Passport PIN already exists.'), null, ['passport_pin' => [_e('Passport PIN must be unique.')]], ResponseStatus::UPROCESSABLE_ENTITY);
+            }
+        }
 
         $this->load($model, $post);
         $this->load($profile, $post);

@@ -272,7 +272,7 @@ class StudentUser extends ParentUser
                 }
                 // ***
 
-                if (!$profile->save(false)) {
+                if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {
                     if ($student->save()) {
@@ -309,15 +309,15 @@ class StudentUser extends ParentUser
             $errors[] = ['all' => [_e('Please send data.')]];
         }
 
-        // if (!($model->validate())) {
-        //     $errors[] = $model->errors;
-        // }
-        // if (!($profile->validate())) {
-        //     $errors[] = $profile->errors;
-        // }
-        // if (!($student->validate())) {
-        //     $errors[] = $student->errors;
-        // }
+        if (!($model->validate())) {
+            $errors[] = $model->errors;
+        }
+        if (!($profile->validate())) {
+            $errors[] = $profile->errors;
+        }
+        if (!($student->validate())) {
+            $errors[] = $student->errors;
+        }
 
 
         if (isset($post['role'])) {
@@ -378,7 +378,7 @@ class StudentUser extends ParentUser
                 }
                 // ***
 
-                if (!$profile->save(false)) {
+                if (!$profile->save()) {
                     $errors[] = $profile->errors;
                 } else {
                     if ($student->save()) {

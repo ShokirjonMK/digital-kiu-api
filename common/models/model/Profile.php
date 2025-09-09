@@ -158,21 +158,28 @@ class Profile extends \yii\db\ActiveRecord
                     'passport_given_by',
                     'permanent_address'
                 ],
-                'string', 'max' => 255
+                'string',
+                'max' => 255
             ],
             [
                 [
                     'phone',
                     'phone_secondary'
-                ], 'string', 'max' => 50
+                ],
+                'string',
+                'max' => 50
             ],
             [
                 [
                     'description'
-                ], 'string'
+                ],
+                'string'
             ],
 
-            [['passport_pin'], 'unique'],
+            [['passport_pin'], 'unique', 'targetAttribute' => ['passport_pin'], 'filter' => function ($query) {
+                // Exclude soft-deleted records from uniqueness check
+                $query->andWhere(['is_deleted' => 0]);
+            }, 'message' => _e('Passport PIN must be unique.')],
 
             [['avatar'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => $this->avatarMaxSize],
             [['passport_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf, png, jpg', 'maxSize' => $this->passportFileMaxSize],

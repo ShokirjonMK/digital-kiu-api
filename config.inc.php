@@ -23,9 +23,9 @@
     'database' => [
         'db' => [
             'class' => 'yii\\db\\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=digital_a3',
-            'username' => 'digital-kiu',
-            'password' => 'J1MKg31&eDfVzn',
+            'dsn' => 'mysql:host=localhost;dbname=kiu_api',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8mb4',
             'attributes' => [
                 \yii\db\mssql\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'));',

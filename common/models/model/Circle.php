@@ -122,6 +122,12 @@ class Circle extends \yii\db\ActiveRecord
 
     public function getSchedules()
     {
+        if (isRole('student')) {
+            return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
+                ->andWhere(['is_deleted' => 0])
+                ->andWhere(['building_id' => self::student(2)->direction->building_id ?? null]);
+        }
+
         if (isRole('teacher')) {
             return $this->hasMany(CircleSchedule::class, ['circle_id' => 'id'])
                 ->andWhere(['is_deleted' => 0])

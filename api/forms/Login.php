@@ -28,22 +28,6 @@ class Login extends Model
         ];
     }
 
-    /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
-     */
-    public function validatePassword($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || (!$user->validatePassword($this->password))) {
-                $this->addError($attribute, _e('Incorrect login or password.'));
-            }
-        }
-    }
 
     /**
      * Logs in a user using the provided username and password.
@@ -202,12 +186,60 @@ class Login extends Model
     }
 
     /**
-     * Finds user by [[username]]
+     * Finds user by [[username]] or passport credentials
      *
      * @return User|null
      */
     protected function getUser()
     {
-        return User::findByUsername($this->username);
+        // Avval oddiy username orqali qidiramiz
+        $user = User::findByUsername($this->username);
+        
+        if ($user) {
+            return $user;
+        }
+        
+        // Agar username topilmasa, passport ma'lumotlari bilan qidiramiz
+        // Bu holatda username passport_pin bo'lishi mumkin
+        $user = User::find()
+            ->joinWith('profile')
+            ->where(['profile.passport_pin' => $this->username])
+            ->one();
+            
+        return $user;
+    }
+    
+    /**
+     * Validates password for both regular and passport login
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validatePassword($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+            if (!$user) {
+                $this->addError($attribute, _e('Incorrect login or password.'));
+                return;
+            }
+            
+            // Oddiy parol tekshiruvi
+            if ($user->validatePassword($this->password)) {
+                return;
+            }
+            
+            // Agar oddiy parol mos kelmasa, passport ma'lumotlari bilan tekshiramiz
+            if ($user->profile && 
+                $user->profile->passport_seria && 
+                $user->profile->passport_number) {
+                $passportPassword = $user->profile->passport_seria . $user->profile->passport_number;
+                if ($this->password === $passportPassword) {
+                    return;
+                }
+            }
+            
+            $this->addError($attribute, _e('Incorrect login or password.'));
+        }
     }
 }

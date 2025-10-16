@@ -30,8 +30,8 @@ class CircleStudent extends \yii\db\ActiveRecord
     }
 
     const MAX_SCHEDULES_PER_SEMESTER = 2;
-    const STATUS_RANDOM = 2;
     const STATUS_MANUAL = 1;
+    const STATUS_RANDOM = 2;
 
     public function rules()
     {

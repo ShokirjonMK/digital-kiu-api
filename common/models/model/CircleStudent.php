@@ -30,6 +30,8 @@ class CircleStudent extends \yii\db\ActiveRecord
     }
 
     const MAX_SCHEDULES_PER_SEMESTER = 2;
+    const STATUS_RANDOM = 2;
+    const STATUS_MANUAL = 1;
 
     public function rules()
     {
@@ -1127,6 +1129,8 @@ class CircleStudent extends \yii\db\ActiveRecord
                     $circleStudent->updated_by        = Yii::$app->user->id ?? 0;
                     $circleStudent->created_at        = time();
                     $circleStudent->updated_at        = time();
+                    $circleStudent->status            = self::STATUS_RANDOM;
+
 
                     if (!$circleStudent->save()) {
                         throw new \Exception(json_encode($circleStudent->errors));

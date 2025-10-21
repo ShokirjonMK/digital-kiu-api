@@ -344,6 +344,35 @@ class CircleStudent extends \yii\db\ActiveRecord
                 return simplify_errors($errors);
             }
 
+            // ✅ 4) Talabaning vaqt to'qnashuvi tekshiruvi (time conflict check)
+            $existingSchedules = self::find()
+                ->alias('cs')
+                ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                ->where([
+                    'cs.student_id'   => $model->student_id,
+                    'cs.is_deleted'   => 0,
+                    'sch.edu_year_id' => $schedule->edu_year_id,
+                    'sch.week_id'     => $schedule->week_id, // same day of week
+                ])
+                ->select(['sch.start_time', 'sch.end_time', 'sch.id'])
+                ->asArray()
+                ->all();
+
+            foreach ($existingSchedules as $existing) {
+                $existingStart = $existing['start_time'];
+                $existingEnd   = $existing['end_time'];
+                $newStart      = $schedule->start_time;
+                $newEnd        = $schedule->end_time;
+
+                // Vaqt to'qnashuvi: start1 < end2 AND start2 < end1
+                if ($newStart < $existingEnd && $existingStart < $newEnd) {
+                    $errors[] = _e('You have a schedule conflict on this day and time') .
+                        ' (' . $existingStart . ' - ' . $existingEnd . ')';
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+            }
+
             // 🔄 Circle_id ni schedule'dan avtomatik olish
             $model->circle_id = $schedule->circle_id;
             $model->edu_year_id = $schedule->edu_year_id;

@@ -330,7 +330,8 @@ class CircleStudentController extends ApiActiveController
             ->where([
                 's.status'     => 10,
                 's.is_deleted' => 0,
-            ]);
+            ])
+            ->andWhere(['s.edu_form_id' => 1]);
 
         // 4) Kurs bo‘yicha filter (ixtiyoriy)
         if (!empty($courseId)) {

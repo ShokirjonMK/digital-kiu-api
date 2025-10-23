@@ -1159,7 +1159,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     $circleStudent->created_at        = time();
                     $circleStudent->updated_at        = time();
                     $circleStudent->status            = self::STATUS_RANDOM;
-
+                    $circleStudent->semestr_type      = $schedule->semestr_type;
 
                     if (!$circleStudent->save()) {
                         throw new \Exception(json_encode($circleStudent->errors));

@@ -1094,7 +1094,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
                     ->where([
                         'cs.student_id' => $student->id,
-                        'cs.edu_year_id' => $eduYearId,
+                        // 'cs.edu_year_id' => $eduYearId,
                         'cs.is_deleted' => 0
                     ])
                     ->select('sch.circle_id')

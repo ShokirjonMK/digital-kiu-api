@@ -377,6 +377,9 @@ class CircleStudentController extends ApiActiveController
         $query = $this->sort($query);
 
         // ⚠️ Ishlab chiqarishda dd() qo‘ymang — u skriptni to‘xtatadi.
+        if (Yii::$app->request->get('sql')) {
+            dd($query->createCommand()->rawSql);
+        }
         // dd($query->createCommand()->rawSql);
 
         // 9) Ma’lumotni olish va javob

@@ -23,9 +23,6 @@ class CircleScheduleController extends ApiActiveController
     public function actionIndex($lang)
     {
 
-        ini_set('memory_limit', '1024M'); // yoki 1G
-
-
         $model = new CircleSchedule();
 
         $query = $model

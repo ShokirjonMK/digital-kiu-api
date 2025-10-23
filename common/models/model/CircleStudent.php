@@ -83,7 +83,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             }
 
             if ($query->exists()) {
-                $this->addError($attribute, _e('Student already enrolled to this circle.'));
+                $this->addError($attribute, _e('Student already enrolled to this circle. ' . $this->circle_id . ' ' . $this->student_id));
             }
         }
     }

@@ -426,16 +426,6 @@ class CircleSchedule extends \yii\db\ActiveRecord
             }
         }
 
-        // o'qituvchi bo'sh ekanini tekshirish (edu_year_id, start_time, week_id)
-        $existingSchedule = self::find()
-            ->where(['teacher_user_id' => $model->teacher_user_id, 'start_time' => $model->start_time, 'week_id' => $model->week_id, 'edu_year_id' => $model->edu_year_id, 'is_deleted' => 0])
-            ->exists();
-        if ($existingSchedule) {
-            $errors[] = _e('Teacher is already busy at this time');
-            $transaction->rollBack();
-            return simplify_errors($errors);
-        }
-
         $model->start_time = date('H:i', strtotime($model->start_time));
         $model->end_time = date('H:i', strtotime($model->end_time));
 
@@ -444,6 +434,27 @@ class CircleSchedule extends \yii\db\ActiveRecord
             $transaction->rollBack();
             return simplify_errors($errors);
         }
+
+        // o'qituvchi bo'sh ekanini tekshirish (edu_year_id, start_time, week_id)
+        $existingSchedule = self::find()
+            ->where([
+                'teacher_user_id' => $model->teacher_user_id,
+                'week_id' => $model->week_id,
+                'edu_year_id' => $model->edu_year_id,
+
+                'is_deleted' => 0
+            ])
+            ->andWhere(['>=', 'start_time', $model->start_time])
+            ->andWhere(['<=', 'end_time', $model->end_time])
+            ->exists();
+
+        if ($existingSchedule) {
+            $errors[] = _e('Teacher is already busy at this time');
+            $transaction->rollBack();
+            return simplify_errors($errors);
+        }
+
+
 
         if (!($model->validate())) {
             $errors[] = $model->errors;

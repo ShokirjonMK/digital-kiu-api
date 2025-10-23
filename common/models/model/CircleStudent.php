@@ -1283,6 +1283,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                         'sch.is_deleted'  => 0,
                     ])
                     ->andWhere(new \yii\db\Expression('sch.student_count < sch.max_student_count'))
+                    ->andWhere(['sch.building_id' => $st->direction->building_id])
                     ->andWhere([
                         'NOT EXISTS',
                         CircleStudent::find()->alias('csy')

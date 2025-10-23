@@ -1106,38 +1106,51 @@ class CircleStudent extends \yii\db\ActiveRecord
 
                 // 2.1️⃣ Get ALL active circle enrollments (across all years) to avoid duplicate circle_id
                 // This is needed because validateUniqueEnrollment checks across all years
+                // 1) IDs of circles the student already takes (distinct, cleaned, ints)
+                /** */
                 $takenCircleIds = CircleStudent::find()
                     ->alias('cs')
                     ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
                     ->where([
-                        'cs.student_id' => $student->id,
-                        'cs.is_deleted' => 0
+                        'cs.student_id' => (int)$student->id,
+                        'cs.is_deleted' => 0,
                     ])
                     ->select('sch.circle_id')
                     ->distinct()
                     ->column();
 
-                // 3️⃣ Mos bo'sh circle_schedule larini olish
-                // Har bir circle_id bo'yicha faqat bittadan schedule olish
-                $query = CircleSchedule::find()
-                    ->where([
-                        'edu_year_id' => $eduYearId,
-                        'status' => 1,
-                        'is_deleted' => 0
+                // clean up: remove null/empty, cast to int, unique, reindex
+                $takenCircleIds = array_values(array_unique(array_filter(array_map('intval', $takenCircleIds))));
+
+                // 2) Subquery: one candidate per circle (min student_count), filtered by capacity & year
+                $baseFilter = [
+                    's.edu_year_id' => (int)$eduYearId,
+                    // 's.status'      => 1,
+                    's.is_deleted'  => 0,
+                ];
+
+                $sub = CircleSchedule::find()
+                    ->alias('s')
+                    ->select([
+                        's.circle_id',
+                        'min_sc' => 'MIN(s.student_count)', // pick lowest load per circle
                     ])
-                    ->andWhere(['<', 'student_count', new \yii\db\Expression('max_student_count')]);
+                    ->where($baseFilter)
+                    ->andWhere('s.student_count < s.max_student_count') // capacity
+                    ->andFilterWhere(['not in', 's.circle_id', $takenCircleIds]) // safe if empty
+                    ->groupBy('s.circle_id');
 
-                // Exclude circles the student is already enrolled in
-                if (!empty($takenCircleIds)) {
-                    $query->andWhere(['not in', 'circle_id', $takenCircleIds]);
-                }
-
-                $schedules = $query->orderBy([
-                    'student_count' => SORT_ASC,
-                    // new \yii\db\Expression('RAND()')
-                ])
+                // 3) Join back to get the actual schedule rows that match the min student_count
+                $schedules = CircleSchedule::find()
+                    ->alias('sch')
+                    ->innerJoin(['x' => $sub], 'x.circle_id = sch.circle_id AND x.min_sc = sch.student_count')
+                    ->where($baseFilter)
+                    ->andWhere('sch.student_count < sch.max_student_count')
+                    ->andFilterWhere(['not in', 'sch.circle_id', $takenCircleIds])
+                    ->orderBy(['sch.student_count' => SORT_ASC, 'sch.id' => SORT_ASC]) // stable tie-break
                     ->asArray()
                     ->all();
+                /** */
 
                 // Har bir circle_id bo'yicha faqat bittadan schedule tanlab olish
                 $uniqueSchedules = [];

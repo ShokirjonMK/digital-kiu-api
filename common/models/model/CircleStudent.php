@@ -1056,7 +1056,7 @@ class CircleStudent extends \yii\db\ActiveRecord
      * @param int $courseId
      * @return array|bool
      */
-    public static function autoEnrollStudentsByCourse($courseId)
+    public static function autoEnrollStudentsByCourseOld($courseId)
     {
         $data = [];
         $data['status'] = 1;
@@ -1106,51 +1106,38 @@ class CircleStudent extends \yii\db\ActiveRecord
 
                 // 2.1️⃣ Get ALL active circle enrollments (across all years) to avoid duplicate circle_id
                 // This is needed because validateUniqueEnrollment checks across all years
-                // 1) IDs of circles the student already takes (distinct, cleaned, ints)
-                /** */
                 $takenCircleIds = CircleStudent::find()
                     ->alias('cs')
                     ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
                     ->where([
-                        'cs.student_id' => (int)$student->id,
-                        'cs.is_deleted' => 0,
+                        'cs.student_id' => $student->id,
+                        'cs.is_deleted' => 0
                     ])
                     ->select('sch.circle_id')
                     ->distinct()
                     ->column();
 
-                // clean up: remove null/empty, cast to int, unique, reindex
-                $takenCircleIds = array_values(array_unique(array_filter(array_map('intval', $takenCircleIds))));
-
-                // 2) Subquery: one candidate per circle (min student_count), filtered by capacity & year
-                $baseFilter = [
-                    's.edu_year_id' => (int)$eduYearId,
-                    // 's.status'      => 1,
-                    's.is_deleted'  => 0,
-                ];
-
-                $sub = CircleSchedule::find()
-                    ->alias('s')
-                    ->select([
-                        's.circle_id',
-                        'min_sc' => 'MIN(s.student_count)', // pick lowest load per circle
+                // 3️⃣ Mos bo'sh circle_schedule larini olish
+                // Har bir circle_id bo'yicha faqat bittadan schedule olish
+                $query = CircleSchedule::find()
+                    ->where([
+                        'edu_year_id' => $eduYearId,
+                        'status' => 1,
+                        'is_deleted' => 0
                     ])
-                    ->where($baseFilter)
-                    ->andWhere('s.student_count < s.max_student_count') // capacity
-                    ->andFilterWhere(['not in', 's.circle_id', $takenCircleIds]) // safe if empty
-                    ->groupBy('s.circle_id');
+                    ->andWhere(['<', 'student_count', new \yii\db\Expression('max_student_count')]);
 
-                // 3) Join back to get the actual schedule rows that match the min student_count
-                $schedules = CircleSchedule::find()
-                    ->alias('sch')
-                    ->innerJoin(['x' => $sub], 'x.circle_id = sch.circle_id AND x.min_sc = sch.student_count')
-                    ->where($baseFilter)
-                    ->andWhere('sch.student_count < sch.max_student_count')
-                    ->andFilterWhere(['not in', 'sch.circle_id', $takenCircleIds])
-                    ->orderBy(['sch.student_count' => SORT_ASC, 'sch.id' => SORT_ASC]) // stable tie-break
+                // Exclude circles the student is already enrolled in
+                if (!empty($takenCircleIds)) {
+                    $query->andWhere(['not in', 'circle_id', $takenCircleIds]);
+                }
+
+                $schedules = $query->orderBy([
+                    'student_count' => SORT_ASC,
+                    // new \yii\db\Expression('RAND()')
+                ])
                     ->asArray()
                     ->all();
-                /** */
 
                 // Har bir circle_id bo'yicha faqat bittadan schedule tanlab olish
                 $uniqueSchedules = [];
@@ -1208,6 +1195,175 @@ class CircleStudent extends \yii\db\ActiveRecord
             $data['message'] = 'Error';
             $data['error'] = $e->getMessage();
             return $data;
+        }
+    }
+
+    public static function autoEnrollStudentsByCourse($courseId)
+    {
+        $resp = ['status' => 1, 'message' => 'Students enrolled successfully.', 'added' => []];
+
+        // 1) Joriy o‘quv yili ID
+        $eduYear = EduYear::find()->where(['is_deleted' => 0, 'status' => 1])
+            ->orderBy(['id' => SORT_DESC])->one();
+        if (!$eduYear) {
+            return ['status' => 0, 'message' => 'EduYear not found'];
+        }
+        $eduYearId = (int)$eduYear->id;
+
+        $db = Yii::$app->db;
+        $tx = $db->beginTransaction();
+        try {
+            // 2) Shu kursdagi, joriy yilda 2 tadan kam circle_student yozuvi bor talabalar
+            $students = Student::find()->alias('s')
+                ->where(['s.status' => 10, 's.course_id' => (int)$courseId])
+                ->andWhere([
+                    '<',
+                    new \yii\db\Expression(
+                        '(SELECT COUNT(*) FROM circle_student cs 
+                      WHERE cs.student_id = s.id 
+                        AND cs.edu_year_id = :ey 
+                        AND cs.is_deleted = 0)'
+                    ),
+                    2
+                ])
+                ->addParams([':ey' => $eduYearId])
+                ->all();
+
+            foreach ($students as $st) {
+                // 3) Joriy yil hisobini aniqlash
+                $currentYearCount = (int)CircleStudent::find()
+                    ->where([
+                        'student_id' => $st->id,
+                        'edu_year_id' => $eduYearId,
+                        'is_deleted' => 0
+                    ])->count();
+
+                $need = 2 - $currentYearCount;
+                if ($need <= 0) {
+                    continue;
+                }
+
+                // 4) Kandidat jadvalni tanlash: 
+                // - faqat joriy yil
+                // - active, is_deleted = 0
+                // - capacity bor (student_count < max_student_count)
+                // - shu talaba ilgari (istalgan yilda) qatnashgan circle_id lar YUQ (NOT EXISTS)
+                //
+                // Har bir circle_id uchun "eng kam student_count" jadvalni olib kelish uchun subquery (min_sc)
+                $baseWhere = [
+                    's.edu_year_id' => $eduYearId,
+                    's.status'      => 1,
+                    's.is_deleted'  => 0,
+                ];
+
+                $sub = CircleSchedule::find()->alias('s')
+                    ->select([
+                        's.circle_id',
+                        'min_sc' => new \yii\db\Expression('MIN(s.student_count)')
+                    ])
+                    ->where($baseWhere)
+                    ->andWhere(new \yii\db\Expression('s.student_count < s.max_student_count'))
+                    ->andWhere([
+                        'NOT EXISTS',
+                        CircleStudent::find()->alias('cs2')
+                            ->innerJoin('circle_schedule sch2', 'sch2.id = cs2.circle_schedule_id')
+                            ->where('sch2.circle_id = s.circle_id')
+                            ->andWhere(['cs2.student_id' => $st->id, 'cs2.is_deleted' => 0])
+                    ])
+                    ->groupBy('s.circle_id');
+
+                // Natijaviy tanlov: min_sc ga mos real schedule qatori
+                $candidates = CircleSchedule::find()->alias('sch')
+                    ->innerJoin(['x' => $sub], 'x.circle_id = sch.circle_id AND x.min_sc = sch.student_count')
+                    ->where($baseWhere)
+                    ->andWhere(new \yii\db\Expression('sch.student_count < sch.max_student_count'))
+                    ->andWhere([
+                        'NOT EXISTS',
+                        CircleStudent::find()->alias('cs3')
+                            ->innerJoin('circle_schedule sch3', 'sch3.id = cs3.circle_schedule_id')
+                            ->where('sch3.circle_id = sch.circle_id')
+                            ->andWhere(['cs3.student_id' => $st->id, 'cs3.is_deleted' => 0])
+                    ])
+                    ->orderBy(['sch.student_count' => SORT_ASC, 'sch.id' => SORT_ASC])
+                    ->limit($need)                 // kerakli sondagina olamiz
+                    ->all();
+
+                if (!$candidates) {
+                    continue;
+                }
+
+                // 5) Kiritish: ikki pog‘ona xavfsizlik
+                foreach ($candidates as $schedule) {
+                    // 5.1) Yana bir marta tekshiruv (validateUniqueEnrollment oldidan)
+                    $already = CircleStudent::find()->alias('z')
+                        ->innerJoin('circle_schedule zsch', 'zsch.id = z.circle_schedule_id')
+                        ->where([
+                            'z.student_id' => $st->id,
+                            'z.is_deleted' => 0,
+                            'zsch.circle_id' => $schedule->circle_id
+                        ])->exists();
+                    if ($already) {
+                        // bu holda validatsiya urishmasin — shunchaki o‘tkazamiz
+                        continue;
+                    }
+
+                    // 5.2) Capacity-ni atomar tekshirgan holda band qilish:
+                    //      UPDATE ... SET student_count = student_count + 1 
+                    //      WHERE id=:id AND student_count < max_student_count
+                    $affected = $db->createCommand(
+                        'UPDATE circle_schedule 
+                      SET student_count = student_count + 1, updated_at = :ts 
+                      WHERE id = :id AND student_count < max_student_count',
+                        [
+                            ':ts' => time(),
+                            ':id' => $schedule->id
+                        ]
+                    )->execute();
+
+                    if ($affected === 0) {
+                        // shu orada joy tugagan — keyingisiga o‘tamiz
+                        continue;
+                    }
+
+                    // 5.3) Endi yozuvni yaratamiz
+                    $cs = new CircleStudent();
+                    $cs->student_id         = (int)$st->id;
+                    $cs->student_user_id    = (int)$st->user_id;
+                    $cs->circle_id          = (int)$schedule->circle_id;
+                    $cs->circle_schedule_id = (int)$schedule->id;
+                    $cs->edu_year_id        = $eduYearId;
+                    $cs->created_by         = Yii::$app->user->id ?? 0;
+                    $cs->updated_by         = Yii::$app->user->id ?? 0;
+                    $cs->created_at         = time();
+                    $cs->updated_at         = time();
+                    $cs->status             = CircleStudent::STATUS_RANDOM;
+                    $cs->semestr_type       = $schedule->semestr_type;
+
+                    if (!$cs->save()) {
+                        // Rollback qilishdan oldin capacity-ni qaytarib qo‘yamiz
+                        $db->createCommand(
+                            'UPDATE circle_schedule 
+                           SET student_count = student_count - 1, updated_at = :ts 
+                         WHERE id = :id AND student_count > 0',
+                            [':ts' => time(), ':id' => $schedule->id]
+                        )->execute();
+
+                        throw new \Exception(json_encode($cs->errors, JSON_UNESCAPED_UNICODE));
+                    }
+
+                    $resp['added'][] = [
+                        'student_id'  => (int)$st->id,
+                        'circle_id'   => (int)$schedule->circle_id,
+                        'schedule_id' => (int)$schedule->id,
+                    ];
+                }
+            }
+
+            $tx->commit();
+            return $resp;
+        } catch (\Throwable $e) {
+            $tx->rollBack();
+            return ['status' => 0, 'message' => 'Error', 'error' => $e->getMessage()];
         }
     }
 }

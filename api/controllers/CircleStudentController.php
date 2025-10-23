@@ -199,7 +199,7 @@ class CircleStudentController extends ApiActiveController
     /**
      * Get not selected students with filters and pagination support
      */
-    private function getNotSelectedStudents()
+    private function getNotSelectedStudentsOld()
     {
         $request   = Yii::$app->request;
         $courseId  = $request->get('course_id');
@@ -285,6 +285,101 @@ class CircleStudentController extends ApiActiveController
         dd($query->createCommand()->rawSql);
 
         // 8) Ma’lumotni olish va javob
+        $data = $this->getData($query);
+        return $this->response(1, _e('Success'), $data);
+    }
+
+    private function getNotSelectedStudents()
+    {
+        $request   = Yii::$app->request;
+        $courseId  = (int)$request->get('course_id');
+        $eduYearId = (int)$request->get('edu_year_id');
+
+        // 1) edu_year_id aniqlash (fallback: oxirgi aktiv yil)
+        if (empty($eduYearId)) {
+            $eduYearId = (int)EduYear::find()
+                ->select('id')
+                ->where(['is_deleted' => 0, 'status' => 1])
+                ->orderBy(['id' => SORT_DESC])
+                ->scalar();
+
+            if (!$eduYearId) {
+                return $this->response(0, _e('Active edu year not found.'), null, null, ResponseStatus::BAD_REQUEST);
+            }
+        }
+
+        // 2) Shu o‘quv yilida har bir student uchun nechta circle_student borligini hisoblaydigan subquery
+        $csAgg = (new \yii\db\Query())
+            ->select([
+                'student_id',
+                'cnt' => new \yii\db\Expression('COUNT(*)'),
+            ])
+            ->from('{{%circle_student}} cs')
+            ->where([
+                'cs.edu_year_id' => $eduYearId,
+                'cs.is_deleted'  => 0,
+            ])
+            ->groupBy('cs.student_id');
+
+        // 3) Asosiy query: student + profile
+        $query = Student::find()
+            ->alias('s')
+            ->innerJoin(Profile::tableName() . ' p', 'p.user_id = s.user_id')
+            // Subquery bilan LEFT JOIN: yo'q bo‘lsa NULL cnt, bo‘lsa real COUNT
+            ->leftJoin(['csa' => $csAgg], 'csa.student_id = s.id')
+            ->where([
+                's.status'     => 10,
+                's.is_deleted' => 0,
+            ]);
+
+        // 4) Kurs bo‘yicha filter (ixtiyoriy)
+        if (!empty($courseId)) {
+            $query->andWhere(['s.course_id' => $courseId]);
+        }
+
+        // 5) Joriy yilda circle_student < 2 bo‘lganlar (0 yoki 1)
+        $query->andWhere([
+            'or',
+            ['csa.cnt' => null],              // umuman yo‘q (0 ta)
+            ['<', 'csa.cnt', 2],              // 1 ta
+        ]);
+
+        // 6) Profile bo‘yicha exact filterlar: ?filter={"region_id":8,"gender":1}
+        $profile    = new Profile();
+        $filterJson = $request->get('filter');
+        if (!empty($filterJson)) {
+            $filterArr = json_decode($filterJson, true);
+            if (is_array($filterArr)) {
+                foreach ($filterArr as $attr => $val) {
+                    if ($profile->hasAttribute($attr)) {
+                        $query->andFilterWhere(['p.' . $attr => $val]);
+                    }
+                }
+            }
+        }
+
+        // 7) Profile bo‘yicha LIKE qidiruv: ?filter-like={"last_name":"Ali"}
+        $filterLikeJson = $request->get('filter-like');
+        if (!empty($filterLikeJson)) {
+            $filterLikeArr = json_decode($filterLikeJson, true);
+            if (is_array($filterLikeArr)) {
+                foreach ($filterLikeArr as $attr => $word) {
+                    if ($profile->hasAttribute($attr) && $word !== '' && $word !== null) {
+                        $query->andFilterWhere(['like', 'p.' . $attr, $word]);
+                    }
+                }
+            }
+        }
+
+        // 8) Umumiy filter va sort (sizning helperlaringiz)
+        $model = new Student();
+        $query = $this->filterAll($query, $model);
+        $query = $this->sort($query);
+
+        // ⚠️ Ishlab chiqarishda dd() qo‘ymang — u skriptni to‘xtatadi.
+        // dd($query->createCommand()->rawSql);
+
+        // 9) Ma’lumotni olish va javob
         $data = $this->getData($query);
         return $this->response(1, _e('Success'), $data);
     }

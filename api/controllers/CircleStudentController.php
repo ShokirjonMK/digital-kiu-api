@@ -282,6 +282,8 @@ class CircleStudentController extends ApiActiveController
         $query = $this->filterAll($query, $model);
         $query = $this->sort($query);
 
+        dd($query->createCommand()->rawSql);
+
         // 8) Ma’lumotni olish va javob
         $data = $this->getData($query);
         return $this->response(1, _e('Success'), $data);

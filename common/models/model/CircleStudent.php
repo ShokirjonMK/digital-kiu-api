@@ -1088,43 +1088,54 @@ class CircleStudent extends \yii\db\ActiveRecord
 
             foreach ($students as $student) {
 
-                // 2️⃣ Studentning mavjud circle_id larini olish
-                $takenCircleIds = CircleStudent::find()
-                    ->alias('cs')
-                    ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                // 2️⃣ Studentning joriy yildagi circle_student sonini tekshirish
+                $currentYearCount = CircleStudent::find()
                     ->where([
-                        'cs.student_id' => $student->id,
-                        // 'cs.edu_year_id' => $eduYearId,
-                        'cs.is_deleted' => 0
+                        'student_id' => $student->id,
+                        'edu_year_id' => $eduYearId,
+                        'is_deleted' => 0
                     ])
-                    ->select('sch.circle_id')
-                    ->column();
+                    ->count();
 
                 // Hali nechta kerak?
-                $currentCount = count($takenCircleIds);
-
-                $need = 2 - $currentCount;
+                $need = 2 - $currentYearCount;
 
                 if ($need <= 0) {
                     continue;
                 }
 
+                // 2.1️⃣ Get ALL active circle enrollments (across all years) to avoid duplicate circle_id
+                // This is needed because validateUniqueEnrollment checks across all years
+                $takenCircleIds = CircleStudent::find()
+                    ->alias('cs')
+                    ->innerJoin('circle_schedule sch', 'sch.id = cs.circle_schedule_id')
+                    ->where([
+                        'cs.student_id' => $student->id,
+                        'cs.is_deleted' => 0
+                    ])
+                    ->select('sch.circle_id')
+                    ->distinct()
+                    ->column();
 
-
-                // 3️⃣ Mos bo‘sh circle_schedule larini olish
+                // 3️⃣ Mos bo'sh circle_schedule larini olish
                 // Har bir circle_id bo'yicha faqat bittadan schedule olish
-                $schedules = CircleSchedule::find()
+                $query = CircleSchedule::find()
                     ->where([
                         'edu_year_id' => $eduYearId,
                         'status' => 1,
                         'is_deleted' => 0
                     ])
-                    ->andWhere(['<', 'student_count', new \yii\db\Expression('max_student_count')])
-                    ->andFilterWhere(['not in', 'circle_id', $takenCircleIds])
-                    ->orderBy([
-                        'student_count' => SORT_ASC,
-                        // new \yii\db\Expression('RAND()')
-                    ])
+                    ->andWhere(['<', 'student_count', new \yii\db\Expression('max_student_count')]);
+
+                // Exclude circles the student is already enrolled in
+                if (!empty($takenCircleIds)) {
+                    $query->andWhere(['not in', 'circle_id', $takenCircleIds]);
+                }
+
+                $schedules = $query->orderBy([
+                    'student_count' => SORT_ASC,
+                    // new \yii\db\Expression('RAND()')
+                ])
                     ->asArray()
                     ->all();
 

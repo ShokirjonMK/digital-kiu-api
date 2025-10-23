@@ -1200,8 +1200,9 @@ class CircleStudent extends \yii\db\ActiveRecord
 
     public static function autoEnrollStudentsByCourse($courseId)
     {
-        $resp = ['status' => 1, 'message' => 'Students enrolled successfully.', 'added' => []];
+        $res = ['status' => 1, 'message' => 'Students enrolled successfully.', 'added' => []];
 
+        // 0) Joriy o‘quv yili
         $eduYear = EduYear::find()
             ->where(['is_deleted' => 0, 'status' => 1])
             ->orderBy(['id' => SORT_DESC])
@@ -1216,15 +1217,15 @@ class CircleStudent extends \yii\db\ActiveRecord
         $tx = $db->beginTransaction();
 
         try {
-            // 1) Shu kursdagi, joriy yilda 2 tadan kam circle_student yozuvi bor talabalar
+            // 1) Shu kursdagi, joriy yilda 2 tadan kam CircleStudent yozuvi bor talabalar
             $students = Student::find()->alias('s')
                 ->where(['s.status' => 10, 's.course_id' => (int)$courseId])
                 ->andWhere([
                     '<',
                     new \yii\db\Expression(
-                        '(SELECT COUNT(*) FROM circle_student cs 
-                      WHERE cs.student_id = s.id 
-                        AND cs.edu_year_id = :ey 
+                        '(SELECT COUNT(*) FROM circle_student cs
+                      WHERE cs.student_id = s.id
+                        AND cs.edu_year_id = :ey
                         AND cs.is_deleted = 0)'
                     ),
                     2
@@ -1233,20 +1234,24 @@ class CircleStudent extends \yii\db\ActiveRecord
                 ->all();
 
             foreach ($students as $st) {
-                // 2) Joriy yil uchun nechta yozuvi bor?
-                $currentYearCount = (int)CircleStudent::find()
+                // 2) Joriy yil uchun mavjud yozuvlar soni
+                $current = (int)CircleStudent::find()
                     ->where([
-                        'student_id' => $st->id,
+                        'student_id'  => (int)$st->id,
                         'edu_year_id' => $eduYearId,
-                        'is_deleted' => 0,
+                        'is_deleted'  => 0,
                     ])->count();
 
-                $need = 2 - $currentYearCount;
+                $need = 2 - $current;
                 if ($need <= 0) {
                     continue;
                 }
 
-                // --- SUBQUERY (alias: s) — har bir circle_id uchun eng kichik student_count ---
+                // 3) Kandidat schedule’lar:
+                //   - Joriy yil, aktiv, o‘chirilmagan
+                //   - Capacity bor (student_count < max_student_count)
+                //   - AYNAN shu student uchun CircleStudent’da BOR circle_id-lar CHIQARILADI (NOT EXISTS)
+                //   - Har circle_id uchun eng kichik student_count’li schedule olinadi (MIN)
                 $sub = CircleSchedule::find()->alias('s')
                     ->select([
                         's.circle_id',
@@ -1258,38 +1263,32 @@ class CircleStudent extends \yii\db\ActiveRecord
                         's.is_deleted'  => 0,
                     ])
                     ->andWhere(new \yii\db\Expression('s.student_count < s.max_student_count'))
-                    // Talaba bu circle’da allaqachon (istalgan yilda) qatnashgan bo‘lsa, chiqarib tashlash
                     ->andWhere([
                         'NOT EXISTS',
-                        CircleStudent::find()->alias('cs2')
-                            ->innerJoin('circle_schedule sch2', 'sch2.id = cs2.circle_schedule_id')
-                            ->where('sch2.circle_id = s.circle_id')
+                        CircleStudent::find()->alias('csx')
+                            ->where('csx.circle_id = s.circle_id')
                             ->andWhere([
-                                'cs2.student_id' => (int)$st->id,
-                                'cs2.is_deleted' => 0,
+                                'csx.student_id' => (int)$st->id,
+                                'csx.is_deleted' => 0,
                             ])
                     ])
                     ->groupBy('s.circle_id');
 
-                // --- TASHQI SELECT (alias: sch) — min_sc ga mos real schedule qatori ---
                 $candidates = CircleSchedule::find()->alias('sch')
                     ->innerJoin(['x' => $sub], 'x.circle_id = sch.circle_id AND x.min_sc = sch.student_count')
                     ->where([
-                        // E’TIBOR: bu yerda alias — sch
                         'sch.edu_year_id' => $eduYearId,
                         'sch.status'      => 1,
                         'sch.is_deleted'  => 0,
                     ])
                     ->andWhere(new \yii\db\Expression('sch.student_count < sch.max_student_count'))
                     ->andWhere([
-                        // Yana bir bor, talaba shu circle’da bor-yo‘qligini tekshiramiz
                         'NOT EXISTS',
-                        CircleStudent::find()->alias('cs3')
-                            ->innerJoin('circle_schedule sch3', 'sch3.id = cs3.circle_schedule_id')
-                            ->where('sch3.circle_id = sch.circle_id')
+                        CircleStudent::find()->alias('csy')
+                            ->where('csy.circle_id = sch.circle_id')
                             ->andWhere([
-                                'cs3.student_id' => (int)$st->id,
-                                'cs3.is_deleted' => 0,
+                                'csy.student_id' => (int)$st->id,
+                                'csy.is_deleted' => 0,
                             ])
                     ])
                     ->orderBy(['sch.student_count' => SORT_ASC, 'sch.id' => SORT_ASC])
@@ -1300,63 +1299,65 @@ class CircleStudent extends \yii\db\ActiveRecord
                     continue;
                 }
 
-                // 3) Kiritish (atomar capacity lock + validatsiyadan oldingi EXISTS tekshiruvi)
+                // 4) Kiritish — atomar capacity lock + dublikatdan himoya
                 foreach ($candidates as $schedule) {
-
-                    // 3.1) Yana bir marta dublikatga tekshiruv (istalgan yil bo‘yicha)
-                    $already = CircleStudent::find()->alias('z')
-                        ->innerJoin('circle_schedule zsch', 'zsch.id = z.circle_schedule_id')
+                    // 4.1) Tezkor dublikat tekshiruvi: (student_id, circle_id, is_deleted=0)
+                    $dup = CircleStudent::find()
                         ->where([
-                            'z.student_id'   => (int)$st->id,
-                            'z.is_deleted'   => 0,
-                            'zsch.circle_id' => (int)$schedule->circle_id,
-                        ])
-                        ->exists();
-
-                    if ($already) {
-                        continue; // dublikat bo'lsa, o‘tkazamiz
+                            'student_id' => (int)$st->id,
+                            'circle_id'  => (int)$schedule->circle_id,
+                            'is_deleted' => 0,
+                        ])->exists();
+                    if ($dup) {
+                        continue;
                     }
 
-                    // 3.2) Atomar UPDATE bilan joyni band qilish
+                    // 4.2) Atomar capacity band qilish
                     $affected = $db->createCommand(
-                        'UPDATE circle_schedule 
-                       SET student_count = student_count + 1, updated_at = :ts 
+                        'UPDATE circle_schedule
+                       SET student_count = student_count + 1, updated_at = :ts
                      WHERE id = :id AND student_count < max_student_count',
                         [':ts' => time(), ':id' => (int)$schedule->id]
                     )->execute();
 
                     if ($affected === 0) {
-                        // shu orada joy tugagan — keyingi nomzodga o‘tamiz
+                        // Shu orada joy tugagan bo‘lishi mumkin
                         continue;
                     }
 
-                    // 3.3) Endi yozuvni yaratamiz
+                    // 4.3) CircleStudent yozuvi
                     $cs = new CircleStudent();
                     $cs->student_id         = (int)$st->id;
                     $cs->student_user_id    = (int)$st->user_id;
                     $cs->circle_id          = (int)$schedule->circle_id;
                     $cs->circle_schedule_id = (int)$schedule->id;
                     $cs->edu_year_id        = $eduYearId;
+                    $cs->semestr_type       = $schedule->semestr_type;
+                    $cs->status             = CircleStudent::STATUS_RANDOM;
                     $cs->created_by         = Yii::$app->user->id ?? 0;
                     $cs->updated_by         = Yii::$app->user->id ?? 0;
                     $cs->created_at         = time();
                     $cs->updated_at         = time();
-                    $cs->status             = CircleStudent::STATUS_RANDOM;
-                    $cs->semestr_type       = $schedule->semestr_type;
 
                     if (!$cs->save()) {
-                        // capacity’ni qaytarish
+                        // capacity’ni qaytarib qo‘yamiz
                         $db->createCommand(
-                            'UPDATE circle_schedule 
-                           SET student_count = student_count - 1, updated_at = :ts 
+                            'UPDATE circle_schedule
+                           SET student_count = student_count - 1, updated_at = :ts
                          WHERE id = :id AND student_count > 0',
                             [':ts' => time(), ':id' => (int)$schedule->id]
                         )->execute();
 
+                        // Agar dublikat validatsiyasi bo‘lsa — skip
+                        $errText = implode(' | ', $cs->getFirstErrors());
+                        if (stripos($errText, 'Student already enrolled to this circle') !== false) {
+                            continue;
+                        }
+
                         throw new \Exception(json_encode($cs->errors, JSON_UNESCAPED_UNICODE));
                     }
 
-                    $resp['added'][] = [
+                    $res['added'][] = [
                         'student_id'  => (int)$st->id,
                         'circle_id'   => (int)$schedule->circle_id,
                         'schedule_id' => (int)$schedule->id,
@@ -1365,7 +1366,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             }
 
             $tx->commit();
-            return $resp;
+            return $res;
         } catch (\Throwable $e) {
             $tx->rollBack();
             return ['status' => 0, 'message' => 'Error', 'error' => $e->getMessage()];

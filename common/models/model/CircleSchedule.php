@@ -435,6 +435,7 @@ class CircleSchedule extends \yii\db\ActiveRecord
             return simplify_errors($errors);
         }
 
+
         // o'qituvchi bo'sh ekanini tekshirish (edu_year_id, start_time, week_id)
         $existingSchedule = self::find()
             ->where([
@@ -444,8 +445,8 @@ class CircleSchedule extends \yii\db\ActiveRecord
 
                 'is_deleted' => 0
             ])
-            ->andWhere(['>=', 'start_time', $model->start_time])
-            ->andWhere(['<=', 'end_time', $model->end_time])
+            ->andWhere(['>', 'start_time', $model->start_time])
+            ->andWhere(['<', 'end_time', $model->end_time])
             ->exists();
 
         if ($existingSchedule) {

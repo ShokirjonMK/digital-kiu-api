@@ -1230,6 +1230,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     ),
                     2
                 ])
+                ->andWhere(['s.edu_form_id' => 1])
                 ->addParams([':ey' => $eduYearId])
                 ->all();
 

@@ -1248,11 +1248,12 @@ class CircleStudent extends \yii\db\ActiveRecord
                     continue;
                 }
 
-                // 3) Kandidat schedule’lar:
-                //   - Joriy yil, aktiv, o‘chirilmagan
+                // 3) Kandidat schedule'lar:
+                //   - Joriy yil, aktiv, o'chirilmagan
                 //   - Capacity bor (student_count < max_student_count)
-                //   - AYNAN shu student uchun CircleStudent’da BOR circle_id-lar CHIQARILADI (NOT EXISTS)
-                //   - Har circle_id uchun eng kichik student_count’li schedule olinadi (MIN)
+                //   - AYNAN shu student uchun CircleStudent'da BOR circle_id-lar CHIQARILADI (NOT EXISTS)
+                //   - Talabaning mavjud to'garaklari bilan vaqt to'qnashuvi YO'Q (week_id, start_time, end_time)
+                //   - Har circle_id uchun eng kichik student_count'li schedule olinadi (MIN)
                 $sub = CircleSchedule::find()->alias('s')
                     ->select([
                         's.circle_id',
@@ -1273,6 +1274,25 @@ class CircleStudent extends \yii\db\ActiveRecord
                                 'csx.is_deleted' => 0,
                             ])
                     ])
+                    // Vaqt to'qnashuvi yo'q: mavjud to'garaklarning vaqtlari bilan bir xil bo'lmagan
+                    ->andWhere([
+                        'NOT EXISTS',
+                        CircleSchedule::find()->alias('existing_sch')
+                            ->innerJoin(
+                                'circle_student existing_cs',
+                                'existing_cs.circle_schedule_id = existing_sch.id'
+                            )
+                            ->where([
+                                'existing_cs.student_id' => (int)$st->id,
+                                'existing_cs.edu_year_id' => $eduYearId,
+                                'existing_cs.is_deleted' => 0,
+                                'existing_sch.is_deleted' => 0,
+                            ])
+                            ->andWhere('existing_sch.week_id = s.week_id')
+                            ->andWhere(new \yii\db\Expression(
+                                '(s.start_time < existing_sch.end_time AND s.end_time > existing_sch.start_time)'
+                            ))
+                    ])
                     ->groupBy('s.circle_id');
 
                 $candidates = CircleSchedule::find()->alias('sch')
@@ -1292,6 +1312,25 @@ class CircleStudent extends \yii\db\ActiveRecord
                                 'csy.student_id' => (int)$st->id,
                                 'csy.is_deleted' => 0,
                             ])
+                    ])
+                    // Vaqt to'qnashuvi yo'q: mavjud to'garaklarning vaqtlari bilan bir xil bo'lmagan
+                    ->andWhere([
+                        'NOT EXISTS',
+                        CircleSchedule::find()->alias('existing_sch2')
+                            ->innerJoin(
+                                'circle_student existing_cs2',
+                                'existing_cs2.circle_schedule_id = existing_sch2.id'
+                            )
+                            ->where([
+                                'existing_cs2.student_id' => (int)$st->id,
+                                'existing_cs2.edu_year_id' => $eduYearId,
+                                'existing_cs2.is_deleted' => 0,
+                                'existing_sch2.is_deleted' => 0,
+                            ])
+                            ->andWhere('existing_sch2.week_id = sch.week_id')
+                            ->andWhere(new \yii\db\Expression(
+                                '(sch.start_time < existing_sch2.end_time AND sch.end_time > existing_sch2.start_time)'
+                            ))
                     ])
                     ->orderBy(['sch.student_count' => SORT_ASC, 'sch.id' => SORT_ASC])
                     ->limit($need)

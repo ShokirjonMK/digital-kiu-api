@@ -529,6 +529,8 @@ class CircleSchedule extends \yii\db\ActiveRecord
         } else {
             $this->updated_by = Current_user_id();
         }
+
+        
         return parent::beforeSave($insert);
     }
 

@@ -187,7 +187,7 @@ class CircleStudentController extends ApiActiveController
             return $this->response(0, _e('Course ID is required.'), null, null, ResponseStatus::BAD_REQUEST);
         }
 
-        $result = CircleStudent::autoEnrollStudentsByCourse($courseId);
+        $result = CircleStudent::autoEnrollStudentsByCourseWorks($courseId);
         if ($result['status'] == 1) {
             return $this->response(1, _e($result['message']), $result['added'], null, ResponseStatus::OK);
         } else {

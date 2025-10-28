@@ -94,6 +94,10 @@ class Course extends \yii\db\ActiveRecord
             'eduSemestrs',
             'timeTables',
 
+            'circleStudents',
+            'circleStudentsCount',
+            'notSelectedCircleStudents',
+            'notSelectedCircleStudentsCount',
 
             'description',
             'createdBy',
@@ -104,6 +108,95 @@ class Course extends \yii\db\ActiveRecord
 
         return $extraFields;
     }
+
+    public function getNotSelectedCircleStudentsCount()
+    {
+        $edu_year_id = Yii::$app->request->get('edu_year_id')
+            ?? EduYear::find()->select('id')->where(['status' => 1])->scalar();
+
+        if (!$edu_year_id) {
+            return 0;
+        }
+
+        // Talabalar ro‘yxatini olish (faol, kurs bo‘yicha)
+        $studentsQuery = Student::find()
+            ->select('id')
+            ->where([
+                'edu_form_id' => 1,
+                'course_id' => $this->id,
+                'is_deleted' => 0,
+                'status' => 10,
+            ]);
+
+        // circle_student jadvali bilan LEFT JOIN orqali birlashtirish
+        $count = (new \yii\db\Query())
+            ->from(['s' => $studentsQuery])
+            ->leftJoin(['cs' => 'circle_student'], 'cs.student_id = s.id AND cs.edu_year_id = :edu_year_id AND cs.is_deleted = 0', [':edu_year_id' => $edu_year_id])
+            ->groupBy('s.id')
+            ->having('COUNT(cs.id) < 2')
+            ->count();
+
+        return (int)$count;
+    }
+
+
+    public function getNotSelectedCircleStudentsCount1()
+    {
+        $edu_year_id = Yii::$app->request->get('edu_year_id') ??  EduYear::find()->where(['status' => 1])->one()->id ?? null;
+
+        // Student jadvali bilan bog'lanish
+        $studentsQuery = Student::find()
+            ->where([
+                'edu_form_id' => 1,
+                'course_id' => $this->id,
+                'is_deleted' => 0,
+                'status' => 10
+            ]);
+
+        $studentIds = $studentsQuery->select('id')->column();
+
+        if (empty($studentIds)) {
+            return 0;
+        }
+
+        // Har bir student uchun circle_student sonini hisoblash
+        $count = 0;
+        foreach ($studentIds as $studentId) {
+            $circleStudentCount = CircleStudent::find()
+                ->where([
+                    'student_id' => $studentId,
+                    'edu_year_id' => $edu_year_id,
+                    'is_deleted' => 0
+                ])
+                ->count();
+
+            // 2 tadan kam bo'lsa, hisobga qo'shish
+            if ($circleStudentCount < 2) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    public function getCircleStudents()
+    {
+        return $this->hasMany(CircleStudent::className(), ['course_id' => 'id']);
+    }
+
+    public function getCircleStudentsCount()
+    {
+        return count($this->circleStudents);
+    }
+
+    public function getNotSelectedCircleStudents()
+    {
+        $query = $this->hasMany(CircleStudent::className(), ['course_id' => 'id']);
+        $query = $query->andWhere(['is_deleted' => 0]);
+        $query = $query->andWhere(['is_selected' => 0]);
+        return $query->all();
+    }
+
 
     public function getTranslate()
     {

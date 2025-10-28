@@ -475,7 +475,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             ])
             ->count();
 
-        if ($countThisSemester >= self::MAX_SCHEDULES_PER_SEMESTER) {
+        if ($countThisSemester >= self::MAX_SCHEDULES_PER_SEMESTER && isRole('student')) {
             $errors[] = _e('You cannot enroll more than') . self::MAX_SCHEDULES_PER_SEMESTER . _e('schedules in a semester');
             $transaction->rollBack();
             return simplify_errors($errors);

@@ -971,6 +971,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             return ['status' => 0, 'message' => 'Error', 'error' => $e->getMessage()];
         }
     }
+    
     /**
      * Talabalarni avtomatik to'garaklarga yozish (optimallashtirilgan)
      * 

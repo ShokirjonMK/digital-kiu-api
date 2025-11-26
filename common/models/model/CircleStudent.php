@@ -224,6 +224,7 @@ class CircleStudent extends \yii\db\ActiveRecord
     {
         $transaction = Yii::$app->db->beginTransaction();
         $errors = [];
+        $t = false;
 
         try {
             // 👤 Agar foydalanuvchi "student" bo'lsa, student_id avtomatik olinadi
@@ -237,6 +238,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     return simplify_errors($errors);
                 }
                 $model->student_id = $post['student_id'];
+                $t = true;
             }
 
             if ($model->student->edu_form_id != 1) {
@@ -262,7 +264,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             $studentModel = $model->student; // relation
             if ($studentModel && $studentModel->course_id) {
                 $course = Course::findOne($studentModel->course_id);
-                if ($course) {
+                if ($course && !$t) {
                     $now = time();
                     // Determine term window by schedule semestr_type: 1=kuz (fall), 2=bahor (spring)
                     $useFall = ((int)$schedule->semestr_type === 1);

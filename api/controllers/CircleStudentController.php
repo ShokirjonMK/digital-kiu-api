@@ -49,6 +49,11 @@ class CircleStudentController extends ApiActiveController
             $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
         }
 
+        // build_id filter
+        $buildId = Yii::$app->request->get('building_id');
+        if (!empty($buildId)) {
+            $query->andWhere(['circle_schedule.building_id' => $buildId]);
+        }
 
 
         //  Filter from Profile 

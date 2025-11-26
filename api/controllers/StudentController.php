@@ -87,23 +87,67 @@ class  StudentController extends ApiActiveController
                 $sheetDatas = $this->executeLeaveRecords($sheetDatas, $this->leaveRecordByIndex);
             }
 
-            foreach ($sheetDatas as $post) {
+            foreach ($sheetDatas as $rowIndex => $post) {
                 /** */
+                $result = null;
+                $errorKey = isset($post['passport_pin']) && !empty($post['passport_pin'])
+                    ? $post['passport_pin']
+                    : 'row_' . ($rowIndex + 1);
+
                 // $post = Yii::$app->request->post();
                 if (isRole('tutor')) {
                     $post['tutor_id'] = Current_user_id();
                 }
                 $post['role'] = 'student';
-                $post['status'] ? $post['status'] = (int)$post['status'] : 10;
-                $post['is_deleted'] ? $post['is_deleted'] = (int)$post['is_deleted'] : 0;
-                $post['deleted'] ? $post['deleted'] = (int)$post['deleted'] : 0;
 
-                $post['passport_pin'] ? $post['passport_pin'] = (int)$post['passport_pin'] : null;
-                $post['passport_number'] ? $post['passport_number'] = (int)$post['passport_number'] : null;
-                $post['phone'] ? $post['phone'] = (string)$post['phone'] : null;
-                $post['birthday'] ? $post['birthday'] = date('Y-m-d', strtotime($post['birthday'])) : null;
-                $post['passport_given_date'] ? $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date'])) : null;
+                // Only process fields that exist in Excel data
+                if (isset($post['status']) && !empty($post['status'])) {
+                    $post['status'] = (int)$post['status'];
+                } else {
+                    $post['status'] = 10;
+                }
 
+                if (isset($post['is_deleted']) && !empty($post['is_deleted'])) {
+                    $post['is_deleted'] = (int)$post['is_deleted'];
+                } else {
+                    $post['is_deleted'] = 0;
+                }
+
+                if (isset($post['deleted']) && !empty($post['deleted'])) {
+                    $post['deleted'] = (int)$post['deleted'];
+                } else {
+                    $post['deleted'] = 0;
+                }
+
+                if (isset($post['passport_pin']) && !empty($post['passport_pin'])) {
+                    $post['passport_pin'] = (int)$post['passport_pin'];
+                } else {
+                    $post['passport_pin'] = null;
+                }
+
+                if (isset($post['passport_number']) && !empty($post['passport_number'])) {
+                    $post['passport_number'] = (int)$post['passport_number'];
+                } else {
+                    $post['passport_number'] = null;
+                }
+
+                if (isset($post['phone']) && !empty($post['phone'])) {
+                    $post['phone'] = (string)$post['phone'];
+                } else {
+                    $post['phone'] = null;
+                }
+
+                if (isset($post['birthday']) && !empty($post['birthday'])) {
+                    $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+                } else {
+                    $post['birthday'] = null;
+                }
+
+                if (isset($post['passport_given_date']) && !empty($post['passport_given_date'])) {
+                    $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
+                } else {
+                    $post['passport_given_date'] = null;
+                }
 
                 $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
                 // dd("asd");
@@ -117,12 +161,16 @@ class  StudentController extends ApiActiveController
                         $student = new Student();
                     }
                     $this->load($student, $post);
-                    $data[] = [$model, $student, $hasProfile];
+
                     if ($model) {
                         $result = StudentUser::updateItem($model, $hasProfile, $student, $post);
-                        // $errorAll[$post['passport_pin']] = $data;
+                        if (is_array($result)) {
+                            $errorAll[$errorKey] = $result;
+                        } else {
+                            $data[] = [$model, $student, $hasProfile];
+                        }
                     } else {
-                        $errorAll[$post['passport_pin']] = _e('There is a Profile but User not found!');
+                        $errorAll[$errorKey] = _e('There is a Profile but User not found!');
                     }
                 } else {
 
@@ -144,32 +192,19 @@ class  StudentController extends ApiActiveController
                     $this->load($student, $post);
 
                     $result = StudentUser::createItemImport($model, $profile, $student, $post);
-                    // return 1112;
                     if (is_array($result)) {
-                        $errorAll[$post['passport_pin']] = $result;
+                        $errorAll[$errorKey] = $result;
+                    } else {
+                        $data[] = [$model, $student, $profile];
                     }
-
-
-
-                    $data[] = [$model, $student, $profile];
-                }
-
-
-
-                if (is_array($result)) {
-                    $errorAll[$post['passport_pin']] = $result;
-                } else {
-                    // $errorAll[$post['passport_pin']] = $data;
                 }
             }
-
-            return $errorAll;
 
             if (count($errorAll) > 0) {
-                return $errorAll;
+                return $this->response(0, _e('There are errors in the import process.'), null, $errorAll, ResponseStatus::UPROCESSABLE_ENTITY);
             }
-            return $data;
-            return $sheetDatas;
+
+            return $this->response(1, _e('Success'), $data, null, ResponseStatus::OK);
         } catch (Exception $e) {
             // $transaction->rollBack();
             return $this->response(0, _e('There is an error occurred while processing.'), null, $e->getMessage(), ResponseStatus::UPROCESSABLE_ENTITY);

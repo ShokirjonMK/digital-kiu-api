@@ -37,7 +37,7 @@ class CircleStudent extends \yii\db\ActiveRecord
     {
         return [
             [['circle_schedule_id'], 'required'],
-            [['circle_id', 'edu_year_id', 'semestr_type', 'circle_schedule_id', 'student_user_id', 'student_id', 'is_finished', 'abs_status', 'certificate_status', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['circle_id', 'edu_year_id', 'semestr_type', 'circle_schedule_id', 'student_user_id', 'student_id', 'is_finished', 'abs_status', 'certificate_status', 'status', 'is_deleted', 'created_at', 'updated_at', 'created_by', 'updated_by', 'course_id'], 'integer'],
             [['certificate_file'], 'string', 'max' => 255],
             [['certificate_date'], 'safe'],
             [['circle_id'], 'exist', 'skipOnError' => true, 'targetClass' => Circle::className(), 'targetAttribute' => ['circle_id' => 'id']],
@@ -379,6 +379,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             $model->circle_id = $schedule->circle_id;
             $model->edu_year_id = $schedule->edu_year_id;
             $model->semestr_type = $schedule->semestr_type;
+            $model->course_id = $model->student->course_id;
 
             // Yana validatsiya (avvalgi xatoliklar bartaraf etilgan bo‘lsa)
             if (!$model->validate()) {
@@ -973,7 +974,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             return ['status' => 0, 'message' => 'Error', 'error' => $e->getMessage()];
         }
     }
-    
+
     /**
      * Talabalarni avtomatik to'garaklarga yozish (optimallashtirilgan)
      * 

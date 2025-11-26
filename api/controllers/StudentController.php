@@ -175,7 +175,9 @@ class  StudentController extends ApiActiveController
             return $sheetDatas;
         } catch (Exception $e) {
             // $transaction->rollBack();
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $e->getMessage(), ResponseStatus::UPROCESSABLE_ENTITY);
         }
+        return $this->response(1, _e('Success'), null, null, ResponseStatus::OK);
     }
 
     /*  public function actionRead($lang)

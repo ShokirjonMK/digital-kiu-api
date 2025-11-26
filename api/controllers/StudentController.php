@@ -94,18 +94,15 @@ class  StudentController extends ApiActiveController
                     $post['tutor_id'] = Current_user_id();
                 }
                 $post['role'] = 'student';
-                $post['status'] = (int)$post['status'] ?? 10;
-                $post['is_deleted'] = (int)$post['is_deleted'] ?? 0;
-                $post['deleted'] = (int)$post['deleted'] ?? 0;
+                $post['status'] ? $post['status'] = (int)$post['status'] : 10;
+                $post['is_deleted'] ? $post['is_deleted'] = (int)$post['is_deleted'] : 0;
+                $post['deleted'] ? $post['deleted'] = (int)$post['deleted'] : 0;
 
-                $post['passport_pin'] = (int)$post['passport_pin'];
-                $post['passport_number'] = (int)$post['passport_number'];
-                $post['phone'] = (string)$post['phone'];
-                $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
-                $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
-
-                // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
-                // $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
+                $post['passport_pin'] ? $post['passport_pin'] = (int)$post['passport_pin'] : null;
+                $post['passport_number'] ? $post['passport_number'] = (int)$post['passport_number'] : null;
+                $post['phone'] ? $post['phone'] = (string)$post['phone'] : null;
+                $post['birthday'] ? $post['birthday'] = date('Y-m-d', strtotime($post['birthday'])) : null;
+                $post['passport_given_date'] ? $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date'])) : null;
 
 
                 $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);

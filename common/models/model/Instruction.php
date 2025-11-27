@@ -253,8 +253,8 @@ class Instruction extends ActiveRecord
     {
         if ($this->validate()) {
             $folder = self::UPLOADS_FOLDER . $this->file->extension . '/';
-            if (!file_exists(UPLOADS_PATH  . $folder)) {
-                mkdir(UPLOADS_PATH  . $folder, 0777, true);
+            if (!file_exists(STORAGE_PATH  . $folder)) {
+                mkdir(STORAGE_PATH  . $folder, 0777, true);
             }
             $fileName = \Yii::$app->security->generateRandomString(6) . '.' . $this->file->extension;
             $miniUrl = $folder . $fileName;

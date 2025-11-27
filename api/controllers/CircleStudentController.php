@@ -331,29 +331,29 @@ class CircleStudentController extends ApiActiveController
 
         // 3) Asosiy query: student + profile
         $query = Student::find()
-            ->alias('s')
-            ->innerJoin(Profile::tableName() . ' p', 'p.user_id = s.user_id')
+            ->alias('student')
+            ->innerJoin(Profile::tableName() . ' p', 'p.user_id = student.user_id')
             // Subquery bilan LEFT JOIN: yo'q bo‘lsa NULL cnt, bo‘lsa real COUNT
-            ->leftJoin(['csa' => $csAgg], 'csa.student_id = s.id')
+            ->leftJoin(['csa' => $csAgg], 'csa.student_id = student.id')
             ->where([
-                's.status'     => 10,
-                's.is_deleted' => 0,
+                'student.status'     => 10,
+                'student.is_deleted' => 0,
             ])
-            ->andWhere(['s.edu_form_id' => 1]);
+            ->andWhere(['student.edu_form_id' => 1]);
 
         // 4) Kurs bo‘yicha filter (ixtiyoriy)
         if (!empty($courseId)) {
-            $query->andWhere(['s.course_id' => $courseId]);
+            $query->andWhere(['student.course_id' => $courseId]);
         }
 
         // 4) Direction bo‘yicha filter (ixtiyoriy)
         if (!empty($directionId)) {
-            $query->andWhere(['s.direction_id' => $directionId]);
+            $query->andWhere(['student.direction_id' => $directionId]);
         }
 
         // 4) Faculty bo‘yicha filter (ixtiyoriy)
         if (!empty($facultyId)) {
-            $query->andWhere(['s.faculty_id' => $facultyId]);
+            $query->andWhere(['student.faculty_id' => $facultyId]);
         }
 
         // 5) Joriy yilda circle_student < 2 bo‘lganlar (0 yoki 1)

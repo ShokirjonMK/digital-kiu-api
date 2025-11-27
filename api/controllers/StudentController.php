@@ -121,33 +121,23 @@ class  StudentController extends ApiActiveController
 
                 if (isset($post['passport_pin']) && !empty($post['passport_pin'])) {
                     $post['passport_pin'] = (int)$post['passport_pin'];
-                } else {
-                    $post['passport_pin'] = null;
-                }
+                } 
 
                 if (isset($post['passport_number']) && !empty($post['passport_number'])) {
                     $post['passport_number'] = (int)$post['passport_number'];
-                } else {
-                    $post['passport_number'] = null;
-                }
+                } 
 
                 if (isset($post['phone']) && !empty($post['phone'])) {
                     $post['phone'] = (string)$post['phone'];
-                } else {
-                    $post['phone'] = null;
-                }
+                } 
 
                 if (isset($post['birthday']) && !empty($post['birthday'])) {
                     $post['birthday'] = date('Y-m-d', strtotime($post['birthday']));
-                } else {
-                    $post['birthday'] = null;
-                }
+                } 
 
                 if (isset($post['passport_given_date']) && !empty($post['passport_given_date'])) {
                     $post['passport_given_date'] = date('Y-m-d', strtotime($post['passport_given_date']));
-                } else {
-                    $post['passport_given_date'] = null;
-                }
+                } 
 
                 $hasProfile = Profile::findOne(['passport_pin' => $post['passport_pin']]);
                 // dd("asd");

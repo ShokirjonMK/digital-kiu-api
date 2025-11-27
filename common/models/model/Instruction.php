@@ -61,7 +61,7 @@ class Instruction extends ActiveRecord
     {
         return [
             [['file_url', 'key'], 'string', 'max' => 255],
-            [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp4,3gp,avi,mov,m4v,mpeg,mpg,png,jpeg,jpg,pdf', 'maxSize' => $this->videoMaxSize],
+            [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'mp4,3gp,avi,mov,m4v,mpeg,mpg,png,jpeg,jpg,pdf,xlx,xlsx,doc,docx,ppt,pptx', 'maxSize' => $this->videoMaxSize],
             ['key', 'unique', 'message' => 'bu ma`lumot allaqachon saqlangan'],
             [
                 [

@@ -260,7 +260,7 @@ class Instruction extends ActiveRecord
             $miniUrl = $folder . $fileName;
             $url = UPLOADS_PATH . $miniUrl;
             $this->file->saveAs($url, false);
-            return "storage/" . $url;
+            return "storage/" . self::UPLOADS_FOLDER . $fileName;
         } else {
             return false;
         }

@@ -3,7 +3,7 @@ define('DS', DIRECTORY_SEPARATOR);
 define('HOME_PATH', dirname(__FILE__) . DS);
 define('BACKEND_PATH', HOME_PATH . 'backend' . DS);
 define('FRONTEND_PATH', HOME_PATH . 'frontend' . DS);
-define('STORAGE_PATH', '/7_TB/storage' . DS);
+define('STORAGE_PATH', '/storage' . DS);
 define('UPLOADS_PATH', STORAGE_PATH . 'uploads' . DS);
 define('THEMES_PATH', HOME_PATH . 'themes' . DS);
 define('TEMP_PATH', HOME_PATH . 'temp' . DS);

@@ -299,6 +299,9 @@ class CircleStudentController extends ApiActiveController
         $request   = Yii::$app->request;
         $courseId  = (int)$request->get('course_id');
         $eduYearId = (int)$request->get('edu_year_id');
+        $directionId = (int)$request->get('direction_id');
+        $facultyId = (int)$request->get('faculty_id');
+
 
         // 1) edu_year_id aniqlash (fallback: oxirgi aktiv yil)
         if (empty($eduYearId)) {
@@ -341,6 +344,16 @@ class CircleStudentController extends ApiActiveController
         // 4) Kurs bo‘yicha filter (ixtiyoriy)
         if (!empty($courseId)) {
             $query->andWhere(['s.course_id' => $courseId]);
+        }
+
+        // 4) Direction bo‘yicha filter (ixtiyoriy)
+        if (!empty($directionId)) {
+            $query->andWhere(['s.direction_id' => $directionId]);
+        }
+
+        // 4) Faculty bo‘yicha filter (ixtiyoriy)
+        if (!empty($facultyId)) {
+            $query->andWhere(['s.faculty_id' => $facultyId]);
         }
 
         // 5) Joriy yilda circle_student < 2 bo‘lganlar (0 yoki 1)

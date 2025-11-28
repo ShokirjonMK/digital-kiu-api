@@ -23,16 +23,21 @@ class CircleAttendanceController extends ApiActiveController
 
         $query = $model->find();
 
-        $query->leftJoin("circle_schedule", "circle_schedule.id = " . $model->tableName() . ".circle_schedule_id");
+        // is_deleted filtri qo'shildi
+        $query->andWhere([$model->tableName() . '.is_deleted' => Yii::$app->request->get('is_deleted', 0)]);
+
+        // circle_schedule join - is_deleted tekshirish qo'shildi
+        $query->leftJoin("circle_schedule", "circle_schedule.id = " . $model->tableName() . ".circle_schedule_id AND circle_schedule.is_deleted = 0");
 
         if (isRole('teacher') && !isRole('admin')) {
             $query->andWhere(['circle_schedule.teacher_user_id' => current_user_id()]);
         }
 
         if (isRole('student')) {
-            $student_id = $this->student();
+            // static metod sifatida chaqirish
+            $student_id = static::student();
             if ($student_id !== null) {
-                $query->andWhere(['student_id' => $student_id]);
+                $query->andWhere([$model->tableName() . '.student_id' => $student_id]);
             }
         }
 
@@ -109,16 +114,20 @@ class CircleAttendanceController extends ApiActiveController
             return $this->response(0, _e('Data not found.'), null, null, ResponseStatus::NOT_FOUND);
         }
 
-        if (isRoleOnly('teacher') && $model->circleSchedule->teacher_user_id !== current_user_id()) {
-            return $this->response(0, _e('You are not authorized to view.'), null, null, ResponseStatus::FORBIDDEN);
+        // circleSchedule null bo'lishi mumkinligini tekshirish
+        if (isRoleOnly('teacher') && $model->circleSchedule && $model->circleSchedule->teacher_user_id !== current_user_id()) {
+            return $this->response(0, _e('You are not authorized to delete.'), null, null, ResponseStatus::FORBIDDEN);
         }
 
-        if ($model) {
-            $model->is_deleted = 1;
-            $model->update();
-
-            return $this->response(1, _e($this->controller_name . ' succesfully removed.'), null, null, ResponseStatus::OK);
+        // is_deleted ni 1 qilish va saqlash
+        $model->is_deleted = 1;
+        
+        // update() o'rniga save() yoki updateAttributes() ishlatish
+        if ($model->save(false)) { // false - validatsiyani o'tkazib yuborish
+            return $this->response(1, _e($this->controller_name . ' successfully removed.'), null, null, ResponseStatus::OK);
+        } else {
+            // Agar saqlashda xatolik bo'lsa
+            return $this->response(0, _e('There is an error occurred while processing.'), null, $model->errors, ResponseStatus::UPROCESSABLE_ENTITY);
         }
-        return $this->response(0, _e('There is an error occurred while processing.'), null, null, ResponseStatus::BAD_REQUEST);
     }
 }

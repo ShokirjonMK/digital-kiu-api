@@ -1399,9 +1399,17 @@ class CircleStudent extends \yii\db\ActiveRecord
             $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            $teacherName  = ($model->teacher && $model->teacher->profile) 
-                ? Profile::getFullname($model->teacher->profile) 
-                : "O'qituvchi";
+            
+            // O'qituvchi ismini "F.Haqqulov" formatida olish
+            $teacherName = "O'qituvchi";
+            if ($model->teacher && $model->teacher->profile) {
+                $profile = $model->teacher->profile;
+                if ($profile->first_name && $profile->last_name) {
+                    $firstLetter = mb_substr($profile->first_name, 0, 1, 'UTF-8');
+                    $teacherName = $firstLetter . '.' . $profile->last_name;
+                }
+            }
+            
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
@@ -1549,9 +1557,17 @@ class CircleStudent extends \yii\db\ActiveRecord
             $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            $teacherName  = ($model->teacher && $model->teacher->profile) 
-                ? Profile::getFullname($model->teacher->profile) 
-                : "O'qituvchi";
+            
+            // O'qituvchi ismini "F.Haqqulov" formatida olish
+            $teacherName = "O'qituvchi";
+            if ($model->teacher && $model->teacher->profile) {
+                $profile = $model->teacher->profile;
+                if ($profile->first_name && $profile->last_name) {
+                    $firstLetter = mb_substr($profile->first_name, 0, 1, 'UTF-8');
+                    $teacherName = $firstLetter . '.' . $profile->last_name;
+                }
+            }
+            
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
@@ -1686,9 +1702,17 @@ class CircleStudent extends \yii\db\ActiveRecord
         $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
         $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
         $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-        $teacherName  = ($model->teacher && $model->teacher->profile) 
-            ? Profile::getFullname($model->teacher->profile) 
-            : "O'qituvchi";
+        
+        // O'qituvchi ismini "F.Haqqulov" formatida olish
+        $teacherName = "O'qituvchi";
+        if ($model->teacher && $model->teacher->profile) {
+            $profile = $model->teacher->profile;
+            if ($profile->first_name && $profile->last_name) {
+                $firstLetter = mb_substr($profile->first_name, 0, 1, 'UTF-8');
+                $teacherName = $firstLetter . '.' . $profile->last_name;
+            }
+        }
+        
         $certDate     = date('Y-m-d');
 
 

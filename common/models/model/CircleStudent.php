@@ -1507,11 +1507,11 @@ class CircleStudent extends \yii\db\ActiveRecord
 
                     <tr>
                         <td style="width: 11%;"></td>
-                        <td style="width: 13%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;">F.Haqqulov</td>
+                        <td style="width: 13%;">F.Haqqulov</td>
                         <td style="width: 6%;"></td>
-                        <td style="width: 14%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;"><?= $teacherName ?></td>
+                        <td style="width: 14%;"><?= $teacherName ?></td>
                         <td style="width: 14%;"></td>
-                        <td style="width: 14%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;">Sh.Turdiyev</td>
+                        <td style="width: 14%;">Sh.Turdiyev</td>
                         <td style="width: 14%;"></td>
                     </tr>
                 </table>
@@ -1665,11 +1665,11 @@ class CircleStudent extends \yii\db\ActiveRecord
 
                     <tr>
                         <td style="width: 11%;"></td>
-                        <td style="width: 13%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;">F.Haqqulov</td>
+                        <td style="width: 13%;">F.Haqqulov</td>
                         <td style="width: 6%;"></td>
-                        <td style="width: 14%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;"><?= $teacherName ?></td>
+                        <td style="width: 14%;"><?= $teacherName ?></td>
                         <td style="width: 14%;"></td>
-                        <td style="width: 14%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;">Sh.Turdiyev</td>
+                        <td style="width: 14%;">Sh.Turdiyev</td>
                         <td style="width: 14%;"></td>
                     </tr>
                 </table>
@@ -1803,11 +1803,11 @@ class CircleStudent extends \yii\db\ActiveRecord
 
                 <tr>
                     <td style="width: 11%;"></td>
-                    <td style="width: 13%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;">F.Haqqulov</td>
+                    <td style="width: 13%;">F.Haqqulov</td>
                     <td style="width: 6%;"></td>
-                    <td style="width: 14%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;"><?= $teacherName ?></td>
+                    <td style="width: 14%;"><?= $teacherName ?></td>
                     <td style="width: 14%;"></td>
-                    <td style="width: 14%; text-align: center; border-bottom: 2px solid #FFD700; padding-bottom: 5px;">Sh.Turdiyev</td>
+                    <td style="width: 14%;">Sh.Turdiyev</td>
                     <td style="width: 14%;"></td>
                 </tr>
             </table>

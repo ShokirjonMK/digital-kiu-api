@@ -1399,7 +1399,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            $teacherName  = $model->teacher->fullName ?? "O'qituvchi";
+            $teacherName  = $model->teacher->fullName ?? "O''qituvchi";
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";

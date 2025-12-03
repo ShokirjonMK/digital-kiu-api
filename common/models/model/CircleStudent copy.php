@@ -1396,10 +1396,9 @@ class CircleStudent extends \yii\db\ActiveRecord
 
         try {
             $circleName   = $model->circle->translate->name ?? "Psixologiya asoslari";
-            $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
+            $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            $teacherName  = $model->circleSchedule->teacher->profile->fullName ?? "O'qituvchi";
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
@@ -1499,7 +1498,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                         <td style="width: 11%;"></td>
                         <td style="width: 13%;">F.Haqqulov</td>
                         <td style="width: 6%;"></td>
-                        <td style="width: 14%;"><?= $teacherName ?></td>
+                        <td style="width: 14%;"> Tr.Shermatov Javoxir</td>
                         <td style="width: 14%;"></td>
                         <td style="width: 14%;">Sh.Turdiyev</td>
                         <td style="width: 14%;"></td>
@@ -1544,10 +1543,9 @@ class CircleStudent extends \yii\db\ActiveRecord
     {
         try {
             $circleName   = $model->circle->translate->name ?? "Psixologiya asoslari";
-            $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
+            $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            $teacherName  = $model->circleSchedule->teacher->profile->fullName ?? "O'qituvchi";
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
@@ -1647,7 +1645,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                         <td style="width: 11%;"></td>
                         <td style="width: 13%;">F.Haqqulov</td>
                         <td style="width: 6%;"></td>
-                        <td style="width: 14%;"><?= $teacherName ?></td>
+                        <td style="width: 14%;"> Tr.Shermatov Javoxir</td>
                         <td style="width: 14%;"></td>
                         <td style="width: 14%;">Sh.Turdiyev</td>
                         <td style="width: 14%;"></td>
@@ -1679,10 +1677,9 @@ class CircleStudent extends \yii\db\ActiveRecord
     public static function generateCertificateOrginal($model)
     {
         $circleName   = $model->circle->translate->name ?? "Psixologiya asoslari";
-        $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
+        $studentName  = $model->student->fullName ?? "ZOIROVA SUG‘DIYONA SHUXRAT QIZI";
         $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
         $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-        $teacherName  = $model->circleSchedule->teacher->profile->fullName ?? "O'qituvchi";
         $certDate     = date('Y-m-d');
 
 
@@ -1775,7 +1772,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     <td style="width: 11%;"></td>
                     <td style="width: 13%;">F.Haqqulov</td>
                     <td style="width: 6%;"></td>
-                    <td style="width: 14%;"><?= $teacherName ?></td>
+                    <td style="width: 14%;"> Tr.Shermatov Javoxir</td>
                     <td style="width: 14%;"></td>
                     <td style="width: 14%;">Sh.Turdiyev</td>
                     <td style="width: 14%;"></td>

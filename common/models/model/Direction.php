@@ -55,6 +55,7 @@ class Direction extends \yii\db\ActiveRecord
             [['faculty_id'], 'required'],
             [['faculty_id', 'building_id', 'order', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'is_deleted'], 'integer'],
             [['code'], 'string', 'max' => 255],
+            [['smena'], 'integer'],
             [['faculty_id'], 'exist', 'skipOnError' => true, 'targetClass' => Faculty::className(), 'targetAttribute' => ['faculty_id' => 'id']],
             [['building_id'], 'exist', 'skipOnError' => true, 'targetClass' => Building::className(), 'targetAttribute' => ['building_id' => 'id']],
         ];
@@ -72,6 +73,7 @@ class Direction extends \yii\db\ActiveRecord
             'faculty_id' => 'Faculty ID',
             'building_id' => 'Building ID',
             'code' => 'Code',
+            'smena' => 'Smena',
             'order' => _e('Order'),
             'status' => _e('Status'),
             'created_at' => _e('Created At'),
@@ -92,6 +94,7 @@ class Direction extends \yii\db\ActiveRecord
             'faculty_id',
             'building_id',
             'code',
+            'smena',
             'order',
             'status',
             'created_at',

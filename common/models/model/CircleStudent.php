@@ -263,14 +263,41 @@ class CircleStudent extends \yii\db\ActiveRecord
             // ✅ 0) Course-based selection window check
             $studentModel = $model->student; // relation
             if ($studentModel && $studentModel->course_id) {
-                $course = Course::findOne($studentModel->course_id);
-                if ($course && !$t) {
+
+                $smena = $studentModel->direction->smena ?? null;
+                if (empty($smena) || $smena <= 0) {
+                    $errors[] = _e('Smena not found for your direction.');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
+                if (empty($studentModel->course_id) || $studentModel->course_id <= 0) {
+                    $errors[] = _e('Course not found for your student.');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
+                $circleOpen = CircleOpen::find()
+                    ->where([
+                        'course_id' => $studentModel->course_id ?? null,
+                        'smena' => $smena,
+                        'is_deleted' => 0
+                    ])
+                    ->one();
+
+                if (!$circleOpen) {
+                    $errors[] = _e('Circle open not found for your course and smena at this time.');
+                    $transaction->rollBack();
+                    return simplify_errors($errors);
+                }
+
+                if ($circleOpen && !$t) {
                     $now = time();
                     // Determine term window by schedule semestr_type: 1=kuz (fall), 2=bahor (spring)
                     $useFall = ((int)$schedule->semestr_type === 1);
 
-                    $fromStr = $useFall ? ($course->circle_kuz_from ?? '') : ($course->circle_bahor_from ?? '');
-                    $toStr   = $useFall ? ($course->circle_kuz_to ?? '')   : ($course->circle_bahor_to ?? '');
+                    $fromStr = $useFall ? ($circleOpen->circle_kuz_from ?? '') : ($circleOpen->circle_bahor_from ?? '');
+                    $toStr   = $useFall ? ($circleOpen->circle_kuz_to ?? '')   : ($circleOpen->circle_bahor_to ?? '');
 
                     if ($fromStr && $toStr) {
                         // Compose with current year (or schedule edu_year_id if that is a year value)
@@ -1399,7 +1426,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            
+
             // O'qituvchi ismini "F.Haqqulov" formatida olish
             $teacherName = "O'qituvchi";
             if ($model->teacher && $model->teacher->profile) {
@@ -1409,7 +1436,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     $teacherName = $firstLetter . '.' . $profile->last_name;
                 }
             }
-            
+
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
@@ -1557,7 +1584,7 @@ class CircleStudent extends \yii\db\ActiveRecord
             $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
             $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
             $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-            
+
             // O'qituvchi ismini "F.Haqqulov" formatida olish
             $teacherName = "O'qituvchi";
             if ($model->teacher && $model->teacher->profile) {
@@ -1567,7 +1594,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                     $teacherName = $firstLetter . '.' . $profile->last_name;
                 }
             }
-            
+
             $certDate     = date('Y-m-d');
 
             $text = "Qarshi xalqaro universitetida " . $eduYear . " o‘quv yili \"" . $semesterName . "\" semestrida tashkil etilgan <b style=\"color: #1F3468;\"> “" . $circleName . "”</b> to‘garagida muvaffaqiyatli ishtirok etgani uchun taqdim etildi.";
@@ -1702,7 +1729,7 @@ class CircleStudent extends \yii\db\ActiveRecord
         $studentName  = $model->student->fullName ?? "ZOIROVA SUG'DIYONA SHUXRAT QIZI";
         $eduYear      = $model->circleSchedule->eduYear->name ?? "2024-2025";
         $semesterName = $model->circleSchedule->eduYear->type == 1 ? "Kuzgi" : "Bahorgi";
-        
+
         // O'qituvchi ismini "F.Haqqulov" formatida olish
         $teacherName = "O'qituvchi";
         if ($model->teacher && $model->teacher->profile) {
@@ -1712,7 +1739,7 @@ class CircleStudent extends \yii\db\ActiveRecord
                 $teacherName = $firstLetter . '.' . $profile->last_name;
             }
         }
-        
+
         $certDate     = date('Y-m-d');
 
 

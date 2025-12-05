@@ -139,6 +139,7 @@ $controllers = [
     'circle-schedule',
     'circle-student',
     'circle-attendance',
+    'circle-open',
 ];
 
 $controllerRoutes = [];

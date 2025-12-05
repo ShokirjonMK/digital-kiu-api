@@ -94,6 +94,7 @@ class Circle extends \yii\db\ActiveRecord
             'countSchedules',
             'countStudents',
             'selecting',
+            'circleOpens',
 
 
             'createdBy',
@@ -118,6 +119,23 @@ class Circle extends \yii\db\ActiveRecord
             ];
         }
         return Course::find()->all();
+    }
+
+    public function getCircleOpens()
+    {
+        if (isRole('student')) {
+            $student = self::student(2);
+            $circleOpen = CircleOpen::find()
+                ->where([
+                    'course_id' => $student->course_id ?? null,
+                    'smena' => $student->direction->smena ?? 1,
+                    'is_deleted' => 0
+                ])
+                ->one();
+
+            return $circleOpen;
+        }
+        return CircleOpen::find()->all();
     }
 
     public function getSchedules()

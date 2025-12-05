@@ -262,7 +262,7 @@ class CircleStudent extends \yii\db\ActiveRecord
 
             // ✅ 0) Course-based selection window check
             $studentModel = $model->student; // relation
-            if ($studentModel && $studentModel->course_id) {
+            if (isRole('student') && $studentModel && $studentModel->course_id) {
 
                 $smena = $studentModel->direction->smena ?? null;
                 if (empty($smena) || $smena <= 0) {

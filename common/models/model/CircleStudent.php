@@ -253,7 +253,6 @@ class CircleStudent extends \yii\db\ActiveRecord
                 $transaction->rollBack();
                 return simplify_errors($errors);
             }
-            // ;lkjasd;klja;lksdj;laksjd
 
             // Student user_id ni avtomatik olish
             $model->student_user_id = $model->student->user_id;
